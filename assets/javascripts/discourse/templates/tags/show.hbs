@@ -1,9 +1,0 @@
-{{#if tagNotification}}
-  {{tag-notifications-button tag=tag.tag_id
-                             action="changeTagNotification"
-                             notificationLevel=tagNotification.notification_level}}
-{{/if}}
-
-<h2>{{{i18n "tagging.topics_tagged" tag=tag.tag_id}}}</h2>
-
-{{topic-list topics=list.topics}}

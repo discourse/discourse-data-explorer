@@ -20,23 +20,11 @@ en:
     errors:
       explorer:
         no_semicolons: "Remove the semicolons from the query."
-    tagging:
-      all_tags: "All Tags"
-      changed: "tags changed:"
-      tags: "Tags"
-      choose_for_topic: "choose optional tags for this topic"
-      topics_tagged: "Topics tagged <span class='discourse-tag'>{{tag}}</span>"
+    explorer:
+      title: "Data Explorer"
+      create: "Create New"
+      import:
+        label: "Import"
+        modal: "Import A Query"
+      export: "Export"
 
-      notifications:
-        watching:
-          title: "Watching"
-          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
-        tracking:
-          title: "Tracking"
-          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
-        regular:
-          title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post."
-        muted:
-          title: "Muted"
-          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."

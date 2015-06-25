@@ -1,0 +1,8 @@
+{{d-button action="create" label="explorer.create" icon="plus"}}
+{{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
+
+{{#each query in model}}
+  <div class="row">
+    {{query.name}}
+  </div>
+{{/each}}

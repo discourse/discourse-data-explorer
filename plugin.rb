@@ -204,14 +204,14 @@ SQL
   end
 
   require_dependency 'application_controller'
-  class DataExplorer::ExplorerController < ::ApplicationController
+  class DataExplorer::QueryController < ::ApplicationController
     requires_plugin DataExplorer.plugin_name
     skip_before_filter :check_xhr, only: [:show]
 
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
-      render_serialized queries, DataExplorer::QuerySerializer
+      render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
     end
 
     def show
@@ -225,7 +225,7 @@ SQL
       end
 
       # guardian.ensure_can_see! query
-      render_serialized query, DataExplorer::QuerySerializer
+      render_serialized query, DataExplorer::QuerySerializer, root: 'queries'
     end
 
     # Helper endpoint for logic
@@ -243,7 +243,7 @@ SQL
       end
       query.save
 
-      render_serialized query, DataExplorer::QuerySerializer
+      render_serialized query, DataExplorer::QuerySerializer, root: 'queries'
     end
 
     def update
@@ -253,12 +253,13 @@ SQL
       end
       query.save
 
-      render_serialized query, DataExplorer::QuerySerializer
+      render_serialized query, DataExplorer::QuerySerializer, root: 'queries'
     end
 
     def destroy
       query = DataExplorer::Query.find(params[:id].to_i)
       query.destroy
+      render nothing: true
     end
 
     def run
@@ -314,18 +315,19 @@ SQL
   end
 
   DataExplorer::Engine.routes.draw do
-    # GET /explorer -> explorer#index
-    # POST /explorer -> explorer#create
-    # GET /explorer/:id -> explorer#show
-    # PUT /explorer/:id -> explorer#update
-    # DELETE /explorer/:id -> explorer#destroy
-    resources :explorer
-    get 'explorer/parse_params' => "explorer#parse_params"
-    post 'explorer/:id/run' => "explorer#run"
+    root to: "query#index"
+    get 'queries' => "query#index"
+    # POST /query -> explorer#create
+    # GET /query/:id -> explorer#show
+    # PUT /query/:id -> explorer#update
+    # DELETE /query/:id -> explorer#destroy
+    resources :query
+    get 'query/parse_params' => "query#parse_params"
+    post 'query/:id/run' => "query#run"
   end
 
   Discourse::Application.routes.append do
-    mount ::DataExplorer::Engine, at: '/admin/plugins/', constraints: AdminConstraint.new
+    mount ::DataExplorer::Engine, at: '/admin/plugins/explorer', constraints: AdminConstraint.new
   end
 
 end
