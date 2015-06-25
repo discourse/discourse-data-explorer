@@ -75,9 +75,7 @@ after_initialize do
 
       query_args = query.defaults.merge(params)
 
-      time_start, time_end = nil
-      explain = nil
-      err = nil
+      time_start, time_end, explain, err, result = nil
       begin
         ActiveRecord::Base.connection.transaction do
           # Setting transaction to read only prevents shoot-in-foot actions like SELECT FOR UPDATE
@@ -87,7 +85,7 @@ after_initialize do
 /*
 DataExplorer Query
 Query: /admin/plugins/explorer/#{query.id}
-Started by: #{current_user}
+Started by: #{opts[:current_user]}
 */
 WITH query AS (
 
@@ -143,7 +141,7 @@ SQL
     def self.alloc_id
       DistributedMutex.synchronize('data-explorer_query-id') do
         max_id = DataExplorer.pstore_get("q:_id")
-        max_id = 0 unless max_id
+        max_id = 1 unless max_id
         DataExplorer.pstore_set("q:_id", max_id + 1)
         max_id
       end
@@ -185,7 +183,7 @@ SQL
     end
 
     def save
-      unless @id
+      unless @id && @id > 0
         @id = self.class.alloc_id
       end
       DataExplorer.pstore_set "q:#{id}", to_hash
@@ -195,9 +193,15 @@ SQL
       DataExplorer.pstore_delete "q:#{id}"
     end
 
+    def read_attribute_for_serialization(attr)
+      self.send(attr)
+    end
+
     def self.all
-      PluginStoreRow.where(plugin_name: DataExplorer.plugin_name).where("key LIKE 'q:%'").map do |psr|
-        next if psr.key == "q:_id"
+      PluginStoreRow.where(plugin_name: DataExplorer.plugin_name)
+                    .where("key LIKE 'q:%'")
+                    .where("key != 'q:_id'")
+                    .map do |psr|
         DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
       end
     end
@@ -265,7 +269,7 @@ SQL
     def run
       query = DataExplorer::Query.find(params[:id].to_i)
       query_params = MultiJson.load(params[:params])
-      opts = {}
+      opts = {current_user: current_user.username}
       opts[:explain] = true if params[:explain]
       result = DataExplorer.run_query(query, query_params, opts)
 
@@ -293,7 +297,7 @@ SQL
           success: true,
           errors: [],
           params: query_params,
-          duration: result[:duration_nanos].to_f * 1_000_000,
+          duration: (result[:duration_nanos].to_f / 1_000_000).round(1),
           columns: cols,
         }
         json[:explain] = result[:explain] if opts[:explain]

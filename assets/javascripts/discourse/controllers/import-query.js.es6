@@ -22,7 +22,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       const object = JSON.parse(this.get('queryFile')).query;
 
       // Slight fixup before creating object
-      delete object.id;
+      object.id = 0; // 0 means no Id yet
 
       this.set('loading', true);
       this.store.createRecord('query', object).save().then(function(query) {

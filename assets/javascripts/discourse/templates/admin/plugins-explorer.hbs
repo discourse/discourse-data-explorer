@@ -1,8 +1,23 @@
+{{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
 {{d-button action="create" label="explorer.create" icon="plus"}}
-{{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
+{{d-button action="importQuery" label="explorer.import.label" icon="upload" class="import-button"}}
 
-{{#each query in model}}
-  <div class="row">
-    {{query.name}}
-  </div>
-{{/each}}
+<h3>Queries</h3>
+<table class="query-list">
+  <thead>
+    <th class="q-name">Name</th>
+    <th class="q-desc">Description</th>
+  </thead>
+  <tbody>
+    {{#each query in content}}
+      <tr {{action "selectItem" query}}>
+        <td class="q-name">{{query.name}}</td>
+        <td class="q-desc">{{query.description}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{render "admin/plugins-explorer-show" selectedItem}}
+
+{{! results }}

@@ -23,8 +23,9 @@ en:
     explorer:
       title: "Data Explorer"
       create: "Create New"
+      create_placeholder: "Query name..."
       import:
         label: "Import"
         modal: "Import A Query"
       export: "Export"
-
+      run: "Run Query"

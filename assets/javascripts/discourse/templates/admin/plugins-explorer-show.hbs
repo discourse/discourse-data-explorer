@@ -1,0 +1,6 @@
+{{#if model}}
+  <h2>{{model.name}}</h2>
+  <div>{{model.description}}</div>
+  {{textarea value=model.sql}}
+  {{d-button action="run" label="explorer.run"}}
+{{/if}}
