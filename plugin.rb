@@ -7,15 +7,38 @@
 enabled_site_setting :data_explorer_enabled
 register_asset 'stylesheets/tagging.scss'
 
-after_initialize do
+# route: /admin/plugins/explorer
+add_admin_route 'explorer.title', 'explorer'
 
-  TAGS_FIELD_NAME = "tags"
-  TAGS_FILTER_REGEXP = /[<\\\/\>\.\#\?\&\s]/
+module ::DataExplorer
+  def self.plugin_name
+    'data-explorer'.freeze
+  end
+
+  def self.pstore_get(key)
+    PluginStore.get(DataExplorer.plugin_name, key)
+  end
+
+  def self.pstore_set(key, value)
+    PluginStore.set(DataExplorer.plugin_name, key, value)
+  end
+
+  def self.pstore_delete(key)
+    PluginStore.remove(DataExplorer.plugin_name, key)
+  end
+end
+
+
+after_initialize do
 
   module ::DataExplorer
     class Engine < ::Rails::Engine
       engine_name "data_explorer"
       isolate_namespace DataExplorer
+    end
+
+    def self.run_query(query)
+
     end
 
     def self.clean_tag(tag)
@@ -63,9 +86,61 @@ after_initialize do
     end
   end
 
+  # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
+  class DataExplorer::Query
+    attr_accessor :id, :name, :query, :params
+
+    def self.alloc_id
+      DistributedMutex.synchronize('data-explorer_query-id') do
+        max_id = DataExplorer.pstore_get("q:_id")
+        max_id = 0 unless max_id
+        DataExplorer.pstore_set("q:_id", max_id + 1)
+        max_id
+      end
+    end
+
+    def self.from_hash(h)
+      query = DataExplorer::Query.new
+      [:id, :name, :query].each do |sym|
+        query.send("#{sym}=", h[sym])
+      end
+      #query.params = h[:params] # TODO - what format are the params
+      query
+    end
+
+    def to_hash
+      {
+        id: @id,
+        name: @name,
+        query: @query,
+        #params: @params, # TODO - what format are the params
+      }
+    end
+
+    def self.find(id)
+      from_hash DataExplorer.pstore_get("q:#{id}")
+    end
+
+    def save
+      unless @id
+        @id = self.class.alloc_id
+      end
+      DataExplorer.pstore_set "q:#{id}", to_hash
+    end
+
+    def destroy
+      DataExplorer.pstore_delete "q:#{id}"
+    end
+
+    def self.all
+      PluginStoreRow.where(plugin_name: DataExplorer.plugin_name).where("key LIKE 'q:%'").map do |psr|
+        DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
+      end
+    end
+  end
+
   require_dependency 'application_controller'
-  require_dependency 'topic_list_responder'
-  class DataExplorer::TagsController < ::ApplicationController
+  class DataExplorer::ExplorerController < ::ApplicationController
     include ::TopicListResponder
 
     requires_plugin 'discourse-tagging'
