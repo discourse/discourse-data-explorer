@@ -12,7 +12,7 @@ add_admin_route 'explorer.title', 'explorer'
 
 module ::DataExplorer
   def self.plugin_name
-    'data-explorer'.freeze
+    'discourse-data-explorer'.freeze
   end
 
   def self.pstore_get(key)
@@ -37,59 +37,109 @@ after_initialize do
       isolate_namespace DataExplorer
     end
 
-    def self.run_query(query)
+    class ValidationError < StandardError; end
 
+    # Extract :colon-style parameters from the SQL query and replace them with
+    # $1-style parameters.
+    #
+    # @return [Hash] :sql => [String] the new SQL query to run, :names =>
+    #   [Array] the names of all parameters, in order by their $-style name.
+    #   (The first name is $0.)
+    def self.extract_params(sql)
+      names = []
+      new_sql = sql.gsub(/:([a-z_]+)/) do |_|
+        names << $1
+        "$#{names.length - 1}"
+      end
+      {sql: new_sql, names: names}
     end
 
-    def self.clean_tag(tag)
-      tag.downcase.strip[0...SiteSetting.max_tag_length].gsub(TAGS_FILTER_REGEXP, '')
-    end
-
-    def self.tags_for_saving(tags, guardian)
-      return unless tags
-
-      tags.map! {|t| clean_tag(t) }
-      tags.delete_if {|t| t.blank? }
-      tags.uniq!
-
-      # If the user can't create tags, remove any tags that don't already exist
-      unless guardian.can_create_tag?
-        tag_count = TopicCustomField.where(name: TAGS_FIELD_NAME, value: tags).group(:value).count
-        tags.delete_if {|t| !tag_count.has_key?(t) }
+    # Run a data explorer query on the currently connected database.
+    #
+    # @param [DataExplorer::Query] query the Query object to run
+    # @param [Hash] params the colon-style query parameters to pass to AR
+    # @param [Hash] opts hash of options
+    #   explain - include a query plan in the result
+    # @return [Hash]
+    #   error - any exception that was raised in the execution. Check this
+    #     first before looking at any other fields.
+    #   pg_result - the PG::Result object
+    #   duration_nanos - the query duration, in nanoseconds
+    #   explain - the query
+    def self.run_query(query, params={}, opts={})
+      # Safety checks
+      if query.sql =~ /;/
+        err = DataExplorer::ValidationError.new(I18n.t('js.errors.explorer.no_semicolons'))
+        return {error: err, duration_nanos: 0}
       end
 
-      return tags[0...SiteSetting.max_tags_per_topic]
+      query_args = query.defaults.merge(params)
+
+      time_start, time_end = nil
+      explain = nil
+      err = nil
+      begin
+        ActiveRecord::Base.connection.transaction do
+          # Setting transaction to read only prevents shoot-in-foot actions like SELECT FOR UPDATE
+          ActiveRecord::Base.exec_sql "SET TRANSACTION READ ONLY"
+          # SQL comments are for the benefits of the slow queries log
+          sql = <<SQL
+/*
+DataExplorer Query
+Query: /admin/plugins/explorer/#{query.id}
+Started by: #{current_user}
+*/
+WITH query AS (
+
+#{query.sql}
+
+) SELECT * FROM query
+SQL
+
+          time_start = Time.now
+          result = ActiveRecord::Base.exec_sql(sql, query_args)
+          time_end = Time.now
+
+          if opts[:explain]
+            explain = ActiveRecord::Base.exec_sql("EXPLAIN #{query.sql}", query_args)
+                        .map { |row| row["QUERY PLAN"] }.join "\n"
+          end
+
+          # All done. Issue a rollback anyways, just in case
+          raise ActiveRecord::Rollback
+        end
+      rescue Exception => ex
+        err = ex
+        time_end = Time.now
+      end
+
+      {
+        error: err,
+        pg_result: result,
+        duration_nanos: time_end.nsec - time_start.nsec,
+        explain: explain,
+      }
     end
 
-    def self.notification_key(tag_id)
-      "tags_notification:#{tag_id}"
-    end
-
-    def self.auto_notify_for(tags, topic)
-
-      key_names = tags.map {|t| notification_key(t) }
-      key_names_sql = ActiveRecord::Base.sql_fragment("(#{tags.map { "'%s'" }.join(', ')})", *key_names)
-
-      sql = <<-SQL
-         INSERT INTO topic_users(user_id, topic_id, notification_level, notifications_reason_id)
-         SELECT ucf.user_id,
-                #{topic.id.to_i},
-                CAST(ucf.value AS INTEGER),
-                #{TopicUser.notification_reasons[:plugin_changed]}
-         FROM user_custom_fields AS ucf
-         WHERE ucf.name IN #{key_names_sql}
-           AND NOT EXISTS(SELECT 1 FROM topic_users WHERE topic_id = #{topic.id.to_i} AND user_id = ucf.user_id)
-           AND CAST(ucf.value AS INTEGER) <> #{TopicUser.notification_levels[:regular]}
-      SQL
-
-      ActiveRecord::Base.exec_sql(sql)
-    end
   end
 
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   class DataExplorer::Query
-    attr_accessor :id, :name, :query, :params
+    attr_accessor :id, :name, :description, :sql, :defaults
 
+    def param_names
+      param_info = DataExplorer.extract_params sql
+      param_info[:names]
+    end
+
+    def slug
+      s = Slug.for(name)
+      s = "query-#{id}" unless s.present?
+      s
+    end
+
+    # saving/loading functions
+    # May want to extract this into a library or something for plugins to use?
     def self.alloc_id
       DistributedMutex.synchronize('data-explorer_query-id') do
         max_id = DataExplorer.pstore_get("q:_id")
@@ -101,19 +151,32 @@ after_initialize do
 
     def self.from_hash(h)
       query = DataExplorer::Query.new
-      [:id, :name, :query].each do |sym|
-        query.send("#{sym}=", h[sym])
+      [:name, :description, :sql].each do |sym|
+        query.send("#{sym}=", h[sym]) if h[sym]
       end
-      #query.params = h[:params] # TODO - what format are the params
+      if h[:id]
+        query.id = h[:id].to_i
+      end
+      if h[:defaults]
+        case h[:defaults]
+          when String
+            query.defaults = MultiJson.load(h[:defaults])
+          when Hash
+            query.defaults = h[:defaults]
+          else
+            raise ArgumentError.new('invalid type for :defaults')
+        end
+      end
       query
     end
 
     def to_hash
       {
         id: @id,
-        name: @name,
-        query: @query,
-        #params: @params, # TODO - what format are the params
+        name: @name || 'Query',
+        description: @description || '',
+        sql: @sql || 'SELECT 1',
+        defaults: @defaults || {},
       }
     end
 
@@ -134,6 +197,7 @@ after_initialize do
 
     def self.all
       PluginStoreRow.where(plugin_name: DataExplorer.plugin_name).where("key LIKE 'q:%'").map do |psr|
+        next if psr.key == "q:_id"
         DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
       end
     end
@@ -141,157 +205,128 @@ after_initialize do
 
   require_dependency 'application_controller'
   class DataExplorer::ExplorerController < ::ApplicationController
-    include ::TopicListResponder
+    requires_plugin DataExplorer.plugin_name
+    skip_before_filter :check_xhr, only: [:show]
 
-    requires_plugin 'discourse-tagging'
-    skip_before_filter :check_xhr, only: [:tag_feed, :show]
-    before_filter :ensure_logged_in, only: [:notifications, :update_notifications]
-
-    def cloud
-      cloud = self.class.tags_by_count(guardian, limit: 300).count
-      result, max_count, min_count = [], 0, nil
-      cloud.each do |t, c|
-        result << { id: t, count: c }
-        max_count = c if c > max_count
-        min_count = c if min_count.nil? || c < min_count
-      end
-
-      result.sort_by! {|r| r[:id]}
-
-      render json: { cloud: result, max_count: max_count, min_count: min_count }
+    def index
+      # guardian.ensure_can_use_data_explorer!
+      queries = DataExplorer::Query.all
+      render_serialized queries, DataExplorer::QuerySerializer
     end
 
     def show
-      tag_id = ::DiscourseTagging.clean_tag(params[:tag_id])
-      topics_tagged = TopicCustomField.where(name: TAGS_FIELD_NAME, value: tag_id).pluck(:topic_id)
+      query = DataExplorer::Query.find(params[:id].to_i)
 
-      page = params[:page].to_i
-
-      query = TopicQuery.new(current_user, page: page)
-      latest_results = query.latest_results.where(id: topics_tagged)
-      @list = query.create_list(:by_tag, {}, latest_results)
-      @list.more_topics_url = list_by_tag_path(tag_id: tag_id, page: page + 1)
-      @rss = "tag"
-
-      respond_with_list(@list)
-    end
-
-    def tag_feed
-      discourse_expires_in 1.minute
-
-      tag_id = ::DiscourseTagging.clean_tag(params[:tag_id])
-      @link = "#{Discourse.base_url}/tags/#{tag_id}"
-      @description = I18n.t("rss_by_tag", tag: tag_id)
-      @title = "#{SiteSetting.title} - #{@description}"
-      @atom_link = "#{Discourse.base_url}/tags/#{tag_id}.rss"
-
-      query = TopicQuery.new(current_user)
-      topics_tagged = TopicCustomField.where(name: TAGS_FIELD_NAME, value: tag_id).pluck(:topic_id)
-      latest_results = query.latest_results.where(id: topics_tagged)
-      @topic_list = query.create_list(:by_tag, {}, latest_results)
-
-      render 'list/list', formats: [:rss]
-    end
-
-    def search
-      tags = self.class.tags_by_count(guardian)
-      term = params[:q]
-      if term.present?
-        term.gsub!(/[^a-z0-9]*/, '')
-        tags = tags.where('value like ?', "%#{term}%")
+      if params[:export]
+        response.headers['Content-Disposition'] = "attachment; filename=#{query.slug}.json"
+        response.sending_file = true
+      else
+        check_xhr
       end
 
-      tags = tags.count(:value).map {|t, c| { id: t, text: t, count: c } }
-
-      render json: { results: tags }
+      # guardian.ensure_can_see! query
+      render_serialized query, DataExplorer::QuerySerializer
     end
 
-    def notifications
-      level = current_user.custom_fields[::DiscourseTagging.notification_key(params[:tag_id])] || 1
-      render json: { tag_notifications: { id: params[:tag_id], notification_level: level.to_i } }
+    # Helper endpoint for logic
+    def parse_params
+      render json: (DataExplorer.extract_params params.require(:sql))[:names]
     end
 
-    def update_notifications
-      level = params[:tag_notifications][:notification_level].to_i
+    def create
+      # guardian.ensure_can_create_explorer_query!
 
-      current_user.custom_fields[::DiscourseTagging.notification_key(params[:tag_id])] = level
-      current_user.save_custom_fields
-
-      render json: success_json
-    end
-
-    private
-
-
-      def self.tags_by_count(guardian, opts=nil)
-        opts = opts || {}
-        result = TopicCustomField.where(name: TAGS_FIELD_NAME)
-                                 .joins(:topic)
-                                 .group(:value)
-                                 .limit(opts[:limit] || 5)
-                                 .order('COUNT(topic_custom_fields.value) DESC')
-
-        guardian.filter_allowed_categories(result)
+      query = DataExplorer::Query.from_hash params.permit(:name, :sql, :defaults)
+      # Set the ID _only_ if undeleting
+      if params[:recover]
+        query.id = params[:id].to_i
       end
+      query.save
+
+      render_serialized query, DataExplorer::QuerySerializer
+    end
+
+    def update
+      query = DataExplorer::Query.find(params[:id].to_i)
+      [:name, :sql, :defaults].each do |sym|
+        query.send("#{sym}=", params[sym]) if params[sym]
+      end
+      query.save
+
+      render_serialized query, DataExplorer::QuerySerializer
+    end
+
+    def destroy
+      query = DataExplorer::Query.find(params[:id].to_i)
+      query.destroy
+    end
+
+    def run
+      query = DataExplorer::Query.find(params[:id].to_i)
+      query_params = MultiJson.load(params[:params])
+      opts = {}
+      opts[:explain] = true if params[:explain]
+      result = DataExplorer.run_query(query, query_params, opts)
+
+      if result[:error]
+        err = result[:error]
+
+        # Pretty printing logic
+        err_class = err.class
+        err_msg = err.message
+        if err.is_a? ActiveRecord::StatementInvalid
+          err_class = err.original_exception.class
+          err_msg.gsub!("#{err_class.to_s}:", '')
+        else
+          err_msg = "#{err_class}: #{err_msg}"
+        end
+
+        render json: {
+                 success: false,
+                 errors: [err_msg]
+               }
+      else
+        pg_result = result[:pg_result]
+        cols = pg_result.fields
+        json = {
+          success: true,
+          errors: [],
+          params: query_params,
+          duration: result[:duration_nanos].to_f * 1_000_000,
+          columns: cols,
+        }
+        json[:explain] = result[:explain] if opts[:explain]
+        # TODO - special serialization
+        # if cols.any? { |col_name| special_serialization? col_name }
+        #   json[:relations] = DataExplorer.add_extra_data(pg_result)
+        # end
+
+        # TODO - can we tweak this to save network traffic
+        json[:rows] = pg_result.to_a
+
+        render json: json
+      end
+    end
+  end
+
+  class DataExplorer::QuerySerializer < ActiveModel::Serializer
+    attributes :id, :sql, :name, :description, :defaults
   end
 
   DataExplorer::Engine.routes.draw do
-    get '/' => 'tags#cloud'
-    get '/filter/cloud' => 'tags#cloud'
-    get '/filter/search' => 'tags#search'
-    get '/:tag_id.rss' => 'tags#tag_feed'
-    get '/:tag_id' => 'tags#show', as: 'list_by_tag'
-    get '/:tag_id/notifications' => 'tags#notifications'
-    put '/:tag_id/notifications' => 'tags#update_notifications'
+    # GET /explorer -> explorer#index
+    # POST /explorer -> explorer#create
+    # GET /explorer/:id -> explorer#show
+    # PUT /explorer/:id -> explorer#update
+    # DELETE /explorer/:id -> explorer#destroy
+    resources :explorer
+    get 'explorer/parse_params' => "explorer#parse_params"
+    post 'explorer/:id/run' => "explorer#run"
   end
 
   Discourse::Application.routes.append do
-    mount ::DataExplorer::Engine, at: "/tags"
+    mount ::DataExplorer::Engine, at: '/admin/plugins/', constraints: AdminConstraint.new
   end
-
-  # Add a `tags` reader to the Topic model for easy reading of tags
-  add_to_class(:topic, :tags) do
-    result = custom_fields[TAGS_FIELD_NAME]
-    return [result].flatten if result
-  end
-
-  # Save the tags when the topic is saved
-  PostRevisor.track_topic_field(:tags_empty_array) do |tc, val|
-    if val.present?
-      tc.record_change(TAGS_FIELD_NAME, tc.topic.custom_fields[TAGS_FIELD_NAME], nil)
-      tc.topic.custom_fields.delete(TAGS_FIELD_NAME)
-    end
-  end
-
-  PostRevisor.track_topic_field(:tags) do |tc, tags|
-    if tags.present?
-      tags = ::DataExplorer.tags_for_saving(tags, tc.guardian)
-
-      new_tags = tags - (tc.topic.tags || [])
-      tc.record_change(TAGS_FIELD_NAME, tc.topic.custom_fields[TAGS_FIELD_NAME], tags)
-      tc.topic.custom_fields.update(TAGS_FIELD_NAME => tags)
-
-      ::DataExplorer.auto_notify_for(new_tags, tc.topic) if new_tags.present?
-    end
-  end
-
-  on(:topic_created) do |topic, params, user|
-    tags = ::DataExplorer.tags_for_saving(params[:tags], Guardian.new(user))
-    if tags.present?
-      topic.custom_fields.update(TAGS_FIELD_NAME => tags)
-      topic.save
-      ::DataExplorer.auto_notify_for(tags, topic)
-    end
-  end
-
-  add_to_class(:guardian, :can_create_tag?) do
-    user && user.has_trust_level?(SiteSetting.min_trust_to_create_tag.to_i)
-  end
-
-  # Return tag related stuff in JSON output
-  TopicViewSerializer.attributes_from_topic(:tags)
-  add_to_serializer(:site, :can_create_tag) { scope.can_create_tag? }
-  add_to_serializer(:site, :tags_filter_regexp) { TAGS_FILTER_REGEXP.source }
 
 end
 

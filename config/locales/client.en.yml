@@ -17,6 +17,9 @@
 
 en:
   js:
+    errors:
+      explorer:
+        no_semicolons: "Remove the semicolons from the query."
     tagging:
       all_tags: "All Tags"
       changed: "tags changed:"
