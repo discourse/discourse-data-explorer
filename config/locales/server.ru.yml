@@ -1,0 +1,4 @@
+ru:
+  site_settings:
+    min_trust_to_create_tag: "Минимальный уровень доверия для создания тегов."
+    max_tags_per_topic: "Максимальное количество тегов для темы."

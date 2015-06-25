@@ -1,0 +1,39 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+en:
+  js:
+    tagging:
+      all_tags: "All Tags"
+      changed: "tags changed:"
+      tags: "Tags"
+      choose_for_topic: "choose optional tags for this topic"
+      topics_tagged: "Topics tagged <span class='discourse-tag'>{{tag}}</span>"
+
+      notifications:
+        watching:
+          title: "Watching"
+          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        tracking:
+          title: "Tracking"
+          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
+        regular:
+          title: "Regular"
+          description: "You will be notified if someone mentions your @name or replies to your post."
+        muted:
+          title: "Muted"
+          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."

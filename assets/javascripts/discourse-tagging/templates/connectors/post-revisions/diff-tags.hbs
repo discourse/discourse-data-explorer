@@ -1,0 +1,13 @@
+{{#if tags_changes}}
+  <div class='row'>
+    {{i18n "tagging.changed"}}
+    {{#each t in previousTagChanges}}
+      {{discourse-tag tagId=t}}
+    {{/each}}
+    &rarr;
+    &nbsp;
+    {{#each t in currentTagChanges}}
+      {{discourse-tag tagId=t}}
+    {{/each}}
+  </div>
+{{/if}}

@@ -1,0 +1,68 @@
+
+.topic-title-outlet.choose-tags {
+  margin-left: 25px;
+  margin-top: 3px;
+}
+
+.tag-cloud {
+  .discourse-tag {
+    display: inline-block;
+    color: #333 !important;
+  }
+}
+
+.extra-info-wrapper {
+  .discourse-tag {
+    -webkit-animation: fadein .7s;
+    animation: fadein .7s;
+  }
+}
+
+
+.add-tags .select2 {
+  margin: 0;
+}
+
+.discourse-tag-count {
+  font-size: 0.8em;
+  color: #999;
+}
+
+.select2-result-label .discourse-tag {
+  margin-right: 0;
+}
+
+.discourse-tag {
+  padding: 0;
+  margin: 0 5px 0 0;
+  font-size: 0.857em;
+
+  /* !important is needed in the select2 widget to overwrite default styles */
+  color: #999 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  font-weight: bold !important;
+  line-height: 1.4em !important;
+}
+
+.list-tags {
+  display: inline;
+  margin-left: 4px;
+}
+
+.tag-chooser {
+  width: 500px;
+  margin: 5px 0;
+}
+
+.tag-notification-menu {
+  float: right;
+  margin-bottom: 10px;
+}
+.tag-notification-menu .dropdown-menu {
+  right: 0;
+  top: 30px;
+  bottom: auto;
+  left: auto;
+}

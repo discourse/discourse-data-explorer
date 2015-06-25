@@ -1,0 +1,10 @@
+<h2>{{i18n "tagging.all_tags"}}</h2>
+
+<div class='tag-cloud'>
+  {{#each tag in cloud}}
+    {{discourse-tag tagId=tag.id
+                    count=tag.count
+                    maxCount=model.max_count
+                    minCount=model.min_count}}
+  {{/each}}
+</div>
