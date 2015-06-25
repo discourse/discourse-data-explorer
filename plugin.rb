@@ -82,16 +82,16 @@ after_initialize do
           ActiveRecord::Base.exec_sql "SET TRANSACTION READ ONLY"
           # SQL comments are for the benefits of the slow queries log
           sql = <<SQL
+
 /*
-DataExplorer Query
-Query: /admin/plugins/explorer/#{query.id}
-Started by: #{opts[:current_user]}
-*/
+ * DataExplorer Query
+ * Query: /admin/plugins/explorer/#{query.id}
+ * Started by: #{opts[:current_user]}
+ */
 WITH query AS (
-
 #{query.sql}
-
 ) SELECT * FROM query
+LIMIT #{opts[:limit] || 1000}
 SQL
 
           time_start = Time.now
