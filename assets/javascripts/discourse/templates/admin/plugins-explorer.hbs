@@ -5,11 +5,13 @@
 <h3>Queries</h3>
 <table class="query-list">
   <thead>
+  <tr>
     <th class="q-name">Name</th>
     <th class="q-desc">Description</th>
+  </tr>
   </thead>
   <tbody>
-    {{#each query in content}}
+    {{#each content as |query|}}
       <tr {{action "selectItem" query}}>
         <td class="q-name">{{query.name}}</td>
         <td class="q-desc">{{query.description}}</td>

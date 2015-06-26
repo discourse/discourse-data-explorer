@@ -240,7 +240,7 @@ SQL
     def create
       # guardian.ensure_can_create_explorer_query!
 
-      query = DataExplorer::Query.from_hash params.permit(:name, :sql, :defaults)
+      query = DataExplorer::Query.from_hash params.permit(:name, :sql, :defaults, :description)
       # Set the ID _only_ if undeleting
       if params[:recover]
         query.id = params[:id].to_i
@@ -252,7 +252,7 @@ SQL
 
     def update
       query = DataExplorer::Query.find(params[:id].to_i)
-      [:name, :sql, :defaults].each do |sym|
+      [:name, :sql, :defaults, :description].each do |sym|
         query.send("#{sym}=", params[sym]) if params[sym]
       end
       query.save

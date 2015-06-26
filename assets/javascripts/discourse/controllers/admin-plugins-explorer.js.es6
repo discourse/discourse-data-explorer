@@ -1,4 +1,5 @@
 import showModal from 'discourse/lib/show-modal';
+import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/query';
 
 export default Ember.Controller.extend({
   selectedItem: null,
@@ -11,7 +12,8 @@ export default Ember.Controller.extend({
     dummy() {},
 
     create() {
-      var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
+      var newQuery = Query.create({name: this.get('newQueryName')});
+      //var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
       newQuery.save();
     },
 

@@ -2,7 +2,11 @@ import RestModel from 'discourse/models/rest';
 
 const Query = RestModel.extend({
   createProperties() {
-    return this.getProperties("name", "description");
+    return this.getProperties("name");
+  },
+
+  updateProperties() {
+    return this.getProperties("name", "description", "sql", "defaults");
   },
 
   run() {
@@ -12,4 +16,5 @@ const Query = RestModel.extend({
 
 console.log('query model loaded');
 
+Discourse.Query = Query;
 export default Query;
