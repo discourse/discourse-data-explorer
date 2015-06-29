@@ -1,6 +1,21 @@
 {{#if model}}
-  <h2>{{model.name}}</h2>
-  <div>{{model.description}}</div>
-  {{textarea value=model.sql}}
+  <div class="name">
+    {{#if editName}}
+      {{text-field value=model.name}}
+    {{else}}
+      <h2>{{model.name}}</h2>
+      {{d-button action="editName" icon="pencil" class="no-text"}}
+    {{/if}}
+  </div>
+  <div class="desc">
+    {{#if editName}}
+      {{textarea value=model.description}}
+    {{else}}
+      {{model.description}}
+    {{/if}}
+  </div>
+  <div class="sql">
+    {{textarea value=model.sql}}
+  </div>
   {{d-button action="run" label="explorer.run"}}
 {{/if}}

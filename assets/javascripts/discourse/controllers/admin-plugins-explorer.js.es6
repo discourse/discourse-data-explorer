@@ -1,7 +1,7 @@
 import showModal from 'discourse/lib/show-modal';
 import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/query';
 
-export default Ember.Controller.extend({
+export default Ember.ArrayController.extend({
   selectedItem: null,
 
   actions: {
@@ -12,9 +12,13 @@ export default Ember.Controller.extend({
     dummy() {},
 
     create() {
-      var newQuery = Query.create({name: this.get('newQueryName')});
-      //var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
-      newQuery.save();
+      const self = this;
+      var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
+      newQuery.save().then(function(result) {
+        self.pushObject(result.target);
+        self.set('selectedItem', result.target);
+        debugger;
+      });
     },
 
     importQuery() {

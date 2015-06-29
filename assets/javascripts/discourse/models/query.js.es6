@@ -14,7 +14,4 @@ const Query = RestModel.extend({
   }
 });
 
-console.log('query model loaded');
-
-Discourse.Query = Query;
 export default Query;

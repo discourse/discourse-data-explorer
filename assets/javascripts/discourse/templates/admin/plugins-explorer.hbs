@@ -1,9 +1,9 @@
+<h3>Queries</h3>
 {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
 {{d-button action="create" label="explorer.create" icon="plus"}}
 {{d-button action="importQuery" label="explorer.import.label" icon="upload" class="import-button"}}
-
-<h3>Queries</h3>
-<table class="query-list">
+<div class="query-list">
+<table>
   <thead>
   <tr>
     <th class="q-name">Name</th>
@@ -19,7 +19,12 @@
     {{/each}}
   </tbody>
 </table>
-
-{{render "admin/plugins-explorer-show" selectedItem}}
-
-{{! results }}
+</div>
+<hr>
+<div class="query-edit">
+  {{render "admin/plugins-explorer-show" selectedItem}}
+</div>
+<hr>
+<div class="query-results">
+  {{results}}
+</div>
