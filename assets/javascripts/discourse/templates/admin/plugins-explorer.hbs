@@ -1,10 +1,16 @@
 <h3>Queries</h3>
-{{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
-{{d-button action="create" label="explorer.create" icon="plus"}}
-{{d-button action="importQuery" label="explorer.import.label" icon="upload" class="import-button"}}
-
-{{combo-box valueAttribute="id" value=selectedQueryId nameProperty="name" content=content castInteger="true"}}
-
+<div class="query-list">
+  {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="name" content=content castInteger="true"}}
+  {{d-button action="showCreate" icon="plus" class="no-text"}}
+  {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
+</div>
+{{#if showCreate}}
+  <div class="query-create">
+    {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
+    {{d-button action="create" label="explorer.create" icon="plus"}}
+  </div>
+{{/if}}
+<hr>
 <div class="query-edit">
   {{partial "admin/plugins-explorer-show" model=selectedItem}}
 </div>

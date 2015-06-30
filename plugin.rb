@@ -5,7 +5,7 @@
 # url: https://github.com/discourse/discourse-data-explorer
 
 enabled_site_setting :data_explorer_enabled
-register_asset 'stylesheets/tagging.scss'
+register_asset 'stylesheets/explorer.scss'
 
 # route: /admin/plugins/explorer
 add_admin_route 'explorer.title', 'explorer'
@@ -231,7 +231,7 @@ SQL
       end
 
       # guardian.ensure_can_see! query
-      render_serialized query, DataExplorer::QuerySerializer, root: 'queries'
+      render_serialized query, DataExplorer::QuerySerializer, root: 'query'
     end
 
     # Helper endpoint for logic

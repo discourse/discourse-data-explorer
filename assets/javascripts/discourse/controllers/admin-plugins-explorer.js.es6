@@ -3,6 +3,7 @@ import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/qu
 
 export default Ember.ArrayController.extend({
   selectedQueryId: null,
+  results: null,
   dirty: false,
   loading: false,
 
@@ -25,11 +26,13 @@ export default Ember.ArrayController.extend({
     create() {
       const self = this;
       this.set('loading', true);
+      this.set('showCreate', false);
       var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
       newQuery.save().then(function(result) {
         self.pushObject(result.target);
-        self.set('selectedItem', result.target);
+        self.set('selectedQueryId', result.target.id);
         self.set('selectedItem.dirty', false);
+        self.set('results', null);
       }).finally(function() {
         self.set('loading', false);
       });
@@ -37,6 +40,11 @@ export default Ember.ArrayController.extend({
 
     importQuery() {
       showModal('import-query');
+      this.set('showCreate', false);
+    },
+
+    showCreate() {
+      this.set('showCreate', true);
     },
 
     editName() {
@@ -59,11 +67,11 @@ export default Ember.ArrayController.extend({
       const self = this;
       this.set('loading', true);
       this.store.find('query', this.get('selectedItem.id')).then(function(result) {
-        debugger;
         const query = self.get('selectedItem');
         query.setProperties(result.getProperties(Query.updatePropertyNames));
         query.markNotDirty();
         self.set('editName', false);
+        self.set('results', null);
       }).finally(function() {
         self.set('loading', false);
       });
