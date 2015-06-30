@@ -47,9 +47,13 @@ after_initialize do
     #   (The first name is $0.)
     def self.extract_params(sql)
       names = []
-      new_sql = sql.gsub(/:([a-z_]+)/) do |_|
-        names << $1
-        "$#{names.length - 1}"
+      new_sql = sql.gsub(/(:?):([a-z_]+)/) do |_|
+        if $1 == ':' # skip casts
+          $&
+        else
+          names << $1
+          "$#{names.length - 1}"
+        end
       end
       {sql: new_sql, names: names}
     end
