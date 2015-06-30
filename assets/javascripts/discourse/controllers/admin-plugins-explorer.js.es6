@@ -2,23 +2,24 @@ import showModal from 'discourse/lib/show-modal';
 import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/query';
 
 export default Ember.ArrayController.extend({
-  selectedItem: null,
+  selectedQueryId: null,
   dirty: false,
   loading: false,
 
-  markDirty: function() {
-    this.set('dirty', true);
-  }.observes('selectedItem.name', 'selectedItem.description', 'selectedItem.sql'),
+  explain: false,
+
+  saveDisabled: Ember.computed.not('selectedItem.dirty'),
+  runDisabled: Ember.computed.alias('selectedItem.dirty'),
+
+  selectedItem: function() {
+    const _id = this.get('selectedQueryId');
+    const id = parseInt(_id);
+    return this.get('content').find(function(q) {
+      return q.get('id') === id;
+    });
+  }.property('selectedQueryId'),
 
   actions: {
-    selectItem(item) {
-      this.setProperties({
-        selectedItem: item,
-        editName: false
-      });
-      this.set('dirty', false);
-    },
-
     dummy() {},
 
     create() {
@@ -28,7 +29,7 @@ export default Ember.ArrayController.extend({
       newQuery.save().then(function(result) {
         self.pushObject(result.target);
         self.set('selectedItem', result.target);
-        self.set('dirty', false);
+        self.set('selectedItem.dirty', false);
       }).finally(function() {
         self.set('loading', false);
       });
@@ -39,17 +40,16 @@ export default Ember.ArrayController.extend({
     },
 
     editName() {
-      this.setProperties({
-        editName: true,
-        dirty: true
-      });
+      this.set('editName', true);
     },
 
     save() {
       const self = this;
       this.set('loading', true);
-      this.get('selectedItem').save().then(function(result) {
-        debugger;
+      this.get('selectedItem').save().then(function() {
+        const query = self.get('selectedItem');
+        query.markNotDirty();
+        self.set('editName', false);
       }).finally(function() {
         self.set('loading', false);
       });
@@ -58,21 +58,25 @@ export default Ember.ArrayController.extend({
     discard() {
       const self = this;
       this.set('loading', true);
-      this.store.find('query', this.selectedItem.id).then(function(result) {
-        self.set('selectedItem', result);
+      this.store.find('query', this.get('selectedItem.id')).then(function(result) {
+        debugger;
+        const query = self.get('selectedItem');
+        query.setProperties(result.getProperties(Query.updatePropertyNames));
+        query.markNotDirty();
+        self.set('editName', false);
       }).finally(function() {
         self.set('loading', false);
       });
     },
 
     run() {
-      if (this.get('dirty')) {
+      if (this.get('selectedItem.dirty')) {
         self.set('results', {errors: [I18n.t('errors.explorer.dirty')]});
         return;
       }
       const self = this;
       this.set('loading', true);
-      Discourse.ajax("/admin/plugins/explorer/query/" + this.get('selectedItem.id') + "/run", {
+      Discourse.ajax("/admin/plugins/explorer/queries/" + this.get('selectedItem.id') + "/run", {
         type: "POST",
         data: {
           params: JSON.stringify({foo: 34}),

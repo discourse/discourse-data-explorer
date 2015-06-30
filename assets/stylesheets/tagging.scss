@@ -4,15 +4,19 @@
   max-height: 15em;
 }
 
-.query-edit .sql textarea {
-  width: 800px;
-  height: 100px;
-  font-family: monospace;
-  border-color: $tertiary;
-}
-
-.query-edit .desc textarea {
-  width: 200px;
+.query-edit {
+  .name h2 {
+    display: inline-block;
+  }
+  .desc textarea {
+    width: 200px;
+  }
+  .sql textarea {
+    width: 800px;
+    height: 100px;
+    font-family: monospace;
+    border-color: $tertiary;
+  }
 }
 
 .query-list, .query-edit, .query-results {

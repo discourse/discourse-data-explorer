@@ -179,7 +179,9 @@ SQL
     end
 
     def self.find(id)
-      from_hash DataExplorer.pstore_get("q:#{id}")
+      hash = DataExplorer.pstore_get("q:#{id}")
+      raise Discourse::NotFound unless hash
+      from_hash hash
     end
 
     def save
@@ -254,11 +256,11 @@ SQL
       query = DataExplorer::Query.find(params[:id].to_i)
       hash = params.require(:query)
       [:name, :sql, :defaults, :description].each do |sym|
-        query.send("#{sym}=", params[sym]) if hash[sym]
+        query.send("#{sym}=", hash[sym]) if hash[sym]
       end
       query.save
 
-      render_serialized query, DataExplorer::QuerySerializer, root: 'queries'
+      render_serialized query, DataExplorer::QuerySerializer, root: true
     end
 
     def destroy
@@ -323,12 +325,11 @@ SQL
     root to: "query#index"
     get 'queries' => "query#index"
     post 'queries' => "query#create"
-    # GET /query/:id -> explorer#show
-    # PUT /query/:id -> explorer#update
-    # DELETE /query/:id -> explorer#destroy
-    resources :query
-    get 'query/parse_params' => "query#parse_params"
-    post 'query/:id/run' => "query#run"
+    get 'queries/:id' => "query#show"
+    put 'queries/:id' => "query#update"
+    delete 'queries/:id' => "query#destroy"
+    get 'queries/parse_params' => "query#parse_params"
+    post 'queries/:id/run' => "query#run"
   end
 
   Discourse::Application.routes.append do

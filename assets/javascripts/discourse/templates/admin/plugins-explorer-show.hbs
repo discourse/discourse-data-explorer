@@ -4,7 +4,7 @@
       {{text-field value=selectedItem.name}}
     {{else}}
       <h2>{{selectedItem.name}}</h2>
-      {{d-button action="editName" icon="pencil" class="no-text"}}
+      {{d-button action="editName" icon="pencil" class="no-text btn-small"}}
     {{/if}}
   </div>
   <div class="desc">
@@ -18,6 +18,6 @@
     {{textarea value=selectedItem.sql}}
   </div>
   {{d-button action="save" label="explorer.save" disabled=saveDisabled}}
-  {{d-button action="discard" class="no-text danger" icon="trash" disabled=saveDisabled}}
+  {{d-button action="discard" class="no-text btn-danger" icon="undo" disabled=saveDisabled}}
   {{d-button action="run" label="explorer.run" disabled=runDisabled}}
 {{/if}}

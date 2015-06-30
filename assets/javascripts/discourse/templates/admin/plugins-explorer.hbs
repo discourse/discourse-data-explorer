@@ -2,25 +2,9 @@
 {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
 {{d-button action="create" label="explorer.create" icon="plus"}}
 {{d-button action="importQuery" label="explorer.import.label" icon="upload" class="import-button"}}
-<div class="query-list">
-<table>
-  <thead>
-  <tr>
-    <th class="q-name">Name</th>
-    <th class="q-desc">Description</th>
-  </tr>
-  </thead>
-  <tbody>
-    {{#each content as |query|}}
-      <tr {{action "selectItem" query}}>
-        <td class="q-name">{{query.name}}</td>
-        <td class="q-desc">{{query.description}}</td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
-</div>
-<hr>
+
+{{combo-box valueAttribute="id" value=selectedQueryId nameProperty="name" content=content castInteger="true"}}
+
 <div class="query-edit">
   {{partial "admin/plugins-explorer-show" model=selectedItem}}
 </div>
