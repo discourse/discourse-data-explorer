@@ -22,9 +22,10 @@
 </div>
 <hr>
 <div class="query-edit">
-  {{render "admin/plugins-explorer-show" selectedItem}}
+  {{partial "admin/plugins-explorer-show" model=selectedItem}}
 </div>
 <hr>
+{{conditional-loading-spinner condition=loading}}
 <div class="query-results">
   {{results}}
 </div>

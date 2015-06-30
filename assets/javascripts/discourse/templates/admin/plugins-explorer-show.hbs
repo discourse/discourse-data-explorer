@@ -1,21 +1,23 @@
-{{#if model}}
+{{#if selectedItem}}
   <div class="name">
     {{#if editName}}
-      {{text-field value=model.name}}
+      {{text-field value=selectedItem.name}}
     {{else}}
-      <h2>{{model.name}}</h2>
+      <h2>{{selectedItem.name}}</h2>
       {{d-button action="editName" icon="pencil" class="no-text"}}
     {{/if}}
   </div>
   <div class="desc">
-    {{#if editName}}
-      {{textarea value=model.description}}
+    {{#if controller.editName}}
+      {{textarea value=selectedItem.description}}
     {{else}}
-      {{model.description}}
+      {{selectedItem.description}}
     {{/if}}
   </div>
   <div class="sql">
-    {{textarea value=model.sql}}
+    {{textarea value=selectedItem.sql}}
   </div>
-  {{d-button action="run" label="explorer.run"}}
+  {{d-button action="save" label="explorer.save" disabled=saveDisabled}}
+  {{d-button action="discard" class="no-text danger" icon="trash" disabled=saveDisabled}}
+  {{d-button action="run" label="explorer.run" disabled=runDisabled}}
 {{/if}}

@@ -20,6 +20,7 @@ en:
     errors:
       explorer:
         no_semicolons: "Remove the semicolons from the query."
+        dirty: "You must save the query before running."
     explorer:
       title: "Data Explorer"
       create: "Create New"
@@ -28,4 +29,5 @@ en:
         label: "Import"
         modal: "Import A Query"
       export: "Export"
+      save: "Save Changes"
       run: "Run Query"
