@@ -31,3 +31,6 @@ en:
       export: "Export"
       save: "Save Changes"
       run: "Run Query"
+      undo: "Revert"
+      delete: "Delete"
+      recover: "Undelete Query"

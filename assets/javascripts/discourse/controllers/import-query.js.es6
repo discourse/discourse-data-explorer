@@ -1,4 +1,5 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   notReady: Em.computed.not('ready'),
@@ -30,16 +31,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         self.set('loading', false);
 
         const parentController = self.get('controllers.admin-plugins-explorer');
-        parentController.pushObject(query);
-        parentController.set('selectedItem', query);
-      }).catch(function(xhr) {
-        self.set('loading', false);
-        if (xhr.responseJSON) {
-          bootbox.alert(xhr.responseJSON.errors.join("<br>"));
-        } else {
-          bootbox.alert(I18n.t('generic_error'));
-        }
-      });
+        parentController.addCreatedRecord(query.target);
+      }).catch(popupAjaxError);
     }
   }
 

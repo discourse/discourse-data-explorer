@@ -1,5 +1,6 @@
 import showModal from 'discourse/lib/show-modal';
 import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/query';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.ArrayController.extend({
   selectedQueryId: null,
@@ -20,23 +21,15 @@ export default Ember.ArrayController.extend({
     });
   }.property('selectedQueryId'),
 
+  addCreatedRecord(record) {
+    this.pushObject(record);
+    this.set('selectedQueryId', Ember.get(record, 'id'));
+    this.get('selectedItem').set('dirty', false);
+    this.set('results', null);
+  },
+
   actions: {
     dummy() {},
-
-    create() {
-      const self = this;
-      this.set('loading', true);
-      this.set('showCreate', false);
-      var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
-      newQuery.save().then(function(result) {
-        self.pushObject(result.target);
-        self.set('selectedQueryId', result.target.id);
-        self.set('selectedItem.dirty', false);
-        self.set('results', null);
-      }).finally(function() {
-        self.set('loading', false);
-      });
-    },
 
     importQuery() {
       showModal('import-query');
@@ -51,6 +44,22 @@ export default Ember.ArrayController.extend({
       this.set('editName', true);
     },
 
+    download() {
+      window.open(this.get('selectedItem.downloadUrl'), "_blank");
+    },
+
+    create() {
+      const self = this;
+      this.set('loading', true);
+      this.set('showCreate', false);
+      var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
+      newQuery.save().then(function(result) {
+        self.addCreatedRecord(result.target);
+      }).catch(popupAjaxError).finally(function() {
+        self.set('loading', false);
+      });
+    },
+
     save() {
       const self = this;
       this.set('loading', true);
@@ -58,7 +67,7 @@ export default Ember.ArrayController.extend({
         const query = self.get('selectedItem');
         query.markNotDirty();
         self.set('editName', false);
-      }).finally(function() {
+      }).catch(popupAjaxError).finally(function() {
         self.set('loading', false);
       });
     },
@@ -72,7 +81,29 @@ export default Ember.ArrayController.extend({
         query.markNotDirty();
         self.set('editName', false);
         self.set('results', null);
-      }).finally(function() {
+      }).catch(popupAjaxError).finally(function() {
+        self.set('loading', false);
+      });
+    },
+
+    destroy() {
+      const self = this;
+      const query = this.get('selectedItem');
+      this.set('loading', true);
+      this.store.destroyRecord('query', query).then(function() {
+        query.set('destroyed', true);
+      }).catch(popupAjaxError).finally(function() {
+        self.set('loading', false);
+      });
+    },
+
+    recover() {
+      const self = this;
+      const query = this.get('selectedItem');
+      this.set('loading', true);
+      query.save().then(function() {
+        query.set('destroyed', false);
+      }).catch(popupAjaxError).finally(function() {
         self.set('loading', false);
       });
     },
@@ -93,7 +124,7 @@ export default Ember.ArrayController.extend({
       }).then(function(result) {
         console.log(result);
         self.set('results', result);
-      }).finally(function() {
+      }).catch(popupAjaxError).finally(function() {
         self.set('loading', false);
       });
     }

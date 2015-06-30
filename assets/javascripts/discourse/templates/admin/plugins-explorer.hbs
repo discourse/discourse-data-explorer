@@ -1,13 +1,13 @@
 <h3>Queries</h3>
 <div class="query-list">
-  {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="name" content=content castInteger="true"}}
+  {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" content=content castInteger="true"}}
   {{d-button action="showCreate" icon="plus" class="no-text"}}
   {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
 </div>
 {{#if showCreate}}
   <div class="query-create">
     {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
-    {{d-button action="create" label="explorer.create" icon="plus"}}
+    {{d-button action="create" label="explorer.create" icon="plus" class="btn-primary"}}
   </div>
 {{/if}}
 <hr>

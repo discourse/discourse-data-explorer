@@ -14,11 +14,18 @@
     width: 200px;
   }
   .sql textarea {
-    width: 800px;
+    width: calc(100% - 8px);
     height: 100px;
     font-family: monospace;
     border-color: $tertiary;
   }
+  .left-buttons {
+    float: left;
+  }
+  .right-buttons {
+    float: right;
+  }
+  .clear { clear: both; }
 }
 
 .query-list, .query-edit, .query-results {

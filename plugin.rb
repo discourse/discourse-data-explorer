@@ -125,6 +125,13 @@ SQL
   class DataExplorer::Query
     attr_accessor :id, :name, :description, :sql, :defaults
 
+    def initialize
+      @name = 'Unnamed Query'
+      @description = 'Enter a description here'
+      @sql = 'SELECT 1'
+      @defaults = {}
+    end
+
     def param_names
       param_info = DataExplorer.extract_params sql
       param_info[:names]
@@ -171,16 +178,19 @@ SQL
     def to_hash
       {
         id: @id,
-        name: @name || 'Query',
-        description: @description || '',
-        sql: @sql || 'SELECT 1',
-        defaults: @defaults || {},
+        name: @name,
+        description: @description,
+        sql: @sql,
+        defaults: @defaults,
       }
     end
 
-    def self.find(id)
+    def self.find(id, opts={})
       hash = DataExplorer.pstore_get("q:#{id}")
-      raise Discourse::NotFound unless hash
+      unless hash
+        return DataExplorer::Query.new if opts[:ignore_deleted]
+        raise Discourse::NotFound
+      end
       from_hash hash
     end
 
@@ -212,7 +222,6 @@ SQL
   require_dependency 'application_controller'
   class DataExplorer::QueryController < ::ApplicationController
     requires_plugin DataExplorer.plugin_name
-    skip_before_filter :check_xhr, only: [:show]
 
     def index
       # guardian.ensure_can_use_data_explorer!
@@ -220,14 +229,15 @@ SQL
       render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
     end
 
+    skip_before_filter :check_xhr, only: [:show]
     def show
+      check_xhr unless params[:export]
+
       query = DataExplorer::Query.find(params[:id].to_i)
 
       if params[:export]
-        response.headers['Content-Disposition'] = "attachment; filename=#{query.slug}.json"
+        response.headers['Content-Disposition'] = "attachment; filename=#{query.slug}.dcquery.json"
         response.sending_file = true
-      else
-        check_xhr
       end
 
       # guardian.ensure_can_see! query
@@ -243,18 +253,26 @@ SQL
       # guardian.ensure_can_create_explorer_query!
 
       query = DataExplorer::Query.from_hash params.require(:query)
-      # Set the ID _only_ if undeleting
-      if params[:recover]
-        query.id = params[:id].to_i
-      end
+      binding.pry
+      query.id = nil # json import will assign an id, which is wrong
       query.save
 
-      render_serialized query, DataExplorer::QuerySerializer, root: 'queries'
+      render_serialized query, DataExplorer::QuerySerializer, root: 'query'
     end
 
     def update
-      query = DataExplorer::Query.find(params[:id].to_i)
+      query = DataExplorer::Query.find(params[:id].to_i, ignore_deleted: true)
       hash = params.require(:query)
+
+      # Undeleting
+      unless query.id
+        if hash[:id]
+          query.id = hash[:id].to_i
+        else
+          raise Discourse::NotFound
+        end
+      end
+
       [:name, :sql, :defaults, :description].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
@@ -266,7 +284,8 @@ SQL
     def destroy
       query = DataExplorer::Query.find(params[:id].to_i)
       query.destroy
-      render nothing: true
+
+      render json: {success: true, errors: []}
     end
 
     def run
