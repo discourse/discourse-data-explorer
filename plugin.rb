@@ -276,7 +276,7 @@ SQL
       end
       query.save
 
-      render_serialized query, DataExplorer::QuerySerializer, root: true
+      render_serialized query, DataExplorer::QuerySerializer, root: 'query'
     end
 
     def destroy
@@ -290,7 +290,7 @@ SQL
       query = DataExplorer::Query.find(params[:id].to_i)
       query_params = MultiJson.load(params[:params])
       opts = {current_user: current_user.username}
-      opts[:explain] = true if params[:explain]
+      opts[:explain] = true if params[:explain] == "true"
       result = DataExplorer.run_query(query, query_params, opts)
 
       if result[:error]
@@ -340,6 +340,7 @@ SQL
 
   DataExplorer::Engine.routes.draw do
     root to: "query#index"
+
     get 'queries' => "query#index"
     post 'queries' => "query#create"
     get 'queries/:id' => "query#show"

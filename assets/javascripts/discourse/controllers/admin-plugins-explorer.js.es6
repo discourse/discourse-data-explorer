@@ -3,12 +3,13 @@ import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/qu
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.ArrayController.extend({
+  queryParams: { selectedQueryId: "id" },
   selectedQueryId: null,
   results: null,
   showResults: false,
   loading: false,
 
-  explain: false,
+  explain: true,
 
   saveDisabled: Ember.computed.not('selectedItem.dirty'),
   runDisabled: Ember.computed.alias('selectedItem.dirty'),
@@ -133,7 +134,7 @@ export default Ember.ArrayController.extend({
         type: "POST",
         data: {
           params: JSON.stringify(this.get('selectedItem.params')),
-          explain: true
+          explain: this.get('explain')
         }
       }).then(function(result) {
         if (!result.success) {

@@ -7,9 +7,13 @@
     {{duration}}
   </div>
 </div>
-{{#if hasExplain}}
-  <pre><code>{{content.explain}}</code></pre>
-{{/if}}
+
+{{~#if hasExplain}}
+  <pre><code>
+    {{~content.explain}}
+  </code></pre>
+{{~/if}}
+
 <table>
   <thead>
   <tr class="headers">

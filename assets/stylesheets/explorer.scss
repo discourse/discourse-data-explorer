@@ -28,6 +28,13 @@
   .clear { clear: both; }
 }
 
-.query-list, .query-edit, .query-results {
+.query-params {
+  border: 1px solid dark-light-diff($primary, $secondary, 60%, -20%);
+  input {
+    margin: 9px;
+  }
+}
+
+.query-list, .query-edit, .query-results, .query-params {
   margin: 10px 0;
 }

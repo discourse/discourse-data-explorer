@@ -37,3 +37,4 @@ en:
       download_json: "Save Query Results"
       run_time: "Query completed in {{value}} ms."
       column: "Column {{number}}"
+      explain_label: "Include query plan?"

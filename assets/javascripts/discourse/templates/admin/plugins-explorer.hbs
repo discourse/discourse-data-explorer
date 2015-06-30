@@ -22,6 +22,9 @@
       {{/each}}
     </div>
   {{/if}}
+  <div class="bool-options">
+    <label>{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
+  </div>
   {{d-button action="run" label="explorer.run" disabled=runDisabled}}
 </div>
 <hr>
