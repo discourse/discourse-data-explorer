@@ -51,7 +51,7 @@ after_initialize do
         if $1 == ':' # skip casts
           $&
         else
-          names << $1
+          names << $2
           "$#{names.length - 1}"
         end
       end
