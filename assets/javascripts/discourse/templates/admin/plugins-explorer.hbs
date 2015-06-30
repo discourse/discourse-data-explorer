@@ -14,8 +14,20 @@
 <div class="query-edit">
   {{partial "admin/plugins-explorer-show" model=selectedItem}}
 </div>
+<div class="query-run">
+  {{#if selectedItem.param_names}}
+    <div class="query-params">
+      {{#each selectedItem.param_names as |pname|}}
+        {{param-field params=selectedItem.params pname=pname}} {{pname}}
+      {{/each}}
+    </div>
+  {{/if}}
+  {{d-button action="run" label="explorer.run" disabled=runDisabled}}
+</div>
 <hr>
 {{conditional-loading-spinner condition=loading}}
-<div class="query-results">
-  {{results}}
-</div>
+{{#if results}}
+  <div class="query-results">
+    {{query-result query=selectedItem content=results}}
+  </div>
+{{/if}}

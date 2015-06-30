@@ -1,0 +1,26 @@
+<div class="result-info">
+  <a class="btn" id="result-download" {{bind-attr download=downloadName}} data-auto-route="true">
+    {{fa-icon "download"}}
+    {{i18n "explorer.download_json"}}
+  </a>
+  <div class="result-about">
+    {{duration}}
+  </div>
+</div>
+{{#if hasExplain}}
+  <pre><code>{{content.explain}}</code></pre>
+{{/if}}
+<table>
+  <thead>
+  <tr class="headers">
+    {{#each handler in columnHandlers}}
+      <th>{{handler.displayName}}</th>
+    {{/each}}
+  </tr>
+  </thead>
+  <tbody>
+  {{#each row in rows}}
+    {{query-row-content row=row colRenders=columnHandlers extra=content}}
+  {{/each}}
+  </tbody>
+</table>

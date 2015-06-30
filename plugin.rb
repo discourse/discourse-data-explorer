@@ -73,7 +73,7 @@ after_initialize do
         return {error: err, duration_nanos: 0}
       end
 
-      query_args = query.defaults.merge(params)
+      query_args = (query.qopts[:defaults] || {}).with_indifferent_access.merge(params)
 
       time_start, time_end, explain, err, result = nil
       begin
@@ -123,13 +123,14 @@ SQL
 
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql, :defaults
+    attr_accessor :id, :name, :description, :sql
+    attr_reader :qopts
 
     def initialize
       @name = 'Unnamed Query'
       @description = 'Enter a description here'
       @sql = 'SELECT 1'
-      @defaults = {}
+      @qopts = {}
     end
 
     def param_names
@@ -154,23 +155,26 @@ SQL
       end
     end
 
+    def qopts=(val)
+      case val
+        when String
+          @qopts = HashWithIndifferentAccess.new(MultiJson.load(val))
+        when HashWithIndifferentAccess
+          @qopts = val
+        when Hash
+          @qopts = val.with_indifferent_access
+        else
+          raise ArgumentError.new('invalid type for qopts')
+      end
+    end
+
     def self.from_hash(h)
       query = DataExplorer::Query.new
-      [:name, :description, :sql].each do |sym|
+      [:name, :description, :sql, :qopts].each do |sym|
         query.send("#{sym}=", h[sym]) if h[sym]
       end
       if h[:id]
         query.id = h[:id].to_i
-      end
-      if h[:defaults]
-        case h[:defaults]
-          when String
-            query.defaults = MultiJson.load(h[:defaults])
-          when Hash
-            query.defaults = h[:defaults]
-          else
-            raise ArgumentError.new('invalid type for :defaults')
-        end
       end
       query
     end
@@ -181,7 +185,7 @@ SQL
         name: @name,
         description: @description,
         sql: @sql,
-        defaults: @defaults,
+        qopts: @qopts.to_hash,
       }
     end
 
@@ -244,16 +248,10 @@ SQL
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
     end
 
-    # Helper endpoint for logic
-    def parse_params
-      render json: (DataExplorer.extract_params params.require(:sql))[:names]
-    end
-
     def create
       # guardian.ensure_can_create_explorer_query!
 
       query = DataExplorer::Query.from_hash params.require(:query)
-      binding.pry
       query.id = nil # json import will assign an id, which is wrong
       query.save
 
@@ -273,7 +271,7 @@ SQL
         end
       end
 
-      [:name, :sql, :defaults, :description].each do |sym|
+      [:name, :sql, :description, :qopts].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
       query.save
@@ -328,8 +326,7 @@ SQL
         #   json[:relations] = DataExplorer.add_extra_data(pg_result)
         # end
 
-        # TODO - can we tweak this to save network traffic
-        json[:rows] = pg_result.to_a
+        json[:rows] = pg_result.values
 
         render json: json
       end
@@ -337,7 +334,7 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :defaults
+    attributes :id, :sql, :name, :description, :qopts, :param_names
   end
 
   DataExplorer::Engine.routes.draw do

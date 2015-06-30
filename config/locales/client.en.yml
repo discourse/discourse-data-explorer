@@ -34,3 +34,6 @@ en:
       undo: "Revert"
       delete: "Delete"
       recover: "Undelete Query"
+      download_json: "Save Query Results"
+      run_time: "Query completed in {{value}} ms."
+      column: "Column {{number}}"

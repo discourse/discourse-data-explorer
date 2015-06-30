@@ -5,7 +5,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 export default Ember.ArrayController.extend({
   selectedQueryId: null,
   results: null,
-  dirty: false,
+  showResults: false,
   loading: false,
 
   explain: false,
@@ -21,10 +21,16 @@ export default Ember.ArrayController.extend({
     });
   }.property('selectedQueryId'),
 
+  clearResults: function() {
+    this.set('showResults', false);
+    this.set('results', null);
+  }.observes('selectedQueryId'),
+
   addCreatedRecord(record) {
     this.pushObject(record);
     this.set('selectedQueryId', Ember.get(record, 'id'));
     this.get('selectedItem').set('dirty', false);
+    this.set('showResults', false);
     this.set('results', null);
   },
 
@@ -46,6 +52,14 @@ export default Ember.ArrayController.extend({
 
     download() {
       window.open(this.get('selectedItem.downloadUrl'), "_blank");
+    },
+
+    resetParams() {
+      this.get('selectedItem').resetParams();
+    },
+
+    saveDefaults() {
+      this.get('selectedItem').saveDefaults();
     },
 
     create() {
@@ -109,20 +123,25 @@ export default Ember.ArrayController.extend({
     },
 
     run() {
+      const self = this;
       if (this.get('selectedItem.dirty')) {
-        self.set('results', {errors: [I18n.t('errors.explorer.dirty')]});
         return;
       }
-      const self = this;
+
       this.set('loading', true);
       Discourse.ajax("/admin/plugins/explorer/queries/" + this.get('selectedItem.id') + "/run", {
         type: "POST",
         data: {
-          params: JSON.stringify({foo: 34}),
+          params: JSON.stringify(this.get('selectedItem.params')),
           explain: true
         }
       }).then(function(result) {
+        if (!result.success) {
+          return popupAjaxError(result);
+        }
+
         console.log(result);
+        self.set('showResults', true);
         self.set('results', result);
       }).catch(popupAjaxError).finally(function() {
         self.set('loading', false);
