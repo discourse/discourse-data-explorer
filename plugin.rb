@@ -1,6 +1,6 @@
 # name: discourse-data-explorer
 # about: Interface for running analysis SQL queries on the live database
-# version: 0.1
+# version: 0.2
 # authors: Riking
 # url: https://github.com/discourse/discourse-data-explorer
 
@@ -322,6 +322,7 @@ SQL
         }
         json[:explain] = result[:explain] if opts[:explain]
         # TODO - special serialization
+        # This is dead code in the client right now
         # if cols.any? { |col_name| special_serialization? col_name }
         #   json[:relations] = DataExplorer.add_extra_data(pg_result)
         # end
