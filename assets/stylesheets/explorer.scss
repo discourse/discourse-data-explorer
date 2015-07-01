@@ -1,12 +1,6 @@
 .https-warning {
   color: $danger;
 }
-.query-list {
-  margin: 10px 0;
-}
-.query-create {
-  margin: 10px 0;
-}
 
 .query-edit {
   .name h2 {
@@ -14,6 +8,9 @@
   }
   .desc textarea {
     width: 200px;
+  }
+  &:not(.editing) .desc {
+    margin: 10px 0;
   }
   .sql textarea {
     width: calc(100% - 8px);
@@ -49,6 +46,6 @@
   }
 }
 
-.query-list, .query-edit, .query-results, .query-params, .https-warning {
+.query-list, .query-create, .query-edit, .query-results, .query-params, .https-warning {
   margin: 10px 0;
 }
