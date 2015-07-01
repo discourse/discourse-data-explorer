@@ -1,24 +1,38 @@
-<h3>Queries</h3>
+<h2>Queries</h2>
+
 <div class="query-list">
   {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" content=content castInteger="true" nameChanges="true"}}
   {{d-button action="showCreate" icon="plus" class="no-text"}}
   {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
 </div>
+
 {{#if showCreate}}
   <div class="query-create">
     {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
     {{d-button action="create" label="explorer.create" icon="plus" class="btn-primary"}}
   </div>
 {{/if}}
+
 <hr>
+
 <div class="query-edit">
   {{partial "admin/plugins-explorer-show" model=selectedItem}}
 </div>
+
+{{conditional-loading-spinner condition=loading}}
+
 <div class="query-run">
   {{#if selectedItem.param_names}}
     <div class="query-params">
+      <div class="param-save">
+        {{d-button action="saveDefaults" label="explorer.save_params"}}
+        {{d-button action="resetParams" label="explorer.reset_params"}}
+      </div>
       {{#each selectedItem.param_names as |pname|}}
-        {{param-field params=selectedItem.params pname=pname}} {{pname}}
+        <div class="param">
+        {{param-field params=selectedItem.params pname=pname}}
+        <span class="param-name">{{pname}}</span>
+        </div>
       {{/each}}
     </div>
   {{/if}}
@@ -27,10 +41,17 @@
   </div>
   {{d-button action="run" label="explorer.run" disabled=runDisabled}}
 </div>
+
 <hr>
-{{conditional-loading-spinner condition=loading}}
+
 {{#if results}}
   <div class="query-results">
-    {{query-result query=selectedItem content=results}}
+    {{#if showResults}}
+      {{query-result query=selectedItem content=results}}
+    {{else}}
+      {{#each results.errors as |err|}}
+        <pre class="query-error"><code>{{~err}}</code></pre>
+      {{/each}}
+    {{/if}}
   </div>
 {{/if}}

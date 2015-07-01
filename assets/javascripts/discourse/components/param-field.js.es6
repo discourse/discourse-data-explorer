@@ -4,5 +4,5 @@ export default Ember.TextField.extend({
       this.get('params')[this.get('pname')] = value;
     }
     return this.get('params')[this.get('pname')];
-  }.property()
+  }.property('params', 'pname')
 });

@@ -137,14 +137,17 @@ export default Ember.ArrayController.extend({
           explain: this.get('explain')
         }
       }).then(function(result) {
+        self.set('results', result);
         if (!result.success) {
-          return popupAjaxError(result);
+          self.set('showResults', false);
+          return;
         }
 
-        console.log(result);
         self.set('showResults', true);
+      }).catch(function(result) {
+        self.set('showResults', false);
         self.set('results', result);
-      }).catch(popupAjaxError).finally(function() {
+      }).finally(function() {
         self.set('loading', false);
       });
     }

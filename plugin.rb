@@ -79,6 +79,15 @@ after_initialize do
 
       query_args = (query.qopts[:defaults] || {}).with_indifferent_access.merge(params)
 
+      # Rudimentary types
+      query_args.map! do |arg|
+        if arg =~ /\A\d+\z/
+          arg.to_i
+        else
+          arg
+        end
+      end
+
       time_start, time_end, explain, err, result = nil
       begin
         ActiveRecord::Base.connection.transaction do
@@ -89,7 +98,7 @@ after_initialize do
 
 /*
  * DataExplorer Query
- * Query: /admin/plugins/explorer/#{query.id}
+ * Query: /admin/plugins/explorer?id=#{query.id}
  * Started by: #{opts[:current_user]}
  */
 WITH query AS (
@@ -290,11 +299,20 @@ SQL
       render json: {success: true, errors: []}
     end
 
+    # Return value:
+    # success - true/false. if false, inspect the errors value.
+    # errors - array of strings.
+    # params - hash. Echo of the query parameters as executed.
+    # duration - float. Time to execute the query, in milliseconds, to 1 decimal place.
+    # columns - array of strings. Titles of the returned columns, in order.
+    # explain - string. (Optional - pass explain=true in the request) Postgres query plan, UNIX newlines.
+    # rows - array of array of strings. Results of the query. In the same order as 'columns'.
     def run
       query = DataExplorer::Query.find(params[:id].to_i)
       query_params = MultiJson.load(params[:params])
       opts = {current_user: current_user.username}
       opts[:explain] = true if params[:explain] == "true"
+      opts[:limit] = params[:limit].to_i if params[:limit]
       result = DataExplorer.run_query(query, query_params, opts)
 
       if result[:error]
@@ -320,7 +338,6 @@ SQL
         json = {
           success: true,
           errors: [],
-          params: query_params,
           duration: (result[:duration_nanos].to_f / 1_000_000).round(1),
           columns: cols,
         }

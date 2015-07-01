@@ -5,9 +5,19 @@ Query = RestModel.extend({
   dirty: false,
   params: {},
 
+  _init: function() {
+    this._super();
+    if (!this.get('options')) {
+      this.set('options', {defaults:{}});
+    }
+    this.set('dirty', false);
+  }.on('init'),
+
   _initParams: function() {
     this.resetParams();
   }.on('init').observes('param_names'),
+
+  options: Em.computed.alias('qopts'),
 
   markDirty: function() {
     this.set('dirty', true);
@@ -37,7 +47,11 @@ Query = RestModel.extend({
     const currentParams = this.get('params');
     let defaults = {};
     (this.get('param_names') || []).forEach(function(name) {
-      defaults[name] = currentParams[name];
+      if (currentParams[name]) {
+        defaults[name] = currentParams[name];
+      } else {
+        delete defaults[name];
+      }
     });
     this.set('options.defaults', defaults);
   },
@@ -80,7 +94,7 @@ Query = RestModel.extend({
 });
 
 Query.reopenClass({
-  updatePropertyNames: ["name", "description", "sql", "options"]
+  updatePropertyNames: ["name", "description", "sql", "qopts"]
 });
 
 export default Query;

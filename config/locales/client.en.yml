@@ -38,3 +38,5 @@ en:
       run_time: "Query completed in {{value}} ms."
       column: "Column {{number}}"
       explain_label: "Include query plan?"
+      save_params: "Set Defaults"
+      reset_params: "Reset"
