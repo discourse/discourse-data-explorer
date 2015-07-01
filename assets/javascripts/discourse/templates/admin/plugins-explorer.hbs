@@ -1,5 +1,12 @@
 <h2>Queries</h2>
 
+{{#if not_https}}
+  <div class="https-warning">
+    {{fa-icon "warning"}}
+    {{i18n "explorer.https_warning"}}
+  </div>
+{{/if}}
+
 <div class="query-list">
   {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" content=content castInteger="true" nameChanges="true"}}
   {{d-button action="showCreate" icon="plus" class="no-text"}}
@@ -18,8 +25,6 @@
 <div class="query-edit">
   {{partial "admin/plugins-explorer-show" model=selectedItem}}
 </div>
-
-{{conditional-loading-spinner condition=loading}}
 
 <div class="query-run">
   {{#if selectedItem.param_names}}
@@ -43,6 +48,8 @@
 </div>
 
 <hr>
+
+{{conditional-loading-spinner condition=loading}}
 
 {{#if results}}
   <div class="query-results">

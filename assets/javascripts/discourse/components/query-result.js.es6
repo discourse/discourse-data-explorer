@@ -46,8 +46,8 @@ const QueryResultComponent = Ember.Component.extend({
 
   columnHandlers: function() {
     const self = this;
-    if (!this.get('content')) {
-      return;
+    if (!this.get('columns')) {
+      return [];
     }
     if (self.get('opts.notransform')) {
       return this.get('columns').map(function(colName) {

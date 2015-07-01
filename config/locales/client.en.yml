@@ -40,3 +40,4 @@ en:
       explain_label: "Include query plan?"
       save_params: "Set Defaults"
       reset_params: "Reset"
+      https_warning: "Use of the Data Explorer on sites not protected by HTTPS is discouraged. Please be careful to not retrieve sensitive information over insecure links."

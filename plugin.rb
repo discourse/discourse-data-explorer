@@ -80,11 +80,9 @@ after_initialize do
       query_args = (query.qopts[:defaults] || {}).with_indifferent_access.merge(params)
 
       # Rudimentary types
-      query_args.map! do |arg|
+      query_args.each do |k, arg|
         if arg =~ /\A\d+\z/
-          arg.to_i
-        else
-          arg
+          query_args[k] = arg.to_i
         end
       end
 

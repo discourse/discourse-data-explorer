@@ -1,4 +1,6 @@
-
+.https-warning {
+  color: $danger;
+}
 .query-list {
   margin: 10px 0;
 }
@@ -47,6 +49,6 @@
   }
 }
 
-.query-list, .query-edit, .query-results, .query-params {
+.query-list, .query-edit, .query-results, .query-params, .https-warning {
   margin: 10px 0;
 }

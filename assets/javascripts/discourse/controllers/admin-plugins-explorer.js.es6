@@ -35,6 +35,14 @@ export default Ember.ArrayController.extend({
     this.set('results', null);
   },
 
+  not_https: function() {
+    return !(
+      window.location.protocol === "https:" ||
+      window.location.hostname === "localhost" ||
+      window.location.hostname.endsWith(".local")
+    );
+  }.property(),
+
   actions: {
     dummy() {},
 
