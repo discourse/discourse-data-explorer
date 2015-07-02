@@ -2,10 +2,11 @@ import showModal from 'discourse/lib/show-modal';
 import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/query';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
+const NoQuery = Query.create({name: "No queries", fake: true});
+
 export default Ember.ArrayController.extend({
   queryParams: { selectedQueryId: "id" },
   selectedQueryId: null,
-  results: null,
   showResults: false,
   loading: false,
 
@@ -17,15 +18,13 @@ export default Ember.ArrayController.extend({
   selectedItem: function() {
     const _id = this.get('selectedQueryId');
     const id = parseInt(_id);
-    return this.get('content').find(function(q) {
+    const item = this.get('content').find(function(q) {
       return q.get('id') === id;
     });
+    return item || NoQuery;
   }.property('selectedQueryId'),
 
-  clearResults: function() {
-    this.set('showResults', false);
-    this.set('results', null);
-  }.observes('selectedQueryId'),
+  results: Em.computed.alias('selectedItem.results'),
 
   addCreatedRecord(record) {
     this.pushObject(record);
@@ -103,7 +102,6 @@ export default Ember.ArrayController.extend({
         query.setProperties(result.getProperties(Query.updatePropertyNames));
         query.markNotDirty();
         self.set('editName', false);
-        self.set('results', null);
       }).catch(popupAjaxError).finally(function() {
         self.set('loading', false);
       });
@@ -138,6 +136,7 @@ export default Ember.ArrayController.extend({
       }
 
       this.set('loading', true);
+      this.set('showResults', false);
       Discourse.ajax("/admin/plugins/explorer/queries/" + this.get('selectedItem.id') + "/run", {
         type: "POST",
         data: {

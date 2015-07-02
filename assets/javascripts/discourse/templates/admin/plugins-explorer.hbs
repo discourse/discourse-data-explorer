@@ -22,43 +22,47 @@
 
 <hr>
 
-<div class="query-edit {{if editName "editing"}}">
-  {{partial "admin/plugins-explorer-show" model=selectedItem}}
-</div>
+{{#if selectedItem.fake}}
+  {{i18n "explorer.no_queries"}} <a {{action "showCreate"}}>{{i18n "explorer.no_queries_hook"}}</a>
+{{else}}
+  <div class="query-edit {{if editName "editing"}}">
+    {{partial "admin/plugins-explorer-show" model=selectedItem}}
+  </div>
 
-<div class="query-run">
-  {{#if selectedItem.param_names}}
-    <div class="query-params">
-      <div class="param-save">
-        {{d-button action="saveDefaults" label="explorer.save_params"}}
-        {{d-button action="resetParams" label="explorer.reset_params"}}
-      </div>
-      {{#each selectedItem.param_names as |pname|}}
-        <div class="param">
-        {{param-field params=selectedItem.params pname=pname}}
-        <span class="param-name">{{pname}}</span>
+  <div class="query-run">
+    {{#if selectedItem.param_names}}
+      <div class="query-params">
+        <div class="param-save">
+          {{d-button action="saveDefaults" label="explorer.save_params"}}
+          {{d-button action="resetParams" label="explorer.reset_params"}}
         </div>
-      {{/each}}
+        {{#each selectedItem.param_names as |pname|}}
+          <div class="param">
+            {{param-field params=selectedItem.params pname=pname}}
+            <span class="param-name">{{pname}}</span>
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+    <div class="bool-options">
+      <label>{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
+    </div>
+    {{d-button action="run" label="explorer.run" disabled=runDisabled}}
+  </div>
+
+  <hr>
+{{/if}}
+{{conditional-loading-spinner condition=loading}}
+{{#unless selectedItem.fake}}
+  {{#if results}}
+    <div class="query-results">
+      {{#if showResults}}
+        {{query-result query=selectedItem content=results}}
+      {{else}}
+        {{#each results.errors as |err|}}
+          <pre class="query-error"><code>{{~err}}</code></pre>
+        {{/each}}
+      {{/if}}
     </div>
   {{/if}}
-  <div class="bool-options">
-    <label>{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
-  </div>
-  {{d-button action="run" label="explorer.run" disabled=runDisabled}}
-</div>
-
-<hr>
-
-{{conditional-loading-spinner condition=loading}}
-
-{{#if results}}
-  <div class="query-results">
-    {{#if showResults}}
-      {{query-result query=selectedItem content=results}}
-    {{else}}
-      {{#each results.errors as |err|}}
-        <pre class="query-error"><code>{{~err}}</code></pre>
-      {{/each}}
-    {{/if}}
-  </div>
-{{/if}}
+{{/unless}}

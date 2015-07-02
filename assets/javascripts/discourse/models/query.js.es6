@@ -4,6 +4,7 @@ let Query;
 Query = RestModel.extend({
   dirty: false,
   params: {},
+  results: null,
 
   _init: function() {
     this._super();
