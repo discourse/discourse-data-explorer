@@ -85,6 +85,9 @@ after_initialize do
           query_args[k] = arg.to_i
         end
       end
+      # If we don't include this, then queries with a % sign in them fail
+      # because AR thinks we want percent-based parametes
+      query_args[:xxdummy] = 1
 
       time_start, time_end, explain, err, result = nil
       begin
@@ -98,6 +101,7 @@ after_initialize do
  * DataExplorer Query
  * Query: /admin/plugins/explorer?id=#{query.id}
  * Started by: #{opts[:current_user]}
+ * :xxdummy
  */
 WITH query AS (
 #{query.sql}
@@ -110,7 +114,7 @@ SQL
           time_end = Time.now
 
           if opts[:explain]
-            explain = ActiveRecord::Base.exec_sql("EXPLAIN #{query.sql}", query_args)
+            explain = ActiveRecord::Base.exec_sql("-- :xxdummy \nEXPLAIN #{query.sql}", query_args)
                         .map { |row| row["QUERY PLAN"] }.join "\n"
           end
 
