@@ -1,7 +1,6 @@
 import RestModel from 'discourse/models/rest';
 
-let Query;
-Query = RestModel.extend({
+const Query = RestModel.extend({
   dirty: false,
   params: {},
   results: null,
@@ -18,6 +17,8 @@ Query = RestModel.extend({
     this.resetParams();
   }.on('init').observes('param_names'),
 
+  // the server uses 'qopts' and the client uses 'options' due to ActiveRecord
+  // freaking out if a serialized value is named 'options'
   options: Em.computed.alias('qopts'),
 
   markDirty: function() {
@@ -29,14 +30,14 @@ Query = RestModel.extend({
   },
 
   resetParams() {
-    let newParams = {};
-    let defaults = this.get('options.defaults');
-    if (!defaults) {
-      defaults = {};
-    }
+    const newParams = {};
+    const oldParams = this.get('params');
+    const defaults = this.get('options.defaults') || {};
     (this.get('param_names') || []).forEach(function(name) {
       if (defaults[name]) {
         newParams[name] = defaults[name];
+      } else if (oldParams[name]) {
+        newParams[name] = oldParams[name];
       } else {
         newParams[name] = '';
       }
