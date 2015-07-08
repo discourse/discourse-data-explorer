@@ -28,6 +28,11 @@ en:
       import:
         label: "Import"
         modal: "Import A Query"
+      schema:
+        title: "Database Schema"
+        filter: "Search..."
+        sensitive: "The contents of this column may contain particularly sensitive or private information."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html' target='_blank'>Types explanation</a>"
       export: "Export"
       save: "Save Changes"
       run: "Run Query"

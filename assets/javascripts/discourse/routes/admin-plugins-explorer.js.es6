@@ -4,6 +4,17 @@ export default Discourse.Route.extend({
   queryParams: { id: { replace: true } },
 
   model() {
-    return this.store.findAll('query');
+    const p1 = this.store.findAll('query');
+    const p2 = Discourse.ajax('/admin/plugins/explorer/schema.json', {cache: true});
+    return p1.then(function(model) {
+      return p2.then(function(schema) {
+        return { content: model, schema: schema };
+      });
+    });
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model.content);
+    controller.set('schema', model.schema);
   }
 });

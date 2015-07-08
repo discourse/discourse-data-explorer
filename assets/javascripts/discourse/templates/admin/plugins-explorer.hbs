@@ -26,7 +26,7 @@
   {{i18n "explorer.no_queries"}} <a {{action "showCreate"}}>{{i18n "explorer.no_queries_hook"}}</a>
 {{else}}
   <div class="query-edit {{if editName "editing"}}">
-    {{partial "admin/plugins-explorer-show" model=selectedItem}}
+    {{partial "admin/plugins-explorer-show" model=selectedItem schema=schema}}
   </div>
 
   <div class="query-run">

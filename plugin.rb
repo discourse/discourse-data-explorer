@@ -37,7 +37,8 @@ after_initialize do
       isolate_namespace DataExplorer
     end
 
-    class ValidationError < StandardError; end
+    class ValidationError < StandardError;
+    end
 
     # Extract :colon-style parameters from the SQL query and replace them with
     # $1-style parameters.
@@ -134,6 +135,97 @@ SQL
       }
     end
 
+    def self.sensitive_column_names
+      %w(
+#_IP_Addresses
+topic_views.ip_address
+users.ip_address
+users.registration_ip_address
+incoming_links.ip_address
+topic_link_clicks.ip_address
+user_histories.ip_address
+
+#_Emails
+email_tokens.email
+users.email
+invites.email
+user_histories.email
+email_logs.to_address
+posts.raw_email
+badge_posts.raw_email
+
+#_Secret_Tokens
+email_tokens.token
+email_logs.reply_key
+api_keys.key
+site_settings.value
+
+users.password_hash
+users.salt
+
+#_Authentication_Info
+user_open_ids.email
+oauth2_user_infos.uid
+oauth2_user_infos.email
+facebook_user_infos.facebook_user_id
+facebook_user_infos.email
+twitter_user_infos.twitter_user_id
+github_user_infos.github_user_id
+single_sign_on_records.external_email
+single_sign_on_records.external_id
+google_user_infos.google_user_id
+google_user_infos.email
+      )
+    end
+
+    def self.schema
+      # refer user to http://www.postgresql.org/docs/9.3/static/datatype.html
+      @schema ||= begin
+        results = ActiveRecord::Base.exec_sql <<SQL
+select column_name, data_type, character_maximum_length, is_nullable, column_default, table_name
+from INFORMATION_SCHEMA.COLUMNS where table_schema = 'public'
+SQL
+        by_table = {}
+        # Massage the results into a nicer form
+        results.each do |hash|
+          if hash['is_nullable'] == "YES"
+            hash['is_nullable'] = true
+          else
+            hash.delete('is_nullable')
+          end
+          clen = hash.delete 'character_maximum_length'
+          dt = hash['data_type']
+          if dt == 'character varying'
+            hash['data_type'] = "varchar(#{clen.to_i})"
+          elsif dt == 'timestamp without time zone'
+            hash['data_type'] = 'timestamp'
+          elsif dt == 'double precision'
+            hash['data_type'] = 'double'
+          end
+          default = hash['column_default']
+          if default.nil? || default =~ /^nextval\(/
+            hash.delete 'column_default'
+          elsif default =~ /^'(.*)'::(character varying|text)/
+            hash['column_default'] = $1
+          end
+
+          if sensitive_column_names.include? "#{hash['table_name']}.#{hash['column_name']}"
+            hash['sensitive'] = true
+          end
+
+          tname = hash.delete('table_name')
+          by_table[tname] ||= []
+          by_table[tname] << hash
+        end
+
+        # this works for now, but no big loss if the tables aren't quite sorted
+        sorted_by_table = {}
+        by_table.keys.sort.each do |tbl|
+          sorted_by_table[tbl] = by_table[tbl]
+        end
+        sorted_by_table
+      end
+    end
   end
 
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
@@ -230,9 +322,9 @@ SQL
 
     def self.all
       PluginStoreRow.where(plugin_name: DataExplorer.plugin_name)
-                    .where("key LIKE 'q:%'")
-                    .where("key != 'q:_id'")
-                    .map do |psr|
+        .where("key LIKE 'q:%'")
+        .where("key != 'q:_id'")
+        .map do |psr|
         DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
       end
     end
@@ -242,6 +334,12 @@ SQL
   class DataExplorer::QueryController < ::ApplicationController
     requires_plugin DataExplorer.plugin_name
 
+    before_filter :check_enabled
+
+    def check_enabled
+      raise Discourse::NotFound unless SiteSetting.data_explorer_enabled?
+    end
+
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
@@ -249,6 +347,7 @@ SQL
     end
 
     skip_before_filter :check_xhr, only: [:show]
+
     def show
       check_xhr unless params[:export]
 
@@ -299,6 +398,13 @@ SQL
       query.destroy
 
       render json: {success: true, errors: []}
+    end
+
+    def schema
+      schema_version = ActiveRecord::Base.exec_sql("SELECT max(version) AS tag FROM schema_migrations").first['tag']
+      if stale?(public: true, etag: schema_version)
+        render json: DataExplorer.schema
+      end
     end
 
     # Return value:
@@ -363,7 +469,7 @@ SQL
 
   DataExplorer::Engine.routes.draw do
     root to: "query#index"
-
+    get 'schema' => "query#schema"
     get 'queries' => "query#index"
     post 'queries' => "query#create"
     get 'queries/:id' => "query#show"

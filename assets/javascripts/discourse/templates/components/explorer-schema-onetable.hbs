@@ -1,0 +1,35 @@
+<div class="schema-table-name">
+  {{#if table.open}}
+    <i class="fa fa-caret-down"></i>
+  {{else}}
+    <i class="fa fa-caret-right"></i>
+  {{/if}}
+  {{table.name}}
+</div>
+<div class="schema-table-cols">
+  {{#if table.open}}
+    {{#each table.columns as |col|}}
+      <div class="schema-table-col">
+        {{#if col.sensitive}}
+          <span class="schema-colname sensitive" title="{{i18n "explorer.schema.sensitive"}}">
+            <i class="fa fa-warning"></i>
+            {{col.column_name}}
+          </span>
+        {{else}}
+          <span class="schema-colname" >
+            {{col.column_name}}
+          </span>
+        {{/if}}
+        <span class="schema-type">
+          {{col.data_type}}
+
+          {{#if col.notes}}
+            <span class="schema-typenotes">
+              {{col.notes}}
+            </span>
+          {{/if}}
+        </span>
+      </div>
+    {{/each}}
+  {{/if}}
+</div>
