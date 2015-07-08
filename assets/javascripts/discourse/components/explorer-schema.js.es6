@@ -47,7 +47,7 @@ export default Ember.Component.extend({
         tables.push({
           name: key,
           columns: schema[key],
-          open: haveFilter
+          open: false
         });
         continue;
       }

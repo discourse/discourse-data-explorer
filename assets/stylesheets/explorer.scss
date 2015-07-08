@@ -2,6 +2,89 @@
   color: $danger;
 }
 
+.query-editor {
+  border: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+  margin-bottom: 15px;
+  .editor-panel {
+    float: left;
+    width: 65%;
+
+    .sql textarea {
+      padding: 4px;
+      height: calc(400px - 8px - 2px);
+      width: 100%;
+      font-family: monospace;
+      box-shadow: none;
+      border: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+      margin: 0;
+      border-radius: 0;
+      transition: initial;
+    }
+  }
+  .right-panel {
+    float: right;
+    width: calc(35% - 10px);
+    .schema {
+      border-left: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+      height: 400px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      color: dark-light-diff($primary, $secondary, 20%, -20%);
+      font-size: 11px;
+
+      .schema-table-name {
+        font-weight: bold;
+        border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+        padding-left: 5px;
+        .fa {
+          width: 6px;
+        }
+      }
+      ul {
+        list-style-type: none;
+        margin: 0;
+      }
+      dl {
+        margin: 0;
+      }
+      dl > div > * {
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+      dl > div {
+        clear:both;
+      }
+      dt {
+        display: inline-block;
+        vertical-align: text-top;
+        overflow-wrap: break-word;
+        width: 110px;
+        margin-left: 5px;
+        &.sensitive {
+          color: $danger;
+        }
+      }
+      dd {
+        display: inline-block;
+        vertical-align: text-top;
+        width: 70px;
+        color: $tertiary;
+        margin: 0;
+        padding-left: 7px;
+        border-left: 1px dotted dark-light-diff($primary, $secondary, 80%, -20%);
+
+        .schema-typenotes {
+          color: dark-light-diff($primary, $secondary, 50%, -20%);
+          font-style: italic;
+        }
+      }
+    }
+  }
+  .grippie {
+    clear: both;
+  }
+}
+
 .query-edit {
   .name h2 {
     display: inline-block;
@@ -12,75 +95,18 @@
   &:not(.editing) .desc {
     margin: 10px 0;
   }
-  .sql textarea {
-    width: 500px;
-    height: 350px;
-    font-family: monospace;
-    border-color: $tertiary;
-  }
-  .clear { clear: both; }
 }
 
-.schema {
-  border: 1px solid black;
-  overflow-y: scroll;
-  > div {
-    width: 306px;
-  }
-  max-height: 400px;
+.clear { clear: both; }
 
-  margin-bottom: 10px;
-}
 .schema-title {
   display: block;
   margin: auto;
-  text-align: center;
 }
 .schema input {
   padding: 4px;
   margin: 3px;
   width: calc(100% - 7px - 7px - 1px);
-}
-.schema .schema-table:first-child {
-  border-top: 1px solid;
-}
-.schema-table-name {
-  background: dark-light-diff($primary, $secondary, 80%, -20%);
-  border-color: dark-light-diff($primary, $secondary, 60%, -20%);
-  font-weight: bold;
-  border-bottom: 1px solid;
-  padding-left: 5px;
-}
-.schema-table-cols {
-
-}
-.schema-table-col {
-  background: $secondary;
-  border-color: dark-light-diff($primary, $secondary, 60%, -20%);
-  border-bottom: 1px solid;
-  padding-left: 10px;
-}
-.schema-colname {
-  font-weight: bold;
-
-  display: inline-block;
-  width: 150px;
-  word-wrap: break-word;
-  vertical-align: text-top;
-  background: dark-light-diff($primary, $secondary, 98%, -20%);
-
-  &.sensitive {
-    color: $danger;
-  }
-}
-.schema-type {
-  display: inline-block;
-  max-width: 140px;
-  vertical-align: text-top;
-}
-.schema-typenotes {
-  color: dark-light-diff($primary, $secondary, 50%, -20%);
-  font-style: italic;
 }
 
 .query-params {

@@ -10,7 +10,7 @@ export default Ember.ArrayController.extend({
   showResults: false,
   loading: false,
 
-  explain: true,
+  explain: false,
 
   saveDisabled: Ember.computed.not('selectedItem.dirty'),
   runDisabled: Ember.computed.alias('selectedItem.dirty'),
@@ -42,6 +42,21 @@ export default Ember.ArrayController.extend({
     );
   }.property(),
 
+  save() {
+    const self = this;
+    this.set('loading', true);
+    return this.get('selectedItem').save().then(function() {
+      const query = self.get('selectedItem');
+      query.markNotDirty();
+      self.set('editName', false);
+    }).catch(function(x) {
+      popupAjaxError(x);
+      throw x;
+    }).finally(function() {
+      self.set('loading', false);
+    });
+  },
+
   actions: {
     dummy() {},
 
@@ -70,6 +85,14 @@ export default Ember.ArrayController.extend({
       this.get('selectedItem').saveDefaults();
     },
 
+    save() {
+      this.save();
+    },
+
+    saverun() {
+      this.save().then(() => this.send('run'));
+    },
+
     create() {
       const self = this;
       this.set('loading', true);
@@ -77,18 +100,6 @@ export default Ember.ArrayController.extend({
       var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
       newQuery.save().then(function(result) {
         self.addCreatedRecord(result.target);
-      }).catch(popupAjaxError).finally(function() {
-        self.set('loading', false);
-      });
-    },
-
-    save() {
-      const self = this;
-      this.set('loading', true);
-      this.get('selectedItem').save().then(function() {
-        const query = self.get('selectedItem');
-        query.markNotDirty();
-        self.set('editName', false);
       }).catch(popupAjaxError).finally(function() {
         self.set('loading', false);
       });

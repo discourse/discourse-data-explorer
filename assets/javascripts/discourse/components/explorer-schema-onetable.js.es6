@@ -1,5 +1,6 @@
 export default Ember.Component.extend({
   classNameBindings: [':schema-table', 'open'],
+  tagName: 'li',
 
   open: Em.computed.alias('table.open'),
 

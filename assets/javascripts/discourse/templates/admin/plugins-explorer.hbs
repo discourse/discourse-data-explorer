@@ -47,7 +47,15 @@
     <div class="bool-options">
       <label>{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
     </div>
-    {{d-button action="run" label="explorer.run" disabled=runDisabled}}
+    {{#if runDisabled}}
+      {{#if saveDisabled}}
+        {{d-button label="explorer.run" disabled="true" class="btn-primary"}}
+      {{else}}
+        {{d-button action="saverun" label="explorer.saverun"}}
+      {{/if}}
+    {{else}}
+      {{d-button action="run" label="explorer.run" disabled=runDisabled class="btn-primary"}}
+    {{/if}}
   </div>
 
   <hr>

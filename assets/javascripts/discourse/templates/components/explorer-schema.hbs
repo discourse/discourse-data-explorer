@@ -1,7 +1,12 @@
+<span class="schema-title">
+  {{i18n "explorer.schema.title"}} - {{{i18n "explorer.schema.type_help"}}}
+</span>
 {{text-field value=filter placeholderKey="explorer.schema.filter"}}
 {{conditional-loading-spinner condition=loading}}
 <div class="schema-container">
-  {{#each tables as |table|}}
-    {{explorer-schema-onetable table=table}}
-  {{/each}}
+  <ul>
+    {{#each tables as |table|}}
+      {{explorer-schema-onetable table=table}}
+    {{/each}}
+  </ul>
 </div>
