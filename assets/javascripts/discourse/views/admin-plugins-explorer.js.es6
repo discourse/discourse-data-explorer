@@ -5,10 +5,6 @@ export default Ember.View.extend({
     if (!$editPane.length) {
       return;
     }
-    const aceComponent = this.get('controller.editor');
-    if (!aceComponent) {
-      return;
-    }
     const oldGrippie = this.get('grippie');
     if (oldGrippie) {
       oldGrippie.off('mousedown mousemove mouseup');
@@ -25,7 +21,7 @@ export default Ember.View.extend({
     const mousemove = Discourse.debounce(function(e) {
       const diff = self.get('startY') - e.screenY;
       $targets.height(self.get('startSize') - diff);
-      aceComponent.trigger('resize');
+      self.appEvents.trigger('ace:resize');
     }, 5);
 
     const mouseup = function(e) {
@@ -34,7 +30,7 @@ export default Ember.View.extend({
       $body.off('mouseup', mouseup);
       self.set('startY', null);
       self.set('startSize', null);
-    }
+    };
 
     $grippie.on('mousedown', function(e) {
       self.set('startY', e.screenY);
@@ -45,5 +41,9 @@ export default Ember.View.extend({
       e.preventDefault();
     });
 
-  }.observes('controller.editor')
+  }.on('didInsertElement'),
+
+  _cleanup: function() {
+    this.set('grippie', null);
+  }.on('willDestroyElement')
 });
