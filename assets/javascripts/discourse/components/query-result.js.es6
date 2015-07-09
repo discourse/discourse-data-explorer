@@ -102,8 +102,12 @@ const QueryResultComponent = Ember.Component.extend({
 
   actions: {
     downloadResult() {
-      const blankUrl = "about:blank";
-      const windowName = randomIdShort();
+      // Create a frame to submit the form in (?)
+      // to avoid leaving an about:blank behind
+      let windowName = randomIdShort();
+      const newWindowContents = "<body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
+
+      let newWindow = window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
 
       let form = document.createElement("form");
       form.setAttribute('id', 'query-download-result');
@@ -124,18 +128,11 @@ const QueryResultComponent = Ember.Component.extend({
       addInput(form, 'explain', this.get('hasExplain'));
       addInput(form, 'limit', '1000000');
 
-      const newWindow = window.open(blankUrl, windowName);
-
       Discourse.ajax('/session/csrf.json').then(function(csrf) {
         addInput(form, 'authenticity_token', csrf.csrf);
 
         document.body.appendChild(form);
         form.submit();
-
-        Em.run.next('afterRender', function() {
-          document.body.removeChild(form);
-          newWindow.close();
-        });
       });
     }
   },
