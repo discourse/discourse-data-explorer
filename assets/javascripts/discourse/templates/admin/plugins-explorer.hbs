@@ -26,7 +26,54 @@
   {{i18n "explorer.no_queries"}} <a {{action "showCreate"}}>{{i18n "explorer.no_queries_hook"}}</a>
 {{else}}
   <div class="query-edit {{if editName "editing"}}">
-    {{partial "admin/plugins-explorer-show" model=selectedItem schema=schema}}
+    {{#if selectedItem}}
+      <div class="name">
+        {{#if editName}}
+          {{text-field value=selectedItem.name}}
+        {{else}}
+          <h2>{{selectedItem.name}}</h2>
+          {{d-button action="editName" icon="pencil" class="no-text btn-small"}}
+        {{/if}}
+      </div>
+      <div class="desc">
+        {{#if editName}}
+          {{textarea value=selectedItem.description}}
+        {{else}}
+          {{selectedItem.description}}
+        {{/if}}
+      </div>
+
+
+      <div class="query-editor">
+        <div class="editor-panel">
+          <div class="sql">
+            {{textarea value=selectedItem.sql class="grippie-target"}}
+          </div>
+        </div>
+        <div class="right-panel">
+          <div class="schema grippie-target">
+            {{explorer-schema schema=schema}}
+          </div>
+        </div>
+        <div class="grippie"></div>
+        <div class="clear"></div>
+      </div>
+
+      <div class="clear"></div>
+      <div class="pull-left">
+        {{d-button action="save" label="explorer.save" disabled=saveDisabled class="btn-primary"}}
+        {{d-button action="download" label="explorer.export" disabled=runDisabled icon="download"}}
+      </div>
+      <div class="pull-right">
+        {{#if selectedItem.destroyed}}
+          {{d-button action="recover" class="" icon="undo" label="explorer.recover"}}
+        {{else}}
+          {{d-button action="discard" class="btn-danger" icon="undo" label="explorer.undo" disabled=saveDisabled}}
+          {{d-button action="destroy" class="btn-danger" icon="trash" label="explorer.delete"}}
+        {{/if}}
+      </div>
+      <div class="clear"></div>
+    {{/if}}
   </div>
 
   <div class="query-run">
