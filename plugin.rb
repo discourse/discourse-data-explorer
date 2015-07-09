@@ -221,8 +221,13 @@ SQL
         end
 
         # this works for now, but no big loss if the tables aren't quite sorted
+        favored_order = %w(posts topics users categories badges groups notifications post_actions site_settings)
         sorted_by_table = {}
+        favored_order.each do |tbl|
+          sorted_by_table[tbl] = by_table[tbl]
+        end
         by_table.keys.sort.each do |tbl|
+          next if favored_order.include? tbl
           sorted_by_table[tbl] = by_table[tbl]
         end
         sorted_by_table
