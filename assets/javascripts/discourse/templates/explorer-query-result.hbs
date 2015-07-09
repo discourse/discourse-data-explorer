@@ -1,8 +1,5 @@
 <div class="result-info">
-  <a class="btn" id="result-download" {{bind-attr download=downloadName}} data-auto-route="true">
-    {{fa-icon "download"}}
-    {{i18n "explorer.download_json"}}
-  </a>
+  {{d-button action="downloadResult" icon="download" label="explorer.download_json"}}
   <div class="result-about">
     {{duration}}
   </div>

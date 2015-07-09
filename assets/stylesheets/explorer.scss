@@ -8,22 +8,22 @@
   .editor-panel {
     float: left;
     width: 65%;
-
-    .sql textarea {
-      padding: 4px;
-      height: calc(400px - 8px - 2px);
+    .ace-wrapper {
+      position: relative;
+      height: 400px;
       width: 100%;
-      font-family: monospace;
-      box-shadow: none;
-      border: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
-      margin: 0;
-      border-radius: 0;
-      transition: initial;
+    }
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
     }
   }
   .right-panel {
     float: right;
-    width: calc(35% - 10px);
+    width: calc(35% - 0px);
     .schema {
       border-left: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
       height: 400px;

@@ -107,11 +107,12 @@ after_initialize do
 WITH query AS (
 #{query.sql}
 ) SELECT * FROM query
-LIMIT #{opts[:limit] || 1000}
+LIMIT #{opts[:limit] || 250}
 SQL
 
           time_start = Time.now
           result = ActiveRecord::Base.exec_sql(sql, query_args)
+          result.check # make sure it's done
           time_end = Time.now
 
           if opts[:explain]
@@ -130,8 +131,9 @@ SQL
       {
         error: err,
         pg_result: result,
-        duration_nanos: time_end.nsec - time_start.nsec,
+        duration_secs: time_end - time_start,
         explain: explain,
+        params_full: query_args.tap {|h| h.delete :xxdummy}
       }
     end
 
@@ -347,7 +349,6 @@ SQL
     end
 
     skip_before_filter :check_xhr, only: [:show]
-
     def show
       check_xhr unless params[:export]
 
@@ -407,6 +408,7 @@ SQL
       end
     end
 
+    skip_before_filter :check_xhr, only: [:run]
     # Return value:
     # success - true/false. if false, inspect the errors value.
     # errors - array of strings.
@@ -416,11 +418,20 @@ SQL
     # explain - string. (Optional - pass explain=true in the request) Postgres query plan, UNIX newlines.
     # rows - array of array of strings. Results of the query. In the same order as 'columns'.
     def run
+      check_xhr unless params[:download]
       query = DataExplorer::Query.find(params[:id].to_i)
+      if params[:download]
+        response.headers['Content-Disposition'] =
+          "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, 'discourse')}-#{Date.today}.dcqresult.json"
+        response.sending_file = true
+      end
+
       query_params = MultiJson.load(params[:params])
+
       opts = {current_user: current_user.username}
       opts[:explain] = true if params[:explain] == "true"
       opts[:limit] = params[:limit].to_i if params[:limit]
+
       result = DataExplorer.run_query(query, query_params, opts)
 
       if result[:error]
@@ -431,7 +442,7 @@ SQL
         err_msg = err.message
         if err.is_a? ActiveRecord::StatementInvalid
           err_class = err.original_exception.class
-          err_msg.gsub!("#{err_class.to_s}:", '')
+          err_msg.gsub!("#{err_class}:", '')
         else
           err_msg = "#{err_class}: #{err_msg}"
         end
@@ -446,7 +457,8 @@ SQL
         json = {
           success: true,
           errors: [],
-          duration: (result[:duration_nanos].to_f / 1_000_000).round(1),
+          duration: (result[:duration_secs].to_f * 1000).round(1),
+          params: result[:params_full],
           columns: cols,
         }
         json[:explain] = result[:explain] if opts[:explain]

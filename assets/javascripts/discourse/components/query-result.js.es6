@@ -10,6 +10,11 @@ var defaultFallback = function(buffer, content, defaultRender) { defaultRender(b
 function isoYMD(date) {
   return date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
 }
+function randomIdShort() {
+  return 'xxxxxxxx'.replace(/[xy]/g, function() {
+    return (Math.random() * 16 | 0).toString(16);
+  });
+}
 
 const QueryResultComponent = Ember.Component.extend({
   layoutName: 'explorer-query-result',
@@ -24,10 +29,6 @@ const QueryResultComponent = Ember.Component.extend({
   colCount: function() {
     return this.get('content.columns').length;
   }.property('content.columns.length'),
-
-  downloadName: function() {
-    return this.get('query.name') + "@" + window.location.host + "-" + isoYMD(new Date()) + ".dcqresult.json";
-  }.property(),
 
   duration: function() {
     return I18n.t('explorer.run_time', {value: I18n.toNumber(this.get('content.duration'), {precision: 1})});
@@ -99,19 +100,45 @@ const QueryResultComponent = Ember.Component.extend({
     });
   }.property('content', 'columns.@each'),
 
-  _clickDownloadButton: function() {
-    const self = this;
-    const $button = this.$().find("#result-download");
-    // use $.one to do once
-    $button.one('mouseover', function(e) {
-      const a = e.target;
-      let resultString = "data:text/plain;base64,";
-      var jsonString = JSON.stringify(self.get('content'));
-      resultString += btoa(jsonString);
+  actions: {
+    downloadResult() {
+      const blankUrl = "about:blank";
+      const windowName = randomIdShort();
 
-      a.href = resultString;
-    });
-  }.on('didInsertElement'),
+      let form = document.createElement("form");
+      form.setAttribute('id', 'query-download-result');
+      form.setAttribute('method', 'post');
+      form.setAttribute('action', Discourse.getURL('/admin/plugins/explorer/queries/' + this.get('query.id') + '/run.json?download=1'));
+      form.setAttribute('target', windowName);
+      form.setAttribute('style', 'display:none;');
+
+      function addInput(form, name, value) {
+        let field;
+        field = document.createElement('input');
+        field.setAttribute('name', name);
+        field.setAttribute('value', value);
+        form.appendChild(field);
+      }
+
+      addInput(form, 'params', JSON.stringify(this.get('params')));
+      addInput(form, 'explain', this.get('hasExplain'));
+      addInput(form, 'limit', '1000000');
+
+      const newWindow = window.open(blankUrl, windowName);
+
+      Discourse.ajax('/session/csrf.json').then(function(csrf) {
+        addInput(form, 'authenticity_token', csrf.csrf);
+
+        document.body.appendChild(form);
+        form.submit();
+
+        Em.run.next('afterRender', function() {
+          document.body.removeChild(form);
+          newWindow.close();
+        });
+      });
+    }
+  },
 
   parent: function() { return this; }.property()
 

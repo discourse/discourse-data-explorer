@@ -48,7 +48,7 @@ export default Ember.ArrayController.extend({
     return this.get('selectedItem').save().then(function() {
       const query = self.get('selectedItem');
       query.markNotDirty();
-      self.set('editName', false);
+      self.set('editing', false);
     }).catch(function(x) {
       popupAjaxError(x);
       throw x;
@@ -70,7 +70,7 @@ export default Ember.ArrayController.extend({
     },
 
     editName() {
-      this.set('editName', true);
+      this.set('editing', true);
     },
 
     download() {
@@ -112,7 +112,7 @@ export default Ember.ArrayController.extend({
         const query = self.get('selectedItem');
         query.setProperties(result.getProperties(Query.updatePropertyNames));
         query.markNotDirty();
-        self.set('editName', false);
+        self.set('editing', false);
       }).catch(popupAjaxError).finally(function() {
         self.set('loading', false);
       });
@@ -143,6 +143,9 @@ export default Ember.ArrayController.extend({
     run() {
       const self = this;
       if (this.get('selectedItem.dirty')) {
+        return;
+      }
+      if (this.get('runDisabled')) {
         return;
       }
 

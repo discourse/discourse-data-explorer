@@ -28,7 +28,7 @@
   <div class="query-edit {{if editName "editing"}}">
     {{#if selectedItem}}
       <div class="name">
-        {{#if editName}}
+        {{#if editing}}
           {{text-field value=selectedItem.name}}
         {{else}}
           <h2>{{selectedItem.name}}</h2>
@@ -36,7 +36,7 @@
         {{/if}}
       </div>
       <div class="desc">
-        {{#if editName}}
+        {{#if editing}}
           {{textarea value=selectedItem.description}}
         {{else}}
           {{selectedItem.description}}
@@ -46,9 +46,7 @@
 
       <div class="query-editor">
         <div class="editor-panel">
-          <div class="sql">
-            {{textarea value=selectedItem.sql class="grippie-target"}}
-          </div>
+          {{ace-editor content=selectedItem.sql mode="sql"}}
         </div>
         <div class="right-panel">
           <div class="schema grippie-target">
@@ -76,12 +74,12 @@
     {{/if}}
   </div>
 
-  <div class="query-run">
+  <form class="query-run" {{action "run" on="submit"}}>
     {{#if selectedItem.param_names}}
       <div class="query-params">
         <div class="param-save">
-          {{d-button action="saveDefaults" label="explorer.save_params"}}
-          {{d-button action="resetParams" label="explorer.reset_params"}}
+          {{d-button action="saveDefaults" label="explorer.save_params" type="button"}}
+          {{d-button action="resetParams" label="explorer.reset_params" type="button"}}
         </div>
         {{#each selectedItem.param_names as |pname|}}
           <div class="param">
@@ -101,9 +99,9 @@
         {{d-button action="saverun" label="explorer.saverun"}}
       {{/if}}
     {{else}}
-      {{d-button action="run" label="explorer.run" disabled=runDisabled class="btn-primary"}}
+      {{d-button action="run" label="explorer.run" disabled=runDisabled class="btn-primary" type="submit"}}
     {{/if}}
-  </div>
+  </form>
 
   <hr>
 {{/if}}
