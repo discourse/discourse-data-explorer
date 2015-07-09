@@ -19,10 +19,13 @@
       </dt>
       <dd>
         {{col.data_type}}
-        {{#if col.notes}}
+        {{#if col.havetypeinfo}}
           <br>
           <span class="schema-typenotes">
             {{col.notes}}
+            {{#if col.enum}}
+              {{explorer-schema-enuminfo col=col}}
+            {{/if}}
           </span>
         {{/if}}
       </dd>

@@ -162,6 +162,7 @@ email_logs.reply_key
 api_keys.key
 site_settings.value
 
+users.auth_token
 users.password_hash
 users.salt
 
@@ -190,6 +191,8 @@ SQL
         by_table = {}
         # Massage the results into a nicer form
         results.each do |hash|
+          full_col_name = "#{hash['table_name']}.#{hash['column_name']}"
+
           if hash['is_nullable'] == "YES"
             hash['is_nullable'] = true
           else
@@ -211,8 +214,11 @@ SQL
             hash['column_default'] = $1
           end
 
-          if sensitive_column_names.include? "#{hash['table_name']}.#{hash['column_name']}"
+          if sensitive_column_names.include? full_col_name
             hash['sensitive'] = true
+          end
+          if enum_info.include? full_col_name
+            hash['enum'] = enum_info[full_col_name]
           end
 
           tname = hash.delete('table_name')
@@ -231,6 +237,39 @@ SQL
           sorted_by_table[tbl] = by_table[tbl]
         end
         sorted_by_table
+      end
+    end
+
+
+    def self.enums
+      @enums ||= {
+        :'category_groups.permission_type' => CategoryGroup.permission_types,
+        :'directory_items.period_type' => DirectoryItem.period_types,
+        :'groups.alias_level' => Group::ALIAS_LEVELS,
+        :'groups.id' => Group::AUTO_GROUPS,
+        :'notifications.notification_type' => Notification.types,
+        :'posts.cook_method' => Post.cook_methods,
+        :'posts.hidden_reason_id' => Post.hidden_reasons,
+        :'posts.post_type' => Post.types,
+        :'post_actions.post_action_type_id' => PostActionType.types,
+        :'post_action_types.id' => PostActionType.types,
+        :'queued_posts.state' => QueuedPost.states,
+        :'site_settings.data_type' => SiteSetting.types,
+        :'topic_users.notification_level' => TopicUser.notification_levels,
+        :'topic_users.notifications_reason_id' => TopicUser.notification_reasons,
+        :'user_histories.action' => UserHistory.actions,
+        :'users.trust_level' => TrustLevel.levels,
+      }.with_indifferent_access
+    end
+
+    def self.enum_info
+      @enum_info ||= begin
+        enum_info = {}
+        enums.map do |key,enum|
+          # https://stackoverflow.com/questions/10874356/reverse-a-hash-in-ruby
+          enum_info[key] = Hash[enum.to_a.map(&:reverse)]
+        end
+        enum_info
       end
     end
   end

@@ -6,8 +6,13 @@ export default Ember.Component.extend({
 
   _bindClicks: function() {
     const self = this;
-    this.$()./*children('.schema-table-name').*/click(function() {
+    this.$().find('.schema-table-name').click(function(e) {
       self.set('open', !self.get('open'));
+      e.preventDefault();
     });
-  }.on('didInsertElement')
+  }.on('didInsertElement'),
+
+  _cleanup: function() {
+    this.$().find('.schema-table-name').off('click');
+  }.on('willDestroyElement')
 });

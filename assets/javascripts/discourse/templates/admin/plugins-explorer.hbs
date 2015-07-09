@@ -45,13 +45,13 @@
 
 
       <div class="query-editor">
-        <div class="editor-panel">
-          {{ace-editor content=selectedItem.sql mode="sql"}}
-        </div>
         <div class="right-panel">
           <div class="schema grippie-target">
             {{explorer-schema schema=schema}}
           </div>
+        </div>
+        <div class="editor-panel">
+          {{ace-editor content=selectedItem.sql mode="sql"}}
         </div>
         <div class="grippie"></div>
         <div class="clear"></div>

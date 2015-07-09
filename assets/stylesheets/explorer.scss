@@ -76,6 +76,29 @@
         .schema-typenotes {
           color: dark-light-diff($primary, $secondary, 50%, -20%);
           font-style: italic;
+
+          ol { display: none; }
+          &:hover ol { display: block; }
+          .enum-info {
+
+            ol {
+              position: absolute;
+              padding: 5px;
+              padding-right: calc(5px + 2em);
+              border: 1px solid;
+              background: white;
+              list-style: none;
+              left: -12em;
+              top: 10px;
+              z-index: 10;
+              > li {
+                width: 150%;
+              }
+              > li:before {
+                content: attr(value) ": ";
+              }
+            }
+          }
         }
       }
     }

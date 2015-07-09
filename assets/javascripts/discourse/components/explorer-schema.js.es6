@@ -22,7 +22,13 @@ export default Ember.Component.extend({
         }
         if (notes) {
           col.notes = notes;
+          col.havetypeinfo = true;
         }
+
+        if (col.enum) {
+          col.havetypeinfo = true;
+        }
+
       });
     }
     return schema;
