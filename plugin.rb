@@ -389,11 +389,11 @@ SQL
     def self.types
       @types ||= Enum.new(
         # Normal types
-        :int, :bigint, :boolean, :string, :date, :time, :datetime, :double, :inet,
+        :int, :bigint, :boolean, :string, :date, :time, :datetime, :double,
         # Selection help
         :user_id, :post_id, :topic_id, :category_id, :group_id, :badge_id,
         # Arrays
-        :int_list, :string_list
+        :int_list, :string_list, :user_list
       )
     end
 
@@ -402,7 +402,6 @@ SQL
         integer: :int,
         text: :string,
         timestamp: :datetime,
-        ipaddr: :inet,
       }
     end
 
@@ -458,15 +457,22 @@ SQL
           rescue ArgumentError => e
             invalid_format string, e.message
           end
-        when :ipaddr
-          begin
-            value = IPAddr.new string
-          rescue ArgumentError => e
-            invalid_format string, e.message
-          end
         when :double
           value = string.to_f
-        when :user_id, :post_id, :topic_id, :category_id, :group_id, :badge_id
+        when :category_id
+          if string =~ /(.*)\/(.*)/
+            parent_name = $1
+            child_name = $2
+            parent = Category.query_parent_category(parent_name)
+            invalid_format string, "Could not find category named #{parent_name}" unless parent
+            object = Category.query_category(child_name, parent)
+            invalid_format string, "Could not find subcategory of #{parent_name} named #{child_name}" unless object
+          else
+            object = Category.where(id: string.to_i).first || Category.where(slug: string).first || Category.where(name: string).first
+            invalid_format string, "Could not find category named #{string}" unless object
+          end
+          value = object.id
+        when :user_id, :post_id, :topic_id, :group_id, :badge_id
           if string.gsub(/[ _]/, '') =~ /^-?\d+$/
             clazz_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
             begin
@@ -497,6 +503,10 @@ SQL
                 invalid_format string, "The topic with id #{$1} was not found"
               end
             end
+          elsif type == :group_id
+            object = Group.where(name: string).first
+            invalid_format string, "The group named #{string} was not found" unless object
+            value = object.id
           else
             invalid_format string
           end
@@ -505,6 +515,9 @@ SQL
           invalid_format string, "can't be empty" if value.length == 0
         when :string_list
           value = string.split(',').map {|s| s.downcase == '#null' ? nil : s }
+          invalid_format string, "can't be empty" if value.length == 0
+        when :user_list
+          value = string.split(',').map {|s| User.find_by_username_or_email(s) }
           invalid_format string, "can't be empty" if value.length == 0
         else
           raise TypeError.new('unknown parameter type??? should not get here')

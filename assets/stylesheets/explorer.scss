@@ -166,10 +166,14 @@
     background-color: mix($danger, $secondary, 20%);
   }
   .param {
+    width: 300px;
     display: inline-block;
     overflow-x: visible;
     .ac-wrap {
       display: inline-block;
+    }
+    input {
+      width: 190px;
     }
   }
   .param-name {
