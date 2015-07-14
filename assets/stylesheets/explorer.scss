@@ -6,8 +6,28 @@
   border: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
   margin-bottom: 15px;
   .editor-panel {
-    float: left;
     width: 65%;
+  }
+  .right-panel {
+    width: 35%;
+  }
+  &.no-schema {
+    .editor-panel {
+      width: 100%;
+    }
+    .right-panel {
+      width: 0;
+      button.unhide {
+        position: absolute;
+        margin-left: -31px;
+        z-index: 1;
+      }
+    }
+  }
+
+
+  .editor-panel {
+    float: left;
     .ace-wrapper {
       position: relative;
       height: 400px;
@@ -23,7 +43,6 @@
   }
   .right-panel {
     float: right;
-    width: calc(35% - 0px);
     .schema {
       border-left: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
       height: 400px;
@@ -32,6 +51,12 @@
       color: dark-light-diff($primary, $secondary, 20%, -20%);
       font-size: 11px;
 
+      input {
+        padding: 4px;
+        margin: 3px;
+        // 100% - padding + margin * 2 - border - button - buttonborder
+        width: calc(100% - 14px - 1px - 22px - 2px);
+      }
       .schema-table-name {
         font-weight: bold;
         border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
@@ -126,11 +151,6 @@
 .schema-title {
   display: block;
   margin: auto;
-}
-.schema input {
-  padding: 4px;
-  margin: 3px;
-  width: calc(100% - 7px - 7px - 1px);
 }
 
 .query-params {

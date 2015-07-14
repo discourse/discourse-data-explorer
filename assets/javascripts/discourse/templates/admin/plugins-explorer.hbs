@@ -44,10 +44,10 @@
       </div>
 
 
-      <div class="query-editor">
+      <div class="query-editor {{if hideSchema "no-schema"}}">
         <div class="right-panel">
           <div class="schema grippie-target">
-            {{explorer-schema schema=schema}}
+            {{explorer-schema schema=schema hideSchema=hideSchema}}
           </div>
         </div>
         <div class="editor-panel">

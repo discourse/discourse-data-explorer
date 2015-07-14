@@ -1,5 +1,14 @@
 export default Ember.Component.extend({
 
+  actions: {
+    expandSchema() {
+      this.set('hideSchema', false);
+    },
+    collapseSchema() {
+      this.set('hideSchema', true);
+    }
+  },
+
   transformedSchema: function() {
     const schema = this.get('schema');
 

@@ -8,6 +8,7 @@ export default Ember.ArrayController.extend({
   queryParams: { selectedQueryId: "id" },
   selectedQueryId: null,
   showResults: false,
+  hideSchema: false,
   loading: false,
 
   explain: false,
