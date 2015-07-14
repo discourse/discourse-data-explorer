@@ -40,25 +40,6 @@ after_initialize do
     class ValidationError < StandardError;
     end
 
-    # Extract :colon-style parameters from the SQL query and replace them with
-    # $1-style parameters.
-    #
-    # @return [Hash] :sql => [String] the new SQL query to run, :names =>
-    #   [Array] the names of all parameters, in order by their $-style name.
-    #   (The first name is $0.)
-    def self.extract_params(sql)
-      names = []
-      new_sql = sql.gsub(/(:?):([a-z_]+)/) do |_|
-        if $1 == ':' # skip casts
-          $&
-        else
-          names << $2
-          "$#{names.length - 1}"
-        end
-      end
-      {sql: new_sql, names: names}
-    end
-
     # Run a data explorer query on the currently connected database.
     #
     # @param [DataExplorer::Query] query the Query object to run
@@ -71,21 +52,20 @@ after_initialize do
     #   pg_result - the PG::Result object
     #   duration_nanos - the query duration, in nanoseconds
     #   explain - the query
-    def self.run_query(query, params={}, opts={})
+    def self.run_query(query, req_params={}, opts={})
       # Safety checks
       if query.sql =~ /;/
         err = DataExplorer::ValidationError.new(I18n.t('js.errors.explorer.no_semicolons'))
         return {error: err, duration_nanos: 0}
       end
 
-      query_args = (query.qopts[:defaults] || {}).with_indifferent_access.merge(params)
-
-      # Rudimentary types
-      query_args.each do |k, arg|
-        if arg =~ /\A\d+\z/
-          query_args[k] = arg.to_i
-        end
+      query_args = {}
+      begin
+        query_args = query.cast_params req_params
+      rescue DataExplorer::ValidationError => e
+        return {error: e, duration_nanos: 0}
       end
+
       # If we don't include this, then queries with a % sign in them fail
       # because AR thinks we want percent-based parametes
       query_args[:xxdummy] = 1
@@ -277,24 +257,34 @@ SQL
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   class DataExplorer::Query
     attr_accessor :id, :name, :description, :sql
-    attr_reader :qopts
 
     def initialize
       @name = 'Unnamed Query'
       @description = 'Enter a description here'
       @sql = 'SELECT 1'
-      @qopts = {}
-    end
-
-    def param_names
-      param_info = DataExplorer.extract_params sql
-      param_info[:names]
     end
 
     def slug
       s = Slug.for(name)
       s = "query-#{id}" unless s.present?
       s
+    end
+
+    def params
+      @params ||= DataExplorer::Parameter.create_from_sql(sql)
+    end
+
+    def check_params!
+      params
+      nil
+    end
+
+    def cast_params(input_params)
+      result = {}.with_indifferent_access
+      self.params.each do |pobj|
+        result[pobj.identifier] = pobj.cast_to_ruby input_params[pobj.identifier]
+      end
+      result
     end
 
     # saving/loading functions
@@ -308,22 +298,9 @@ SQL
       end
     end
 
-    def qopts=(val)
-      case val
-        when String
-          @qopts = HashWithIndifferentAccess.new(MultiJson.load(val))
-        when HashWithIndifferentAccess
-          @qopts = val
-        when Hash
-          @qopts = val.with_indifferent_access
-        else
-          raise ArgumentError.new('invalid type for qopts')
-      end
-    end
-
     def self.from_hash(h)
       query = DataExplorer::Query.new
-      [:name, :description, :sql, :qopts].each do |sym|
+      [:name, :description, :sql].each do |sym|
         query.send("#{sym}=", h[sym]) if h[sym]
       end
       if h[:id]
@@ -338,7 +315,6 @@ SQL
         name: @name,
         description: @description,
         sql: @sql,
-        qopts: @qopts.to_hash,
       }
     end
 
@@ -352,6 +328,7 @@ SQL
     end
 
     def save
+      check_params!
       unless @id && @id > 0
         @id = self.class.alloc_id
       end
@@ -373,6 +350,164 @@ SQL
         .map do |psr|
         DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
       end
+    end
+  end
+
+  class DataExplorer::Parameter
+    attr_accessor :identifier, :type, :default, :nullable
+
+    def initialize(identifier, type, default, nullable)
+      raise DataExplorer::ValidationError.new('Parameter declaration error - identifier is missing') unless identifier
+      raise DataExplorer::ValidationError.new('Parameter declaration error - type is missing') unless type
+      # process aliases
+      type = type.to_sym
+      if DataExplorer::Parameter.type_aliases[type]
+        type = DataExplorer::Parameter.type_aliases[type]
+      end
+      raise DataExplorer::ValidationError.new("Parameter declaration error - unknown type #{type}") unless DataExplorer::Parameter.types[type]
+
+      @identifier = identifier
+      @type = type
+      @default = default
+      @nullable = nullable
+      begin
+        cast_to_ruby default unless default.blank?
+      rescue DataExplorer::ValidationError
+        raise DataExplorer::ValidationError.new("Parameter declaration error - the default value is not a valid #{type}")
+      end
+    end
+
+    def to_hash
+      {
+        identifier: @identifier,
+        type: @type,
+        default: @default,
+        nullable: @nullable,
+      }
+    end
+
+    def self.types
+      @types ||= Enum.new(
+        # Normal types
+        :int, :bigint, :boolean, :string, :time, :double,
+        # Selection help
+        :user_id, :post_id, :topic_id, :category_id, :group_id, :badge_id,
+        # Arrays
+        :int_list, :string_list
+      )
+    end
+
+    def self.type_aliases
+      @type_aliases ||= {
+        integer: :int,
+        text: :string,
+      }
+    end
+
+    def cast_to_ruby(string)
+      string = @default unless string
+
+      if string.blank?
+        if @nullable
+          return nil
+        else
+          raise DataExplorer::ValidationError.new("Missing parameter #{identifier} of type #{type}")
+        end
+      end
+      if string.downcase == '#null'
+        return nil
+      end
+
+      def invalid_format(string, msg=nil)
+        if msg
+          raise DataExplorer::ValidationError.new("'#{string}' is an invalid #{type} - #{msg}")
+        else
+          raise DataExplorer::ValidationError.new("'#{string}' is an invalid value for #{type}")
+        end
+      end
+
+      value = nil
+
+      case @type
+        when :int
+          value = string.to_i
+          invalid_format string, 'Too large' unless Fixnum === value
+        when :bigint
+          value = string.to_i
+        when :boolean
+          value = !!(string =~ /t|true|y|yes|1/)
+        when :string
+          value = string
+        when :time
+          begin
+            value = Time.parse string
+          rescue ArgumentError => e
+            invalid_format string, e.message
+          end
+        when :double
+          value = string.to_f
+        when :user_id, :post_id, :topic_id, :category_id, :group_id, :badge_id
+          pkey = string.to_i
+          if pkey != 0
+            clazz_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
+            begin
+              Object.const_get(clazz_name).find(pkey)
+              value = pkey
+            rescue ActiveRecord::RecordNotFound
+              invalid_format string, "The specified #{clazz_name} was not found"
+            end
+          else
+            invalid_format string
+          end
+        when :int_list
+          value = string.split(',').map(&:to_i)
+          invalid_format string, "can't be empty" if value.length == 0
+        when :string_list
+          value = string.split(',')
+          invalid_format string, "can't be empty" if value.length == 0
+        else
+          raise TypeError.new('unknown parameter type??? should not get here')
+      end
+
+      value
+    end
+
+    def self.create_from_sql(sql)
+      in_params = false
+      ret_params = []
+      sql.split("\n").find do |line|
+        if in_params
+          # -- (ident) :(ident) (= (ident))?
+
+          if line =~ /^\s*--\s*([a-zA-Z_ ]+)\s*:([a-z_]+)\s*(?:=\s+(.*)\s*)?$/
+            type = $1
+            ident = $2
+            default = $3
+            nullable = false
+            if type =~ /^(null)?(.*?)(null)?$/i
+              if $1 or $3
+                nullable = true
+              end
+              type = $2
+            end
+            type = type.strip
+
+            ret_params << DataExplorer::Parameter.new(ident, type, default, nullable)
+            false
+          elsif line =~ /^\s+$/
+            false
+          else
+            true
+          end
+
+        else
+          if line =~ /^\s*--\s*\[params\]\s*$/
+            in_params = true
+          end
+          false
+        end
+      end
+      return ret_params
     end
   end
 
@@ -430,12 +565,15 @@ SQL
         end
       end
 
-      [:name, :sql, :description, :qopts].each do |sym|
+      [:name, :sql, :description].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
+      query.check_params!
       query.save
 
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+    rescue DataExplorer::ValidationError => e
+      render_json_error e.message
     end
 
     def destroy
@@ -520,7 +658,11 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :qopts, :param_names
+    attributes :id, :sql, :name, :description, :param_info
+
+    def param_info
+      object.params.map(&:to_hash) rescue nil
+    end
   end
 
   DataExplorer::Engine.routes.draw do
@@ -531,7 +673,6 @@ SQL
     get 'queries/:id' => "query#show"
     put 'queries/:id' => "query#update"
     delete 'queries/:id' => "query#destroy"
-    get 'queries/parse_params' => "query#parse_params"
     post 'queries/:id/run' => "query#run"
   end
 
