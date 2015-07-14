@@ -20,6 +20,13 @@
   </div>
 {{/if}}
 
+{{#if othersDirty}}
+  <div class="warning">
+    {{fa-icon "warning"}}
+    {{i18n "explorer.others_dirty"}}
+  </div>
+{{/if}}
+
 <hr>
 
 {{#if selectedItem.fake}}
@@ -27,35 +34,44 @@
 {{else}}
   <div class="query-edit {{if editName "editing"}}">
     {{#if selectedItem}}
-      <div class="name">
-        {{#if editing}}
+      {{#if editing}}
+        <div class="name">
           {{text-field value=selectedItem.name}}
-        {{else}}
+        </div>
+        <div class="desc">
+          {{textarea value=selectedItem.description}}
+        </div>
+      {{else}}
+        <div class="name">
           <h2>{{selectedItem.name}}</h2>
           {{d-button action="editName" icon="pencil" class="no-text btn-small"}}
-        {{/if}}
-      </div>
-      <div class="desc">
-        {{#if editing}}
-          {{textarea value=selectedItem.description}}
-        {{else}}
+        </div>
+        <div class="desc">
           {{selectedItem.description}}
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
 
-
-      <div class="query-editor {{if hideSchema "no-schema"}}">
-        <div class="right-panel">
-          <div class="schema grippie-target">
-            {{explorer-schema schema=schema hideSchema=hideSchema}}
+      {{! the SQL editor will show the first time you }}
+      {{#if everEditing}}
+        <div class="query-editor {{if hideSchema "no-schema"}}">
+          <div class="right-panel">
+            <div class="schema grippie-target">
+              {{explorer-schema schema=schema hideSchema=hideSchema}}
+            </div>
           </div>
+          <div class="editor-panel">
+            {{ace-editor content=selectedItem.sql mode="sql"}}
+          </div>
+          <div class="grippie"></div>
+          <div class="clear"></div>
         </div>
-        <div class="editor-panel">
-          {{ace-editor content=selectedItem.sql mode="sql"}}
+      {{else}}
+        <div class="sql">
+          {{hljs-code-view value=selectedItem.sql codeClass="sql"}}
         </div>
-        <div class="grippie"></div>
-        <div class="clear"></div>
-      </div>
+      {{/if}}
+
+
 
       <div class="clear"></div>
       <div class="pull-left">

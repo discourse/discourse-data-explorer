@@ -104,6 +104,7 @@
 
           ol { display: none; }
           &:hover ol { display: block; }
+          &:focus ol { display: block; }
           .enum-info {
 
             ol {
@@ -114,7 +115,7 @@
               background: white;
               list-style: none;
               left: -12em;
-              top: 10px;
+              top: 6px;
               z-index: 10;
               > li {
                 width: 150%;
@@ -138,8 +139,8 @@
   .name h2 {
     display: inline-block;
   }
-  .desc textarea {
-    width: 200px;
+  .name input, .desc textarea {
+    width: calc(100% - 10px);
   }
   &:not(.editing) .desc {
     margin: 10px 0;

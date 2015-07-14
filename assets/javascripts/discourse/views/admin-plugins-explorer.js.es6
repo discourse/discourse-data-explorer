@@ -6,7 +6,17 @@ export default Ember.View.extend({
     this.appEvents.trigger('ace:resize');
   }.observes('controller.hideSchema'),
 
+  _onInsertEditor: function() {
+    const self = this;
+    Em.run.schedule('afterRender', this, function() {
+      self.trigger('didInsertEditor');
+    });
+  }.observes('controller.everEditing'),
+
   _bindGrippie: function() {
+    if (this._state !== "inDOM") {
+      return;
+    }
     const $editPane = this.$().find('.query-editor');
     if (!$editPane.length) {
       return;
@@ -27,7 +37,7 @@ export default Ember.View.extend({
     const mousemove = function(e) {
       const diff = self.get('startY') - e.screenY;
       const newHeight = self.get('startSize') - diff;
-      Em.Logger.debug("new height", newHeight);
+      //Em.Logger.debug("new height", newHeight);
       $targets.height(newHeight);
       self.appEvents.trigger('ace:resize');
     };
@@ -35,7 +45,6 @@ export default Ember.View.extend({
     let mouseup;
     mouseup = function(e) {
       mousemove(e);
-      Em.Logger.debug("mouseup");
       $body.off('mousemove', mousemove);
       $body.off('mouseup', mouseup);
       self.set('startY', null);
@@ -51,10 +60,12 @@ export default Ember.View.extend({
       e.preventDefault();
     });
 
-  }.on('didInsertElement'),
+  }.on('didInsertElement', 'didInsertEditor'),
 
   _cleanup: function() {
-    this.get('grippie').off('mousedown');
-    this.set('grippie', null);
+    if (this.get('controller.everEditing')) {
+      this.get('grippie').off('mousedown');
+      this.set('grippie', null);
+    }
   }.on('willDestroyElement')
 });

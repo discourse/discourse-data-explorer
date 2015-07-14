@@ -15,6 +15,10 @@ export default Ember.ArrayController.extend({
 
   saveDisabled: Ember.computed.not('selectedItem.dirty'),
   runDisabled: Ember.computed.alias('selectedItem.dirty'),
+  results: Em.computed.alias('selectedItem.results'),
+
+  editing: false,
+  everEditing: false,
 
   selectedItem: function() {
     const _id = this.get('selectedQueryId');
@@ -25,16 +29,6 @@ export default Ember.ArrayController.extend({
     return item || NoQuery;
   }.property('selectedQueryId'),
 
-  results: Em.computed.alias('selectedItem.results'),
-
-  addCreatedRecord(record) {
-    this.pushObject(record);
-    this.set('selectedQueryId', Ember.get(record, 'id'));
-    this.get('selectedItem').set('dirty', false);
-    this.set('showResults', false);
-    this.set('results', null);
-  },
-
   not_https: function() {
     return !(
       window.location.protocol === "https:" ||
@@ -42,6 +36,28 @@ export default Ember.ArrayController.extend({
       window.location.hostname.endsWith(".local")
     );
   }.property(),
+
+  othersDirty: function() {
+    const selected = this.get('selectedItem');
+    return !!this.get('content').find(function(q) {
+      return q !== selected && q.get('dirty');
+    });
+  }.property('selectedItem', 'selectedItem.dirty'),
+
+  setEverEditing: function() {
+    if (this.get('editing') && !this.get('everEditing')) {
+      this.set('everEditing', true);
+    }
+  }.observes('editing'),
+
+  addCreatedRecord(record) {
+    this.pushObject(record);
+    this.set('selectedQueryId', Ember.get(record, 'id'));
+    this.get('selectedItem').set('dirty', false);
+    this.set('showResults', false);
+    this.set('results', null);
+    this.set('editing', true);
+  },
 
   save() {
     const self = this;
