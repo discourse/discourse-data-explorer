@@ -275,7 +275,7 @@ SQL
     end
 
     def check_params!
-      params
+      DataExplorer::Parameter.create_from_sql(sql, strict: true)
       nil
     end
 
@@ -389,7 +389,7 @@ SQL
     def self.types
       @types ||= Enum.new(
         # Normal types
-        :int, :bigint, :boolean, :string, :time, :double,
+        :int, :bigint, :boolean, :string, :date, :time, :datetime, :double, :inet,
         # Selection help
         :user_id, :post_id, :topic_id, :category_id, :group_id, :badge_id,
         # Arrays
@@ -401,6 +401,8 @@ SQL
       @type_aliases ||= {
         integer: :int,
         text: :string,
+        timestamp: :datetime,
+        ipaddr: :inet,
       }
     end
 
@@ -435,7 +437,7 @@ SQL
         when :bigint
           value = string.to_i
         when :boolean
-          value = !!(string =~ /t|true|y|yes|1/)
+          value = !!(string =~ /t|true|y|yes|1/i)
         when :string
           value = string
         when :time
@@ -444,26 +446,65 @@ SQL
           rescue ArgumentError => e
             invalid_format string, e.message
           end
+        when :date
+          begin
+            value = Date.parse string
+          rescue ArgumentError => e
+            invalid_format string, e.message
+          end
+        when :datetime
+          begin
+            value = DateTime.parse string
+          rescue ArgumentError => e
+            invalid_format string, e.message
+          end
+        when :ipaddr
+          begin
+            value = IPAddr.new string
+          rescue ArgumentError => e
+            invalid_format string, e.message
+          end
         when :double
           value = string.to_f
         when :user_id, :post_id, :topic_id, :category_id, :group_id, :badge_id
-          pkey = string.to_i
-          if pkey != 0
+          if string.gsub(/[ _]/, '') =~ /^-?\d+$/
             clazz_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
             begin
-              Object.const_get(clazz_name).find(pkey)
+              Object.const_get(clazz_name).find(string.gsub(/[ _]/, '').to_i)
               value = pkey
             rescue ActiveRecord::RecordNotFound
               invalid_format string, "The specified #{clazz_name} was not found"
+            end
+          elsif type == :user_id
+            begin
+              object = User.find_by_username_or_email(string)
+              value = object.id
+            rescue ActiveRecord::RecordNotFound
+              invalid_format string, "The user named #{string} was not found"
+            end
+          elsif type == :post_id
+            if string =~ /(\d+)\/(\d+)(\?u=.*)?$/
+              object = Post.with_deleted.find_by(topic_id: $1, post_number: $2)
+              invalid_format string, "The post at topic:#{$1} post_number:#{$2} was not found" unless object
+              value = object.id
+            end
+          elsif type == :topic_id
+            if string =~ /\/t\/[^\/]+\/(\d+)/
+              begin
+                object = Topic.with_deleted.find($1)
+                value = object.id
+              rescue ActiveRecord::RecordNotFound
+                invalid_format string, "The topic with id #{$1} was not found"
+              end
             end
           else
             invalid_format string
           end
         when :int_list
-          value = string.split(',').map(&:to_i)
+          value = string.split(',').map {|s| s.downcase == '#null' ? nil : s.to_i }
           invalid_format string, "can't be empty" if value.length == 0
         when :string_list
-          value = string.split(',')
+          value = string.split(',').map {|s| s.downcase == '#null' ? nil : s }
           invalid_format string, "can't be empty" if value.length == 0
         else
           raise TypeError.new('unknown parameter type??? should not get here')
@@ -472,7 +513,7 @@ SQL
       value
     end
 
-    def self.create_from_sql(sql)
+    def self.create_from_sql(sql, opts={})
       in_params = false
       ret_params = []
       sql.split("\n").find do |line|
@@ -492,7 +533,14 @@ SQL
             end
             type = type.strip
 
-            ret_params << DataExplorer::Parameter.new(ident, type, default, nullable)
+            begin
+              ret_params << DataExplorer::Parameter.new(ident, type, default, nullable)
+            rescue
+              if opts[:strict]
+                raise
+              end
+            end
+
             false
           elsif line =~ /^\s+$/
             false
@@ -568,6 +616,7 @@ SQL
       [:name, :sql, :description].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
+
       query.check_params!
       query.save
 
@@ -640,7 +689,7 @@ SQL
           success: true,
           errors: [],
           duration: (result[:duration_secs].to_f * 1000).round(1),
-          params: result[:params_full],
+          params: query_params,
           columns: cols,
         }
         json[:explain] = result[:explain] if opts[:explain]

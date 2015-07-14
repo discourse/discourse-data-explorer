@@ -1,0 +1,6 @@
+{{#if info.nullable}}
+  {{combo-box valueAttribute="id" value=value nameProperty="name" content=boolTypes}}
+{{else}}
+  {{input type="checkbox" checked=value}}
+{{/if}}
+<span class="param-name">{{info.identifier}}</span>

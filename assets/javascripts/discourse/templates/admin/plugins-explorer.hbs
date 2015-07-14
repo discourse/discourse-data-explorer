@@ -75,14 +75,20 @@
 
       <div class="clear"></div>
       <div class="pull-left">
-        {{d-button action="save" label="explorer.save" disabled=saveDisabled class="btn-primary"}}
+        {{#if everEditing}}
+          {{d-button action="save" label="explorer.save" disabled=saveDisabled class="btn-primary"}}
+        {{else}}
+          {{d-button action="editName" label="explorer.edit" icon="pencil" class="btn-primary"}}
+        {{/if}}
         {{d-button action="download" label="explorer.export" disabled=runDisabled icon="download"}}
       </div>
       <div class="pull-right">
         {{#if selectedItem.destroyed}}
           {{d-button action="recover" class="" icon="undo" label="explorer.recover"}}
         {{else}}
-          {{d-button action="discard" class="btn-danger" icon="undo" label="explorer.undo" disabled=saveDisabled}}
+          {{#if everEditing}}
+            {{d-button action="discard" class="btn-danger" icon="undo" label="explorer.undo" disabled=saveDisabled}}
+          {{/if}}
           {{d-button action="destroy" class="btn-danger" icon="trash" label="explorer.delete"}}
         {{/if}}
       </div>
@@ -91,17 +97,14 @@
   </div>
 
   <form class="query-run" {{action "run" on="submit"}}>
-    {{#if selectedItem.param_names}}
+    {{#if selectedItem.hasParams}}
       <div class="query-params">
-        <div class="param-save">
-          {{d-button action="saveDefaults" label="explorer.save_params" type="button"}}
-          {{d-button action="resetParams" label="explorer.reset_params" type="button"}}
-        </div>
-        {{#each selectedItem.param_names as |pname|}}
-          <div class="param">
-            {{param-field params=selectedItem.params pname=pname}}
-            <span class="param-name">{{pname}}</span>
-          </div>
+        {{#each selectedItem.param_info as |pinfo|}}
+          {{param-input params=selectedItem.params info=pinfo}}
+          {{! <div class="param">
+            {{param-field params=selectedItem.params pname=pinfo.identifier type=pinfo.type}
+            <span class="param-name">{{pinfo.identifier}</span>
+          </div> }}
         {{/each}}
       </div>
     {{/if}}

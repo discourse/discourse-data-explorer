@@ -33,11 +33,17 @@ en:
         filter: "Search..."
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Types</a>"
+      types:
+        bool:
+          yes: "Yes"
+          no: "No"
+          null_: "Null"
       export: "Export"
       save: "Save Changes"
       saverun: "Save Changes and Run Query"
       run: "Run Query"
       undo: "Discard Changes"
+      edit: "Edit"
       delete: "Delete"
       recover: "Undelete Query"
       download_json: "Download Results"

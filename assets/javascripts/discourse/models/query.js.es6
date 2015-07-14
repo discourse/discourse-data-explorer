@@ -7,55 +7,40 @@ const Query = RestModel.extend({
 
   _init: function() {
     this._super();
-    if (!this.get('options')) {
-      this.set('options', {defaults:{}});
-    }
     this.set('dirty', false);
   }.on('init'),
 
   _initParams: function() {
     this.resetParams();
-  }.on('init').observes('param_names'),
-
-  // the server uses 'qopts' and the client uses 'options' due to ActiveRecord
-  // freaking out if a serialized value is named 'options'
-  options: Em.computed.alias('qopts'),
+  }.on('init').observes('param_info'),
 
   markDirty: function() {
     this.set('dirty', true);
-  }.observes('name', 'description', 'sql', 'options', 'options.defaults'),
+  }.observes('name', 'description', 'sql'),
 
   markNotDirty() {
     this.set('dirty', false);
   },
 
+  hasParams: function() {
+    return this.get('param_info.length') > 0;
+  }.property('param_info'),
+
   resetParams() {
     const newParams = {};
     const oldParams = this.get('params');
-    const defaults = this.get('options.defaults') || {};
-    (this.get('param_names') || []).forEach(function(name) {
-      if (defaults[name]) {
-        newParams[name] = defaults[name];
-      } else if (oldParams[name]) {
+    const paramInfo = this.get('param_info') || [];
+    paramInfo.forEach(function(pinfo) {
+      const name = pinfo.identifier;
+      if (oldParams[pinfo.identifier]) {
         newParams[name] = oldParams[name];
+      } else if (pinfo['default'] !== null) {
+        newParams[name] = pinfo['default'];
       } else {
         newParams[name] = '';
       }
     });
     this.set('params', newParams);
-  },
-
-  saveDefaults() {
-    const currentParams = this.get('params');
-    let defaults = {};
-    (this.get('param_names') || []).forEach(function(name) {
-      if (currentParams[name]) {
-        defaults[name] = currentParams[name];
-      } else {
-        delete defaults[name];
-      }
-    });
-    this.set('options.defaults', defaults);
   },
 
   downloadUrl: function() {
@@ -88,15 +73,11 @@ const Query = RestModel.extend({
       props.id = this.get('id');
     }
     return props;
-  },
-
-  run() {
-    console.log("Called query#run");
   }
 });
 
 Query.reopenClass({
-  updatePropertyNames: ["name", "description", "sql", "qopts"]
+  updatePropertyNames: ["name", "description", "sql"]
 });
 
 export default Query;
