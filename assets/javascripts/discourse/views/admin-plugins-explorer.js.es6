@@ -18,14 +18,18 @@ export default Ember.View.extend({
 
     this.set('grippie', $grippie);
 
-    const mousemove = Discourse.debounce(function(e) {
+    const mousemove = function(e) {
       const diff = self.get('startY') - e.screenY;
-      $targets.height(self.get('startSize') - diff);
+      const newHeight = self.get('startSize') - diff;
+      Em.Logger.debug("new height", newHeight);
+      $targets.height(newHeight);
       self.appEvents.trigger('ace:resize');
-    }, 5);
+    };
 
-    const mouseup = function(e) {
-      //mousemove(e);
+    let mouseup;
+    mouseup = function(e) {
+      mousemove(e);
+      Em.Logger.debug("mouseup");
       $body.off('mousemove', mousemove);
       $body.off('mouseup', mouseup);
       self.set('startY', null);
@@ -44,6 +48,7 @@ export default Ember.View.extend({
   }.on('didInsertElement'),
 
   _cleanup: function() {
+    this.get('grippie').off('mousedown');
     this.set('grippie', null);
   }.on('willDestroyElement')
 });
