@@ -182,9 +182,13 @@ export default Ember.ArrayController.extend({
         }
 
         self.set('showResults', true);
-      }).catch(function(result) {
+      }).catch(function(err) {
         self.set('showResults', false);
-        self.set('results', result);
+        if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
+          self.set('results', err.jqXHR.responseJSON);
+        } else {
+          popupAjaxError(err);
+        }
       }).finally(function() {
         self.set('loading', false);
       });

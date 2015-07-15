@@ -720,7 +720,7 @@ SQL
         render json: {
                  success: false,
                  errors: [err_msg]
-               }
+               }, status: 422
       else
         pg_result = result[:pg_result]
         cols = pg_result.fields
