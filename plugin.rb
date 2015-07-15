@@ -54,6 +54,7 @@ after_initialize do
     #   explain - the query
     def self.run_query(query, req_params={}, opts={})
       # Safety checks
+      # see test 'doesn't allow you to modify the database #2'
       if query.sql =~ /;/
         err = DataExplorer::ValidationError.new(I18n.t('js.errors.explorer.no_semicolons'))
         return {error: err, duration_nanos: 0}
@@ -74,10 +75,11 @@ after_initialize do
       begin
         ActiveRecord::Base.connection.transaction do
           # Setting transaction to read only prevents shoot-in-foot actions like SELECT FOR UPDATE
+          # see test 'doesn't allow you to modify the database #1'
           ActiveRecord::Base.exec_sql "SET TRANSACTION READ ONLY"
-          # SQL comments are for the benefits of the slow queries log
-          sql = <<SQL
 
+          # SQL comments are for the benefits of the slow queries log
+          sql = <<-SQL
 /*
  * DataExplorer Query
  * Query: /admin/plugins/explorer?id=#{query.id}
@@ -101,6 +103,7 @@ SQL
           end
 
           # All done. Issue a rollback anyways, just in case
+          # see test 'doesn't allow you to modify the database #1'
           raise ActiveRecord::Rollback
         end
       rescue Exception => ex
