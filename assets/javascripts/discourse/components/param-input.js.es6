@@ -75,7 +75,7 @@ export default Ember.Component.extend({
       case 'boolean':
         return /^Y|N|#null|true|false/.test(value);
       case 'double':
-        return !isNaN(parseFloat(value));
+        return !isNaN(parseFloat(value)) || /^(-?)Inf(inity)?$/i.test(value) || /^(-?)NaN$/i.test(value);
       case 'int_list':
         return value.split(',').every(function(i) {
           return /^(-?\d+|null)$/.test(i.trim());

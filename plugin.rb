@@ -351,6 +351,12 @@ SQL
         DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
       end
     end
+
+    def self.destroy_all
+      PluginStoreRow.where(plugin_name: DataExplorer.plugin_name)
+        .where("key LIKE 'q:%'")
+        .destroy_all
+    end
   end
 
   class DataExplorer::Parameter
@@ -431,9 +437,11 @@ SQL
 
       case @type
         when :int
+          invalid_format string, 'Not an integer' unless string =~ /^-?\d+$/
           value = string.to_i
           invalid_format string, 'Too large' unless Fixnum === value
         when :bigint
+          invalid_format string, 'Not an integer' unless string =~ /^-?\d+$/
           value = string.to_i
         when :boolean
           value = !!(string =~ /t|true|y|yes|1/i)
@@ -458,7 +466,23 @@ SQL
             invalid_format string, e.message
           end
         when :double
-          value = string.to_f
+          if string =~ /-?\d*(\.\d+)/
+            value = Float(string)
+          elsif string =~ /^(-?)Inf(inity)?$/i
+            if $1
+              value = -Float::INFINITY
+            else
+              value = Float::INFINITY
+            end
+          elsif string =~ /^(-?)NaN$/i
+            if $1
+              value = -Float::NAN
+            else
+              value = Float::NAN
+            end
+          else
+            invalid_format string
+          end
         when :category_id
           if string =~ /(.*)\/(.*)/
             parent_name = $1
@@ -670,7 +694,9 @@ SQL
         response.sending_file = true
       end
 
-      query_params = MultiJson.load(params[:params])
+      params[:params] = params[:_params] if params[:_params] # testing workaround
+      query_params = {}
+      query_params = MultiJson.load(params[:params]) if params[:params]
 
       opts = {current_user: current_user.username}
       opts[:explain] = true if params[:explain] == "true"
