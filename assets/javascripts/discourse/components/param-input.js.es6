@@ -83,13 +83,12 @@ export default Ember.Component.extend({
       case 'post_id':
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case 'category_id':
-        const cats = Category.list();
         if (!isPositiveInt && value !== value.dasherize()) {
           this.set('value', value.dasherize());
         }
 
         if (isPositiveInt) {
-          return !!cats.find(function(c) {
+          return !!this.site.categories.find(function(c) {
             return c.get('id') === intVal;
           });
         } else if (/\//.test(value)) {
