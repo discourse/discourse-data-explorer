@@ -35,7 +35,10 @@ const Query = RestModel.extend({
       if (oldParams[pinfo.identifier]) {
         newParams[name] = oldParams[name];
       } else if (pinfo['default'] !== null) {
+        if (pinfo['default'] === false) { debugger; }
         newParams[name] = pinfo['default'];
+      } else if (pinfo['type'] === 'boolean') {
+        newParams[name] = 'false';
       } else {
         newParams[name] = '';
       }

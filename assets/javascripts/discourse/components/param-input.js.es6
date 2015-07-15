@@ -43,7 +43,14 @@ export default Ember.Component.extend({
       this.get('params')[this.get('info.identifier')] = value.toString();
     }
     return this.get('params')[this.get('info.identifier')];
-  }.property('params', 'pname'),
+  }.property('params', 'info.identifier'),
+
+  valueBool: function(key, value, previousValue) {
+    if (arguments.length > 1) {
+      this.get('params')[this.get('info.identifier')] = (!!value).toString();
+    }
+    return this.get('params')[this.get('info.identifier')] !== 'false';
+  }.property('params', 'info.identifier'),
 
   valid: function() {
     const type = this.get('info.type'),

@@ -171,6 +171,9 @@
     overflow-x: visible;
     .ac-wrap {
       display: inline-block;
+      input {
+        width: 100px !important; // override an inline style
+      }
     }
     input {
       width: 190px;
