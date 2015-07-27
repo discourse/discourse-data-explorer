@@ -168,8 +168,18 @@ google_user_infos.email
       # refer user to http://www.postgresql.org/docs/9.3/static/datatype.html
       @schema ||= begin
         results = ActiveRecord::Base.exec_sql <<SQL
-select column_name, data_type, character_maximum_length, is_nullable, column_default, table_name
-from INFORMATION_SCHEMA.COLUMNS where table_schema = 'public'
+select
+  c.column_name column_name,
+  c.data_type data_type,
+  c.character_maximum_length character_maximum_length,
+  c.is_nullable is_nullable,
+  c.column_default column_default,
+  c.table_name table_name,
+  pgd.description column_desc
+from INFORMATION_SCHEMA.COLUMNS c
+inner join pg_catalog.pg_statio_all_tables st on (c.table_schema=st.schemaname and c.table_name=st.relname)
+left outer join pg_catalog.pg_description pgd on (pgd.objoid=st.relid)
+where c.table_schema = 'public'
 SQL
         by_table = {}
         # Massage the results into a nicer form
@@ -196,6 +206,7 @@ SQL
           elsif default =~ /^'(.*)'::(character varying|text)/
             hash['column_default'] = $1
           end
+          hash.delete('column_desc') unless hash['column_desc']
 
           if sensitive_column_names.include? full_col_name
             hash['sensitive'] = true
