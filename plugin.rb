@@ -165,6 +165,7 @@ google_user_infos.email
     end
 
     def self.schema
+      # No need to expire this, because the server processes get restarted on upgrade
       # refer user to http://www.postgresql.org/docs/9.3/static/datatype.html
       @schema ||= begin
         results = ActiveRecord::Base.exec_sql <<SQL
@@ -194,7 +195,10 @@ SQL
           end
           clen = hash.delete 'character_maximum_length'
           dt = hash['data_type']
-          if dt == 'character varying'
+          if hash['column_name'] == 'id'
+            hash['data_type'] = 'serial'
+            hash['primary'] = true
+          elsif dt == 'character varying'
             hash['data_type'] = "varchar(#{clen.to_i})"
           elsif dt == 'timestamp without time zone'
             hash['data_type'] = 'timestamp'
@@ -214,6 +218,9 @@ SQL
           end
           if enum_info.include? full_col_name
             hash['enum'] = enum_info[full_col_name]
+          end
+          if denormalized_columns.include? full_col_name
+            hash['denormal'] = denormalized_columns[full_col_name]
           end
           fkey = fkey_info(hash['table_name'], hash['column_name'])
           if fkey
@@ -309,6 +316,7 @@ SQL
         :'post_actions.related_post_id' => :posts,
 
         :'color_scheme_colors.color_scheme_id' => :color_schemes,
+        :'color_schemes.versioned_id' => :color_schemes,
 
         :'incoming_links.incoming_referer_id' => :incoming_referers,
         :'incoming_referers.incoming_domain_id' => :incoming_domains,
@@ -346,6 +354,121 @@ SQL
         :topic_id     => :topics,
         :upload_id    => :uploads,
 
+      }.with_indifferent_access
+    end
+
+    def self.denormalized_columns
+      {
+        :'posts.reply_count' => :post_replies,
+        :'posts.quote_count' => :quoted_posts,
+        :'posts.incoming_link_count' => :topic_links,
+        :'posts.word_count' => :posts,
+        :'posts.avg_time' => :post_timings,
+        :'posts.reads' => :post_timings,
+        :'posts.like_score' => :post_actions,
+
+        :'posts.like_count' => :post_actions,
+        :'posts.bookmark_count' => :post_actions,
+        :'posts.vote_count' => :post_actions,
+        :'posts.off_topic_count' => :post_actions,
+        :'posts.notify_moderators_count' => :post_actions,
+        :'posts.spam_count' => :post_actions,
+        :'posts.illegal_count' => :post_actions,
+        :'posts.inappropriate_count' => :post_actions,
+        :'posts.notify_user_count' => :post_actions,
+
+        :'topics.views' => :topic_views,
+        :'topics.posts_count' => :posts,
+        :'topics.reply_count' => :posts,
+        :'topics.incoming_link_count' => :topic_links,
+        :'topics.moderator_posts_count' => :posts,
+        :'topics.participant_count' => :posts,
+        :'topics.word_count' => :posts,
+        :'topics.last_posted_at' => :posts,
+        :'topics.last_post_user_idt' => :posts,
+        :'topics.avg_time' => :post_timings,
+        :'topics.highest_post_number' => :posts,
+        :'topics.image_url' => :posts,
+        :'topics.excerpt' => :posts,
+
+        :'topics.like_count' => :post_actions,
+        :'topics.bookmark_count' => :post_actions,
+        :'topics.vote_count' => :post_actions,
+        :'topics.off_topic_count' => :post_actions,
+        :'topics.notify_moderators_count' => :post_actions,
+        :'topics.spam_count' => :post_actions,
+        :'topics.illegal_count' => :post_actions,
+        :'topics.inappropriate_count' => :post_actions,
+        :'topics.notify_user_count' => :post_actions,
+
+        :'categories.topic_count' => :topics,
+        :'categories.post_count' => :posts,
+        :'categories.latest_post_id' => :posts,
+        :'categories.latest_topic_id' => :topics,
+        :'categories.description' => :posts,
+        :'categories.read_restricted' => :category_groups,
+        :'categories.topics_year' => :topics,
+        :'categories.topics_month' => :topics,
+        :'categories.topics_week' => :topics,
+        :'categories.topics_day' => :topics,
+        :'categories.posts_year' => :posts,
+        :'categories.posts_month' => :posts,
+        :'categories.posts_week' => :posts,
+        :'categories.posts_day' => :posts,
+
+        :'badges.grant_count' => :user_badges,
+        :'groups.user_count' => :group_users,
+
+        :'directory_items.likes_received' => :post_actions,
+        :'directory_items.likes_given' => :post_actions,
+        :'directory_items.topics_entered' => :user_stats,
+        :'directory_items.days_visited' => :user_stats,
+        :'directory_items.posts_read' => :user_stats,
+        :'directory_items.topic_count' => :topics,
+        :'directory_items.post_count' => :posts,
+
+        :'post_search_data.search_data' => :posts,
+
+        :'top_topics.yearly_posts_count' => :posts,
+        :'top_topics.monthly_posts_count' => :posts,
+        :'top_topics.weekly_posts_count' => :posts,
+        :'top_topics.daily_posts_count' => :posts,
+        :'top_topics.yearly_views_count' => :topic_views,
+        :'top_topics.monthly_views_count' => :topic_views,
+        :'top_topics.weekly_views_count' => :topic_views,
+        :'top_topics.daily_views_count' => :topic_views,
+        :'top_topics.yearly_likes_count' => :post_actions,
+        :'top_topics.monthly_likes_count' => :post_actions,
+        :'top_topics.weekly_likes_count' => :post_actions,
+        :'top_topics.daily_likes_count' => :post_actions,
+        :'top_topics.yearly_op_likes_count' => :post_actions,
+        :'top_topics.monthly_op_likes_count' => :post_actions,
+        :'top_topics.weekly_op_likes_count' => :post_actions,
+        :'top_topics.daily_op_likes_count' => :post_actions,
+        :'top_topics.all_score' => :posts,
+        :'top_topics.yearly_score' => :posts,
+        :'top_topics.monthly_score' => :posts,
+        :'top_topics.weekly_score' => :posts,
+        :'top_topics.daily_score' => :posts,
+
+        :'topic_links.clicks' => :topic_link_clicks,
+        :'topic_search_data.search_data' => :topics,
+
+        :'topic_users.liked' => :post_actions,
+        :'topic_users.bookmarked' => :post_actions,
+
+        :'user_stats.posts_read_count' => :post_timings,
+        :'user_stats.topic_reply_count' => :posts,
+        :'user_stats.first_post_created_at' => :posts,
+        :'user_stats.post_count' => :posts,
+        :'user_stats.topic_count' => :topics,
+        :'user_stats.likes_given' => :post_actions,
+        :'user_stats.likes_received' => :post_actions,
+
+        :'user_search_data.search_data' => :user_profiles,
+
+        :'users.last_posted_at' => :posts,
+        :'users.previous_visit_at' => :user_visits,
       }.with_indifferent_access
     end
   end

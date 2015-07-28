@@ -18,24 +18,23 @@ export default Ember.Component.extend({
       }
 
       schema[key].forEach(function(col) {
-        let notes = false;
+        const notes_components = [];
+        if (col.primary) {
+          notes_components.push("primary key");
+        }
         if (col.is_nullable) {
-          notes = "null";
+          notes_components.push("null");
         }
         if (col.column_default) {
-          if (notes) {
-            notes += ", default " + col.column_default;
-          } else {
-            notes = "default " + col.column_default;
-          }
+          notes_components.push("default " + col.column_default);
         }
         if (col.fkey_info) {
-          if (notes) {
-            notes += ", fkey " + col.fkey_info;
-          } else {
-            notes = "fkey " + col.fkey_info;
-          }
+          notes_components.push("fkey " + col.fkey_info);
         }
+        if (col.denormal) {
+          notes_components.push("denormal " + col.denormal);
+        }
+        const notes = notes_components.join(", ");
 
         if (notes) {
           col.notes = notes;
