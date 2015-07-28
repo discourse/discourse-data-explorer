@@ -29,14 +29,23 @@ export default Ember.Component.extend({
             notes = "default " + col.column_default;
           }
         }
-        if (notes) {
-          col.notes = notes;
-          col.havetypeinfo = true;
+        if (col.fkey_info) {
+          if (notes) {
+            notes += ", fkey " + col.fkey_info;
+          } else {
+            notes = "fkey " + col.fkey_info;
+          }
         }
 
-        if (col.enum) {
-          col.havetypeinfo = true;
+        if (notes) {
+          col.notes = notes;
         }
+
+        if (col.enum || col.column_desc) {
+          col.havepopup = true;
+        }
+
+        col.havetypeinfo = !!(col.notes || col.enum || col.column_desc);
 
       });
     }

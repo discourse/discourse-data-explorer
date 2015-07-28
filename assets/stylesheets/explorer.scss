@@ -92,7 +92,7 @@
       dd {
         display: inline-block;
         vertical-align: text-top;
-        width: 70px;
+        width: 90px;
         color: $tertiary;
         margin: 0;
         padding-left: 7px;
@@ -101,28 +101,31 @@
         .schema-typenotes {
           color: dark-light-diff($primary, $secondary, 50%, -20%);
           font-style: italic;
+        }
+        .popup-info {
+          color: dark-light-diff($primary, $secondary, 50%, -20%);
 
-          ol { display: none; }
-          &:hover ol { display: block; }
-          &:focus ol { display: block; }
-          .enum-info {
+          .popup { display: none; }
+          &:hover .popup { display: block; }
+          &:focus .popup { display: block; }
 
-            ol {
-              position: absolute;
-              padding: 5px;
-              padding-right: calc(5px + 2em);
-              border: 1px solid;
-              background: white;
-              list-style: none;
-              left: -12em;
-              top: 6px;
-              z-index: 10;
-              > li {
-                width: 150%;
-              }
-              > li:before {
-                content: attr(value) ": ";
-              }
+          .popup {
+            position: absolute;
+            padding: 5px;
+            padding-right: calc(5px + 2em);
+            border: 1px solid;
+            background: white;
+            left: -120px;
+            width: 180px;
+            top: 6px;
+            z-index: 10;
+          }
+
+          .popup ol {
+            margin: 0;
+            list-style: none;
+            > li:before {
+              content: attr(value) ": ";
             }
           }
         }

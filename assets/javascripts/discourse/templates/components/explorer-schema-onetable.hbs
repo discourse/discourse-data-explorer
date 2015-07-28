@@ -21,11 +21,18 @@
         {{col.data_type}}
         {{#if col.havetypeinfo}}
           <br>
+          {{#if col.havepopup}}
+            <i class="fa fa-info popup-info">
+              <div class="popup">
+                {{col.column_desc}}
+                {{#if col.enum}}
+                  {{explorer-schema-enuminfo col=col}}
+                {{/if}}
+              </div>
+            </i>
+          {{/if}}
           <span class="schema-typenotes">
             {{col.notes}}
-            {{#if col.enum}}
-              {{explorer-schema-enuminfo col=col}}
-            {{/if}}
           </span>
         {{/if}}
       </dd>

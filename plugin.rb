@@ -177,9 +177,10 @@ select
   c.table_name table_name,
   pgd.description column_desc
 from INFORMATION_SCHEMA.COLUMNS c
-inner join pg_catalog.pg_statio_all_tables st on (c.table_schema=st.schemaname and c.table_name=st.relname)
-left outer join pg_catalog.pg_description pgd on (pgd.objoid=st.relid)
+inner join pg_catalog.pg_statio_all_tables st on (c.table_schema = st.schemaname and c.table_name = st.relname)
+left outer join pg_catalog.pg_description pgd on (pgd.objoid = st.relid and pgd.objsubid = c.ordinal_position)
 where c.table_schema = 'public'
+ORDER BY c.table_name, c.ordinal_position
 SQL
         by_table = {}
         # Massage the results into a nicer form
@@ -214,10 +215,14 @@ SQL
           if enum_info.include? full_col_name
             hash['enum'] = enum_info[full_col_name]
           end
+          fkey = fkey_info(hash['table_name'], hash['column_name'])
+          if fkey
+            hash['fkey_info'] = fkey
+          end
 
-          tname = hash.delete('table_name')
-          by_table[tname] ||= []
-          by_table[tname] << hash
+          table_name = hash.delete('table_name')
+          by_table[table_name] ||= []
+          by_table[table_name] << hash
         end
 
         # this works for now, but no big loss if the tables aren't quite sorted
@@ -234,9 +239,9 @@ SQL
       end
     end
 
-
     def self.enums
       @enums ||= {
+        :'badges.badge_type_id' => BadgeType.all_types,
         :'category_groups.permission_type' => CategoryGroup.permission_types,
         :'directory_items.period_type' => DirectoryItem.period_types,
         :'groups.alias_level' => Group::ALIAS_LEVELS,
@@ -265,6 +270,83 @@ SQL
         end
         enum_info
       end
+    end
+
+    def self.fkey_info(table, column)
+      full_name = "#{table}.#{column}"
+
+      if fkey_defaults[column]
+        fkey_defaults[column]
+      elsif column =~ /_by_id$/ || column =~ /_user_id$/
+        :users
+      elsif foreign_keys[full_name]
+        foreign_keys[full_name]
+      else
+        nil
+      end
+    end
+
+    def self.foreign_keys
+      @fkey_columns ||= {
+        :'posts.last_editor_id' => :users,
+
+        :'topics.featured_user1_id' => :users,
+        :'topics.featured_user2_id' => :users,
+        :'topics.featured_user3_id' => :users,
+        :'topics.featured_user4_id' => :users,
+        :'topics.featured_user5_id' => :users,
+
+        :'users.seen_notification_id' => :notifications,
+        :'users.uploaded_avatar_id' => :uploads,
+        :'users.primary_group_id' => :groups,
+
+        :'categories.latest_post_id' => :posts,
+        :'categories.latest_topic_id' => :topics,
+        :'categories.parent_category_id' => :categories,
+
+        :'badges.badge_grouping_id' => :badge_groupings,
+
+        :'post_actions.related_post_id' => :posts,
+
+        :'color_scheme_colors.color_scheme_id' => :color_schemes,
+
+        :'incoming_links.incoming_referer_id' => :incoming_referers,
+        :'incoming_referers.incoming_domain_id' => :incoming_domains,
+
+        :'post_replies.reply_id' => :posts,
+
+        :'quoted_posts.quoted_post_id' => :posts,
+
+        :'topic_link_clicks.topic_link_id' => :topic_links,
+        :'topic_link_clicks.link_topic_id' => :topics,
+        :'topic_link_clicks.link_post_id' => :posts,
+
+        :'user_actions.target_topic_id' => :topics,
+        :'user_actions.target_post_id' => :posts,
+
+        :'user_avatars.custom_upload_id' => :uploads,
+        :'user_avatars.gravatar_upload_id' => :uploads,
+
+        :'user_badges.notification_id' => :notifications,
+
+        :'user_profiles.card_image_badge_id' => :badges,
+      }.with_indifferent_access
+    end
+
+    def self.fkey_defaults
+      @fkey_defaults ||= {
+        :user_id      => :users,
+        # :*_by_id    => :users,
+        # :*_user_id  => :users,
+
+        :category_id  => :categories,
+        :group_id     => :groups,
+        :post_id      => :posts,
+        :post_action_id => :post_actions,
+        :topic_id     => :topics,
+        :upload_id    => :uploads,
+
+      }.with_indifferent_access
     end
   end
 
@@ -784,3 +866,9 @@ SQL
 
 end
 
+# polyfill
+class ::BadgeType
+  def self.all_types
+    @all_types ||= Enum.new(:gold, :silver, :bronze, start: 1)
+  end
+end

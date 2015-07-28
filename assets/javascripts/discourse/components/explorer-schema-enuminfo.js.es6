@@ -1,6 +1,5 @@
 export default Ember.Component.extend({
-  classNames: ['fa', 'fa-info', 'enum-info'],
-  tagName: 'i',
+  tagName: 'ol',
 
   enuminfo: function() {
     const hash = this.get('col.enum');
