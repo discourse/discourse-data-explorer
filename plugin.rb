@@ -183,6 +183,14 @@ left outer join pg_catalog.pg_description pgd on (pgd.objoid = st.relid and pgd.
 where c.table_schema = 'public'
 ORDER BY c.table_name, c.ordinal_position
 SQL
+        table_comment_results = ActiveRecord::Base.exec_sql <<SQL
+SELECT
+  st.relname table_name,
+  pgd.description table_desc
+FROM pg_catalog.pg_statio_all_tables st
+INNER JOIN pg_catalog.pg_description pgd ON (pgd.objoid = st.relid AND pgd.objsubid = 0)
+WHERE st.schemaname = 'public'
+SQL
         by_table = {}
         # Massage the results into a nicer form
         results.each do |hash|
@@ -296,6 +304,7 @@ SQL
     def self.foreign_keys
       @fkey_columns ||= {
         :'posts.last_editor_id' => :users,
+        :'posts.version' => :'post_revisions.number',
 
         :'topics.featured_user1_id' => :users,
         :'topics.featured_user2_id' => :users,
