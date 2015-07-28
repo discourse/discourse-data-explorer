@@ -241,7 +241,7 @@ SQL
 
     def self.enums
       @enums ||= {
-        :'badges.badge_type_id' => BadgeType.all_types,
+        :'badges.badge_type_id' =>  Enum.new(:gold, :silver, :bronze, start: 1),
         :'category_groups.permission_type' => CategoryGroup.permission_types,
         :'directory_items.period_type' => DirectoryItem.period_types,
         :'groups.alias_level' => Group::ALIAS_LEVELS,
@@ -862,13 +862,5 @@ SQL
 
   Discourse::Application.routes.append do
     mount ::DataExplorer::Engine, at: '/admin/plugins/explorer', constraints: AdminConstraint.new
-  end
-
-end
-
-# polyfill
-class ::BadgeType
-  def self.all_types
-    @all_types ||= Enum.new(:gold, :silver, :bronze, start: 1)
   end
 end
