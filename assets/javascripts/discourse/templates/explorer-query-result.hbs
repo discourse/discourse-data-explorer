@@ -1,5 +1,7 @@
 <div class="result-info">
-  {{d-button action="downloadResult" icon="download" label="explorer.download_json"}}
+  {{i18n "explorer.download"}}
+  {{d-button action="downloadResultJson" icon="download" label="explorer.download_json"}}
+  {{d-button action="downloadResultCsv" icon="download" label="explorer.download_csv"}}
   <div class="result-about">
     {{duration}}
   </div>

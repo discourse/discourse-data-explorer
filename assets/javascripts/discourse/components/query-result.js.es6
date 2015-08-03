@@ -100,43 +100,50 @@ const QueryResultComponent = Ember.Component.extend({
     });
   }.property('content', 'columns.@each'),
 
+  downloadResult(format) {
+    // Create a frame to submit the form in (?)
+    // to avoid leaving an about:blank behind
+    let windowName = randomIdShort();
+    const newWindowContents = "<body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
+
+    let newWindow = window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
+
+    let form = document.createElement("form");
+    form.setAttribute('id', 'query-download-result');
+    form.setAttribute('method', 'post');
+    form.setAttribute('action', Discourse.getURL('/admin/plugins/explorer/queries/' + this.get('query.id') + '/run.' + format + '?download=1'));
+    form.setAttribute('target', windowName);
+    form.setAttribute('style', 'display:none;');
+
+    function addInput(form, name, value) {
+      let field;
+      field = document.createElement('input');
+      field.setAttribute('name', name);
+      field.setAttribute('value', value);
+      form.appendChild(field);
+    }
+
+    addInput(form, 'params', JSON.stringify(this.get('params')));
+    addInput(form, 'explain', this.get('hasExplain'));
+    addInput(form, 'limit', '1000000');
+
+    Discourse.ajax('/session/csrf.json').then(function(csrf) {
+      addInput(form, 'authenticity_token', csrf.csrf);
+
+      document.body.appendChild(form);
+      form.submit();
+      Em.run.next('afterRender', function() {
+        document.body.removeChild(form);
+      })
+    });
+  },
+
   actions: {
-    downloadResult() {
-      // Create a frame to submit the form in (?)
-      // to avoid leaving an about:blank behind
-      let windowName = randomIdShort();
-      const newWindowContents = "<body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
-
-      let newWindow = window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
-
-      let form = document.createElement("form");
-      form.setAttribute('id', 'query-download-result');
-      form.setAttribute('method', 'post');
-      form.setAttribute('action', Discourse.getURL('/admin/plugins/explorer/queries/' + this.get('query.id') + '/run.json?download=1'));
-      form.setAttribute('target', windowName);
-      form.setAttribute('style', 'display:none;');
-
-      function addInput(form, name, value) {
-        let field;
-        field = document.createElement('input');
-        field.setAttribute('name', name);
-        field.setAttribute('value', value);
-        form.appendChild(field);
-      }
-
-      addInput(form, 'params', JSON.stringify(this.get('params')));
-      addInput(form, 'explain', this.get('hasExplain'));
-      addInput(form, 'limit', '1000000');
-
-      Discourse.ajax('/session/csrf.json').then(function(csrf) {
-        addInput(form, 'authenticity_token', csrf.csrf);
-
-        document.body.appendChild(form);
-        form.submit();
-        Em.run.next('afterRender', function() {
-          document.body.removeChild(form);
-        })
-      });
+    downloadResultJson() {
+      this.downloadResult('json');
+    },
+    downloadResultCsv() {
+      this.downloadResult('csv');
     }
   },
 

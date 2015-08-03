@@ -917,8 +917,6 @@ SQL
       check_xhr unless params[:download]
       query = DataExplorer::Query.find(params[:id].to_i)
       if params[:download]
-        response.headers['Content-Disposition'] =
-          "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, 'discourse')}-#{Date.today}.dcqresult.json"
         response.sending_file = true
       end
 
@@ -952,23 +950,45 @@ SQL
       else
         pg_result = result[:pg_result]
         cols = pg_result.fields
-        json = {
-          success: true,
-          errors: [],
-          duration: (result[:duration_secs].to_f * 1000).round(1),
-          params: query_params,
-          columns: cols,
-        }
-        json[:explain] = result[:explain] if opts[:explain]
-        # TODO - special serialization
-        # This is dead code in the client right now
-        # if cols.any? { |col_name| special_serialization? col_name }
-        #   json[:relations] = DataExplorer.add_extra_data(pg_result)
-        # end
+        respond_to do |format|
+          format.json do
+            if params[:download]
+              response.headers['Content-Disposition'] =
+                "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, 'discourse')}-#{Date.today}.dcqresult.json"
+            end
+            json = {
+              success: true,
+              errors: [],
+              duration: (result[:duration_secs].to_f * 1000).round(1),
+              params: query_params,
+              columns: cols,
+            }
+            json[:explain] = result[:explain] if opts[:explain]
+            # TODO - special serialization
+            # This is dead code in the client right now
+            # if cols.any? { |col_name| special_serialization? col_name }
+            #   json[:relations] = DataExplorer.add_extra_data(pg_result)
+            # end
 
-        json[:rows] = pg_result.values
+            json[:rows] = pg_result.values
 
-        render json: json
+            render json: json
+          end
+          format.csv do
+            response.headers['Content-Disposition'] =
+              "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, 'discourse')}-#{Date.today}.dcqresult.csv"
+
+            require 'csv'
+            text = CSV.generate do |csv|
+              csv << cols
+              pg_result.values.each do |row|
+                csv << row
+              end
+            end
+
+            render text: text
+          end
+        end
       end
     end
   end
