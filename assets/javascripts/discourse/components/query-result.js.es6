@@ -104,7 +104,7 @@ const QueryResultComponent = Ember.Component.extend({
     // Create a frame to submit the form in (?)
     // to avoid leaving an about:blank behind
     let windowName = randomIdShort();
-    const newWindowContents = "<body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
+    const newWindowContents = "<style>body{font-size:36px;display:flex;justify-content:center;align-items:center;}</style><body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
 
     let newWindow = window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
 
