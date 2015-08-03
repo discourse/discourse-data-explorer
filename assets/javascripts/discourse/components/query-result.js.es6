@@ -106,7 +106,7 @@ const QueryResultComponent = Ember.Component.extend({
     let windowName = randomIdShort();
     const newWindowContents = "<style>body{font-size:36px;display:flex;justify-content:center;align-items:center;}</style><body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
 
-    let newWindow = window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
+    const _ = window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
 
     let form = document.createElement("form");
     form.setAttribute('id', 'query-download-result');
