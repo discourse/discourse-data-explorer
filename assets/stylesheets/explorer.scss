@@ -150,6 +150,14 @@
   }
 }
 
+.query-run {
+  margin-top: 15px;
+  .query-plan {
+    display: inline-block;
+    margin-left: 15px;
+  }
+}
+
 .clear { clear: both; }
 
 .schema-title {

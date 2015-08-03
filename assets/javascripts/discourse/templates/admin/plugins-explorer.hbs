@@ -1,5 +1,3 @@
-<h2>Queries</h2>
-
 <div class="query-list">
   {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" content=content castInteger="true" nameChanges="true"}}
   {{d-button action="showCreate" icon="plus" class="no-text"}}
@@ -101,9 +99,6 @@
         {{/each}}
       </div>
     {{/if}}
-    <div class="bool-options">
-      <label>{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
-    </div>
     {{#if runDisabled}}
       {{#if saveDisabled}}
         {{d-button label="explorer.run" disabled="true" class="btn-primary"}}
@@ -113,6 +108,7 @@
     {{else}}
       {{d-button action="run" label="explorer.run" disabled=runDisabled class="btn-primary" type="submit"}}
     {{/if}}
+    <label class="query-plan">{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
   </form>
 
   <hr>
