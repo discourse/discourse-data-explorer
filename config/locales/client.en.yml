@@ -55,6 +55,5 @@ en:
       explain_label: "Include query plan?"
       save_params: "Set Defaults"
       reset_params: "Reset"
-      https_warning: "This site is not protected by HTTPS. Please be careful to not retrieve sensitive information over insecure links."
       no_queries: "There are no queries. Why not "
       no_queries_hook: "create one?"

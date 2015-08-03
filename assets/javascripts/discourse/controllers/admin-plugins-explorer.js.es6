@@ -29,14 +29,6 @@ export default Ember.ArrayController.extend({
     return item || NoQuery;
   }.property('selectedQueryId'),
 
-  not_https: function() {
-    return !(
-      window.location.protocol === "https:" ||
-      window.location.hostname === "localhost" ||
-      window.location.hostname.endsWith(".local")
-    );
-  }.property(),
-
   othersDirty: function() {
     const selected = this.get('selectedItem');
     return !!this.get('content').find(function(q) {
