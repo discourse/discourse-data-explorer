@@ -924,8 +924,10 @@ SQL
       query_params = {}
       query_params = MultiJson.load(params[:params]) if params[:params]
 
-      opts = {current_user: current_user.username}
+      opts = { current_user: current_user.username }
       opts[:explain] = true if params[:explain] == "true"
+
+      opts[:limit] = "ALL" if params[:format] == "csv"
       opts[:limit] = params[:limit].to_i if params[:limit]
 
       result = DataExplorer.run_query(query, query_params, opts)
