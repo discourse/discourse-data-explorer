@@ -728,8 +728,8 @@ SQL
           if string.gsub(/[ _]/, '') =~ /^-?\d+$/
             clazz_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
             begin
-              Object.const_get(clazz_name).find(string.gsub(/[ _]/, '').to_i)
-              value = pkey
+              object = Object.const_get(clazz_name).with_deleted.find(string.gsub(/[ _]/, '').to_i)
+              value = object.id
             rescue ActiveRecord::RecordNotFound
               invalid_format string, "The specified #{clazz_name} was not found"
             end
