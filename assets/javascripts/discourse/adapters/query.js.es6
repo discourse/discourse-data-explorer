@@ -1,5 +1,3 @@
-import buildPluginAdapter from 'discourse/adapters/build-plugin';
+import buildPluginAdapter from 'admin/adapters/build-plugin';
 
-export default buildPluginAdapter('explorer').extend({
-
-});
+export default buildPluginAdapter('explorer').extend({});
