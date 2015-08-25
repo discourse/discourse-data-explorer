@@ -9,8 +9,9 @@ Follow our [Install a Plugin](https://meta.discourse.org/t/install-a-plugin/1915
 howto, using `git clone https://github.com/discourse/discourse-data-explorer.git`
 as the plugin command.
 
-Once you've installed it, review the settings under admin and then enable
-`data_explorer_enabled`.
+Once you've installed it, turn on the `data_explorer_enabled` site setting, go to `/admin/plugins/explorer`, and start querying.
+
+TODO - screenshots of interface, etc
 
 ## License
 
