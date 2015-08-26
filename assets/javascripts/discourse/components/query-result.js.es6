@@ -4,6 +4,7 @@ const Escape = Handlebars.Utils.escapeExpression;
 
 import avatarTemplate from 'discourse/lib/avatar-template';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
+import Badge from 'discourse/models/badge';
 
 var defaultFallback = function(buffer, content, defaultRender) { defaultRender(buffer, content); };
 
@@ -16,10 +17,14 @@ function randomIdShort() {
   });
 }
 
-function transformedRelTable(table) {
+function transformedRelTable(table, modelClass) {
   const result = {};
   table.forEach(function(item) {
-    result[item.id] = item;
+    if (modelClass) {
+      result[item.id] = modelClass.create(item);
+    } else {
+      result[item.id] = item;
+    }
   });
   return result;
 }
@@ -87,9 +92,31 @@ const QueryResultComponent = Ember.Component.extend({
   transformedUserTable: function() {
     return transformedRelTable(this.get('content.relations.user'));
   }.property('content.relations.user'),
+  transformedBadgeTable: function() {
+    return transformedRelTable(this.get('content.relations.badge'), Badge);
+  }.property('content.relations.badge'),
+  transformedPostTable: function() {
+    return transformedRelTable(this.get('content.relations.post'));
+  }.property('content.relations.post'),
+  transformedTopicTable: function() {
+    return transformedRelTable(this.get('content.relations.topic'));
+  }.property('content.relations.topic'),
 
-  lookupUser: function(id) {
+  lookupUser(id) {
     return this.get('transformedUserTable')[id];
+  },
+  lookupBadge(id) {
+    return this.get('transformedBadgeTable')[id];
+  },
+  lookupPost(id) {
+    return this.get('transformedPostTable')[id];
+  },
+  lookupTopic(id) {
+    return this.get('transformedTopicTable')[id];
+  },
+
+  lookupCategory(id) {
+    return this.site.get('categoriesById')[id];
   },
 
   downloadResult(format) {

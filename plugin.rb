@@ -41,9 +41,6 @@ after_initialize do
 
     class SmallBadgeSerializer < ApplicationSerializer
       attributes :id, :name, :badge_type, :description, :icon
-      def badge_type
-        object.badge_type.name
-      end
     end
 
     class SmallPostWithExcerptSerializer < ApplicationSerializer
