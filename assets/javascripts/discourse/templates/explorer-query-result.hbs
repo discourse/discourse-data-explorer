@@ -16,14 +16,14 @@
 <table>
   <thead>
   <tr class="headers">
-    {{#each handler in columnHandlers}}
-      <th>{{handler.displayName}}</th>
+    {{#each columnDispNames as |col|}}
+      <th>{{col}}</th>
     {{/each}}
   </tr>
   </thead>
   <tbody>
-  {{#each row in rows}}
-    {{query-row-content row=row colRenders=columnHandlers extra=content}}
-  {{/each}}
+  {{~#each row in rows}}
+    {{~query-row-content row=row columnTemplates=columnTemplates parent=controller}}
+  {{~/each}}
   </tbody>
 </table>

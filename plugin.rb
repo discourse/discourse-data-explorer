@@ -28,7 +28,6 @@ module ::DataExplorer
   end
 end
 
-
 after_initialize do
 
   module ::DataExplorer
@@ -38,6 +37,20 @@ after_initialize do
     end
 
     class ValidationError < StandardError;
+    end
+
+    class SmallBadgeSerializer < ApplicationSerializer
+      attributes :id, :name, :badge_type, :description, :icon
+    end
+
+    class SmallPostWithExcerptSerializer < ApplicationSerializer
+      attributes :id, :topic_id, :post_number, :excerpt
+      attributes :username, :uploaded_avatar_id
+      def excerpt
+        Post.excerpt(object.cooked, 70)
+      end
+      def username; object.user.username; end
+      def uploaded_avatar_id; object.user.uploaded_avatar_id; end
     end
 
     # Run a data explorer query on the currently connected database.
@@ -118,6 +131,75 @@ SQL
         explain: explain,
         params_full: query_args.tap {|h| h.delete :xxdummy}
       }
+    end
+
+    def self.extra_data_pluck_fields
+      @extra_data_pluck_fields ||= {
+        user: {class: User, fields: [:id, :username, :uploaded_avatar_id], serializer: BasicUserSerializer},
+        badge: {class: Badge, fields: [:id, :name, :badge_type_id, :description, :icon], include: [:badge_type], serializer: SmallBadgeSerializer},
+        post: {class: Post, fields: [:id, :topic_id, :post_number, :cooked, :user_id], include: [:user], serializer: SmallPostWithExcerptSerializer},
+        topic: {class: Topic, fields: [:id, :title, :slug, :posts_count], serializer: BasicTopicSerializer},
+        category: {class: Category, ignore: true},
+        reltime: {ignore: true},
+        html: {ignore: true},
+      }
+    end
+
+    def self.column_regexes
+      @column_regexes ||=
+        extra_data_pluck_fields.map do |key, val|
+          if val[:class]
+            /(#{val[:class].to_s.downcase})_id$/
+          end
+        end.compact
+    end
+
+    def self.add_extra_data(pg_result)
+      needed_classes = {}
+
+      pg_result.fields.each_with_index do |col, idx|
+        rgx = column_regexes.find { |rgx| rgx.match col }
+        if rgx
+          cls = (rgx.match col)[1].to_sym
+          needed_classes[cls] ||= []
+          needed_classes[cls] << idx
+        elsif col =~ /^(\w+)\$/
+          cls = $1.to_sym
+          needed_classes[cls] ||= []
+          needed_classes[cls] << idx
+        end
+      end
+
+      ret = {}
+      col_map = {}
+      needed_classes.each do |cls, column_nums|
+        next unless column_nums.present?
+        support_info = extra_data_pluck_fields[cls]
+        next unless support_info
+
+        column_nums.each do |col_n|
+          col_map[col_n] = cls
+        end
+
+        if support_info[:ignore]
+          ret[cls] = []
+          next
+        end
+
+        ids = Set.new
+        column_nums.each do |col_n|
+          ids.merge(pg_result.column_values(col_n))
+        end
+        ids.delete nil
+        ids.map! &:to_i
+
+        object_class = support_info[:class]
+        all_objs = object_class.select(support_info[:fields]).
+                            where(id: ids.to_a.sort).includes(support_info[:include]).order(:id)
+
+        ret[cls] = ActiveModel::ArraySerializer.new(all_objs, each_serializer: support_info[:serializer])
+      end
+      [ret, col_map]
     end
 
     def self.sensitive_column_names
@@ -966,11 +1048,9 @@ SQL
               columns: cols,
             }
             json[:explain] = result[:explain] if opts[:explain]
-            # TODO - special serialization
-            # This is dead code in the client right now
-            # if cols.any? { |col_name| special_serialization? col_name }
-            #   json[:relations] = DataExplorer.add_extra_data(pg_result)
-            # end
+            ext = DataExplorer.add_extra_data(pg_result)
+            json[:colrender] = ext[1]
+            json[:relations] = ext[0]
 
             json[:rows] = pg_result.values
 
