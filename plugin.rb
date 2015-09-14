@@ -90,6 +90,8 @@ after_initialize do
           # Setting transaction to read only prevents shoot-in-foot actions like SELECT FOR UPDATE
           # see test 'doesn't allow you to modify the database #1'
           ActiveRecord::Base.exec_sql "SET TRANSACTION READ ONLY"
+          # Set a statement timeout so we can't tie up the server
+          ActiveRecord::Base.exec_sql "SET LOCAL statement_timeout = 10000"
 
           # SQL comments are for the benefits of the slow queries log
           sql = <<-SQL
