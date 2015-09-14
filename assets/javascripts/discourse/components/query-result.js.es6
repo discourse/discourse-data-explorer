@@ -1,19 +1,11 @@
-var ColumnHandlers = [];
-var AssistedHandlers = {};
-const Escape = Handlebars.Utils.escapeExpression;
 
-import avatarTemplate from 'discourse/lib/avatar-template';
-import { categoryLinkHTML } from 'discourse/helpers/category-link';
 import Badge from 'discourse/models/badge';
 
-var defaultFallback = function(buffer, content, defaultRender) { defaultRender(buffer, content); };
-
-function isoYMD(date) {
-  return date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
-}
 function randomIdShort() {
   return 'xxxxxxxx'.replace(/[xy]/g, function() {
+    /*eslint-disable*/
     return (Math.random() * 16 | 0).toString(16);
+    /*eslint-enable*/
   });
 }
 
@@ -58,12 +50,10 @@ const QueryResultComponent = Ember.Component.extend({
   }.property('params.@each'),
 
   columnDispNames: function() {
-    const templates = this.get('columnTemplates');
-    const self = this;
     if (!this.get('columns')) {
       return [];
     }
-    return this.get('columns').map(function(colName, idx) {
+    return this.get('columns').map(function(colName) {
       if (colName.endsWith("_id")) {
         return colName.slice(0, -3);
       }
@@ -125,7 +115,7 @@ const QueryResultComponent = Ember.Component.extend({
     let windowName = randomIdShort();
     const newWindowContents = "<style>body{font-size:36px;display:flex;justify-content:center;align-items:center;}</style><body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
 
-    const _ = window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
+    window.open('data:text/html;base64,' + btoa(newWindowContents), windowName);
 
     let form = document.createElement("form");
     form.setAttribute('id', 'query-download-result');
@@ -134,7 +124,7 @@ const QueryResultComponent = Ember.Component.extend({
     form.setAttribute('target', windowName);
     form.setAttribute('style', 'display:none;');
 
-    function addInput(form, name, value) {
+    function addInput(name, value) {
       let field;
       field = document.createElement('input');
       field.setAttribute('name', name);
@@ -142,12 +132,12 @@ const QueryResultComponent = Ember.Component.extend({
       form.appendChild(field);
     }
 
-    addInput(form, 'params', JSON.stringify(this.get('params')));
-    addInput(form, 'explain', this.get('hasExplain'));
-    addInput(form, 'limit', '1000000');
+    addInput('params', JSON.stringify(this.get('params')));
+    addInput('explain', this.get('hasExplain'));
+    addInput('limit', '1000000');
 
     Discourse.ajax('/session/csrf.json').then(function(csrf) {
-      addInput(form, 'authenticity_token', csrf.csrf);
+      addInput('authenticity_token', csrf.csrf);
 
       document.body.appendChild(form);
       form.submit();

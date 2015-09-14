@@ -1,5 +1,3 @@
-import binarySearch from 'discourse/plugins/discourse-data-explorer/discourse/lib/binary-search';
-import avatarTemplate from 'discourse/lib/avatar-template';
 
 function icon_or_image_replacement(str, ctx) {
   str = Ember.get(ctx.contexts[0], str);
@@ -12,14 +10,11 @@ function icon_or_image_replacement(str, ctx) {
   }
 }
 
-function shorthandTinyAvatar(username, uploadId, ctx) {
-  username = Ember.get(ctx.contexts[0], username);
-  uploadId = Ember.get(ctx.contexts[0], uploadId);
+function shorthandTinyAvatar(avatar_template, ctx) {
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
     size: "tiny",
     extraClasses: '',
-    title: username,
-    avatarTemplate: avatarTemplate(username, uploadId)
+    avatarTemplate: avatar_template
   }));
 }
 
@@ -28,14 +23,9 @@ const esc = Handlebars.Utils.escapeExpression;
 const QueryRowContentComponent = Ember.Component.extend({
   tagName: "tr",
 
-  transformedUserTable: function() {
-    return transformedRelTable(this.get('extra.relations.user'));
-  }.property('extra.relations.user'),
-
   render: function(buffer) {
     const self = this;
     const row = this.get('row');
-    const relations = this.get('extra.relations');
     const parent = self.get('parent');
 
     const parts = this.get('columnTemplates').map(function(t, idx) {

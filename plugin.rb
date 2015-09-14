@@ -45,12 +45,12 @@ after_initialize do
 
     class SmallPostWithExcerptSerializer < ApplicationSerializer
       attributes :id, :topic_id, :post_number, :excerpt
-      attributes :username, :uploaded_avatar_id
+      attributes :username, :avatar_template
       def excerpt
         Post.excerpt(object.cooked, 70)
       end
       def username; object.user.username; end
-      def uploaded_avatar_id; object.user.uploaded_avatar_id; end
+      def uploaded_avatar_id; object.user.avatar_template; end
     end
 
     # Run a data explorer query on the currently connected database.
