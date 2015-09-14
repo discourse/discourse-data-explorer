@@ -65,6 +65,10 @@ const QueryResultComponent = Ember.Component.extend({
     });
   }.property('content', 'columns.@each'),
 
+  fallbackTemplate: function() {
+    return this.container.lookup('template:explorer/text.raw');
+  }.property(),
+
   columnTemplates: function() {
     const self = this;
     if (!this.get('columns')) {

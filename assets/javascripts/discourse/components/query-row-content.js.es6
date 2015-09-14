@@ -27,6 +27,7 @@ const QueryRowContentComponent = Ember.Component.extend({
     const self = this;
     const row = this.get('row');
     const parent = self.get('parent');
+    const fallback = parent.get('fallbackTemplate');
 
     const parts = this.get('columnTemplates').map(function(t, idx) {
       const ctx = {};
@@ -48,7 +49,7 @@ const QueryRowContentComponent = Ember.Component.extend({
         ctx.value = row[idx];
       }
 
-      return new Handlebars.SafeString(t.template(ctx, params));
+      return new Handlebars.SafeString((t.template || fallback)(ctx, params));
     });
 
     buffer.push("<td>" + parts.join("</td><td>") + "</td>");
