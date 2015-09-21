@@ -50,7 +50,7 @@ after_initialize do
         Post.excerpt(object.cooked, 70)
       end
       def username; object.user.username; end
-      def uploaded_avatar_id; object.user.avatar_template; end
+      def avatar_template; object.user.avatar_template; end
     end
 
     # Run a data explorer query on the currently connected database.
@@ -141,6 +141,7 @@ SQL
         badge: {class: Badge, fields: [:id, :name, :badge_type_id, :description, :icon], include: [:badge_type], serializer: SmallBadgeSerializer},
         post: {class: Post, fields: [:id, :topic_id, :post_number, :cooked, :user_id], include: [:user], serializer: SmallPostWithExcerptSerializer},
         topic: {class: Topic, fields: [:id, :title, :slug, :posts_count], serializer: BasicTopicSerializer},
+        group: {class: Group, ignore: true},
         category: {class: Category, ignore: true},
         reltime: {ignore: true},
         html: {ignore: true},
@@ -196,8 +197,13 @@ SQL
         ids.map! &:to_i
 
         object_class = support_info[:class]
-        all_objs = object_class.select(support_info[:fields]).
-                            where(id: ids.to_a.sort).includes(support_info[:include]).order(:id)
+        all_objs = object_class
+        all_objs = all_objs.with_deleted if all_objs.respond_to? :with_deleted
+        all_objs = all_objs
+                     .select(support_info[:fields])
+                     .where(id: ids.to_a.sort)
+                     .includes(support_info[:include])
+                     .order(:id)
 
         ret[cls] = ActiveModel::ArraySerializer.new(all_objs, each_serializer: support_info[:serializer])
       end

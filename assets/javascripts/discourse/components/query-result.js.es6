@@ -96,6 +96,10 @@ const QueryResultComponent = Ember.Component.extend({
     return transformedRelTable(this.get('content.relations.topic'));
   }.property('content.relations.topic'),
 
+  transformedGroupTable: function() {
+    return transformedRelTable(this.get('site.groups'));
+  }.property('site.groups'),
+
   lookupUser(id) {
     return this.get('transformedUserTable')[id];
   },
@@ -107,6 +111,9 @@ const QueryResultComponent = Ember.Component.extend({
   },
   lookupTopic(id) {
     return this.get('transformedTopicTable')[id];
+  },
+  lookupGroup(id) {
+    return this.get('transformedGroupTable')[id];
   },
 
   lookupCategory(id) {
