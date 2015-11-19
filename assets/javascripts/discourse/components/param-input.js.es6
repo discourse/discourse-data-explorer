@@ -106,11 +106,8 @@ export default Ember.Component.extend({
             return g.id === intVal;
           });
         } else {
-          if (value !== value.underscore()) {
-            this.set('value', value.underscore());
-          }
           return !!groups.find(function(g) {
-            return g.name === value.underscore();
+            return g.name === value;
           });
         }
     }
