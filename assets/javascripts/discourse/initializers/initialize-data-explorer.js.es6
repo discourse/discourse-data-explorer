@@ -1,6 +1,9 @@
+
 export default {
-  name: 'polyfill-string-endswith',
+  name: 'initialize-data-explorer',
   initialize(container) {
+    container.lookup('store:main').addPluralization('query', 'queries');
+
     if (!String.prototype.endsWith) {
       String.prototype.endsWith = function(searchString, position) {
         var subjectString = this.toString();
@@ -12,5 +15,8 @@ export default {
         return lastIndex !== -1 && lastIndex === position;
       };
     }
+
+    // load route
+    require('discourse/plugins/discourse-data-explorer/discourse/explorer-route-map');
   }
 };
