@@ -1,3 +1,4 @@
+import debounce from 'discourse/lib/debounce';
 import highlightSyntax from 'discourse/lib/highlight-syntax';
 
 export default Ember.Component.extend({
@@ -7,7 +8,7 @@ export default Ember.Component.extend({
     buffer.push("</code></pre>");
   },
 
-  _refreshHighlight: Discourse.debounce(function() {
+  _refreshHighlight: debounce(function() {
     this.rerender();
   }, 50).observes('value'),
 

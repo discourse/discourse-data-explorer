@@ -1,3 +1,5 @@
+import debounce from 'discourse/lib/debounce';
+
 export default Ember.Component.extend({
 
   actions: {
@@ -111,7 +113,7 @@ export default Ember.Component.extend({
     return tables;
   },
 
-  triggerFilter: Discourse.debounce(function() {
+  triggerFilter: debounce(function() {
     this.set('filteredTables', this.filterTables(this.get('transformedSchema')));
     this.set('loading', false);
   }, 500).observes('filter'),
