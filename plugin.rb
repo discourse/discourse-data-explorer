@@ -989,7 +989,7 @@ SQL
 
     def schema
       schema_version = ActiveRecord::Base.exec_sql("SELECT max(version) AS tag FROM schema_migrations").first['tag']
-      if stale?(public: true, etag: schema_version)
+      if stale?(public: true, etag: schema_version, template: false)
         render json: DataExplorer.schema
       end
     end
