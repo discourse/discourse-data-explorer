@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe DataExplorer::QueryController do
   routes { ::DataExplorer::Engine.routes }
