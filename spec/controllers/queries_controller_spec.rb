@@ -29,13 +29,27 @@ describe DataExplorer::QueryController do
     end
     it 'denies every request' do
       get :index; expect(response.body).to be_empty # check_xhr fail
-      expect { xhr :get, :index }.to raise_error ApplicationController::PluginDisabled
-      expect { xhr :get, :schema }.to raise_error ApplicationController::PluginDisabled
-      expect { xhr :get, :show, id: 3 }.to raise_error ApplicationController::PluginDisabled
-      expect { xhr :post, :create, id: 3 }.to raise_error ApplicationController::PluginDisabled
-      expect { xhr :post, :run, id: 3 }.to raise_error ApplicationController::PluginDisabled
-      expect { xhr :put, :update, id: 3 }.to raise_error ApplicationController::PluginDisabled
-      expect { xhr :delete, :destroy, id: 3 }.to raise_error ApplicationController::PluginDisabled
+
+      xhr :get, :index
+      expect(response.status).to eq(404)
+
+      xhr :get, :schema
+      expect(response.status).to eq(404)
+
+      xhr :get, :show, id: 3
+      expect(response.status).to eq(404)
+
+      xhr :post, :create, id: 3
+      expect(response.status).to eq(404)
+
+      xhr :post, :run, id: 3
+      expect(response.status).to eq(404)
+
+      xhr :put, :update, id: 3
+      expect(response.status).to eq(404)
+
+      xhr :delete, :destroy, id: 3
+      expect(response.status).to eq(404)
     end
   end
 
