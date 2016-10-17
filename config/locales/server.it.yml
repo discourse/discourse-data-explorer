@@ -1,0 +1,3 @@
+it:
+  site_settings:
+    data_explorer_enabled: "Abilitare il plugin Data Explorer su /admin/plugins/explorer"
