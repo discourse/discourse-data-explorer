@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 
 export default Discourse.Route.extend({
   controllerName: 'admin-plugins-explorer',
@@ -5,7 +6,7 @@ export default Discourse.Route.extend({
 
   model() {
     const p1 = this.store.findAll('query');
-    const p2 = Discourse.ajax('/admin/plugins/explorer/schema.json', {cache: true});
+    const p2 = ajax('/admin/plugins/explorer/schema.json', {cache: true});
     return p1.then(model => {
       model.forEach(query => query.markNotDirty());
 

@@ -1,4 +1,4 @@
-
+import { ajax } from 'discourse/lib/ajax';
 import Badge from 'discourse/models/badge';
 
 function randomIdShort() {
@@ -147,7 +147,7 @@ const QueryResultComponent = Ember.Component.extend({
     addInput('explain', this.get('hasExplain'));
     addInput('limit', '1000000');
 
-    Discourse.ajax('/session/csrf.json').then(function(csrf) {
+    ajax('/session/csrf.json').then(function(csrf) {
       addInput('authenticity_token', csrf.csrf);
 
       document.body.appendChild(form);

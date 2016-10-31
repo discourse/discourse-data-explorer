@@ -1,6 +1,7 @@
 import showModal from 'discourse/lib/show-modal';
 import Query from 'discourse/plugins/discourse-data-explorer/discourse/models/query';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { ajax } from 'discourse/lib/ajax';
 
 const NoQuery = Query.create({name: "No queries", fake: true});
 
@@ -160,7 +161,7 @@ export default Ember.ArrayController.extend({
 
       this.set('loading', true);
       this.set('showResults', false);
-      Discourse.ajax("/admin/plugins/explorer/queries/" + this.get('selectedItem.id') + "/run", {
+      ajax("/admin/plugins/explorer/queries/" + this.get('selectedItem.id') + "/run", {
         type: "POST",
         data: {
           params: JSON.stringify(this.get('selectedItem.params')),
