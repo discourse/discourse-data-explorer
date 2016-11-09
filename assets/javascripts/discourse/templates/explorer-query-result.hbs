@@ -22,8 +22,11 @@
   </tr>
   </thead>
   <tbody>
-  {{~#each rows as |row|}}
-    {{~query-row-content row=row columnTemplates=columnTemplates parent=controller}}
-  {{~/each}}
+  {{#each rows as |row|}}
+    {{query-row-content
+      row=row
+      fallbackTemplate=fallbackTemplate
+      columnTemplates=columnTemplates}}
+  {{/each}}
   </tbody>
 </table>

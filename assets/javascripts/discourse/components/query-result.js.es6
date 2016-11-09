@@ -167,9 +167,7 @@ const QueryResultComponent = Ember.Component.extend({
     downloadResultCsv() {
       this.downloadResult('csv');
     }
-  },
-
-  parent: function() { return this; }.property()
+  }
 
 });
 

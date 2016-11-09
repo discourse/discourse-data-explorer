@@ -33,8 +33,8 @@ const QueryRowContentComponent = Ember.Component.extend(bufferedRender({
   buildBuffer(buffer) {
     const self = this;
     const row = this.get('row');
-    const parent = self.get('parent');
-    const fallback = parent.get('fallbackTemplate');
+    const parentView = self.get('parentView');
+    const fallback = this.get('fallbackTemplate');
     const helpers = {
       "icon-or-image": icon_or_image_replacement,
       "category-link": category_badge_replacement,
@@ -54,9 +54,9 @@ const QueryRowContentComponent = Ember.Component.extend(bufferedRender({
         return esc(row[idx]);
       }
 
-      const lookupFunc = parent[`lookup${t.name.capitalize()}`];
+      const lookupFunc = parentView[`lookup${t.name.capitalize()}`];
       if (lookupFunc) {
-        ctx[t.name] = parent[`lookup${t.name.capitalize()}`](id);
+        ctx[t.name] = parentView[`lookup${t.name.capitalize()}`](id);
       }
 
       if (t.name === "category" || t.name === "badge" || t.name === "reltime") {
