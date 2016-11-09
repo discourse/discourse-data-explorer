@@ -38,19 +38,26 @@ export default Ember.Component.extend({
 
   boolTypes: [ {name: I18n.t('explorer.types.bool.true'), id: 'Y'}, {name: I18n.t('explorer.types.bool.false'), id: 'N'}, {name: I18n.t('explorer.types.bool.null_'), id: '#null'} ],
 
-  value: function(key, value, previousValue) {
-    if (arguments.length > 1) {
+  value: Ember.computed('params', 'info.identifier', {
+    get() {
+      return this.get('params')[this.get('info.identifier')];
+    },
+    set(key, value) {
       this.get('params')[this.get('info.identifier')] = value.toString();
+      return value;
     }
-    return this.get('params')[this.get('info.identifier')];
-  }.property('params', 'info.identifier'),
+  }),
 
-  valueBool: function(key, value, previousValue) {
-    if (arguments.length > 1) {
-      this.get('params')[this.get('info.identifier')] = (!!value).toString();
+  valueBool: Ember.computed('params', 'info.identifier', {
+    get() {
+      return this.get('params')[this.get('info.identifier')] !== 'false';
+    },
+    set(key, value) {
+      value = !!value;
+      this.get('params')[this.get('info.identifier')] = value.toString();
+      return value;
     }
-    return this.get('params')[this.get('info.identifier')] !== 'false';
-  }.property('params', 'info.identifier'),
+  }),
 
   valid: function() {
     const type = this.get('info.type'),

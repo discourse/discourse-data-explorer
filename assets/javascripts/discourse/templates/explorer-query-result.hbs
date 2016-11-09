@@ -22,7 +22,7 @@
   </tr>
   </thead>
   <tbody>
-  {{~#each row in rows}}
+  {{~#each rows as |row|}}
     {{~query-row-content row=row columnTemplates=columnTemplates parent=controller}}
   {{~/each}}
   </tbody>

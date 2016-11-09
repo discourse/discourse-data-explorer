@@ -2,7 +2,6 @@ import { ajax } from 'discourse/lib/ajax';
 
 export default Discourse.Route.extend({
   controllerName: 'admin-plugins-explorer',
-  queryParams: { id: { replace: true } },
 
   model() {
     const p1 = this.store.findAll('query');

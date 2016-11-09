@@ -5,7 +5,7 @@ import { ajax } from 'discourse/lib/ajax';
 
 const NoQuery = Query.create({name: "No queries", fake: true});
 
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
   queryParams: { selectedQueryId: "id" },
   selectedQueryId: null,
   showResults: false,
@@ -44,7 +44,7 @@ export default Ember.ArrayController.extend({
   }.observes('editing'),
 
   addCreatedRecord(record) {
-    this.pushObject(record);
+    this.get('model').pushObject(record);
     this.set('selectedQueryId', Ember.get(record, 'id'));
     this.get('selectedItem').set('dirty', false);
     this.set('showResults', false);

@@ -1,7 +1,6 @@
-
-
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
 import { autoUpdatingRelativeAge } from 'discourse/lib/formatter';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
 function icon_or_image_replacement(str, ctx) {
   str = Ember.get(ctx.contexts[0], str);
@@ -28,10 +27,10 @@ function bound_date_replacement(str, ctx) {
 
 const esc = Handlebars.Utils.escapeExpression;
 
-const QueryRowContentComponent = Ember.Component.extend({
+const QueryRowContentComponent = Ember.Component.extend(bufferedRender({
   tagName: "tr",
 
-  render: function(buffer) {
+  buildBuffer(buffer) {
     const self = this;
     const row = this.get('row');
     const parent = self.get('parent');
@@ -76,6 +75,6 @@ const QueryRowContentComponent = Ember.Component.extend({
 
     buffer.push("<td>" + parts.join("</td><td>") + "</td>");
   }
-});
+}));
 
 export default QueryRowContentComponent;

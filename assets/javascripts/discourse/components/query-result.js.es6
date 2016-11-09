@@ -1,5 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import Badge from 'discourse/models/badge';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 function randomIdShort() {
   return 'xxxxxxxx'.replace(/[xy]/g, function() {
@@ -66,7 +67,7 @@ const QueryResultComponent = Ember.Component.extend({
   }.property('content', 'columns.@each'),
 
   fallbackTemplate: function() {
-    return this.container.lookup('template:explorer/text.raw');
+    return getOwner(this).lookup('template:explorer/text.raw');
   }.property(),
 
   columnTemplates: function() {
@@ -79,7 +80,8 @@ const QueryResultComponent = Ember.Component.extend({
       if (self.get('content.colrender')[idx]) {
         viewName = self.get('content.colrender')[idx];
       }
-      return {name: viewName, template: self.container.lookup('template:explorer/' + viewName + '.raw')};
+      const template = getOwner(self).lookup('template:explorer/' + viewName + '.raw');
+      return {name: viewName, template };
     });
   }.property('content', 'columns.@each'),
 
