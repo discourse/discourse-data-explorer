@@ -2,7 +2,6 @@
 export default Ember.View.extend({
 
   _onHideSchema: function() {
-    Em.Logger.log('resizing');
     this.appEvents.trigger('ace:resize');
   }.observes('controller.hideSchema'),
 

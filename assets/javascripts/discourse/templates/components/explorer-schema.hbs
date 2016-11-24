@@ -7,7 +7,7 @@
   {{conditional-loading-spinner condition=loading}}
   <div class="schema-container">
     <ul>
-      {{#each tables as |table|}}
+      {{#each filteredTables as |table|}}
         {{explorer-schema-onetable table=table}}
       {{/each}}
     </ul>

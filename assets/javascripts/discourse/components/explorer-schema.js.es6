@@ -122,12 +122,9 @@ export default Ember.Component.extend({
     this.set('loading', true);
   }.observes('filter'),
 
-  tables: function() {
-    if (!this.get('filteredTables')) {
-      this.set('loading', true);
-      this.triggerFilter();
-      return [];
-    }
-    return this.get('filteredTables');
-  }.property('transformedSchema', 'filteredTables')
+  init() {
+    this._super();
+    this.set('loading', true);
+    this.triggerFilter();
+  }
 });
