@@ -80,7 +80,13 @@ const QueryResultComponent = Ember.Component.extend({
       if (self.get('content.colrender')[idx]) {
         viewName = self.get('content.colrender')[idx];
       }
-      const template = getOwner(self).lookup('template:explorer/' + viewName + '.raw');
+
+      // After `findRawTemplates` is in stable this should be updated to use that
+      let template = getOwner(self).lookup('template:explorer/' + viewName + '.raw');
+      if (!template) {
+        template = Discourse.RAW_TEMPLATES[`javascripts/explorer/${viewName}`];
+      }
+
       return {name: viewName, template };
     });
   }.property('content', 'columns.@each'),

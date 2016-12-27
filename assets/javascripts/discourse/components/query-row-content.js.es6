@@ -68,7 +68,6 @@ const QueryRowContentComponent = Ember.Component.extend(bufferedRender({
         return new Handlebars.SafeString((t.template || fallback)(ctx, params));
       } catch (e) {
         console.error(e);
-        debugger;
         return "error";
       }
     });
