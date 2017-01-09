@@ -1,3 +1,4 @@
 plugins:
   data_explorer_enabled:
     default: false
+    client: true
