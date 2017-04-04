@@ -4,7 +4,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 export default Ember.Controller.extend(ModalFunctionality, {
   notReady: Em.computed.not('ready'),
 
-  needs: ['admin-plugins-explorer'],
+  adminPluginsExplorer: Ember.inject.controller(),
 
   ready: function() {
     let parsed;
@@ -30,7 +30,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         self.send('closeModal');
         self.set('loading', false);
 
-        const parentController = self.get('controllers.admin-plugins-explorer');
+        const parentController = self.get('adminPluginsExplorer');
         parentController.addCreatedRecord(query.target);
       }).catch(popupAjaxError);
     }
