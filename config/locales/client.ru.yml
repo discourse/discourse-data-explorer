@@ -1,0 +1,60 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+ru:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Удалите точку с запятой из запроса."
+        dirty: "Вы должны сохранить запрос перед запуском."
+    explorer:
+      admins_only: "Исследование данных доступен только для администраторов."
+      title: "Проводник данных"
+      create: "Создавать новое"
+      create_placeholder: "Имя запроса..."
+      import:
+        label: "Импорт"
+        modal: "Импорт запроса"
+      schema:
+        title: "Database Schema"
+        filter: "Поиск..."
+        sensitive: "Содержимое этого столбца может содержать особенно конфиденциальную или конфиденциальную информацию. Будьте осторожны при использовании содержимого этой колонки."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Типы</a>"
+      types:
+        bool:
+          yes: "Да"
+          no: "Нет"
+          null_: "Null"
+      export: "Экспорт"
+      save: "Сохранить изменения"
+      saverun: "Сохранить изменения и выполнить запрос"
+      run: "Запустить запрос"
+      undo: "Отменить изменения"
+      edit: "Редактировать"
+      delete: "Удалить"
+      recover: "Отменить запрос"
+      download: "Загрузить результаты"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Запрос имеет несохраненные изменения, которые будут потеряны, если вы уйдете."
+      run_time: "Запрос завершен {{value}} мс."
+      column: "Колонка {{number}}"
+      explain_label: "Включить план запроса?"
+      save_params: "Установка значений по умолчанию"
+      reset_params: "Сброс"
+      no_queries: "Запросов нет. Почему нет "
+      no_queries_hook: "создать?"

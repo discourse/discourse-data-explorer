@@ -1,0 +1,3 @@
+ru:
+  site_settings:
+    data_explorer_enabled: "Включить проводник данных в /admin/plugins/explorer"
