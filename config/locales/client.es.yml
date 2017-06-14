@@ -1,0 +1,60 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+es:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Elimina los puntos y coma de la consulta."
+        dirty: "Debes guardar la consulta antes de ejecutarla."
+    explorer:
+      admins_only: "El data explorer esta disponible únicamente para administradores."
+      title: "Data Explorer"
+      create: "Crear nuevo"
+      create_placeholder: "Nombre de la consulta..."
+      import:
+        label: "Importar"
+        modal: "Importar una consulta"
+      schema:
+        title: "Esquema de Base de Datos"
+        filter: "Buscar..."
+        sensitive: "Los contenidos de esta parte pueden incluir información sensible o privada. Por favor, ten cuidado cuando visualices estos contenidos."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Types</a>"
+      types:
+        bool:
+          yes: "Si"
+          no: "No"
+          null_: "Null"
+      export: "Exportar"
+      save: "Guardar cambios"
+      saverun: "Guardar cambios y Ejecutar consulta"
+      run: "Ejecutar consulta"
+      undo: "Deshacer cambios"
+      edit: "Editar"
+      delete: "Borrar"
+      recover: "Recuperar consulta"
+      download: "Descargar Resultados"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Una consulta tiene cambios no guardados que se perderán si salis."
+      run_time: "Consulta completada en {{value}} ms."
+      column: "Columna {{number}}"
+      explain_label: "¿Incluir plan de consulta?"
+      save_params: "Configuración por Defecto"
+      reset_params: "Resetear"
+      no_queries: "No hay consultas. ¿Por qué no "
+      no_queries_hook: "creas una?"
