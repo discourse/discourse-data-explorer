@@ -15,8 +15,5 @@ export default {
         return lastIndex !== -1 && lastIndex === position;
       };
     }
-
-    // load route
-    require('discourse/plugins/discourse-data-explorer/discourse/explorer-route-map');
   }
 };
