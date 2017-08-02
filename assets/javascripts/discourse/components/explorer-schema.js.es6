@@ -78,7 +78,7 @@ export default Ember.Component.extend({
       }
 
       // Check the table name vs the filter
-      if (filter.source == key || filter.source + "s" == key) {
+      if (filter.source === key || filter.source + "s" === key) {
         tables.unshift({
           name: key,
           columns: schema[key],
@@ -95,7 +95,7 @@ export default Ember.Component.extend({
         // filter the columns
         let filterCols = [];
         schema[key].forEach(function(col) {
-          if (filter.source == col.column_name) {
+          if (filter.source === col.column_name) {
             filterCols.unshift(col);
           } else if (filter.test(col.column_name)) {
             filterCols.push(col);

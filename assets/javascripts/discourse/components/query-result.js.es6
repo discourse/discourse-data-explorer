@@ -162,7 +162,7 @@ const QueryResultComponent = Ember.Component.extend({
       form.submit();
       Em.run.next('afterRender', function() {
         document.body.removeChild(form);
-      })
+      });
     });
   },
 

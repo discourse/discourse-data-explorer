@@ -67,10 +67,6 @@ export default Ember.Component.extend({
       return this.get('info.nullable');
     }
 
-    function matches(regex) {
-      return regex.test(value);
-    }
-
     const intVal = parseInt(value, 10);
     const intValid = !isNaN(intVal) && intVal < 2147483648 && intVal > -2147483649;
     const isPositiveInt = /^\d+$/.test(value);
