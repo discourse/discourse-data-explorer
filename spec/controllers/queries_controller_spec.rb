@@ -11,9 +11,9 @@ describe DataExplorer::QueryController do
     SiteSetting.data_explorer_enabled = true
   end
 
-  let!(:admin) {log_in_user(Fabricate(:admin))}
+  let!(:admin) { log_in_user(Fabricate(:admin)) }
 
-  def make_query(sql='SELECT 1 as value')
+  def make_query(sql = 'SELECT 1 as value')
     q = DataExplorer::Query.new
     q.id = Fabrication::Sequencer.sequence("query-id", 1)
     q.name = "Query number #{q.id}"
@@ -74,11 +74,11 @@ describe DataExplorer::QueryController do
   end
 
   describe "#run" do
-    let!(:admin) {log_in(:admin)}
+    let!(:admin) { log_in(:admin) }
 
-    def run_query(id, params={})
+    def run_query(id, params = {})
       params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-      xhr :post, :run, {id: id, _params: MultiJson.dump(params)}
+      xhr :post, :run, id: id, _params: MultiJson.dump(params)
     end
     it "can run queries" do
       q = make_query('SELECT 23 as my_value')
@@ -96,7 +96,7 @@ describe DataExplorer::QueryController do
 -- int :foo = 34
 SELECT :foo as my_value
 SQL
-      run_query q.id, {foo: 23}
+      run_query q.id, foo: 23
       expect(response).to be_success
       expect(response_json['errors']).to eq([])
       expect(response_json['success']).to eq(true)
@@ -111,7 +111,7 @@ SQL
       expect(response_json['rows']).to eq([['34']])
 
       # 2.3 is not an integer
-      run_query q.id, {foo: '2.3'}
+      run_query q.id, foo: '2.3'
       expect(response).to_not be_success
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
