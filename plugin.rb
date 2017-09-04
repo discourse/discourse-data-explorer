@@ -757,7 +757,7 @@ SQL
       when :int
         invalid_format string, 'Not an integer' unless string =~ /^-?\d+$/
         value = string.to_i
-        invalid_format string, 'Too large' unless Fixnum === value
+        invalid_format string, 'Too large' unless Integer === value
       when :bigint
         invalid_format string, 'Not an integer' unless string =~ /^-?\d+$/
         value = string.to_i
