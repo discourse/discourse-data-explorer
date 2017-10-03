@@ -1077,7 +1077,7 @@ SQL
               end
             end
 
-            render text: text
+            render plain: text
           end
         end
       end

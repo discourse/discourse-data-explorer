@@ -234,5 +234,11 @@ describe DataExplorer::QueryController do
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/syntax error/)
     end
+
+    it "can export data in CSV format" do
+      q = make_query('SELECT 23 as my_value')
+      post :run, params: { id: q.id, download: 1 }, format: :csv
+      expect(response).to be_success
+    end
   end
 end
