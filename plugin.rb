@@ -872,7 +872,9 @@ SQL
     def self.create_from_sql(sql, opts = {})
       in_params = false
       ret_params = []
-      sql.split("\n").find do |line|
+      sql.lines.find do |line|
+        line.chomp!
+
         if in_params
           # -- (ident) :(ident) (= (ident))?
 
