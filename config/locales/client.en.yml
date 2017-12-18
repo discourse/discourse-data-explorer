@@ -56,5 +56,5 @@ en:
       explain_label: "Include query plan?"
       save_params: "Set Defaults"
       reset_params: "Reset"
-      no_queries: "There are no queries. Why not "
+      no_queries: "There are no queries. Why not create one?"
       no_queries_hook: "create one?"
