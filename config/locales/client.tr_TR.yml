@@ -5,4 +5,26 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-tr_TR: {}
+tr_TR:
+  js:
+    explorer:
+      create: "Yeni Oluştur"
+      import:
+        label: "İçeri Aktar"
+      schema:
+        filter: "Ara..."
+      types:
+        bool:
+          'yes': "Evet"
+          'no': "Hayır"
+          null_: "Boş"
+      export: "Dışarı Aktar"
+      save: "Değişiklikleri Kaydet"
+      edit: "Düzenle"
+      delete: "Sil"
+      download: "Sonuçları İndir"
+      download_json: "JSON"
+      download_csv: "CSV"
+      save_params: "Varsayılan belirle"
+      reset_params: "Sıfırla"
+      no_queries_hook: "bir tane oluştur?"

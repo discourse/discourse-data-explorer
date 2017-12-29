@@ -5,4 +5,43 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nb_NO: {}
+nb_NO:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Fjern semikolonene fra spørringen."
+        dirty: "Du må lagre spørringen før du kjører den."
+    explorer:
+      admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
+      title: "Datautforsker"
+      create: "Opprett ny"
+      create_placeholder: "Spørringsnavn…"
+      import:
+        label: "Importer"
+        modal: "Importer en spørring"
+      schema:
+        filter: "Søk…"
+      types:
+        bool:
+          'yes': "Ja"
+          'no': "Nei"
+          null_: "Null"
+      export: "Eksporter"
+      save: "Lagre endringer"
+      saverun: "Lagre endringer og kjør spørring"
+      run: "Kjør spørring"
+      undo: "Forkast endringer"
+      edit: "Rediger"
+      delete: "Slett"
+      recover: "Angre sletting av spørring"
+      download: "Last ned resultater"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
+      run_time: "Spørring fullført på {{value}} ms."
+      column: "Kolonne {{number}}"
+      explain_label: "Inkluder spørringsplan?"
+      save_params: "Sett forvalg"
+      reset_params: "Tilbakestill"
+      no_queries: "Det er ingen spørringer. Hvorfor ikke"
+      no_queries_hook: "opprette en?"

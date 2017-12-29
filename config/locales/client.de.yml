@@ -5,4 +5,46 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-de: {}
+de:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Entfernt die Semikolons aus der Anfrage."
+        dirty: "Du musst die Anfrage speicher, bevor du sie startest."
+    explorer:
+      admins_only: "Dieser Daten-Explorer ist nur für Administratoren verfügbar."
+      title: "Daten-Explorer"
+      create: "Neu erstellen"
+      create_placeholder: "Name der Anfrage…"
+      import:
+        label: "Importieren"
+        modal: "Anfrage importieren"
+      schema:
+        title: "Datenbank-Schema"
+        filter: "Suchen..."
+        sensitive: "Die Inhalte dieser Spalte enthalten möglicherweise besonders sensible oder persönliche Informationen. Bitte gehe behutsam mit den Inhalten dieser Spalte um."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Typen</a>"
+      types:
+        bool:
+          'yes': "Ja"
+          'no': "Nein"
+          null_: "Null"
+      export: "Exportieren"
+      save: "Änderungen speichern"
+      saverun: "Änderungen speichern und Anfrage starten"
+      run: "Anfrage starten"
+      undo: "Änderungen verwerfen"
+      edit: "Bearbeiten"
+      delete: "Löschen"
+      recover: "Anfrage wiederherstellen"
+      download: "Ergebnisse herunterladen"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Eine Anfrage hat ungespeicherte Änderungen, die verloren gehen, wenn du woanders hingehst."
+      run_time: "Anfrage abgeschlossen in {{value}} ms."
+      column: "Spalte {{number}}"
+      explain_label: "Anfrageplan beinhalten?"
+      save_params: "Standard festlegen"
+      reset_params: "Zurücksetzen"
+      no_queries: "Es gibt keine Anfragen. Warum auch nicht"
+      no_queries_hook: "Soll einer erstellt werden?"

@@ -5,4 +5,46 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fi: {}
+fi:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Poista puolipisteet kyselystä."
+        dirty: "Kysely täytyy tallentaa ennen suorittamista."
+    explorer:
+      admins_only: "Dataselain on vain ylläpitäjille."
+      title: "Dataselain"
+      create: "Luo uusi"
+      create_placeholder: "Kyselyn nimi"
+      import:
+        label: "Tuo"
+        modal: "Tuo kysely"
+      schema:
+        title: "Tietokantakaava"
+        filter: "Hae..."
+        sensitive: "Tämän sarakkeen sisältö voi sisältää erityisen arkaluontoista tai yksityistä tietoa. Noudata erityistä harkintaa kun käytät sarakkeen sisältämää tietoa."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tyypit</a>"
+      types:
+        bool:
+          'yes': "Kyllä"
+          'no': "Ei"
+          null_: "Tyhjä"
+      export: "Vie"
+      save: "Tallenna muutokset"
+      saverun: "Tallenna muutokset ja suorita kysely"
+      run: "Suorita kysely"
+      undo: "Kumoa muutokset"
+      edit: "Muokkaa"
+      delete: "Poista"
+      recover: "Palauta poistettu kysely"
+      download: "Lataa tulokset"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois. "
+      run_time: "Kysely suoritettiin ajassa {{value}} ms."
+      column: "Sarake {{number}}"
+      explain_label: "Sisällytä kyselysuunnitelma?"
+      save_params: "Aseta oletusarvot"
+      reset_params: "Nollaa"
+      no_queries: "Kyselyitä ei ole. Mikset"
+      no_queries_hook: "loisi yhtä?"
