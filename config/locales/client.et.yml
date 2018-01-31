@@ -5,4 +5,28 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-et: {}
+et:
+  js:
+    explorer:
+      create: "Loo uus"
+      create_placeholder: "Päringu nimi..."
+      import:
+        label: "Impordi"
+        modal: "Impordi päring"
+      schema:
+        title: "Andmebaasi skeem"
+        filter: "Otsi..."
+      types:
+        bool:
+          'yes': "Jah"
+          'no': "Ei"
+      export: "Ekspordi"
+      save: "Salvesta muudatused"
+      run: "Käivita päring"
+      edit: "Muuda"
+      delete: "Kustuta"
+      download: "Allalaadimise tulemused"
+      download_json: "JSON"
+      download_csv: "CSV"
+      save_params: "Määra vaikeväärtused"
+      reset_params: "Nulli"

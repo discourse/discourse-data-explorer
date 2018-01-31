@@ -5,4 +5,46 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ur: {}
+ur:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"
+        dirty: "چلانے سے پہلے آپ کا کمانڈ کو محفوظ کرنا لازمی ہے۔"
+    explorer:
+      admins_only: "ڈیٹا ایکسپلورر صرف ایڈمنوں کو دستیاب ہے۔"
+      title: "ڈیٹا ایکسپلورر"
+      create: "نیا بنائیں"
+      create_placeholder: "ڈیٹا کمانڈ کا نام..."
+      import:
+        label: "درآمد"
+        modal: "ڈیٹا کمانڈ درآمد کریں"
+      schema:
+        title: "ڈیٹا بیس سکیمہ"
+        filter: "تلاش کریں..."
+        sensitive: "اس کالم کے مواد میں خاص طور پر حساس یا نِجی معلومات موجود ہوسکتی ہے۔ براہ مہربانی، اِس کالم کے مواد کا استعمال کرتے وقت احتیاط کریں۔"
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>اقسام</a>"
+      types:
+        bool:
+          'yes': "ہاں "
+          'no': "نہیں "
+          null_: "خالی"
+      export: "برآمد"
+      save: "تبدیلیاں محفوظ کریں"
+      saverun: "تبدیلیاں محفوظ کریں اور ڈیٹا کمانڈ چلائیں"
+      run: "ڈیٹا کمانڈ چلائیں"
+      undo: "تبدیلیاں منسوخ کریں"
+      edit: "ترمیم کریں"
+      delete: "حذف کریں"
+      recover: "ڈیٹا کمانڈ کا حذف کرنا منسوخ کریں"
+      download: "نتائج ڈاؤن لوڈ کریں"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "ایک ڈیٹا کمانڈ کی غیرمحفوظ کردہ تبدیلیاں موجود ہیں جو آپ کے یہاں سے جانے کے بعد کھو جائیں گی۔"
+      run_time: "ڈیٹا کمانڈ {{value}} ملیسیکنڈ میں مکمل ہوئی۔"
+      column: "کالم {{number}}"
+      explain_label: "ڈیٹا کمانڈ پلَین شامل کریں؟"
+      save_params: "ڈیفالٹس سَیٹ کریں"
+      reset_params: "رِی سَیٹ"
+      no_queries: "کوئی ڈیٹا کمانڈ نہیں ہیں۔ کیوں نہیں"
+      no_queries_hook: "ایک بنائیں؟"

@@ -5,4 +5,46 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-he: {}
+he:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
+        dirty: "עליך לשמור את השאילתה בטרם ההרצה."
+    explorer:
+      admins_only: "דפדפן הנתונים זמין רק למנהלים."
+      title: "דפדפן נתונים"
+      create: "יצירת חדשה"
+      create_placeholder: "שם השאילתה…"
+      import:
+        label: "ייבוא"
+        modal: "ייבוא שאילתה"
+      schema:
+        title: "סכימת מסד הנתונים"
+        filter: "חיפוש…"
+        sensitive: "תכני העמודה הזו עשויים להכיל מידע רגיש או פרטי. נא לנקוט במשנה זהירות בעת השימוש בעמודה זו."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>סוגים</a>"
+      types:
+        bool:
+          'yes': "כן"
+          'no': "לא"
+          null_: "אפס"
+      export: "ייצוא"
+      save: "שמירת שינויים"
+      saverun: "שמירת השינויים והרצת השאילתה"
+      run: "הרצת השאילתה"
+      undo: "התעלמות מהשינויים"
+      edit: "עריכה"
+      delete: "מחיקה"
+      recover: "ביטול מחיקת השאילתה"
+      download: "הורדת התוצאות"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד בעת ניווט למקום אחר."
+      run_time: "השאילתה הושלמה תוך {{value}} מילישניות."
+      column: "עמודה {{number}}"
+      explain_label: "לכלול תכנית שאילתה?"
+      save_params: "הגדרת בררות מחדל"
+      reset_params: "איפוס"
+      no_queries: "אין שאילתות. למה לא"
+      no_queries_hook: "ליצור אחת?"
