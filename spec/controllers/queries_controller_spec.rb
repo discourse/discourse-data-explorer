@@ -13,10 +13,10 @@ describe DataExplorer::QueryController do
 
   let!(:admin) { log_in_user(Fabricate(:admin)) }
 
-  def make_query(sql = 'SELECT 1 as value')
+  def make_query(sql, opts = {})
     q = DataExplorer::Query.new
     q.id = Fabrication::Sequencer.sequence("query-id", 1)
-    q.name = "Query number #{q.id}"
+    q.name = opts[:name] || "Query number #{q.id}"
     q.description = "A description for query number #{q.id}"
     q.sql = sql
     q.save
@@ -62,15 +62,15 @@ describe DataExplorer::QueryController do
       expect(response_json['queries']).to eq([])
     end
 
-    it "shows all available queries" do
+    it "shows all available queries in alphabetical order" do
       DataExplorer::Query.destroy_all
-      q1 = make_query
-      q2 = make_query
+      make_query('SELECT 1 as value', name: 'B')
+      make_query('SELECT 1 as value', name: 'A')
       get :index, format: :json
       expect(response).to be_success
       expect(response_json['queries'].length).to eq(2)
-      expect(response_json['queries'][0]['name']).to eq(q1.name)
-      expect(response_json['queries'][1]['name']).to eq(q2.name)
+      expect(response_json['queries'][0]['name']).to eq('A')
+      expect(response_json['queries'][1]['name']).to eq('B')
     end
   end
 

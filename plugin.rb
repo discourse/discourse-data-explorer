@@ -666,8 +666,8 @@ SQL
         .where("key LIKE 'q:%'")
         .where("key != 'q:_id'")
         .map do |psr|
-        DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
-      end
+          DataExplorer::Query.from_hash PluginStore.cast_value(psr.type_name, psr.value)
+        end.sort_by { |query| query.name }
     end
 
     def self.destroy_all
