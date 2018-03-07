@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fr: {}
+fr:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Enlever les point-virgules de votre requête."
+        dirty: "Il faut sauvegarder la requête avant de l'exécuter."
