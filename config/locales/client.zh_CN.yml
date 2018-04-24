@@ -5,4 +5,22 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_CN: {}
+zh_CN:
+  js:
+    errors:
+      explorer:
+        dirty: "运行 query 之前必须先保存 query"
+    explorer:
+      title: "数据查看"
+      create: "创建新的"
+      schema:
+        filter: "搜索"
+      types:
+        bool:
+          null_: "空"
+      export: "导出"
+      edit: "编辑"
+      delete: "删除"
+      download: "下载结果"
+      download_json: "JSON"
+      download_csv: "CSV"

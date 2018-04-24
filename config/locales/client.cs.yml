@@ -9,3 +9,19 @@ cs:
   js:
     explorer:
       create: "Vytvořit nový"
+      import:
+        label: "Import"
+      schema:
+        filter: "Hledat..."
+      types:
+        bool:
+          'yes': "Ano"
+          'no': "Ne"
+          null_: "Null"
+      export: "Export"
+      save: "Uložit změny"
+      edit: "Upravit"
+      delete: "Smazat"
+      download_json: "JSON"
+      download_csv: "CSV"
+      column: "Sloupec {{number}}"
