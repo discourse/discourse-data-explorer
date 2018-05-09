@@ -200,6 +200,16 @@
   margin: 10px 0;
 }
 
+.query-list {
+  display: flex;
+  .combo-box, button {
+    margin-right: .5em;
+  }
+  li.none {
+    color: $primary-medium;
+  }
+}
+
 .explorer-pad-bottom {
   margin-bottom: 200px;
 }

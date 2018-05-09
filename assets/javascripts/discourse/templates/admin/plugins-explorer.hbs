@@ -4,8 +4,8 @@
     <h2>{{i18n "explorer.admins_only"}}</h2>
   {{else}}
     <div class="query-list">
-      {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" content=content castInteger="true" nameChanges="true"}}
-      {{d-button action="showCreate" icon="plus" class="no-text"}}
+      {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" none="explorer.menu_none" content=content castInteger="true" nameChanges="true"}}
+      {{d-button action="showCreate" icon="plus" class="no-icon"}}
       {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
     </div>
 
@@ -24,7 +24,7 @@
     {{/if}}
 
     <hr>
-
+    
     {{#if selectedItem.fake}}
       {{i18n "explorer.no_queries"}} <a {{action "showCreate"}}>{{i18n "explorer.no_queries_hook"}}</a>
     {{else}}

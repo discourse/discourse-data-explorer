@@ -58,3 +58,4 @@ en:
       reset_params: "Reset"
       no_queries: "There are no queries. Why not "
       no_queries_hook: "create one?"
+      menu_none: "Select a query"
