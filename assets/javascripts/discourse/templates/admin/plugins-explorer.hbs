@@ -12,7 +12,7 @@
     {{#if showCreate}}
       <div class="query-create">
         {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
-        {{d-button action="create" label="explorer.create" icon="plus" class="btn-primary"}}
+        {{d-button action="create" disabled=createDisabled label="explorer.create" icon="plus" class="btn-primary"}}
       </div>
     {{/if}}
 

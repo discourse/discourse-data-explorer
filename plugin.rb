@@ -583,9 +583,7 @@ SQL
     end
 
     def slug
-      s = Slug.for(name)
-      s = "query-#{id}" unless s.present?
-      s
+      Slug.for(name).presence || "query-#{id}"
     end
 
     def params
@@ -619,11 +617,9 @@ SQL
     def self.from_hash(h)
       query = DataExplorer::Query.new
       [:name, :description, :sql].each do |sym|
-        query.send("#{sym}=", h[sym]) if h[sym]
+        query.send("#{sym}=", h[sym].strip) if h[sym]
       end
-      if h[:id]
-        query.id = h[:id].to_i
-      end
+      query.id = h[:id].to_i if h[:id]
       query
     end
 
@@ -637,8 +633,7 @@ SQL
     end
 
     def self.find(id, opts = {})
-      hash = DataExplorer.pstore_get("q:#{id}")
-      unless hash
+      unless hash = DataExplorer.pstore_get("q:#{id}")
         return DataExplorer::Query.new if opts[:ignore_deleted]
         raise Discourse::NotFound
       end
@@ -647,9 +642,7 @@ SQL
 
     def save
       check_params!
-      unless @id && @id > 0
-        @id = self.class.alloc_id
-      end
+      @id = self.class.alloc_id unless @id && @id > 0
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
 

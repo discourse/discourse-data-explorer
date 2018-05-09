@@ -21,20 +21,19 @@ export default Ember.Controller.extend({
   editing: false,
   everEditing: false,
 
+  createDisabled: function() {
+    return (this.get('newQueryName') || "").trim().length === 0;
+  }.property('newQueryName'),
+
   selectedItem: function() {
-    const _id = this.get('selectedQueryId');
-    const id = parseInt(_id);
-    const item = this.get('content').find(function(q) {
-      return q.get('id') === id;
-    });
+    const id = parseInt(this.get('selectedQueryId'));
+    const item = this.get('content').find(q => q.get('id') === id);
     return item || NoQuery;
   }.property('selectedQueryId'),
 
   othersDirty: function() {
     const selected = this.get('selectedItem');
-    return !!this.get('content').find(function(q) {
-      return q !== selected && q.get('dirty');
-    });
+    return !!this.get('content').find(q => q !== selected && q.get('dirty'));
   }.property('selectedItem', 'selectedItem.dirty'),
 
   setEverEditing: function() {
@@ -104,15 +103,15 @@ export default Ember.Controller.extend({
     },
 
     create() {
-      const self = this;
+      const name = this.get("newQueryName").trim();
       this.set('loading', true);
       this.set('showCreate', false);
-      var newQuery = this.store.createRecord('query', {name: this.get('newQueryName')});
-      newQuery.save().then(function(result) {
-        self.addCreatedRecord(result.target);
-      }).catch(popupAjaxError).finally(function() {
-        self.set('loading', false);
-      });
+      this.store
+        .createRecord('query', { name })
+        .save()
+        .then(result => this.addCreatedRecord(result.target) )
+        .catch(popupAjaxError)
+        .finally(() => this.set('loading', false));
     },
 
     discard() {
