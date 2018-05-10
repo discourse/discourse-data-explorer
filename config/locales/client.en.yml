@@ -60,4 +60,4 @@ en:
       no_queries_hook: "create one?"
       menu_none: "Select a query"
       no_query_selected: "Please select or "
-      no_query_selected_hook: "create one."
+      no_query_selected_hook: "Create one."
