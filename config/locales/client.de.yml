@@ -48,3 +48,6 @@ de:
       reset_params: "Zurücksetzen"
       no_queries: "Es gibt keine Anfragen. Warum auch nicht"
       no_queries_hook: "Soll einer erstellt werden?"
+      menu_none: "Wähle eine Anfrage"
+      no_query_selected: "Bitte wähle aus oder"
+      no_query_selected_hook: "erstelle eine."

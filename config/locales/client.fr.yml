@@ -48,3 +48,6 @@ fr:
       reset_params: "Réinitialiser"
       no_queries: "Il n'y a pas de requête. Pourquoi pas"
       no_queries_hook: "en créer une?"
+      menu_none: "Sélectionner une requête"
+      no_query_selected: "Veuillez sélectionner ou"
+      no_query_selected_hook: "en créer une."
