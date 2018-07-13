@@ -80,18 +80,14 @@ after_initialize do
         return { error: e, duration_nanos: 0 }
       end
 
-      # If we don't include this, then queries with a % sign in them fail
-      # because AR thinks we want percent-based parametes
-      query_args[:xxdummy] = 1
-
       time_start, time_end, explain, err, result = nil
       begin
         ActiveRecord::Base.connection.transaction do
           # Setting transaction to read only prevents shoot-in-foot actions like SELECT FOR UPDATE
           # see test 'doesn't allow you to modify the database #1'
-          ActiveRecord::Base.exec_sql "SET TRANSACTION READ ONLY"
+          DB.exec "SET TRANSACTION READ ONLY"
           # Set a statement timeout so we can't tie up the server
-          ActiveRecord::Base.exec_sql "SET LOCAL statement_timeout = 10000"
+          DB.exec "SET LOCAL statement_timeout = 10000"
 
           # SQL comments are for the benefits of the slow queries log
           sql = <<-SQL
@@ -99,7 +95,6 @@ after_initialize do
  * DataExplorer Query
  * Query: /admin/plugins/explorer?id=#{query.id}
  * Started by: #{opts[:current_user]}
- * :xxdummy
  */
 WITH query AS (
 #{query.sql}
@@ -108,12 +103,17 @@ LIMIT #{opts[:limit] || 250}
 SQL
 
           time_start = Time.now
-          result = ActiveRecord::Base.exec_sql(sql, query_args)
+
+          # we probably want to rewrite this ... but for now reuse the working
+          # code we have
+          sql = DB.param_encoder.encode(sql, query_args)
+
+          result = ActiveRecord::Base.connection.raw_connection.async_exec(sql)
           result.check # make sure it's done
           time_end = Time.now
 
           if opts[:explain]
-            explain = ActiveRecord::Base.exec_sql("-- :xxdummy \nEXPLAIN #{query.sql}", query_args)
+            explain = DB.query_hash("EXPLAIN #{query.sql}", query_args)
               .map { |row| row["QUERY PLAN"] }.join "\n"
           end
 
@@ -131,7 +131,7 @@ SQL
         pg_result: result,
         duration_secs: time_end - time_start,
         explain: explain,
-        params_full: query_args.tap { |h| h.delete :xxdummy }
+        params_full: query_args
       }
     end
 
@@ -212,45 +212,45 @@ SQL
 
     def self.sensitive_column_names
       %w(
-#_IP_Addresses
-topic_views.ip_address
-users.ip_address
-users.registration_ip_address
-incoming_links.ip_address
-topic_link_clicks.ip_address
-user_histories.ip_address
+        #_IP_Addresses
+        topic_views.ip_address
+        users.ip_address
+        users.registration_ip_address
+        incoming_links.ip_address
+        topic_link_clicks.ip_address
+        user_histories.ip_address
 
-#_Emails
-email_tokens.email
-users.email
-invites.email
-user_histories.email
-email_logs.to_address
-posts.raw_email
-badge_posts.raw_email
+        #_Emails
+        email_tokens.email
+        users.email
+        invites.email
+        user_histories.email
+        email_logs.to_address
+        posts.raw_email
+        badge_posts.raw_email
 
-#_Secret_Tokens
-email_tokens.token
-email_logs.reply_key
-api_keys.key
-site_settings.value
+        #_Secret_Tokens
+        email_tokens.token
+        email_logs.reply_key
+        api_keys.key
+        site_settings.value
 
-users.auth_token
-users.password_hash
-users.salt
+        users.auth_token
+        users.password_hash
+        users.salt
 
-#_Authentication_Info
-user_open_ids.email
-oauth2_user_infos.uid
-oauth2_user_infos.email
-facebook_user_infos.facebook_user_id
-facebook_user_infos.email
-twitter_user_infos.twitter_user_id
-github_user_infos.github_user_id
-single_sign_on_records.external_email
-single_sign_on_records.external_id
-google_user_infos.google_user_id
-google_user_infos.email
+        #_Authentication_Info
+        user_open_ids.email
+        oauth2_user_infos.uid
+        oauth2_user_infos.email
+        facebook_user_infos.facebook_user_id
+        facebook_user_infos.email
+        twitter_user_infos.twitter_user_id
+        github_user_infos.github_user_id
+        single_sign_on_records.external_email
+        single_sign_on_records.external_id
+        google_user_infos.google_user_id
+        google_user_infos.email
       )
     end
 
@@ -258,29 +258,22 @@ google_user_infos.email
       # No need to expire this, because the server processes get restarted on upgrade
       # refer user to http://www.postgresql.org/docs/9.3/static/datatype.html
       @schema ||= begin
-        results = ActiveRecord::Base.exec_sql <<SQL
-select
-  c.column_name column_name,
-  c.data_type data_type,
-  c.character_maximum_length character_maximum_length,
-  c.is_nullable is_nullable,
-  c.column_default column_default,
-  c.table_name table_name,
-  pgd.description column_desc
-from INFORMATION_SCHEMA.COLUMNS c
-inner join pg_catalog.pg_statio_all_tables st on (c.table_schema = st.schemaname and c.table_name = st.relname)
-left outer join pg_catalog.pg_description pgd on (pgd.objoid = st.relid and pgd.objsubid = c.ordinal_position)
-where c.table_schema = 'public'
-ORDER BY c.table_name, c.ordinal_position
-SQL
-        table_comment_results = ActiveRecord::Base.exec_sql <<SQL
-SELECT
-  st.relname table_name,
-  pgd.description table_desc
-FROM pg_catalog.pg_statio_all_tables st
-INNER JOIN pg_catalog.pg_description pgd ON (pgd.objoid = st.relid AND pgd.objsubid = 0)
-WHERE st.schemaname = 'public'
-SQL
+        results = DB.query_hash <<~SQL
+          select
+            c.column_name column_name,
+            c.data_type data_type,
+            c.character_maximum_length character_maximum_length,
+            c.is_nullable is_nullable,
+            c.column_default column_default,
+            c.table_name table_name,
+            pgd.description column_desc
+          from INFORMATION_SCHEMA.COLUMNS c
+          inner join pg_catalog.pg_statio_all_tables st on (c.table_schema = st.schemaname and c.table_name = st.relname)
+          left outer join pg_catalog.pg_description pgd on (pgd.objoid = st.relid and pgd.objsubid = c.ordinal_position)
+          where c.table_schema = 'public'
+          ORDER BY c.table_name, c.ordinal_position
+        SQL
+
         by_table = {}
         # Massage the results into a nicer form
         results.each do |hash|
@@ -984,7 +977,7 @@ SQL
     end
 
     def schema
-      schema_version = ActiveRecord::Base.exec_sql("SELECT max(version) AS tag FROM schema_migrations").first['tag']
+      schema_version = DB.query_single("SELECT max(version) AS tag FROM schema_migrations").first
       if stale?(public: true, etag: schema_version, template: false)
         render json: DataExplorer.schema
       end

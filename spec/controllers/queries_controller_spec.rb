@@ -58,7 +58,7 @@ describe DataExplorer::QueryController do
     it "behaves nicely with no queries" do
       DataExplorer::Query.destroy_all
       get :index, format: :json
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(response_json['queries']).to eq([])
     end
 
@@ -67,7 +67,7 @@ describe DataExplorer::QueryController do
       make_query('SELECT 1 as value', name: 'B')
       make_query('SELECT 1 as value', name: 'A')
       get :index, format: :json
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(response_json['queries'].length).to eq(2)
       expect(response_json['queries'][0]['name']).to eq('A')
       expect(response_json['queries'][1]['name']).to eq('B')
@@ -84,7 +84,7 @@ describe DataExplorer::QueryController do
     it "can run queries" do
       q = make_query('SELECT 23 as my_value')
       run_query q.id
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(response_json['success']).to eq(true)
       expect(response_json['errors']).to eq([])
       expect(response_json['columns']).to eq(['my_value'])
@@ -99,14 +99,14 @@ describe DataExplorer::QueryController do
       SQL
 
       run_query q.id, foo: 23
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(response_json['errors']).to eq([])
       expect(response_json['success']).to eq(true)
       expect(response_json['columns']).to eq(['my_value'])
       expect(response_json['rows']).to eq([[23]])
 
       run_query q.id
-      expect(response).to be_success
+      expect(response.status).to eq(200)
       expect(response_json['errors']).to eq([])
       expect(response_json['success']).to eq(true)
       expect(response_json['columns']).to eq(['my_value'])
@@ -114,7 +114,7 @@ describe DataExplorer::QueryController do
 
       # 2.3 is not an integer
       run_query q.id, foo: '2.3'
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/ValidationError/)
@@ -132,11 +132,11 @@ describe DataExplorer::QueryController do
       p.reload
 
       # Manual Test - comment out the following lines:
-      #   ActiveRecord::Base.exec_sql "SET TRANSACTION READ ONLY"
+      #   DB.exec "SET TRANSACTION READ ONLY"
       #   raise ActiveRecord::Rollback
       # This test should fail on the below check.
       expect(p.cooked).to_not match(/winner/)
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/read-only transaction/)
@@ -173,7 +173,7 @@ describe DataExplorer::QueryController do
       #
       # Afterwards, this test should fail on the below check.
       expect(p.cooked).to_not match(/winner/)
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/semicolon/)
@@ -185,7 +185,7 @@ describe DataExplorer::QueryController do
       SQL
 
       run_query q.id
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/read-only transaction/)
@@ -197,7 +197,7 @@ describe DataExplorer::QueryController do
       SQL
 
       run_query q.id
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/read-only transaction|syntax error/)
@@ -209,7 +209,7 @@ describe DataExplorer::QueryController do
       SQL
 
       run_query q.id
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/syntax error/)
@@ -219,7 +219,7 @@ describe DataExplorer::QueryController do
       SQL
 
       run_query q.id
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/syntax error/)
@@ -229,7 +229,7 @@ describe DataExplorer::QueryController do
       SQL
 
       run_query q.id
-      expect(response).to_not be_success
+      expect(response.status).to eq(422)
       expect(response_json['errors']).to_not eq([])
       expect(response_json['success']).to eq(false)
       expect(response_json['errors'].first).to match(/syntax error/)
@@ -238,7 +238,7 @@ describe DataExplorer::QueryController do
     it "can export data in CSV format" do
       q = make_query('SELECT 23 as my_value')
       post :run, params: { id: q.id, download: 1 }, format: :csv
-      expect(response).to be_success
+      expect(response.status).to eq(200)
     end
   end
 end
