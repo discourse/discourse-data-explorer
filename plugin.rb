@@ -567,12 +567,15 @@ SQL
 
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql
+    attr_accessor :id, :name, :description, :sql, :user, :time
 
     def initialize
       @name = 'Unnamed Query'
       @description = 'Enter a description here'
       @sql = 'SELECT 1'
+      #TODO: Figure out where to assign current user for storage
+      @created_by = 'Admin'
+      @created_at = Time.now.strftime("%b %e, %Y")
     end
 
     def slug
@@ -609,7 +612,7 @@ SQL
 
     def self.from_hash(h)
       query = DataExplorer::Query.new
-      [:name, :description, :sql].each do |sym|
+      [:name, :description, :sql, :created_by, :created_at].each do |sym|
         query.send("#{sym}=", h[sym].strip) if h[sym]
       end
       query.id = h[:id].to_i if h[:id]
@@ -622,6 +625,8 @@ SQL
         name: @name,
         description: @description,
         sql: @sql,
+        created_by: @created_by,
+        created_at: @created_at
       }
     end
 
@@ -1073,7 +1078,7 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :param_info
+    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at
 
     def param_info
       object.params.map(&:to_hash) rescue nil

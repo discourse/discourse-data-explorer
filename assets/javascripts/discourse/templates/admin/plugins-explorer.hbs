@@ -133,6 +133,33 @@
         {{/if}}
       {{/unless}}
 
+    {{#if showRecentQueries}}
+      {{#if model.length}}
+        <table class="recent-queries">
+          <thead class="heading-container">
+            <th class="col heading name">{{i18n 'explorer.query_name'}}</th>
+            <th class="col heading user">{{i18n 'explorer.query_user'}}</th>
+            <th class="col heading time">{{i18n 'explorer.query_time'}}</th>
+          </thead>
+          <tr></tr>
+          {{#each model as |query|}}
+            <tr>
+              <td>
+                <a>
+                  <b class="query-name">{{query.name}}</b>
+                  <br>
+                  <medium class="query-desc">{{query.description}}</medium>
+                  <br>
+                </a>
+              </td>
+              <td><medium class="query-user">{{query.user}}</medium></td>
+              <td><medium class="query-time">{{query.time}}</medium></td>
+            </tr>
+          {{/each}}
+        </table>
+      {{/if}}
+    {{/if}}
+
       <div class="explorer-pad-bottom"></div>
 
     {{else}}

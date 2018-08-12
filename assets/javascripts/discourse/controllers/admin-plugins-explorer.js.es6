@@ -20,6 +20,7 @@ export default Ember.Controller.extend({
 
   editing: false,
   everEditing: false,
+  showRecentQueries: true,
 
   createDisabled: function() {
     return (this.get('newQueryName') || "").trim().length === 0;
@@ -28,6 +29,9 @@ export default Ember.Controller.extend({
   selectedItem: function() {
     const id = parseInt(this.get('selectedQueryId'));
     const item = this.get('content').find(q => q.get('id') === id);
+    if (!isNaN(id)) {
+      this.set('showRecentQueries', false);
+    }
     return item || NoQuery;
   }.property('selectedQueryId'),
 
@@ -76,6 +80,11 @@ export default Ember.Controller.extend({
 
     showCreate() {
       this.set('showCreate', true);
+      this.set('showRecentQueries', false);
+    },
+
+    showRecentQueries() {
+      this.set('showRecentQueries', true);
     },
 
     editName() {
@@ -106,6 +115,7 @@ export default Ember.Controller.extend({
       const name = this.get("newQueryName").trim();
       this.set('loading', true);
       this.set('showCreate', false);
+      this.set('showRecentQueries', false);
       this.store
         .createRecord('query', { name })
         .save()

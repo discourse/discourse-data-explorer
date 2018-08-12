@@ -210,6 +210,47 @@
   }
 }
 
+.recent-queries {
+  tr a {
+    display:block;
+    width:100%;
+    height: 100%;
+    color: inherit; 
+  }
+  th {
+    .time{
+      width: 15%;
+    }
+    .user {
+      width: 15%;
+    }
+  }
+  td{
+    .query-time {
+      font-weight: bold;
+      color: dark-light-diff($primary, $secondary, 40%, -20%);
+    } 
+    .query-user {
+      color: dark-light-diff($primary, $secondary, 25%, -20%);
+    }  
+  }
+  hr {
+    height: 2px;
+    width: 100%;
+    color: dark-light-diff($primary, $secondary, 35%, -20%);
+  }
+  .heading {
+    padding-top: 30px;
+    color: dark-light-diff($primary, $secondary, 30%, -20%);
+  }
+  .query-name {
+    color: dark-light-diff($primary, $secondary, 15%, -20%);
+  }
+  .query-desc {
+    color: dark-light-diff($primary, $secondary, 25%, -20%);
+  }
+}
+
 .explorer-pad-bottom {
   margin-bottom: 200px;
 }
