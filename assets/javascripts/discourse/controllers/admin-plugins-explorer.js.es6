@@ -21,6 +21,8 @@ export default Ember.Controller.extend({
   editing: false,
   everEditing: false,
   showRecentQueries: true,
+  sortBy: ['id:desc'],
+  sortedQueries: Em.computed.sort('model', 'sortBy'),
 
   createDisabled: function() {
     return (this.get('newQueryName') || "").trim().length === 0;
@@ -29,9 +31,7 @@ export default Ember.Controller.extend({
   selectedItem: function() {
     const id = parseInt(this.get('selectedQueryId'));
     const item = this.get('content').find(q => q.get('id') === id);
-    if (!isNaN(id)) {
-      this.set('showRecentQueries', false);
-    }
+    !isNaN(id) ? this.set('showRecentQueries', false) : this.set('showRecentQueries', true);
     return item || NoQuery;
   }.property('selectedQueryId'),
 
@@ -80,11 +80,6 @@ export default Ember.Controller.extend({
 
     showCreate() {
       this.set('showCreate', true);
-      this.set('showRecentQueries', false);
-    },
-
-    showRecentQueries() {
-      this.set('showRecentQueries', true);
     },
 
     editName() {

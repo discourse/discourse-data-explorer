@@ -134,7 +134,7 @@
       {{/unless}}
 
     {{#if showRecentQueries}}
-      {{#if model.length}}
+      {{#if sortedQueries.length}}
         <table class="recent-queries">
           <thead class="heading-container">
             <th class="col heading name">{{i18n 'explorer.query_name'}}</th>
@@ -142,18 +142,22 @@
             <th class="col heading time">{{i18n 'explorer.query_time'}}</th>
           </thead>
           <tr></tr>
-          {{#each model as |query|}}
+          {{#each sortedQueries as |query|}}
             <tr>
               <td>
-                <a>
+                <a href="/admin/plugins/explorer/?id={{query.id}}">
                   <b class="query-name">{{query.name}}</b>
                   <br>
                   <medium class="query-desc">{{query.description}}</medium>
                   <br>
                 </a>
               </td>
-              <td><medium class="query-user">{{query.user}}</medium></td>
-              <td><medium class="query-time">{{query.time}}</medium></td>
+              <td>
+                <a href="/users/{{query.username}}/activity">
+                  <medium class="query-created-by">{{query.username}}</medium>
+                </a>
+              </td>
+              <td><medium class="query-created-at">{{query.created_at}}</medium></td>
             </tr>
           {{/each}}
         </table>

@@ -567,15 +567,12 @@ SQL
 
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql, :user, :time
+    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :username
 
     def initialize
       @name = 'Unnamed Query'
       @description = 'Enter a description here'
       @sql = 'SELECT 1'
-      #TODO: Figure out where to assign current user for storage
-      @created_by = 'Admin'
-      @created_at = Time.now.strftime("%b %e, %Y")
     end
 
     def slug
@@ -612,7 +609,7 @@ SQL
 
     def self.from_hash(h)
       query = DataExplorer::Query.new
-      [:name, :description, :sql, :created_by, :created_at].each do |sym|
+      [:name, :description, :sql, :created_by, :created_at, :username].each do |sym|
         query.send("#{sym}=", h[sym].strip) if h[sym]
       end
       query.id = h[:id].to_i if h[:id]
@@ -626,7 +623,8 @@ SQL
         description: @description,
         sql: @sql,
         created_by: @created_by,
-        created_at: @created_at
+        created_at: @created_at,
+        username: @username
       }
     end
 
@@ -943,6 +941,9 @@ SQL
       # guardian.ensure_can_create_explorer_query!
 
       query = DataExplorer::Query.from_hash params.require(:query)
+      query.created_by = current_user.id.to_s
+      query.created_at = Time.now.strftime("%b %e, %Y")
+      query.username = current_user.username
       query.id = nil # json import will assign an id, which is wrong
       query.save
 
@@ -1078,7 +1079,7 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at
+    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username
 
     def param_info
       object.params.map(&:to_hash) rescue nil

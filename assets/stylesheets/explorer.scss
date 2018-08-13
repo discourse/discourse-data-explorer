@@ -217,20 +217,18 @@
     height: 100%;
     color: inherit; 
   }
-  th {
-    .time{
+  .time {
       width: 15%;
     }
-    .user {
-      width: 15%;
-    }
+  .user {
+      width: 20%;
   }
   td{
-    .query-time {
+    .query-created-at {
       font-weight: bold;
       color: dark-light-diff($primary, $secondary, 40%, -20%);
     } 
-    .query-user {
+    .query-created-by {
       color: dark-light-diff($primary, $secondary, 25%, -20%);
     }  
   }
