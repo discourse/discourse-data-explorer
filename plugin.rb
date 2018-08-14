@@ -941,9 +941,9 @@ SQL
       # guardian.ensure_can_create_explorer_query!
 
       query = DataExplorer::Query.from_hash params.require(:query)
-      query.created_by = current_user.id.to_s
       query.created_at = Time.now.strftime("%b %e, %Y")
-      query.username = current_user.username
+      query.created_by = current_user.id.to_s
+      query.username = User.find(query.created_by).username
       query.id = nil # json import will assign an id, which is wrong
       query.save
 

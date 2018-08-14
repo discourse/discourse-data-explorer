@@ -145,7 +145,7 @@
           {{#each sortedQueries as |query|}}
             <tr>
               <td>
-                <a href="/admin/plugins/explorer/?id={{query.id}}">
+                <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
                   <b class="query-name">{{query.name}}</b>
                   <br>
                   <medium class="query-desc">{{query.description}}</medium>

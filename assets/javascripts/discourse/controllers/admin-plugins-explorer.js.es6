@@ -90,6 +90,10 @@ export default Ember.Controller.extend({
       window.open(this.get('selectedItem.downloadUrl'), "_blank");
     },
 
+    scrollTop() {
+      window.scrollTo(0,0);
+    },
+
     resetParams() {
       this.get('selectedItem').resetParams();
     },
