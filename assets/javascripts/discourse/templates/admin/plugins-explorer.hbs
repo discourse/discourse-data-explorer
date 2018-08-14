@@ -133,6 +133,37 @@
         {{/if}}
       {{/unless}}
 
+    {{#if showRecentQueries}}
+      {{#if sortedQueries.length}}
+        <table class="recent-queries">
+          <thead class="heading-container">
+            <th class="col heading name">{{i18n 'explorer.query_name'}}</th>
+            <th class="col heading user">{{i18n 'explorer.query_user'}}</th>
+            <th class="col heading time">{{i18n 'explorer.query_time'}}</th>
+          </thead>
+          <tr></tr>
+          {{#each sortedQueries as |query|}}
+            <tr>
+              <td>
+                <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                  <b class="query-name">{{query.name}}</b>
+                  <br>
+                  <medium class="query-desc">{{query.description}}</medium>
+                  <br>
+                </a>
+              </td>
+              <td>
+                <a href="/users/{{query.username}}/activity">
+                  <medium class="query-created-by">{{query.username}}</medium>
+                </a>
+              </td>
+              <td><medium class="query-created-at">{{query.created_at}}</medium></td>
+            </tr>
+          {{/each}}
+        </table>
+      {{/if}}
+    {{/if}}
+
       <div class="explorer-pad-bottom"></div>
 
     {{else}}
