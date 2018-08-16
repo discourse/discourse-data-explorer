@@ -142,6 +142,12 @@
   .name h2 {
     display: inline-block;
   }
+  .name .previous {
+    padding: 0.2em;
+    display: inline-block;
+    padding-right: 0.25em;
+    font-size: 1.2em;
+  }
   .name input, .desc textarea {
     width: calc(100% - 10px);
   }

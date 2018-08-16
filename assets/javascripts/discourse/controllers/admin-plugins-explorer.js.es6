@@ -92,6 +92,12 @@ export default Ember.Controller.extend({
 
     scrollTop() {
       window.scrollTo(0,0);
+      this.set('editing', false);
+      this.set('everEditing', false);
+    },
+
+    goBack() {
+      history.back();
     },
 
     resetParams() {
