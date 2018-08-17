@@ -34,7 +34,7 @@
             {{#if editing}}
               <div class="name">
                 <div class="previous">
-                  {{d-button action="goBack" icon="chevron-left" class="no-text btn-med"}}
+                  {{d-button action="goHome" icon="chevron-left" class="no-text btn-med"}}
                 </div>
                 {{text-field value=selectedItem.name}}
               </div>
@@ -44,7 +44,7 @@
             {{else}}
               <div class="name">
                 <div class="previous">
-                  {{d-button action="goBack" icon="chevron-left" class="no-text btn-med"}}
+                  {{d-button action="goHome" icon="chevron-left" class="no-text btn-med"}}
                 </div>
                 <h2>{{selectedItem.name}}</h2>
                 {{d-button action="editName" icon="pencil" class="no-text btn-small"}}

@@ -96,8 +96,9 @@ export default Ember.Controller.extend({
       this.set('everEditing', false);
     },
 
-    goBack() {
-      history.back();
+    goHome() {
+      this.set('selectedQueryId', null);
+      this.transitionToRoute('adminPlugins.explorer');
     },
 
     resetParams() {
