@@ -3,11 +3,13 @@
   {{#if disallow}}
     <h2>{{i18n "explorer.admins_only"}}</h2>
   {{else}}
+    {{#if showNavbar}}
     <div class="query-list">
       {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" none="explorer.menu_none" content=content castInteger="true" nameChanges="true"}}
       {{d-button action="showCreate" icon="plus" class="no-text"}}
       {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
     </div>
+    {{/if}}
 
     {{#if showCreate}}
       <div class="query-create">
@@ -23,7 +25,9 @@
       </div>
     {{/if}}
 
-    <hr>
+    {{#if showNavbar}}
+      <hr>
+    {{/if}}
 
     {{#if content.length}}
       {{#if selectedItem.fake}}
@@ -151,7 +155,7 @@
           {{#each sortedQueries as |query|}}
             <tr>
               <td>
-                <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                <a {{action "visitQuery"}} href="/admin/plugins/explorer/?id={{query.id}}">
                   <b class="query-name">{{query.name}}</b>
                   <br>
                   <medium class="query-desc">{{query.description}}</medium>
