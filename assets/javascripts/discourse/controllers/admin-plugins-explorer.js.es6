@@ -19,6 +19,7 @@ export default Ember.Controller.extend({
   results: Em.computed.alias('selectedItem.results'),
 
   editing: false,
+  showNavbar: true,
   everEditing: false,
   showRecentQueries: true,
   sortBy: ['id:desc'],
@@ -90,13 +91,16 @@ export default Ember.Controller.extend({
       window.open(this.get('selectedItem.downloadUrl'), "_blank");
     },
 
-    scrollTop() {
+    visitQuery() {
       window.scrollTo(0,0);
       this.set('editing', false);
+      this.set('showCreate', false);
+      this.set('showNavbar', false);
       this.set('everEditing', false);
     },
 
     goHome() {
+      this.set('showNavbar', true);
       this.set('selectedQueryId', null);
       this.transitionToRoute('adminPlugins.explorer');
     },
