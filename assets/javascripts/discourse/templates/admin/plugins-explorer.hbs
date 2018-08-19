@@ -3,27 +3,29 @@
   {{#if disallow}}
     <h2>{{i18n "explorer.admins_only"}}</h2>
   {{else}}
-    <div class="query-list">
-      {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" none="explorer.menu_none" content=content castInteger="true" nameChanges="true"}}
-      {{d-button action="showCreate" icon="plus" class="no-text"}}
-      {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
-    </div>
-
-    {{#if showCreate}}
-      <div class="query-create">
-        {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
-        {{d-button action="create" disabled=createDisabled label="explorer.create" icon="plus" class="btn-primary"}}
+    {{#unless selectedQueryId}}
+      <div class="query-list">
+        {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" none="explorer.menu_none" content=content castInteger="true" nameChanges="true"}}
+        {{d-button action="showCreate" icon="plus" class="no-text"}}
+        {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
       </div>
-    {{/if}}
 
-    {{#if othersDirty}}
-      <div class="warning">
-        {{fa-icon "warning"}}
-        {{i18n "explorer.others_dirty"}}
-      </div>
-    {{/if}}
+      {{#if showCreate}}
+        <div class="query-create">
+          {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
+          {{d-button action="create" disabled=createDisabled label="explorer.create" icon="plus" class="btn-primary"}}
+        </div>
+      {{/if}}
 
-    <hr>
+      {{#if othersDirty}}
+        <div class="warning">
+          {{fa-icon "warning"}}
+          {{i18n "explorer.others_dirty"}}
+        </div>
+      {{/if}}
+
+      <hr>
+    {{/unless}}
 
     {{#if content.length}}
       {{#if selectedItem.fake}}
