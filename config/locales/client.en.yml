@@ -26,6 +26,7 @@ en:
       title: "Data Explorer"
       create: "Create New"
       create_placeholder: "Query name..."
+      description_placeholder: "Enter a description here"
       import:
         label: "Import"
         modal: "Import A Query"
