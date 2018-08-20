@@ -571,7 +571,7 @@ SQL
 
     def initialize
       @name = 'Unnamed Query'
-      @description = 'Enter a description here'
+      @description = ''
       @sql = 'SELECT 1'
     end
 
