@@ -3,7 +3,7 @@
 }
 
 .query-editor {
-  border: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+  border: 1px solid $primary-very-low;
   margin-bottom: 15px;
   .editor-panel {
     width: 65%;
@@ -44,11 +44,11 @@
   .right-panel {
     float: right;
     .schema {
-      border-left: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+      border-left: 1px solid $primary-low;
       height: 400px;
       overflow-y: scroll;
       overflow-x: hidden;
-      color: dark-light-diff($primary, $secondary, 20%, -20%);
+      color: $secondary-low;
       font-size: 11px;
 
       input {
@@ -59,7 +59,7 @@
       }
       .schema-table-name {
         font-weight: bold;
-        border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+        border-bottom: 1px solid $primary-low;
         padding-left: 5px;
         .fa {
           width: 6px;
@@ -96,14 +96,14 @@
         color: $tertiary;
         margin: 0;
         padding-left: 7px;
-        border-left: 1px dotted dark-light-diff($primary, $secondary, 80%, -20%);
+        border-left: 1px dotted $primary-low-mid;
 
         .schema-typenotes {
-          color: dark-light-diff($primary, $secondary, 50%, -20%);
+          color: $primary-medium;
           font-style: italic;
         }
         .popup-info {
-          color: dark-light-diff($primary, $secondary, 50%, -20%);
+          color: $primary-medium;
 
           .popup { display: none; }
           &:hover .popup { display: block; }
@@ -114,7 +114,7 @@
             padding: 5px;
             padding-right: calc(5px + 2em);
             border: 1px solid;
-            background: white;
+            background: $secondary;
             left: -120px;
             width: 180px;
             top: 6px;
@@ -141,6 +141,7 @@
 .query-edit {
   .name h2 {
     display: inline-block;
+    color: $secondary-low;
   }
   .name .previous {
     padding: 0.2em;
@@ -172,15 +173,15 @@
 }
 
 .query-params {
-  border: 1px solid dark-light-diff($primary, $secondary, 60%, -20%);
+  border: 1px solid $header_primary-medium;
   .param > input {
     margin: 9px;
   }
   .invalid > input {
-    background-color: mix($danger, $secondary, 20%);
+    background-color: $danger-low;
   }
   .invalid .ac-wrap {
-    background-color: mix($danger, $secondary, 20%);
+    background-color: $danger-low;
   }
   .param {
     width: 300px;
@@ -232,26 +233,24 @@
   td{
     .query-created-at {
       font-weight: bold;
-      color: dark-light-diff($primary, $secondary, 40%, -20%);
+      color: $secondary-medium;
     } 
     .query-created-by {
-      color: dark-light-diff($primary, $secondary, 25%, -20%);
+      color: $primary-high;
     }  
   }
-  hr {
+  tr {
     height: 2px;
-    width: 100%;
-    color: dark-light-diff($primary, $secondary, 35%, -20%);
   }
   .heading {
     padding-top: 30px;
-    color: dark-light-diff($primary, $secondary, 30%, -20%);
+    color: $primary-high;
   }
   .query-name {
-    color: dark-light-diff($primary, $secondary, 15%, -20%);
+    color: $secondary-low;
   }
   .query-desc {
-    color: dark-light-diff($primary, $secondary, 25%, -20%);
+    color: $primary-high;
   }
 }
 
