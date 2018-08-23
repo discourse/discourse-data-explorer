@@ -22,13 +22,13 @@ it:
       schema:
         title: "Schema del Database "
         filter: "Cerca..."
-        sensitive: "Il contenuto di questa colonna contiene informazioni particolarmente sensibili o private. Si prega di prestare attenzione quando si utilizzano i contenuti di questa colonna."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipi di dati</a>"
+        sensitive: "Il contenuto di questa colonna potrebbe contenere dati sensibili o privati. Si prega di prestare particolare attenzione nell'uso dei contenuti di questa colonna."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipi</a>"
       types:
         bool:
           'yes': "Sì"
           'no': "No"
-          null_: "Vuoto"
+          null_: "Null"
       export: "Esporta"
       save: "Salva Modifiche"
       saverun: "Salva Modifiche e Esegui Query"
@@ -43,8 +43,9 @@ it:
       others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
       run_time: "Query completata in {{value}} ms."
       column: "Colonna {{number}}"
-      explain_label: "Includere piano query?"
+      explain_label: "Includere il query plan?"
       save_params: "Imposta Predefiniti"
       reset_params: "Azzera"
       no_queries: "Non ci sono query. Perché non ne "
       no_queries_hook: "crei una?"
+      menu_none: "Seleziona una query"

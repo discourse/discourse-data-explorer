@@ -5,4 +5,20 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ca: {}
+ca:
+  js:
+    explorer:
+      create_placeholder: "Nom de consulta..."
+      import:
+        label: "Importa"
+      schema:
+        filter: "Cerca..."
+      types:
+        bool:
+          'yes': "Sí"
+          'no': "No"
+      export: "Exporta"
+      save: "Desa els canvis"
+      edit: "Edita"
+      download_json: "JSON"
+      download_csv: "CSV"

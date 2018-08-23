@@ -1,0 +1,56 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sw:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Ondoa alama ya mkato kwenye swali."
+        dirty: "Lazima uhifadhi taarifa kabla ya kutekeleza."
+    explorer:
+      admins_only: "Uwezo wa kupitia taarifa zote unapatikana kwa viongozi tu."
+      title: "Utafiti wa Taarifa"
+      create: "Tengeneza Mpya"
+      create_placeholder: "Jina la ulizo..."
+      description_placeholder: "Andika maelezo hapa"
+      import:
+        label: "Imeingizwa kutoka sehemu nyingine"
+        modal: "Ingiza Ulizo"
+      schema:
+        title: "Mpango wa kuhifadhidata"
+        filter: "Tafuta..."
+        sensitive: "Taarifa zilizomo ndani ya safuwima zinaweza kuwa za kibinafsi au zinazozingatiwa. Tafadhali kuwa makini na mwangalifu unapotumia hizi taarifa.  "
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Aina</a>"
+      types:
+        bool:
+          'yes': "Ndio"
+          'no': "Hapana"
+          null_: "Hamna Kitu"
+      export: "Hamisha"
+      save: "Hifadhi Mabadiliko"
+      saverun: "Hifadhi Mabadiliko na Uliza Swali"
+      run: "Uliza Swali"
+      undo: "Kataa Mabadiliko"
+      edit: "Hariri"
+      delete: "Futa"
+      recover: "Rejesha Suala"
+      download: "Pakua Majibu"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Mabaliko uliyofanya kwenye ulizo hayajahifadhiwa, hifadhi kabla ya kwenda kwingine."
+      run_time: "Utafutaji umemalizika ndani ya ms {{value}}"
+      query_name: "Swali"
+      query_description: "Maelezo"
+      query_time: "Siku iliyotengenezwa"
+      query_user: "Imetengenezwa na"
+      column: "Safuwima {{namba}}"
+      explain_label: "pamoja na mpango wa swala?"
+      save_params: "Seti Chaguo-misingi"
+      reset_params: "Weka/Anzisha Upya"
+      no_queries: "Hakuna maulizo. Kwa nini"
+      no_queries_hook: "Tengeneza Mpya?"
+      menu_none: "chagua swala"

@@ -49,5 +49,3 @@ es:
       no_queries: "No hay consultas. ¿Por qué no "
       no_queries_hook: "crear una?"
       menu_none: "Selecciona una consulta"
-      no_query_selected: "Por favor seleccionar o"
-      no_query_selected_hook: "crear una."
