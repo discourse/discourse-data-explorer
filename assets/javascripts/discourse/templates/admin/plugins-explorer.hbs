@@ -160,12 +160,12 @@
                   <br>
                 </a>
               </td>
-              <td>
+              <td class="query-created-by">
                 <a href="/users/{{query.username}}/activity">
-                  <medium class="query-created-by">{{query.username}}</medium>
+                  <medium>{{query.username}}</medium>
                 </a>
               </td>
-              <td><medium class="query-created-at">{{query.created_at}}</medium></td>
+              <td class="query-created-at"><medium>{{bound-date query.last_run_at}}</medium></td>
             </tr>
           {{/each}}
         </table>

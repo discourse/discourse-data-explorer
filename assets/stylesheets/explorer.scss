@@ -226,19 +226,21 @@
   }
   .time {
       width: 15%;
+      text-align: center;
     }
   .user {
       width: 20%;
+      padding-left: 1em;
   }
-  td{
-    .query-created-at {
-      font-weight: bold;
-      color: $secondary-medium;
-    } 
-    .query-created-by {
-      color: $primary-high;
-    }  
-  }
+  .query-created-at {
+    color: $secondary-medium;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+  } 
+  .query-created-by {
+    color: $primary-high;
+  }  
   tr {
     height: 2px;
   }
