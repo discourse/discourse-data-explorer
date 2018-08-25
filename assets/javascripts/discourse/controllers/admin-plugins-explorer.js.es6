@@ -58,7 +58,7 @@ export default Ember.Controller.extend({
   save() {
     const self = this;
     this.set('loading', true);
-    this.set('selectedItem.description', '');
+    if (this.get('selectedItem.description') === '') this.set('selectedItem.description', '');
     return this.get('selectedItem').save().then(function() {
       const query = self.get('selectedItem');
       query.markNotDirty();
