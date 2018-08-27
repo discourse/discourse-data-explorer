@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
   editing: false,
   everEditing: false,
   showRecentQueries: true,
-  sortBy: ['id:desc'],
+  sortBy: ['last_run_at:desc'],
   sortedQueries: Em.computed.sort('model', 'sortBy'),
 
   createDisabled: function() {
