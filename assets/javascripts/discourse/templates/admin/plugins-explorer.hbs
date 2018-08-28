@@ -167,7 +167,17 @@
                   </a>
                 {{/if}}
               </td>
-              <td class="query-created-at"><medium>{{bound-date query.last_run_at}}</medium></td>
+              <td class="query-created-at">
+                {{#if query.last_run_at}}  
+                  <medium>
+                    {{bound-date query.last_run_at}}
+                  </medium>
+                {{else}}
+                  <medium>
+                    {{bound-date query.created_at}}
+                  </medium>
+                {{/if}}
+              </td>
             </tr>
           {{/each}}
         </table>
