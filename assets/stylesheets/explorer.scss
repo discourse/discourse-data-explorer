@@ -219,7 +219,6 @@
 
 .recent-queries {
   tr a {
-    display:block;
     width:100%;
     height: 100%;
     color: inherit; 
@@ -230,7 +229,7 @@
     }
   .user {
       width: 20%;
-      padding-left: 1em;
+      text-align: center;
   }
   .query-created-at {
     color: $secondary-medium;
@@ -240,6 +239,8 @@
   } 
   .query-created-by {
     color: $primary-high;
+    text-align: center;
+    vertical-align: middle;
   }  
   tr {
     height: 2px;

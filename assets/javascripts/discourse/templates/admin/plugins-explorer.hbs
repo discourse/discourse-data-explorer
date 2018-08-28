@@ -161,9 +161,11 @@
                 </a>
               </td>
               <td class="query-created-by">
-                <a href="/users/{{query.username}}/activity">
-                  <medium>{{query.username}}</medium>
-                </a>
+                {{#if query.username}}
+                  <a href="/users/{{query.username}}/activity">
+                    <medium>{{query.username}}</medium>
+                  </a>
+                {{/if}}
               </td>
               <td class="query-created-at"><medium>{{bound-date query.last_run_at}}</medium></td>
             </tr>
