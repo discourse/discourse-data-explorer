@@ -143,6 +143,10 @@
     display: inline-block;
     color: $secondary-low;
   }
+  .name-text-field {
+    padding-top: 0.75em;
+    width: calc(100% - 10px);
+  }
   .name .previous {
     padding: 0.2em;
     display: inline-block;

@@ -38,7 +38,9 @@
                 <div class="previous">
                   {{d-button action="goHome" icon="chevron-left" class="no-text btn-med"}}
                 </div>
-                {{text-field value=selectedItem.name}}
+                <div class="name-text-field">
+                  {{text-field value=selectedItem.name}}
+                </div>
               </div>
               <div class="desc">
                 {{textarea value=selectedItem.description placeholder=(i18n "explorer.description_placeholder")}}
