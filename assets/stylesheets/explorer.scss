@@ -260,6 +260,9 @@
   .query-desc {
     color: $primary-high;
   }
+  th:hover{
+    cursor: pointer;
+  }
 }
 
 .explorer-pad-bottom {
