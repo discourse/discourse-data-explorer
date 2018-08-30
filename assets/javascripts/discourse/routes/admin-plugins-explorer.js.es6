@@ -18,5 +18,10 @@ export default Discourse.Route.extend({
 
   setupController: function(controller, model) {
     controller.setProperties(model);
+  },
+  
+  actions: {
+  refreshModel: function() {
+    this.refresh();
   }
-});
+}});

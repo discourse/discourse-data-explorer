@@ -98,6 +98,7 @@ export default Ember.Controller.extend({
     },
 
     goHome() {
+      this.send('refreshModel');
       this.set('selectedQueryId', null);
       this.transitionToRoute('adminPlugins.explorer');
     },
