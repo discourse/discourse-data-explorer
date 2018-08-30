@@ -120,11 +120,12 @@ export default Ember.Controller.extend({
     },
 
     sortByProperty(property) {
-      if (this.sortBy == `${property}:desc`){
-        this.set('sortBy', [`${property}:asc`]);}
-      else {
+      if (this.sortBy[0] === `${property}:desc`) {
+        this.set('sortBy', [`${property}:asc`]);
+      } else {
         this.set('sortBy', [`${property}:desc`]);
-    }},
+      }
+    },
 
     create() {
       const name = this.get("newQueryName").trim();
