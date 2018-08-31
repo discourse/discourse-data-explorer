@@ -147,9 +147,18 @@
       {{#if sortedQueries.length}}
         <table class="recent-queries">
           <thead class="heading-container">
-            <th class="col heading name">{{i18n 'explorer.query_name'}}</th>
-            <th class="col heading user">{{i18n 'explorer.query_user'}}</th>
-            <th class="col heading time">{{i18n 'explorer.query_time'}}</th>
+            <th {{action "sortByProperty" "name"}} class="col heading name">
+              {{d-icon "sort"}}
+              {{i18n 'explorer.query_name'}}
+            </th>
+            <th {{action "sortByProperty" "username"}} class="col heading user">
+              {{d-icon "sort"}}
+              {{i18n 'explorer.query_user'}}
+            </th>
+            <th {{action "sortByProperty" "last_run_at"}} class="col heading time">
+              {{d-icon "sort"}}
+              {{i18n 'explorer.query_time'}}
+            </th>
           </thead>
           <tr></tr>
           {{#each sortedQueries as |query|}}
