@@ -145,53 +145,60 @@
 
     {{#if showRecentQueries}}
       {{#if sortedQueries.length}}
-        <table class="recent-queries">
-          <thead class="heading-container">
-            <th {{action "sortByProperty" "name"}} class="col heading name">
-              {{d-icon "sort"}}
-              {{i18n 'explorer.query_name'}}
-            </th>
-            <th {{action "sortByProperty" "username"}} class="col heading user">
-              {{d-icon "sort"}}
-              {{i18n 'explorer.query_user'}}
-            </th>
-            <th {{action "sortByProperty" "last_run_at"}} class="col heading time">
-              {{d-icon "sort"}}
-              {{i18n 'explorer.query_time'}}
-            </th>
-          </thead>
-          <tr></tr>
-          {{#each sortedQueries as |query|}}
-            <tr>
-              <td>
-                <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
-                  <b class="query-name">{{query.name}}</b>
-                  <br>
-                  <medium class="query-desc">{{query.description}}</medium>
-                  <br>
-                </a>
-              </td>
-              <td class="query-created-by">
-                {{#if query.username}}
-                  <a href="/users/{{query.username}}/activity">
-                    <medium>{{query.username}}</medium>
-                  </a>
-                {{/if}}
-              </td>
-              <td class="query-created-at">
-                {{#if query.last_run_at}}  
-                  <medium>
-                    {{bound-date query.last_run_at}}
-                  </medium>
-                {{else}}
-                  <medium>
-                    {{bound-date query.created_at}}
-                  </medium>
-                {{/if}}
-              </td>
-            </tr>
-          {{/each}}
-        </table>
+        <div class="container">
+          <table class="recent-queries">
+            <thead class="heading-container">
+              <th class="col heading name">
+                <div class="heading-toggle" {{action "sortByProperty" "name"}}>
+                  {{directory-toggle field="name" labelKey="explorer.query_name" order=order asc=asc}}
+                </div>
+              </th>
+              <th class="col heading created-by" {{action "sortByProperty" "username"}}>
+                <div class="heading-toggle">
+                  {{directory-toggle field="username" labelKey="explorer.query_user" order=order asc=asc}}
+                </div>
+              </th>
+              <th class="col heading created-at" {{action "sortByProperty" "last_run_at"}}>
+                <div class="heading-toggle">
+                  {{directory-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=desc}}
+                </div>
+              </th>
+            </thead>
+            <tr></tr>
+            <tbody>
+              {{#each sortedQueries as |query|}}
+                <tr class="query-row">
+                  <td>
+                    <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                      <b class="query-name">{{query.name}}</b>
+                      <br>
+                      <medium class="query-desc">{{query.description}}</medium>
+                      <br>
+                    </a>
+                  </td>
+                  <td class="query-created-by">
+                    {{#if query.username}}
+                      <a href="/users/{{query.username}}/activity">
+                        <medium>{{query.username}}</medium>
+                      </a>
+                    {{/if}}
+                  </td>
+                  <td class="query-created-at">
+                    {{#if query.last_run_at}}  
+                      <medium>
+                        {{bound-date query.last_run_at}}
+                      </medium>
+                    {{else}}
+                      <medium>
+                        {{bound-date query.created_at}}
+                      </medium>
+                    {{/if}}
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       {{/if}}
     {{/if}}
 

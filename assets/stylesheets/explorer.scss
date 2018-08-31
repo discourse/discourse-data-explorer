@@ -222,37 +222,33 @@
 }
 
 .recent-queries {
-  tr a {
-    display: inline-block;
-    width:100%;
-    height: 100%;
-    color: inherit; 
+  tr {
+    cursor: pointer;
   }
-  .time {
-      width: 15%;
-      text-align: center;
-    }
-  .user {
-      width: 20%;
-      text-align: center;
+  tr a {
+    color: inherit;
+    display: inline-block;
+  }
+  .query-row a {
+    width: 100%;
+  }
+  .created-by {
+    width: 20%;
+  }
+  .created-at {
+    width: 15%;
+  }
+  .query-created-by {
+    color: $primary-high;
   }
   .query-created-at {
     color: $secondary-medium;
     font-weight: bold;
-    text-align: center;
-    vertical-align: middle;
-  } 
-  .query-created-by {
-    color: $primary-high;
-    text-align: center;
-    vertical-align: middle;
   }  
-  tr {
-    height: 2px;
-  }
   .heading {
-    padding-top: 30px;
+    position: relative;
     color: $primary-high;
+    padding: 50px 0px 0px 0px;
   }
   .query-name {
     color: $secondary-low;
@@ -260,8 +256,10 @@
   .query-desc {
     color: $primary-high;
   }
-  th:hover{
-    cursor: pointer;
+  .heading-toggle {
+    bottom: 0;
+    position: absolute;
+    display: inline-block;
   }
 }
 

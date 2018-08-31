@@ -11,13 +11,14 @@ export default Ember.Controller.extend({
   showResults: false,
   hideSchema: false,
   loading: false,
-
   explain: false,
 
   saveDisabled: Ember.computed.not('selectedItem.dirty'),
   runDisabled: Ember.computed.alias('selectedItem.dirty'),
   results: Em.computed.alias('selectedItem.results'),
 
+  asc: null,
+  order: null,
   editing: false,
   everEditing: false,
   showRecentQueries: true,
@@ -98,8 +99,13 @@ export default Ember.Controller.extend({
     },
 
     goHome() {
+      this.setProperties({
+        asc: null,
+        order: null,
+        selectedQueryId: null,
+        sortBy: ['last_run_at:desc']
+      });
       this.send('refreshModel');
-      this.set('selectedQueryId', null);
       this.transitionToRoute('adminPlugins.explorer');
     },
 
