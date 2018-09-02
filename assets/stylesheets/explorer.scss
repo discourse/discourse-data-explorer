@@ -222,43 +222,45 @@
 }
 
 .recent-queries {
-  tr {
-    cursor: pointer;
+  thead {
+    .created-by {
+      width: 20%;
+    }
+    .created-at {
+      width: 15%;
+    }
+    .heading {
+      position: relative;
+      color: $primary-high;
+      padding: 50px 0px 0px 0px;
+      .heading-toggle {
+        bottom: 0;
+        position: absolute;
+        display: inline-block;
+      }
+    }
+  }
+  .query-row {
+    a {
+      width: 100%;
+    }
+    .query-name {
+      color: $secondary-low;
+    }
+    .query-desc {
+      color: $primary-high;
+    }
+    .query-created-by {
+      color: $primary-high;
+    }
+    .query-created-at {
+      color: $secondary-medium;
+      font-weight: bold;
+    }  
   }
   tr a {
     color: inherit;
-    display: inline-block;
-  }
-  .query-row a {
-    width: 100%;
-  }
-  .created-by {
-    width: 20%;
-  }
-  .created-at {
-    width: 15%;
-  }
-  .query-created-by {
-    color: $primary-high;
-  }
-  .query-created-at {
-    color: $secondary-medium;
-    font-weight: bold;
-  }  
-  .heading {
-    position: relative;
-    color: $primary-high;
-    padding: 50px 0px 0px 0px;
-  }
-  .query-name {
-    color: $secondary-low;
-  }
-  .query-desc {
-    color: $primary-high;
-  }
-  .heading-toggle {
-    bottom: 0;
-    position: absolute;
+    cursor: pointer;
     display: inline-block;
   }
 }
