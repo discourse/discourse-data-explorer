@@ -25,7 +25,6 @@
     }
   }
 
-
   .editor-panel {
     float: left;
     .ace-wrapper {
@@ -48,14 +47,14 @@
       height: 400px;
       overflow-y: scroll;
       overflow-x: hidden;
-      color: $secondary-low;
-      font-size: 11px;
+      color: $primary-high;
+      font-size: $font-down-2;
 
       input {
         padding: 4px;
         margin: 3px;
         // 100% - padding + margin * 2 - border - button - buttonborder
-        width: calc(100% - 14px - 1px - 22px - 2px);
+        width: calc(100% - 14px - 1px - 40px - 2px);
       }
       .schema-table-name {
         font-weight: bold;
@@ -77,7 +76,7 @@
         padding-bottom: 2px;
       }
       dl > div {
-        clear:both;
+        clear: both;
       }
       dt {
         display: inline-block;
@@ -105,9 +104,15 @@
         .popup-info {
           color: $primary-medium;
 
-          .popup { display: none; }
-          &:hover .popup { display: block; }
-          &:focus .popup { display: block; }
+          .popup {
+            display: none;
+          }
+          &:hover .popup {
+            display: block;
+          }
+          &:focus .popup {
+            display: block;
+          }
 
           .popup {
             position: absolute;
@@ -139,22 +144,33 @@
 }
 
 .query-edit {
-  .name h2 {
-    display: inline-block;
-    color: $secondary-low;
+  .name {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+    h1 {
+      display: inline-block;
+      margin: 0 0.5em 0 0;
+      color: $primary;
+      a {
+        color: currentColor;
+      }
+    }
+  }
+  button.previous {
+    margin-right: 0.5em;
+    .d-icon {
+      margin-left: -0.15em; // fixing fontawesome horizontal alignment
+    }
   }
   .name-text-field {
-    padding-top: 0.75em;
-    width: calc(100% - 10px);
+    width: 100%;
   }
-  .name .previous {
-    padding: 0.2em;
-    display: inline-block;
-    padding-right: 0.25em;
-    font-size: 1.2em;
-  }
-  .name input, .desc textarea {
-    width: calc(100% - 10px);
+  .name input,
+  .desc textarea {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
   }
   &:not(.editing) .desc {
     margin: 10px 0;
@@ -169,7 +185,9 @@
   }
 }
 
-.clear { clear: both; }
+.clear {
+  clear: both;
+}
 
 .schema-title {
   display: block;
@@ -207,14 +225,20 @@
   }
 }
 
-.query-list, .query-create, .query-edit, .query-results, .query-params, .https-warning {
+.query-list,
+.query-create,
+.query-edit,
+.query-results,
+.query-params,
+.https-warning {
   margin: 10px 0;
 }
 
 .query-list {
   display: flex;
-  .combo-box, button {
-    margin-right: .5em;
+  .combo-box,
+  button {
+    margin-right: 0.5em;
   }
   li.none {
     display: none;
@@ -231,8 +255,11 @@
     }
     .heading {
       position: relative;
-      color: $primary-high;
+      color: $primary-medium;
       padding: 50px 0px 0px 0px;
+      th.sortable {
+        font-weight: normal;
+      }
       .heading-toggle {
         bottom: 0;
         position: absolute;
@@ -245,7 +272,7 @@
       width: 100%;
     }
     .query-name {
-      color: $secondary-low;
+      color: $primary;
     }
     .query-desc {
       color: $primary-high;
@@ -254,9 +281,8 @@
       color: $primary-high;
     }
     .query-created-at {
-      color: $secondary-medium;
-      font-weight: bold;
-    }  
+      color: $primary-medium;
+    }
   }
   tr a {
     color: inherit;

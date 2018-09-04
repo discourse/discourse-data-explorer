@@ -1,7 +1,7 @@
 {{#explorer-container hideSchema=hideSchema everEditing=everEditing}}
 
   {{#if disallow}}
-    <h2>{{i18n "explorer.admins_only"}}</h2>
+    <h1>{{i18n "explorer.admins_only"}}</h1>
   {{else}}
     {{#unless selectedQueryId}}
       <div class="query-list">
@@ -35,9 +35,7 @@
           {{#if selectedItem}}
             {{#if editing}}
               <div class="name">
-                <div class="previous">
-                  {{d-button action="goHome" icon="chevron-left" class="no-text btn-med"}}
-                </div>
+                  {{d-button action="goHome" icon="chevron-left" class="previous"}}
                 <div class="name-text-field">
                   {{text-field value=selectedItem.name}}
                 </div>
@@ -47,11 +45,10 @@
               </div>
             {{else}}
               <div class="name">
-                <div class="previous">
-                  {{d-button action="goHome" icon="chevron-left" class="no-text btn-med"}}
-                </div>
-                <h2>{{selectedItem.name}}</h2>
-                {{d-button action="editName" icon="pencil" class="no-text btn-small"}}
+                {{d-button action="goHome" icon="chevron-left" class="previous"}}
+                <h1>{{selectedItem.name}}
+                <a {{action "editName" class="edit-query-name"}}>{{d-icon "pencil"}}</a>
+                </h1>
               </div>
               <div class="desc">
                 {{selectedItem.description}}
