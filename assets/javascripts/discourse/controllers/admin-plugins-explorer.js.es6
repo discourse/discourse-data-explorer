@@ -199,7 +199,10 @@ export default Ember.Controller.extend({
         type: "POST",
         data: {
           params: JSON.stringify(this.get('selectedItem.params')),
-          explain: this.get('explain')
+          explain: this.get('explain'),
+          query_default: false
+          // TODO: add query_default to query serializer params and get from there
+          // pass type of query
         }
       }).then(function(result) {
         self.set('results', result);

@@ -919,6 +919,20 @@ SQL
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
+      # TODO: Refactor into separate function
+      # Adding queries from json file here
+      json = JSON.parse(File.read(File.expand_path("../config/stock_queries.json", __FILE__)))
+      json["queries"].each do |params|
+        query = DataExplorer::Query.new
+        query.id = query.class.alloc_id
+        # ends up allocating new id's everytime you refresh the page, so we cannot link default queries by url
+        query.sql = params["sql"]
+        query.name = params["name"]
+        query.description = params["description"]
+        query.created_by = Discourse::SYSTEM_USER_ID.to_s
+        queries.push(query)
+      end
+
       render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
     end
 
@@ -1000,9 +1014,24 @@ SQL
     # rows - array of array of strings. Results of the query. In the same order as 'columns'.
     def run
       check_xhr unless params[:download]
+      # if !params[:query_default]
+      # if user created query, run from db
       query = DataExplorer::Query.find(params[:id].to_i)
       query.last_run_at = Time.now
       query.save
+      # else
+      #   # if default query, it does not exist in db
+      #   # hence we must run it from somewhere else
+      #   # query.id = ?
+      #   # need to somehow find which default query was run by passing some sort of id
+      #   json = JSON.parse(File.read(File.expand_path("../config/stock_queries.json", __FILE__)))
+      #   query = DataExplorer::Query.new
+      #   query.name = params["name"]
+      #   query.sql = params["sql"]
+      #   query.last_run_at = Time.now
+      #   query.description = params["description"]
+      #   query.created_by = Discourse::SYSTEM_USER_ID.to_s
+      # end
 
       if params[:download]
         response.sending_file = true

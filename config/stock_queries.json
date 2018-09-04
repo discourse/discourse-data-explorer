@@ -1,0 +1,19 @@
+{
+    "queries": [
+      {
+        "sql": "WITH pairs AS (\n    SELECT p.user_id liked, pa.user_id liker\n    FROM post_actions pa\n    LEFT JOIN posts p ON p.id = pa.post_id\n    WHERE post_action_type_id = 2\n)\nSELECT liker liker_user_id, liked liked_user_id, count(*)\nFROM pairs\nGROUP BY liked, liker\nORDER BY count DESC",
+        "name": "Most Common Likers",
+        "description": "Which users like particular other users the most? Query by @riking"
+      },
+      {
+        "sql": "SELECT\n  username\nFROM\n  users\nWHERE\n NOT staged AND active AND last_seen_at IS NOT NULL\n AND\n NOT EXISTS (SELECT 1 FROM facebook_user_infos WHERE facebook_user_infos.user_id = users.id)\n AND\n NOT EXISTS (SELECT 1 FROM github_user_infos WHERE github_user_infos.user_id = users.id)\n AND\n NOT EXISTS (SELECT 1 FROM google_user_infos WHERE google_user_infos.user_id = users.id)\n AND\n NOT EXISTS (SELECT 1 FROM twitter_user_infos WHERE twitter_user_infos.user_id = users.id)\n AND\n NOT EXISTS (SELECT 1 FROM user_open_ids WHERE user_open_ids.user_id = users.id)",
+        "name": "Users without Social Logins",
+        "description": "This query should return users that don't have any Social Logins (Facebook, Twitter, etc.) associated in their accounts."
+      },
+      {
+        "sql": "WITH query AS (\n SELECT id, raw from posts\n ) SELECT * FROM query",
+        "name": "All posts",
+        "description": "This query should return users that don't have any Social Logins (Facebook, Twitter, etc.) associated in their accounts."
+      }
+    ]
+}
