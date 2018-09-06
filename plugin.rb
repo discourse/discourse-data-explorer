@@ -919,6 +919,11 @@ SQL
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
+      if !queries.any?{|q| q.created_by == Discourse::SYSTEM_USER_ID.to_s}
+      # if there are no queries created by system user
+        add_default_queries
+      end
+
       render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
     end
 
@@ -1077,6 +1082,18 @@ SQL
             render plain: text
           end
         end
+      end
+    end
+
+    def add_default_queries
+      json = JSON.parse(File.read(File.expand_path("../config/stock_queries.json", __FILE__)))
+      json["queries"].each do |params|
+        query = DataExplorer::Query.new
+        query.sql = params["sql"]
+        query.name = params["name"]
+        query.description = params["description"]
+        query.created_by = Discourse::SYSTEM_USER_ID.to_s
+        query.save
       end
     end
   end
