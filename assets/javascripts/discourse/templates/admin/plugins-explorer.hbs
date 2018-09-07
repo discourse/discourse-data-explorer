@@ -5,9 +5,9 @@
   {{else}}
     {{#unless selectedQueryId}}
       <div class="query-list">
-        {{combo-box valueAttribute="id" value=selectedQueryId nameProperty="listName" none="explorer.menu_none" content=content castInteger="true" nameChanges="true"}}
-        {{d-button action="showCreate" icon="plus" class="no-text"}}
-        {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
+        {{combo-box valueAttribute="id" class="btn-left" value=selectedQueryId nameProperty="listName" none="explorer.menu_none" content=content castInteger="true" nameChanges="true"}}
+        {{d-button action="showCreate" icon="plus" class="no-text btn-right"}}
+        {{d-button action="importQuery" label="explorer.import.label" icon="upload btn-right"}}
       </div>
 
       {{#if showCreate}}
@@ -23,14 +23,10 @@
           {{i18n "explorer.others_dirty"}}
         </div>
       {{/if}}
-
-      <hr>
     {{/unless}}
 
     {{#if content.length}}
-      {{#if selectedItem.fake}}
-        <p>{{i18n "explorer.no_query_selected"}} <a {{action "showCreate"}}>{{i18n "explorer.no_query_selected_hook"}}</a></p>
-      {{else}}
+      {{#unless selectedItem.fake}}
         <div class="query-edit {{if editName "editing"}}">
           {{#if selectedItem}}
             {{#if editing}}
@@ -124,7 +120,7 @@
         </form>
 
         <hr>
-      {{/if}}
+      {{/unless}}
       {{conditional-loading-spinner condition=loading}}
       {{#unless selectedItem.fake}}
         {{#if results}}
@@ -199,8 +195,6 @@
 
       <div class="explorer-pad-bottom"></div>
 
-    {{else}}
-      <p>{{i18n "explorer.no_queries"}} <a {{action "showCreate"}}>{{i18n "explorer.no_queries_hook"}}</a></p>
     {{/if}}
   {{/if}}
 {{/explorer-container}}

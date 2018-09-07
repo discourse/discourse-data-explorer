@@ -236,8 +236,11 @@
 
 .query-list {
   display: flex;
-  .combo-box,
-  button {
+  .btn-left {
+    margin-right: 0.5em;
+  }
+  .btn-right {
+    margin-left: auto;
     margin-right: 0.5em;
   }
   li.none {
