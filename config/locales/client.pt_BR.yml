@@ -46,6 +46,4 @@ pt_BR:
       explain_label: "Incluir plano de consulta?"
       save_params: "Definir padrões"
       reset_params: "Restabelecer"
-      no_queries: "Não há consultas. Por que não"
-      no_queries_hook: "crie um?"
       menu_none: "Selecionar uma pesquisa"

@@ -46,5 +46,3 @@ ur:
       explain_label: "ڈیٹا کمانڈ پلَین شامل کریں؟"
       save_params: "ڈیفالٹس سَیٹ کریں"
       reset_params: "رِی سَیٹ"
-      no_queries: "کوئی ڈیٹا کمانڈ نہیں ہیں۔ کیوں نہیں"
-      no_queries_hook: "ایک بنائیں؟"

@@ -27,4 +27,3 @@ tr_TR:
       download_csv: "CSV"
       save_params: "Varsayılan belirle"
       reset_params: "Sıfırla"
-      no_queries_hook: "bir tane oluştur?"

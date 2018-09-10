@@ -46,5 +46,3 @@ fi:
       explain_label: "Sisällytä kyselysuunnitelma?"
       save_params: "Aseta oletusarvot"
       reset_params: "Nollaa"
-      no_queries: "Kyselyitä ei ole. Mikset"
-      no_queries_hook: "loisi yhtä?"

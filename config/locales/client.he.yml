@@ -46,5 +46,3 @@ he:
       explain_label: "לכלול תכנית שאילתה?"
       save_params: "הגדרת בררות מחדל"
       reset_params: "איפוס"
-      no_queries: "אין שאילתות. למה לא"
-      no_queries_hook: "ליצור אחת?"

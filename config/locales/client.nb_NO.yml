@@ -43,5 +43,3 @@ nb_NO:
       explain_label: "Inkluder spørringsplan?"
       save_params: "Sett forvalg"
       reset_params: "Tilbakestill"
-      no_queries: "Det er ingen spørringer. Hvorfor ikke"
-      no_queries_hook: "opprette en?"
