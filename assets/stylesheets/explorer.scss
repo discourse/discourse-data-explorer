@@ -288,6 +288,9 @@
       color: $primary-medium;
     }
   }
+  .query-row:hover {
+    background-color: inherit;
+  }
   tr a {
     color: inherit;
     cursor: pointer;
