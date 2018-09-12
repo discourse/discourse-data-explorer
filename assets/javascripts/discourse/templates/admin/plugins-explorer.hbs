@@ -137,60 +137,58 @@
       {{/unless}}
 
     {{#if showRecentQueries}}
-      {{#if sortedQueries.length}}
-        <div class="container">
-          <table class="recent-queries">
-            <thead class="heading-container">
-              <th class="col heading name">
-                <div class="heading-toggle" {{action "sortByProperty" "name"}}>
-                  {{directory-toggle field="name" labelKey="explorer.query_name" order=order asc=asc}}
-                </div>
-              </th>
-              <th class="col heading created-by">
-                <div class="heading-toggle" {{action "sortByProperty" "username"}}>
-                  {{directory-toggle field="username" labelKey="explorer.query_user" order=order asc=asc}}
-                </div>
-              </th>
-              <th class="col heading created-at">
-                <div class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
-                  {{directory-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc}}
-                </div>
-              </th>
-            </thead>
-            <tr></tr>
-            <tbody>
-              {{#each sortedQueries as |query|}}
-                <tr class="query-row">
-                  <td>
-                    <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
-                      <b class="query-name">{{query.name}}</b>
-                      <medium class="query-desc">{{query.description}}</medium>
+      <div class="container">
+        <table class="recent-queries">
+          <thead class="heading-container">
+            <th class="col heading name">
+              <div class="heading-toggle" {{action "sortByProperty" "name"}}>
+                {{directory-toggle field="name" labelKey="explorer.query_name" order=order asc=asc}}
+              </div>
+            </th>
+            <th class="col heading created-by">
+              <div class="heading-toggle" {{action "sortByProperty" "username"}}>
+                {{directory-toggle field="username" labelKey="explorer.query_user" order=order asc=asc}}
+              </div>
+            </th>
+            <th class="col heading created-at">
+              <div class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
+                {{directory-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc}}
+              </div>
+            </th>
+          </thead>
+          <tr></tr>
+          <tbody>
+            {{#each sortedQueries as |query|}}
+              <tr class="query-row">
+                <td>
+                  <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                    <b class="query-name">{{query.name}}</b>
+                    <medium class="query-desc">{{query.description}}</medium>
+                  </a>
+                </td>
+                <td class="query-created-by">
+                  {{#if query.username}}
+                    <a href="/users/{{query.username}}/activity">
+                      <medium>{{query.username}}</medium>
                     </a>
-                  </td>
-                  <td class="query-created-by">
-                    {{#if query.username}}
-                      <a href="/users/{{query.username}}/activity">
-                        <medium>{{query.username}}</medium>
-                      </a>
-                    {{/if}}
-                  </td>
-                  <td class="query-created-at">
-                    {{#if query.last_run_at}}  
-                      <medium>
-                        {{bound-date query.last_run_at}}
-                      </medium>
-                    {{else}}
-                      <medium>
-                        {{bound-date query.created_at}}
-                      </medium>
-                    {{/if}}
-                  </td>
-                </tr>
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
-      {{/if}}
+                  {{/if}}
+                </td>
+                <td class="query-created-at">
+                  {{#if query.last_run_at}}  
+                    <medium>
+                      {{bound-date query.last_run_at}}
+                    </medium>
+                  {{else}}
+                    <medium>
+                      {{bound-date query.created_at}}
+                    </medium>
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
     {{/if}}
 
       <div class="explorer-pad-bottom"></div>
