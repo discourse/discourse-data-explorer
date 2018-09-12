@@ -102,6 +102,7 @@ export default Ember.Controller.extend({
       this.setProperties({
         asc: null,
         order: null,
+        showResults: false,
         selectedQueryId: null,
         sortBy: ['last_run_at:desc']
       });
@@ -163,6 +164,7 @@ export default Ember.Controller.extend({
       const self = this;
       const query = this.get('selectedItem');
       this.set('loading', true);
+      this.set('showResults', false);
       this.store.destroyRecord('query', query).then(function() {
         query.set('destroyed', true);
       }).catch(popupAjaxError).finally(function() {
@@ -174,6 +176,7 @@ export default Ember.Controller.extend({
       const self = this;
       const query = this.get('selectedItem');
       this.set('loading', true);
+      this.set('showResults', true);
       query.save().then(function() {
         query.set('destroyed', false);
       }).catch(popupAjaxError).finally(function() {

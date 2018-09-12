@@ -1,17 +1,21 @@
 <div class="result-info">
-  {{i18n "explorer.download"}}
   {{d-button action="downloadResultJson" icon="download" label="explorer.download_json"}}
   {{d-button action="downloadResultCsv" icon="download" label="explorer.download_csv"}}
-  <div class="result-about">
-    {{duration}}
-  </div>
 </div>
 
+<div class="result-about">
+  {{duration}}
+</div>
+
+<br>
+
 {{~#if hasExplain}}
-  <pre><code>
+  <pre class="result-explain"><code>
     {{~content.explain}}
   </code></pre>
 {{~/if}}
+
+<br>
 
 <table>
   <thead>

@@ -298,6 +298,18 @@
   }
 }
 
+.result-info {
+  float: left;
+}
+.result-about {
+  color: $primary-high;
+  float: right;
+}
+.result-explain {
+  padding-top: 1em;
+  margin-bottom: 0px;
+}
+
 .explorer-pad-bottom {
   margin-bottom: 200px;
 }
