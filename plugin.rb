@@ -99,7 +99,7 @@ after_initialize do
 WITH query AS (
 #{query.sql}
 ) SELECT * FROM query
-LIMIT #{opts[:limit] || 250}
+LIMIT #{opts[:limit] || 1000}
 SQL
 
           time_start = Time.now
