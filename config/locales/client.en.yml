@@ -52,6 +52,12 @@ en:
       download_csv: "CSV"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in {{value}} ms."
+      result_count:
+        one: "%{count} result."
+        other: "%{count} results."
+      max_result_count:
+        one: "Showing top %{count} results."
+        other: "Showing top %{count} results."
       query_name: "Query"
       query_description: "Description"
       query_time: "Last run"

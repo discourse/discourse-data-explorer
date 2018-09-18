@@ -99,7 +99,7 @@ after_initialize do
 WITH query AS (
 #{query.sql}
 ) SELECT * FROM query
-LIMIT #{opts[:limit] || 250}
+LIMIT #{opts[:limit] || 1000}
 SQL
 
           time_start = Time.now
@@ -939,7 +939,7 @@ SQL
 
     def create
       # guardian.ensure_can_create_explorer_query!
-      
+
       query = DataExplorer::Query.from_hash params.require(:query)
       query.created_at = Time.now
       query.created_by = current_user.id.to_s
@@ -1050,6 +1050,7 @@ SQL
               success: true,
               errors: [],
               duration: (result[:duration_secs].to_f * 1000).round(1),
+              result_count: pg_result.values.length || 0,
               params: query_params,
               columns: cols,
             }

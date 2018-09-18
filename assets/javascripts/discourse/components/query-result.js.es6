@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import Badge from 'discourse/models/badge';
 import { getOwner } from 'discourse-common/lib/get-owner';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 function randomIdShort() {
   return 'xxxxxxxx'.replace(/[xy]/g, function() {
@@ -29,8 +30,17 @@ const QueryResultComponent = Ember.Component.extend({
   columns: Em.computed.alias('content.columns'),
   params: Em.computed.alias('content.params'),
   explainText: Em.computed.alias('content.explain'),
-
   hasExplain: Em.computed.notEmpty('content.explain'),
+
+  @computed('content.result_count')
+  resultCount: function(count) {
+    if (count === 1000) {
+      return I18n.t('explorer.max_result_count', { count });
+    } else {
+      return I18n.t('explorer.result_count', { count });
+    }
+  },
+
   colCount: function() {
     return this.get('content.columns').length;
   }.property('content.columns.length'),
