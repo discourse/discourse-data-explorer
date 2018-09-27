@@ -43,7 +43,9 @@
               <div class="name">
                 {{d-button action="goHome" icon="chevron-left" class="previous"}}
                 <h1>{{selectedItem.name}}
-                <a {{action "editName" class="edit-query-name"}}>{{d-icon "pencil"}}</a>
+                  {{#unless editDisabled}}
+                    <a {{action "editName" class="edit-query-name"}}>{{d-icon "pencil"}}</a>
+                  {{/unless}}
                 </h1>
               </div>
               <div class="desc">
@@ -77,7 +79,9 @@
               {{#if everEditing}}
                 {{d-button action="save" label="explorer.save" disabled=saveDisabled class="btn-primary"}}
               {{else}}
-                {{d-button action="editName" label="explorer.edit" icon="pencil" class="btn-primary"}}
+                {{#unless editDisabled}}
+                  {{d-button action="editName" label="explorer.edit" icon="pencil" class="btn-primary"}}
+                {{/unless}}
               {{/if}}
               {{d-button action="download" label="explorer.export" disabled=runDisabled icon="download"}}
             </div>
@@ -88,7 +92,9 @@
                 {{#if everEditing}}
                   {{d-button action="discard" class="btn-danger" icon="undo" label="explorer.undo" disabled=saveDisabled}}
                 {{/if}}
-                {{d-button action="destroy" class="btn-danger" icon="trash" label="explorer.delete"}}
+                {{#unless editDisabled}}
+                  {{d-button action="destroy" class="btn-danger" icon="trash" label="explorer.delete"}}
+                {{/unless}}
               {{/if}}
             </div>
             <div class="clear"></div>
