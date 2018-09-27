@@ -33,6 +33,7 @@ export default Ember.Controller.extend({
     const id = parseInt(this.get('selectedQueryId'));
     const item = this.get('content').find(q => q.get('id') === id);
     !isNaN(id) ? this.set('showRecentQueries', false) : this.set('showRecentQueries', true);
+    if (id<0) this.set('saveDisabled', true);
     return item || NoQuery;
   }.property('selectedQueryId'),
 
@@ -199,10 +200,7 @@ export default Ember.Controller.extend({
         type: "POST",
         data: {
           params: JSON.stringify(this.get('selectedItem.params')),
-          explain: this.get('explain'),
-          query_default: false
-          // TODO: add query_default to query serializer params and get from there
-          // pass type of query
+          explain: this.get('explain')
         }
       }).then(function(result) {
         self.set('results', result);
