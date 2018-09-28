@@ -629,16 +629,16 @@ SQL
     end
 
     def self.find(id, opts = {})
-      if id > 0 # user created queries
+      if id < 0 # default queries
+        json = JSON.parse(File.read(File.expand_path("../config/default_queries.json", __FILE__)))
+        hash = json["queries"][id.to_s].with_indifferent_access
+        hash[:id] = id
+        from_hash hash
+      else
         unless hash = DataExplorer.pstore_get("q:#{id}")
           return DataExplorer::Query.new if opts[:ignore_deleted]
           raise Discourse::NotFound
         end
-        from_hash hash
-      else
-        json = JSON.parse(File.read(File.expand_path("../config/stock_queries.json", __FILE__)))
-        hash = json["queries"][id.to_s].with_indifferent_access
-        hash[:id] = id
         from_hash hash
       end
     end
@@ -926,7 +926,7 @@ SQL
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
-      json = JSON.parse(File.read(File.expand_path("../config/stock_queries.json", __FILE__)))
+      json = JSON.parse(File.read(File.expand_path("../config/default_queries.json", __FILE__)))
       json["queries"].each do |params|
         query = DataExplorer::Query.new
         query.id = params.first.to_i

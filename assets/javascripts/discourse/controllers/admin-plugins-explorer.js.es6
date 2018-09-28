@@ -34,7 +34,7 @@ export default Ember.Controller.extend({
     const id = parseInt(this.get('selectedQueryId'));
     const item = this.get('content').find(q => q.get('id') === id);
     !isNaN(id) ? this.set('showRecentQueries', false) : this.set('showRecentQueries', true);
-    if (id<0) this.set('editDisabled', true);
+    if (id < 0) this.set('editDisabled', true);
     return item || NoQuery;
   }.property('selectedQueryId'),
 
