@@ -637,8 +637,9 @@ SQL
         from_hash hash
       else
         json = JSON.parse(File.read(File.expand_path("../config/stock_queries.json", __FILE__)))
-        query_params = json["queries"][id.to_s]
-        from_hash query_params
+        hash = json["queries"][id.to_s].with_indifferent_access
+        hash[:id] = id
+        from_hash hash
       end
     end
 
@@ -928,10 +929,10 @@ SQL
       json = JSON.parse(File.read(File.expand_path("../config/stock_queries.json", __FILE__)))
       json["queries"].each do |params|
         query = DataExplorer::Query.new
-        query.id = params[0].to_i
-        query.sql = params[1]["sql"]
-        query.name = params[1]["name"]
-        query.description = params[1]["description"]
+        query.id = params.first.to_i
+        query.sql = params.second["sql"]
+        query.name = params.second["name"]
+        query.description = params.second["description"]
         query.created_by = Discourse::SYSTEM_USER_ID.to_s
         queries.push(query)
       end
@@ -1020,6 +1021,7 @@ SQL
 
       query = DataExplorer::Query.find(params[:id].to_i)
 
+      # don't update last_run_at for default queries
       if params[:id].to_i > 0
         query.last_run_at = Time.now
         query.save
