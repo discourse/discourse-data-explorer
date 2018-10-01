@@ -629,7 +629,7 @@ SQL
     end
 
     def self.find(id, opts = {})
-      if id < 0 # default queries
+      if DataExplorer.pstore_get("q:#{id}").nil? && id < 0
         json = JSON.parse(File.read(File.expand_path("../config/default_queries.json", __FILE__)))
         hash = json["queries"][id.to_s].with_indifferent_access
         hash[:id] = id
@@ -646,6 +646,11 @@ SQL
     def save
       check_params!
       @id = self.class.alloc_id unless @id && @id > 0
+      DataExplorer.pstore_set "q:#{id}", to_hash
+    end
+
+    def save_default_query
+      check_params!
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
 
@@ -934,7 +939,9 @@ SQL
         query.name = params.second["name"]
         query.description = params.second["description"]
         query.created_by = Discourse::SYSTEM_USER_ID.to_s
-        queries.push(query)
+
+        # don't render this query if query with the same id already exists in pstore
+        queries.push(query) unless DataExplorer.pstore_get("q:#{query.id}").present?
       end
 
       render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
@@ -1020,10 +1027,12 @@ SQL
       check_xhr unless params[:download]
 
       query = DataExplorer::Query.find(params[:id].to_i)
+      query.last_run_at = Time.now
 
-      # don't update last_run_at for default queries
-      if params[:id].to_i > 0
-        query.last_run_at = Time.now
+      if params[:id].to_i < 0
+        query.created_by = Discourse::SYSTEM_USER_ID.to_s
+        query.save_default_query
+      else
         query.save
       end
 
