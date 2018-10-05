@@ -651,6 +651,12 @@ SQL
 
     def save_default_query
       check_params!
+      # Read from default_queries.json again to pick up any changes
+      query = JSON.parse(File.read(File.expand_path("../config/default_queries.json", __FILE__)))["queries"]["#{@id}"]
+      @sql = query["sql"]
+      @name = query["name"]
+      @description = query["description"]
+
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
 
