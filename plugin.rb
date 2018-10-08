@@ -566,6 +566,7 @@ SQL
   end
 
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
+  require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::Query
     attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :last_run_at
 
@@ -630,8 +631,7 @@ SQL
 
     def self.find(id, opts = {})
       if DataExplorer.pstore_get("q:#{id}").nil? && id < 0
-        json = JSON.parse(File.read(File.expand_path("../config/default_queries.json", __FILE__)))
-        hash = json["queries"][id.to_s].with_indifferent_access
+        hash = Queries.default[id.to_s]
         hash[:id] = id
         from_hash hash
       else
@@ -651,8 +651,9 @@ SQL
 
     def save_default_query
       check_params!
-      # Read from default_queries.json again to pick up any changes
-      query = JSON.parse(File.read(File.expand_path("../config/default_queries.json", __FILE__)))["queries"]["#{@id}"]
+      # Read from queries.rb again to pick up any changes and save them
+      query = Queries.default[id.to_s]
+      @id = query["id"]
       @sql = query["sql"]
       @name = query["name"]
       @description = query["description"]
@@ -925,6 +926,7 @@ SQL
   end
 
   require_dependency 'application_controller'
+  require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::QueryController < ::ApplicationController
     requires_plugin DataExplorer.plugin_name
 
@@ -937,10 +939,9 @@ SQL
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
-      json = JSON.parse(File.read(File.expand_path("../config/default_queries.json", __FILE__)))
-      json["queries"].each do |params|
+      Queries.default.each do |params|
         query = DataExplorer::Query.new
-        query.id = params.first.to_i
+        query.id = params.second["id"]
         query.sql = params.second["sql"]
         query.name = params.second["name"]
         query.description = params.second["description"]

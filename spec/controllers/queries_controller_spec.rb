@@ -55,13 +55,15 @@ describe DataExplorer::QueryController do
   end
 
   describe "#index" do
-    let(:json) { JSON.parse(File.read(File.expand_path("../../../config/default_queries.json", __FILE__))) }
+    before do
+      require_dependency File.expand_path('../../../lib/queries.rb', __FILE__)
+    end
 
     it "behaves nicely with no user created queries" do
       DataExplorer::Query.destroy_all
       get :index, format: :json
       expect(response.status).to eq(200)
-      expect(response_json['queries'].count).to eq(json["queries"].count)
+      expect(response_json['queries'].count).to eq(Queries.default.count)
     end
 
     it "shows all available queries in alphabetical order" do
@@ -70,7 +72,7 @@ describe DataExplorer::QueryController do
       make_query('SELECT 1 as value', name: 'A')
       get :index, format: :json
       expect(response.status).to eq(200)
-      expect(response_json['queries'].length).to eq(json["queries"].count + 2)
+      expect(response_json['queries'].length).to eq(Queries.default.count + 2)
       expect(response_json['queries'][0]['name']).to eq('A')
       expect(response_json['queries'][1]['name']).to eq('B')
     end
