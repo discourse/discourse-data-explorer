@@ -1,4 +1,4 @@
-import RestModel from 'discourse/models/rest';
+import RestModel from "discourse/models/rest";
 
 const Query = RestModel.extend({
   dirty: false,
@@ -7,62 +7,66 @@ const Query = RestModel.extend({
 
   _init: function() {
     this._super();
-    this.set('dirty', false);
-  }.on('init'),
+    this.set("dirty", false);
+  }.on("init"),
 
   _initParams: function() {
     this.resetParams();
-  }.on('init').observes('param_info'),
+  }
+    .on("init")
+    .observes("param_info"),
 
   markDirty: function() {
-    this.set('dirty', true);
-  }.observes('name', 'description', 'sql'),
+    this.set("dirty", true);
+  }.observes("name", "description", "sql"),
 
   markNotDirty() {
-    this.set('dirty', false);
+    this.set("dirty", false);
   },
 
   hasParams: function() {
-    return this.get('param_info.length') > 0;
-  }.property('param_info'),
+    return this.get("param_info.length") > 0;
+  }.property("param_info"),
 
   resetParams() {
     const newParams = {};
-    const oldParams = this.get('params');
-    const paramInfo = this.get('param_info') || [];
+    const oldParams = this.get("params");
+    const paramInfo = this.get("param_info") || [];
     paramInfo.forEach(function(pinfo) {
       const name = pinfo.identifier;
       if (oldParams[pinfo.identifier]) {
         newParams[name] = oldParams[name];
-      } else if (pinfo['default'] !== null) {
-        newParams[name] = pinfo['default'];
-      } else if (pinfo['type'] === 'boolean') {
-        newParams[name] = 'false';
+      } else if (pinfo["default"] !== null) {
+        newParams[name] = pinfo["default"];
+      } else if (pinfo["type"] === "boolean") {
+        newParams[name] = "false";
       } else {
-        newParams[name] = '';
+        newParams[name] = "";
       }
     });
-    this.set('params', newParams);
+    this.set("params", newParams);
   },
 
   downloadUrl: function() {
     // TODO - can we change this to use the store/adapter?
-    return Discourse.getURL("/admin/plugins/explorer/queries/" + this.get('id') + ".json?export=1");
-  }.property('id'),
+    return Discourse.getURL(
+      "/admin/plugins/explorer/queries/" + this.get("id") + ".json?export=1"
+    );
+  }.property("id"),
 
   listName: function() {
-    let name = this.get('name');
-    if (this.get('dirty')) {
+    let name = this.get("name");
+    if (this.get("dirty")) {
       name += " (*)";
     }
-    if (this.get('destroyed')) {
+    if (this.get("destroyed")) {
       name += " (deleted)";
     }
     return name;
-  }.property('name', 'dirty', 'destroyed'),
+  }.property("name", "dirty", "destroyed"),
 
   createProperties() {
-    if (this.get('sql')) {
+    if (this.get("sql")) {
       // Importing
       return this.updateProperties();
     }
@@ -71,8 +75,8 @@ const Query = RestModel.extend({
 
   updateProperties() {
     let props = this.getProperties(Query.updatePropertyNames);
-    if (this.get('destroyed')) {
-      props.id = this.get('id');
+    if (this.get("destroyed")) {
+      props.id = this.get("id");
     }
     return props;
   }

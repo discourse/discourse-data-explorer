@@ -1,18 +1,17 @@
-import debounce from 'discourse/lib/debounce';
+import debounce from "discourse/lib/debounce";
 
 export default Ember.Component.extend({
-
   actions: {
     expandSchema() {
-      this.set('hideSchema', false);
+      this.set("hideSchema", false);
     },
     collapseSchema() {
-      this.set('hideSchema', true);
+      this.set("hideSchema", true);
     }
   },
 
   transformedSchema: function() {
-    const schema = this.get('schema');
+    const schema = this.get("schema");
 
     for (let key in schema) {
       if (!schema.hasOwnProperty(key)) {
@@ -47,21 +46,20 @@ export default Ember.Component.extend({
         }
 
         col.havetypeinfo = !!(col.notes || col.enum || col.column_desc);
-
       });
     }
     return schema;
-  }.property('schema'),
+  }.property("schema"),
 
   rfilter: function() {
-    if (!Em.isBlank(this.get('filter'))) {
-      return new RegExp(this.get('filter'));
+    if (!Em.isBlank(this.get("filter"))) {
+      return new RegExp(this.get("filter"));
     }
-  }.property('filter'),
+  }.property("filter"),
 
   filterTables: function(schema) {
     let tables = [];
-    const filter = this.get('rfilter'),
+    const filter = this.get("rfilter"),
       haveFilter = !!filter;
 
     for (let key in schema) {
@@ -114,17 +112,20 @@ export default Ember.Component.extend({
   },
 
   triggerFilter: debounce(function() {
-    this.set('filteredTables', this.filterTables(this.get('transformedSchema')));
-    this.set('loading', false);
-  }, 500).observes('filter'),
+    this.set(
+      "filteredTables",
+      this.filterTables(this.get("transformedSchema"))
+    );
+    this.set("loading", false);
+  }, 500).observes("filter"),
 
   setLoading: function() {
-    this.set('loading', true);
-  }.observes('filter'),
+    this.set("loading", true);
+  }.observes("filter"),
 
   init() {
     this._super();
-    this.set('loading', true);
+    this.set("loading", true);
     this.triggerFilter();
   }
 });

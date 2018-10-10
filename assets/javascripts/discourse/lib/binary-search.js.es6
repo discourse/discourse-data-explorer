@@ -14,12 +14,10 @@ export default function binarySearch(list, target, keyProp) {
 
     if (Em.get(list[guess], keyProperty) === target) {
       return guess;
-    }
-    else {
+    } else {
       if (Em.get(list[guess], keyProperty) < target) {
         min = guess + 1;
-      }
-      else {
+      } else {
         max = guess - 1;
       }
     }
