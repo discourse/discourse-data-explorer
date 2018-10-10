@@ -566,6 +566,7 @@ SQL
   end
 
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
+  require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::Query
     attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :last_run_at
 
@@ -629,16 +630,34 @@ SQL
     end
 
     def self.find(id, opts = {})
-      unless hash = DataExplorer.pstore_get("q:#{id}")
-        return DataExplorer::Query.new if opts[:ignore_deleted]
-        raise Discourse::NotFound
+      if DataExplorer.pstore_get("q:#{id}").nil? && id < 0
+        hash = Queries.default[id.to_s]
+        hash[:id] = id
+        from_hash hash
+      else
+        unless hash = DataExplorer.pstore_get("q:#{id}")
+          return DataExplorer::Query.new if opts[:ignore_deleted]
+          raise Discourse::NotFound
+        end
+        from_hash hash
       end
-      from_hash hash
     end
 
     def save
       check_params!
       @id = self.class.alloc_id unless @id && @id > 0
+      DataExplorer.pstore_set "q:#{id}", to_hash
+    end
+
+    def save_default_query
+      check_params!
+      # Read from queries.rb again to pick up any changes and save them
+      query = Queries.default[id.to_s]
+      @id = query["id"]
+      @sql = query["sql"]
+      @name = query["name"]
+      @description = query["description"]
+
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
 
@@ -907,6 +926,7 @@ SQL
   end
 
   require_dependency 'application_controller'
+  require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::QueryController < ::ApplicationController
     requires_plugin DataExplorer.plugin_name
 
@@ -919,6 +939,18 @@ SQL
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
+      Queries.default.each do |params|
+        query = DataExplorer::Query.new
+        query.id = params.second["id"]
+        query.sql = params.second["sql"]
+        query.name = params.second["name"]
+        query.description = params.second["description"]
+        query.created_by = Discourse::SYSTEM_USER_ID.to_s
+
+        # don't render this query if query with the same id already exists in pstore
+        queries.push(query) unless DataExplorer.pstore_get("q:#{query.id}").present?
+      end
+
       render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
     end
 
@@ -1000,9 +1032,16 @@ SQL
     # rows - array of array of strings. Results of the query. In the same order as 'columns'.
     def run
       check_xhr unless params[:download]
+
       query = DataExplorer::Query.find(params[:id].to_i)
       query.last_run_at = Time.now
-      query.save
+
+      if params[:id].to_i < 0
+        query.created_by = Discourse::SYSTEM_USER_ID.to_s
+        query.save_default_query
+      else
+        query.save
+      end
 
       if params[:download]
         response.sending_file = true

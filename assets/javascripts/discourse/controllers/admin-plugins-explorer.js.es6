@@ -8,6 +8,7 @@ const NoQuery = Query.create({name: "No queries", fake: true});
 export default Ember.Controller.extend({
   queryParams: { selectedQueryId: "id" },
   selectedQueryId: null,
+  editDisabled: false,
   showResults: false,
   hideSchema: false,
   loading: false,
@@ -33,6 +34,7 @@ export default Ember.Controller.extend({
     const id = parseInt(this.get('selectedQueryId'));
     const item = this.get('content').find(q => q.get('id') === id);
     !isNaN(id) ? this.set('showRecentQueries', false) : this.set('showRecentQueries', true);
+    if (id < 0) this.set('editDisabled', true);
     return item || NoQuery;
   }.property('selectedQueryId'),
 
@@ -103,6 +105,7 @@ export default Ember.Controller.extend({
         asc: null,
         order: null,
         showResults: false,
+        editDisabled: false,
         selectedQueryId: null,
         sortBy: ['last_run_at:desc']
       });
