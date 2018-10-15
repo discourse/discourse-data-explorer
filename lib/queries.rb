@@ -164,7 +164,7 @@ class Queries
         u.views
     HAVING count(p.id) > 50
     ORDER BY sum(p.score) / count(p) DESC
-    LIMIT 20
+    LIMIT 50
     SQL
 
     queries["user-participation"]["sql"] = <<~SQL
