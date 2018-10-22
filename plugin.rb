@@ -161,7 +161,7 @@ SQL
       needed_classes = {}
 
       pg_result.fields.each_with_index do |col, idx|
-        rgx = column_regexes.find { |rgx| rgx.match col }
+        rgx = column_regexes.find { |r| r.match col }
         if rgx
           cls = (rgx.match col)[1].to_sym
           needed_classes[cls] ||= []
