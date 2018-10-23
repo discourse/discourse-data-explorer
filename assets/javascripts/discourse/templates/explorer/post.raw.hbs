@@ -1,15 +1,23 @@
-{{~#if post}}
-<aside class="quote"
-       data-post="{{post.post_number}}"
-       data-topic="{{post.topic_id}}">
-  <div class="title" style="cursor: pointer;">
-  <div class="quote-controls">
-  {{!<i class="fa fa-chevron-down" title="expand/collapse"></i>}}
-    <a href="/t/via-quote/{{post.topic_id}}/{{post.post_number}}"
-         title="go to the quoted post"
-         class="quote-other-topic"></a></div>
-{{avatar post imageSize="tiny"}}{{post.username}}:</div>
-<blockquote><p>{{{post.excerpt}}}</p></blockquote></aside>
-{{~else}}
+{{#if post}}
+  <aside class="quote" data-post="{{post.post_number}}" data-topic="{{post.topic_id}}">
+    <div class="title">
+      <div class="quote-controls">
+        {{!<i class="fa fa-chevron-down" title="expand/collapse"></i>}}
+        <a href="/t/via-quote/{{post.topic_id}}/{{post.post_number}}"
+          title="go to the quoted post"
+          class="quote-other-topic">
+        </a>
+      </div>
+      <a class="result-post-link" href="/t/{{post.topic_id}}/{{post.post_number}}">
+        {{avatar post imageSize="tiny"}}{{post.username}}:
+      </a>
+    </div>
+    <blockquote>
+      <p>
+        {{{post.excerpt}}}
+      </p>
+    </blockquote>
+  </aside>
+{{else}}
   {{id}}
-{{~/if}}
+{{/if}}
