@@ -54,17 +54,6 @@ const Query = RestModel.extend({
     );
   }.property("id"),
 
-  listName: function() {
-    let name = this.get("name");
-    if (this.get("dirty")) {
-      name += " (*)";
-    }
-    if (this.get("destroyed")) {
-      name += " (deleted)";
-    }
-    return name;
-  }.property("name", "dirty", "destroyed"),
-
   createProperties() {
     if (this.get("sql")) {
       // Importing

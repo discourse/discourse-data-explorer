@@ -164,7 +164,7 @@
           </thead>
           <tr></tr>
           <tbody>
-            {{#each searchedContent as |query|}}
+            {{#each filteredContent as |query|}}
               <tr class="query-row">
                 <td>
                   <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">

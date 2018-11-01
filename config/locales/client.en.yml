@@ -66,6 +66,5 @@ en:
       explain_label: "Include query plan?"
       save_params: "Set Defaults"
       reset_params: "Reset"
-      menu_none: "Select a query"
       search_placeholder: "Search..."
       no_search_results: "Sorry, we couldn't find any results matching your text."

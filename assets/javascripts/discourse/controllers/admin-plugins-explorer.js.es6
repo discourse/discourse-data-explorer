@@ -2,6 +2,7 @@ import showModal from "discourse/lib/show-modal";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
+import { default as computed } from "ember-addons/ember-computed-decorators";
 
 const NoQuery = Query.create({ name: "No queries", fake: true });
 
@@ -26,15 +27,16 @@ export default Ember.Controller.extend({
   sortBy: ["last_run_at:desc"],
   sortedQueries: Em.computed.sort("model", "sortBy"),
 
-  searchedContent: function() {
-    var regexp = new RegExp(this.get("search"));
+  @computed("search")
+  filteredContent(search) {
+    const regexp = new RegExp(this.get("search"));
     return this.get("sortedQueries").filter(function(result) {
       return (
         regexp.test(result.get("name")) ||
         regexp.test(result.get("description"))
       );
     });
-  }.property("search"),
+  },
 
   createDisabled: function() {
     return (this.get("newQueryName") || "").trim().length === 0;
