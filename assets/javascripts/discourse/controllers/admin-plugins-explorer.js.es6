@@ -26,6 +26,16 @@ export default Ember.Controller.extend({
   sortBy: ["last_run_at:desc"],
   sortedQueries: Em.computed.sort("model", "sortBy"),
 
+  searchedContent: function() {
+    var regexp = new RegExp(this.get("search"));
+    return this.get("sortedQueries").filter(function(result) {
+      return (
+        regexp.test(result.get("name")) ||
+        regexp.test(result.get("description"))
+      );
+    });
+  }.property("search"),
+
   createDisabled: function() {
     return (this.get("newQueryName") || "").trim().length === 0;
   }.property("newQueryName"),

@@ -296,6 +296,9 @@
     cursor: pointer;
     display: inline-block;
   }
+  .no-search-results {
+    color: $primary-medium;
+  }
 }
 
 .result-info {
