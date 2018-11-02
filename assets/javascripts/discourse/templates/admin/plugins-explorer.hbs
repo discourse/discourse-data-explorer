@@ -5,7 +5,7 @@
   {{else}}
     {{#unless selectedQueryId}}
       <div class="query-list">
-        {{combo-box valueAttribute="id" class="btn-left" value=selectedQueryId nameProperty="listName" none="explorer.menu_none" content=content castInteger="true" nameChanges="true"}}
+        {{text-field value=search placeholderKey="explorer.search_placeholder"}}
         {{d-button action="showCreate" icon="plus" class="no-text btn-right"}}
         {{d-button action="importQuery" label="explorer.import.label" icon="upload btn-right"}}
       </div>
@@ -164,7 +164,7 @@
           </thead>
           <tr></tr>
           <tbody>
-            {{#each sortedQueries as |query|}}
+            {{#each filteredContent as |query|}}
               <tr class="query-row">
                 <td>
                   <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
@@ -191,6 +191,9 @@
                   {{/if}}
                 </td>
               </tr>
+            {{else}}
+              <br>
+              <em class="no-search-results"> {{i18n "explorer.no_search_results"}}</em>
             {{/each}}
           </tbody>
         </table>

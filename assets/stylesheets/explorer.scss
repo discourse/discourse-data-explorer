@@ -236,6 +236,7 @@
 
 .query-list {
   display: flex;
+  max-height: 30px;
   .btn-left {
     margin-right: 0.5em;
   }
@@ -295,6 +296,9 @@
     color: inherit;
     cursor: pointer;
     display: inline-block;
+  }
+  .no-search-results {
+    color: $primary-medium;
   }
 }
 
