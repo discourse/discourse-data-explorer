@@ -115,19 +115,16 @@
           }
 
           .popup {
-            position: absolute;
-            padding: 5px;
-            padding-right: calc(5px + 2em);
+            padding: 4px;
+            position: relative;
             border: 1px solid;
             background: $secondary;
-            left: -120px;
-            width: 180px;
-            top: 6px;
-            z-index: 10;
+            padding-right: calc(5px + 0.5em);
           }
 
           .popup ol {
-            margin: 0;
+            padding: 0px;
+            position: relative;
             list-style: none;
             > li:before {
               content: attr(value) ": ";
