@@ -6,6 +6,7 @@
 
 enabled_site_setting :data_explorer_enabled
 register_asset 'stylesheets/explorer.scss'
+register_svg_icon "upload" if respond_to?(:register_svg_icon)
 
 # route: /admin/plugins/explorer
 add_admin_route 'explorer.title', 'explorer'

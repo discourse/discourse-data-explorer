@@ -7,7 +7,7 @@
       <div class="query-list">
         {{text-field value=search placeholderKey="explorer.search_placeholder"}}
         {{d-button action="showCreate" icon="plus" class="no-text btn-right"}}
-        {{d-button action="importQuery" label="explorer.import.label" icon="upload btn-right"}}
+        {{d-button action="importQuery" label="explorer.import.label" icon="upload"}}
       </div>
 
       {{#if showCreate}}
@@ -180,7 +180,7 @@
                   {{/if}}
                 </td>
                 <td class="query-created-at">
-                  {{#if query.last_run_at}}  
+                  {{#if query.last_run_at}}
                     <medium>
                       {{bound-date query.last_run_at}}
                     </medium>
