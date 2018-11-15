@@ -1,6 +1,7 @@
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
+import { iconHTML, convertIconClass } from "discourse-common/lib/icon-library";
 
 function icon_or_image_replacement(str, ctx) {
   str = Ember.get(ctx.contexts[0], str);
@@ -8,8 +9,9 @@ function icon_or_image_replacement(str, ctx) {
     return "";
   }
 
-  if (str.indexOf("fa-") === 0) {
-    return new Handlebars.SafeString("<i class='fa " + str + "'></i>");
+  if (str.indexOf("fa-") > -1) {
+    const icon = iconHTML(convertIconClass(str));
+    return new Handlebars.SafeString(icon);
   } else {
     return new Handlebars.SafeString("<img src='" + str + "'>");
   }

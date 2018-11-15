@@ -7,8 +7,15 @@
 enabled_site_setting :data_explorer_enabled
 register_asset 'stylesheets/explorer.scss'
 
-register_svg_icon "upload" if respond_to?(:register_svg_icon)
-register_svg_icon "chevron-left" if respond_to?(:register_svg_icon)
+if respond_to?(:register_svg_icon)
+  register_svg_icon "caret-down"
+  register_svg_icon "caret-right"
+  register_svg_icon "chevron-left"
+  register_svg_icon "exclamation-circle"
+  register_svg_icon "info"
+  register_svg_icon "pencil-alt"
+  register_svg_icon "upload"
+end
 
 # route: /admin/plugins/explorer
 add_admin_route 'explorer.title', 'explorer'

@@ -1,8 +1,8 @@
 <div class="schema-table-name">
   {{#if table.open}}
-    <i class="fa fa-caret-down"></i>
+    {{d-icon "caret-down"}}
   {{else}}
-    <i class="fa fa-caret-right"></i>
+    {{d-icon "caret-right"}}
   {{/if}}
   {{table.name}}
 </div>
@@ -13,7 +13,7 @@
       <div>
       <dt class="{{if col.sensitive "sensitive"}}" title="{{if col.sensitive (i18n "explorer.schema.sensitive")}}">
         {{#if col.sensitive}}
-          <i class="fa fa-warning"></i>
+          {{d-icon "warning"}}
         {{/if}}
         {{col.column_name}}
       </dt>
@@ -22,14 +22,15 @@
         {{#if col.havetypeinfo}}
           <br>
           {{#if col.havepopup}}
-            <i class="fa fa-info popup-info">
+            <div class="popup-info">
+              {{d-icon "info"}}
               <div class="popup">
                 {{col.column_desc}}
                 {{#if col.enum}}
                   {{explorer-schema-enuminfo col=col}}
                 {{/if}}
               </div>
-            </i>
+            </div>
           {{/if}}
           <span class="schema-typenotes">
             {{col.notes}}
