@@ -29,7 +29,7 @@ export default Ember.Controller.extend({
 
   @computed("search")
   filteredContent(search) {
-    const regexp = new RegExp(this.get("search"));
+    const regexp = new RegExp(this.get("search"), "i");
     return this.get("sortedQueries").filter(function(result) {
       return (
         regexp.test(result.get("name")) ||
