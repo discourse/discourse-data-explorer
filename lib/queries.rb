@@ -1,6 +1,11 @@
 class Queries
   def self.default
+    # WARNING: Edit the query hash carefully
     # For each query, add id, name and description here and add sql below
+    # Feel free to add new queries at the bottom of the hash in numerical order
+    # If any query has been run on an instance, it is then saved in the local db
+    # Locally stored queries are updated from the below data only when they are run again
+
     queries = {
         "most-common-likers": {
             "id": -1,
