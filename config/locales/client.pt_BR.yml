@@ -37,7 +37,6 @@ pt_BR:
       edit: "Editar"
       delete: "Apagar"
       recover: "Anular a consulta"
-      download: "Download de Resultados"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Uma consulta tem alterações não salvas que serão perdidas se você sair do navegador."
@@ -46,4 +45,3 @@ pt_BR:
       explain_label: "Incluir plano de consulta?"
       save_params: "Definir padrões"
       reset_params: "Restabelecer"
-      menu_none: "Selecionar uma pesquisa"

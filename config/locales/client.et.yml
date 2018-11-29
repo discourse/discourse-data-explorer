@@ -25,7 +25,6 @@ et:
       run: "Käivita päring"
       edit: "Muuda"
       delete: "Kustuta"
-      download: "Allalaadimise tulemused"
       download_json: "JSON"
       download_csv: "CSV"
       save_params: "Määra vaikeväärtused"

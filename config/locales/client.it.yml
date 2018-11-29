@@ -38,7 +38,6 @@ it:
       edit: "Modifica"
       delete: "Elimina"
       recover: "Ripristina Query"
-      download: "Scarica Risultati"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
@@ -49,4 +48,3 @@ it:
       explain_label: "Includere il query plan?"
       save_params: "Imposta Predefiniti"
       reset_params: "Azzera"
-      menu_none: "Seleziona una query"

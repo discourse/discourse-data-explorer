@@ -23,7 +23,6 @@ sk:
       save: "Uložiť zmeny"
       edit: "Upraviť"
       delete: "Zmazať"
-      download: "Stiahnuť výslekdy"
       download_json: "JSON"
       download_csv: "CSV"
       column: "Stĺpec {{number}}"

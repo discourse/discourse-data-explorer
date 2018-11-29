@@ -38,7 +38,6 @@ sw:
       edit: "Hariri"
       delete: "Futa"
       recover: "Rejesha Suala"
-      download: "Pakua Majibu"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Mabaliko uliyofanya kwenye ulizo hayajahifadhiwa, hifadhi kabla ya kwenda kwingine."
@@ -50,4 +49,3 @@ sw:
       explain_label: "pamoja na mpango wa swala?"
       save_params: "Seti Chaguo-misingi"
       reset_params: "Weka/Anzisha Upya"
-      menu_none: "chagua swala"

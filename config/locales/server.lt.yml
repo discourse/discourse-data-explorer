@@ -5,10 +5,4 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko:
-  js:
-    explorer:
-      description_placeholder: "여기에 설명을 입력하세요"
-      query_name: "쿼리"
-      query_description: "설명"
-      query_time: "마지막 실행"
+lt: {}

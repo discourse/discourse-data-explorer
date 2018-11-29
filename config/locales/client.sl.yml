@@ -5,4 +5,24 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sl: {}
+sl:
+  js:
+    explorer:
+      import:
+        label: "Uvozi"
+        modal: "Uvozi poizvedbo"
+      schema:
+        title: "Shema podatkovne baze"
+        filter: "Išči..."
+      types:
+        bool:
+          'yes': "Da"
+          'no': "Ne"
+          null_: "Nič"
+      export: "Izvozi"
+      save: "Shrani spremembe"
+      edit: "Uredi"
+      delete: "Izbriši"
+      download_json: "JSON"
+      download_csv: "CSV"
+      query_name: "Poizvedba"

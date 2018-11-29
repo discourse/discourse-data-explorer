@@ -34,7 +34,6 @@ nb_NO:
       edit: "Rediger"
       delete: "Slett"
       recover: "Angre sletting av spørring"
-      download: "Last ned resultater"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."

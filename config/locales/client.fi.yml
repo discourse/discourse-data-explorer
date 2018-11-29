@@ -37,7 +37,6 @@ fi:
       edit: "Muokkaa"
       delete: "Poista"
       recover: "Palauta poistettu kysely"
-      download: "Lataa tulokset"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois. "

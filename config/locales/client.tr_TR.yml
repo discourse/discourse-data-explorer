@@ -22,7 +22,6 @@ tr_TR:
       save: "Değişiklikleri Kaydet"
       edit: "Düzenle"
       delete: "Sil"
-      download: "Sonuçları İndir"
       download_json: "JSON"
       download_csv: "CSV"
       save_params: "Varsayılan belirle"

@@ -21,6 +21,5 @@ zh_CN:
       export: "导出"
       edit: "编辑"
       delete: "删除"
-      download: "下载结果"
       download_json: "JSON"
       download_csv: "CSV"

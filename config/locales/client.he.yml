@@ -37,7 +37,6 @@ he:
       edit: "עריכה"
       delete: "מחיקה"
       recover: "ביטול מחיקת השאילתה"
-      download: "הורדת התוצאות"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד בעת ניווט למקום אחר."
