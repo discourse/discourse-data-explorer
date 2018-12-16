@@ -1,7 +1,7 @@
 <div class="jsfu-shade-container">
   <div class="jsfu-file">
     <input id="js-file-input" type="file" style="display:none;" accept={{accept}}>
-    {{d-button class="fileSelect" action="selectFile" class="" icon="upload" label="upload_selector.select_file"}}
+    {{d-button class="fileSelect" action=(action "selectFile") class="" icon="upload" label="upload_selector.select_file"}}
     {{conditional-loading-spinner condition=loading size="small"}}
   </div>
   <div class="jsfu-separator">{{i18n "alternation"}}</div>

@@ -27,6 +27,7 @@ export default Discourse.Route.extend({
   actions: {
     refreshModel: function() {
       this.refresh();
+      return false;
     }
   }
 });
