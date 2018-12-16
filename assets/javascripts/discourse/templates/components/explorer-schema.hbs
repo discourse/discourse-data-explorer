@@ -1,9 +1,9 @@
 {{#if hideSchema}}
-  {{d-button action="expandSchema" icon="chevron-left" class="no-text unhide"}}
+  {{d-button action=(action "expandSchema") icon="chevron-left" class="no-text unhide"}}
 {{/if}}
 <div class="{{if hideSchema "hidden"}}">
   {{text-field value=filter placeholderKey="explorer.schema.filter"}}
-  {{d-button action="collapseSchema" icon="chevron-right" class="no-text"}}
+  {{d-button action=(action "collapseSchema") icon="chevron-right" class="no-text"}}
   {{conditional-loading-spinner condition=loading}}
   <div class="schema-container">
     <ul>

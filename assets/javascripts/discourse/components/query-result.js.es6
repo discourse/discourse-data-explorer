@@ -60,7 +60,7 @@ const QueryResultComponent = Ember.Component.extend({
       }
     }
     return arr;
-  }.property("params.@each"),
+  }.property("params.[]"),
 
   columnDispNames: function() {
     if (!this.get("columns")) {
@@ -76,7 +76,7 @@ const QueryResultComponent = Ember.Component.extend({
       }
       return colName;
     });
-  }.property("content", "columns.@each"),
+  }.property("content", "columns.[]"),
 
   fallbackTemplate: function() {
     return getOwner(this).lookup("template:explorer/text.raw");
@@ -103,7 +103,7 @@ const QueryResultComponent = Ember.Component.extend({
 
       return { name: viewName, template };
     });
-  }.property("content", "columns.@each"),
+  }.property("content", "columns.[]"),
 
   transformedUserTable: function() {
     return transformedRelTable(this.get("content.relations.user"));

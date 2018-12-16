@@ -44,7 +44,7 @@ export default Ember.Controller.extend({
 
   selectedItem: function() {
     const id = parseInt(this.get("selectedQueryId"));
-    const item = this.get("content").find(q => q.get("id") === id);
+    const item = this.get("model").find(q => q.get("id") === id);
     !isNaN(id)
       ? this.set("showRecentQueries", false)
       : this.set("showRecentQueries", true);
@@ -54,7 +54,7 @@ export default Ember.Controller.extend({
 
   othersDirty: function() {
     const selected = this.get("selectedItem");
-    return !!this.get("content").find(q => q !== selected && q.get("dirty"));
+    return !!this.get("model").find(q => q !== selected && q.get("dirty"));
   }.property("selectedItem", "selectedItem.dirty"),
 
   setEverEditing: function() {
