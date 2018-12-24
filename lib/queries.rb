@@ -46,6 +46,11 @@ class Queries
             "id": -8,
             "name": "User Participation Statistics",
             "description": "Detailed statistics for the most active users"
+        },
+        "largest-uploads": {
+            "id": -9,
+            "name": "Top 50 Largest Uploads",
+            "description": "sorted by file size"
         }
     }.with_indifferent_access
 
@@ -285,6 +290,20 @@ class Queries
         visits DESC,
         posts_read DESC,
         posts_created DESC
+    SQL
+
+    queries["largest-uploads"]["sql"] = <<~SQL
+    SELECT posts.id AS post_id,
+        uploads.original_filename,
+        ROUND(uploads.filesize / 1000000.0, 2) AS size_in_mb,
+        uploads.extension,
+        uploads.created_at,
+        uploads.url
+    FROM post_uploads
+    JOIN uploads ON uploads.id = post_uploads.upload_id
+    JOIN posts ON posts.id = post_uploads.post_id
+    ORDER BY uploads.filesize DESC
+    LIMIT 50
     SQL
 
   # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
