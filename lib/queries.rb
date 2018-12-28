@@ -5,6 +5,8 @@ class Queries
     # Feel free to add new queries at the bottom of the hash in numerical order
     # If any query has been run on an instance, it is then saved in the local db
     # Locally stored queries are updated from the below data only when they are run again
+    # eg. If you update a query with id=-1 in this file and the query has been run on a site,
+    #     you must run the query with id=-1 on the site again to update these changes in the site db
 
     queries = {
         "most-common-likers": {
@@ -45,12 +47,22 @@ class Queries
         "user-participation": {
             "id": -8,
             "name": "User Participation Statistics",
-            "description": "Detailed statistics for the most active users"
+            "description": "Detailed statistics for the most active users."
         },
         "largest-uploads": {
             "id": -9,
             "name": "Top 50 Largest Uploads",
-            "description": "sorted by file size"
+            "description": "sorted by file size."
+        },
+        "inactive-users": {
+            "id": -10,
+            "name": "Inactive Users with no posts",
+            "description": "analyze pre-Discourse signups."
+        },
+        "active-lurkers": {
+            "id": -11,
+            "name": "Most Active Lurkers",
+            "description": "active users without posts and excessive read times, it accepts a post_read_count paramteter that sets the threshold for posts read."
         }
     }.with_indifferent_access
 
@@ -304,6 +316,45 @@ class Queries
     JOIN posts ON posts.id = post_uploads.post_id
     ORDER BY uploads.filesize DESC
     LIMIT 50
+    SQL
+
+    queries["inactive-users"]["sql"] = <<~SQL
+    SELECT
+        u.id,
+        u.username_lower AS "username",
+        u.created_at,
+        u.last_seen_at
+    FROM users u
+    WHERE u.active = false
+    ORDER BY u.id
+    SQL
+
+    queries["active-lurkers"]["sql"] = <<~SQL
+    -- [params]
+    -- int :post_read_count = 100
+    WITH posts_by_user AS (
+        SELECT COUNT(*) AS posts, user_id
+        FROM posts
+        GROUP BY user_id
+    ), posts_read_by_user AS (
+        SELECT SUM(posts_read) AS posts_read, user_id
+        FROM user_visits
+        GROUP BY user_id
+    )
+    SELECT
+        u.id,
+        u.username_lower AS "username",
+        u.created_at,
+        u.last_seen_at,
+        COALESCE(pbu.posts, 0) AS "posts_created",
+        COALESCE(prbu.posts_read, 0) AS "posts_read"
+    FROM users u
+    LEFT JOIN posts_by_user pbu ON pbu.user_id = u.id
+    LEFT JOIN posts_read_by_user prbu ON prbu.user_id = u.id
+    WHERE u.active = true
+    AND posts IS NULL
+    AND posts_read > :post_read_count
+    ORDER BY u.id
     SQL
 
   # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
