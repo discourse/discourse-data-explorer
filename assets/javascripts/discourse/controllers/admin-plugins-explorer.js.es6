@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
   sortBy: ["last_run_at:desc"],
   sortedQueries: Em.computed.sort("model", "sortBy"),
 
-  @computed("search")
+  @computed("search", "sortBy")
   filteredContent(search) {
     const regexp = new RegExp(this.get("search"), "i");
     return this.get("sortedQueries").filter(function(result) {
