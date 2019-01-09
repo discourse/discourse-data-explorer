@@ -4,7 +4,11 @@
     {{d-button class="fileSelect" action=(action "selectFile") class="" icon="upload" label="upload_selector.select_file"}}
     {{conditional-loading-spinner condition=loading size="small"}}
   </div>
-  <div class="jsfu-separator">{{i18n "alternation"}}</div>
+  <div class="jsfu-separator">
+    <small>
+      {{i18n "alternation"}}
+    </small>
+  </div>
   <div class="jsfu-paste">
     {{textarea value=value}}
   </div>
