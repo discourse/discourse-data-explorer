@@ -21,6 +21,8 @@ end
 add_admin_route 'explorer.title', 'explorer'
 
 module ::DataExplorer
+  QUERY_RESULT_MAX_LIMIT = 1000
+
   def self.plugin_name
     'discourse-data-explorer'.freeze
   end
@@ -109,7 +111,7 @@ after_initialize do
 WITH query AS (
 #{query.sql}
 ) SELECT * FROM query
-LIMIT #{opts[:limit] || 1000}
+LIMIT #{opts[:limit] || DataExplorer::QUERY_RESULT_MAX_LIMIT}
 SQL
 
           time_start = Time.now
@@ -1102,6 +1104,7 @@ SQL
               result_count: pg_result.values.length || 0,
               params: query_params,
               columns: cols,
+              result_limit: DataExplorer::QUERY_RESULT_MAX_LIMIT
             }
             json[:explain] = result[:explain] if opts[:explain]
             ext = DataExplorer.add_extra_data(pg_result)
