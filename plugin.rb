@@ -48,7 +48,7 @@ after_initialize do
       isolate_namespace DataExplorer
     end
 
-    class ValidationError < StandardError;
+    class ValidationError < StandardError
     end
 
     class SmallBadgeSerializer < ApplicationSerializer
@@ -61,8 +61,12 @@ after_initialize do
       def excerpt
         Post.excerpt(object.cooked, 70)
       end
-      def username; object.user && object.user.username; end
-      def avatar_template; object.user && object.user.avatar_template; end
+      def username
+        object.user && object.user.username
+      end
+      def avatar_template
+        object.user && object.user.avatar_template
+      end
     end
 
     # Run a data explorer query on the currently connected database.
