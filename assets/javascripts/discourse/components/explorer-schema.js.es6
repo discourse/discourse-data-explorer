@@ -52,7 +52,7 @@ export default Ember.Component.extend({
   }.property("schema"),
 
   rfilter: function() {
-    if (!Em.isBlank(this.get("filter"))) {
+    if (!Ember.isBlank(this.get("filter"))) {
       return new RegExp(this.get("filter"));
     }
   }.property("filter"),
@@ -99,7 +99,7 @@ export default Ember.Component.extend({
             filterCols.push(col);
           }
         });
-        if (!Em.isEmpty(filterCols)) {
+        if (!Ember.isEmpty(filterCols)) {
           tables.push({
             name: key,
             columns: filterCols,

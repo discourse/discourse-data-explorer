@@ -2,7 +2,7 @@ export default Ember.Component.extend({
   classNameBindings: [":schema-table", "open"],
   tagName: "li",
 
-  open: Em.computed.alias("table.open"),
+  open: Ember.computed.alias("table.open"),
 
   _bindClicks: function() {
     const self = this;

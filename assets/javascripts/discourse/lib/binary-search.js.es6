@@ -12,10 +12,10 @@ export default function binarySearch(list, target, keyProp) {
   while (min <= max) {
     guess = Math.floor((min + max) / 2);
 
-    if (Em.get(list[guess], keyProperty) === target) {
+    if (Ember.get(list[guess], keyProperty) === target) {
       return guess;
     } else {
-      if (Em.get(list[guess], keyProperty) < target) {
+      if (Ember.get(list[guess], keyProperty) < target) {
         min = guess + 1;
       } else {
         max = guess - 1;

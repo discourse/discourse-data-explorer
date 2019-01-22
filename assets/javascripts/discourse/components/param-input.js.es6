@@ -66,7 +66,7 @@ export default Ember.Component.extend({
     const type = this.get("info.type"),
       value = this.get("value");
 
-    if (Em.isEmpty(this.get("value"))) {
+    if (Ember.isEmpty(this.get("value"))) {
       return this.get("info.nullable");
     }
 

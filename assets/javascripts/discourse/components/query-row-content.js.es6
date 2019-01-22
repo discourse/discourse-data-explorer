@@ -84,7 +84,6 @@ const QueryRowContentComponent = Ember.Component.extend(
             (t.template || fallback)(ctx, params)
           );
         } catch (e) {
-          console.error(e);
           return "error";
         }
       });

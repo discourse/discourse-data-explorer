@@ -17,7 +17,7 @@ export default Ember.Controller.extend({
 
   saveDisabled: Ember.computed.not("selectedItem.dirty"),
   runDisabled: Ember.computed.alias("selectedItem.dirty"),
-  results: Em.computed.alias("selectedItem.results"),
+  results: Ember.computed.alias("selectedItem.results"),
 
   asc: null,
   order: null,
@@ -25,10 +25,10 @@ export default Ember.Controller.extend({
   everEditing: false,
   showRecentQueries: true,
   sortBy: ["last_run_at:desc"],
-  sortedQueries: Em.computed.sort("model", "sortBy"),
+  sortedQueries: Ember.computed.sort("model", "sortBy"),
 
   @computed("search", "sortBy")
-  filteredContent(search) {
+  filteredContent() {
     const regexp = new RegExp(this.get("search"), "i");
     return this.get("sortedQueries").filter(function(result) {
       return (
