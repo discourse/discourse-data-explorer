@@ -1070,8 +1070,12 @@ SQL
       opts = { current_user: current_user.username }
       opts[:explain] = true if params[:explain] == "true"
 
-      opts[:limit] = "ALL" if params[:format] == "csv"
-      opts[:limit] = params[:limit].to_i if params[:limit]
+      opts[:limit] =
+        if params[:limit] == "ALL" || params[:format] == "csv"
+          "ALL"
+        elsif params[:limit]
+          params[:limit].to_i
+        end
 
       result = DataExplorer.run_query(query, query_params, opts)
 
@@ -1108,7 +1112,7 @@ SQL
               result_count: pg_result.values.length || 0,
               params: query_params,
               columns: cols,
-              result_limit: DataExplorer::QUERY_RESULT_MAX_LIMIT
+              default_limit: DataExplorer::QUERY_RESULT_MAX_LIMIT
             }
             json[:explain] = result[:explain] if opts[:explain]
             ext = DataExplorer.add_extra_data(pg_result)

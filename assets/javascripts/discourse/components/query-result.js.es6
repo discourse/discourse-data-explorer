@@ -34,7 +34,7 @@ const QueryResultComponent = Ember.Component.extend({
 
   @computed("content.result_count")
   resultCount: function(count) {
-    if (count === this.get("content.result_limit")) {
+    if (count === this.get("content.default_limit")) {
       return I18n.t("explorer.max_result_count", { count });
     } else {
       return I18n.t("explorer.result_count", { count });
