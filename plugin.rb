@@ -1115,9 +1115,12 @@ SQL
               default_limit: DataExplorer::QUERY_RESULT_MAX_LIMIT
             }
             json[:explain] = result[:explain] if opts[:explain]
-            ext = DataExplorer.add_extra_data(pg_result)
-            json[:colrender] = ext[1]
-            json[:relations] = ext[0]
+
+            if !params[:download]
+              ext = DataExplorer.add_extra_data(pg_result)
+              json[:colrender] = ext[1]
+              json[:relations] = ext[0]
+            end
 
             json[:rows] = pg_result.values
 
