@@ -1011,7 +1011,7 @@ SQL
         end
       end
 
-      [:name, :sql, :description].each do |sym|
+      [:name, :sql, :description, :created_by, :created_at, :last_run_at].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
 
