@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nl: {}
+nl:
+  site_settings:
+    data_explorer_enabled: "De Data Explorer bij /admin/plugins/explorer inschakelen."

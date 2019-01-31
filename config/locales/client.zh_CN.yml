@@ -13,13 +13,32 @@ zh_CN:
     explorer:
       title: "数据查看"
       create: "创建新的"
+      description_placeholder: "在此键入描述"
+      import:
+        label: "导入"
       schema:
         filter: "搜索"
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>类型</a>"
       types:
         bool:
+          'yes': "是"
+          'no': "否"
           null_: "空"
       export: "导出"
+      save: "保存更改"
+      undo: "放弃更改"
       edit: "编辑"
       delete: "删除"
       download_json: "JSON"
       download_csv: "CSV"
+      result_count:
+        other: "%{count}结果"
+      max_result_count:
+        other: "显示前%{count}个结果。"
+      query_description: "描述"
+      query_time: "最后运行"
+      query_user: "创建于"
+      save_params: "设置为默认"
+      reset_params: "重置"
+      search_placeholder: "搜索……"
+      no_search_results: "抱歉，我们找不到符合你文本的结果。"
