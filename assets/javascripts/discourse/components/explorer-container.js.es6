@@ -35,7 +35,6 @@ export default Ember.Component.extend({
     const mousemove = function(e) {
       const diff = self.get("startY") - e.screenY;
       const newHeight = self.get("startSize") - diff;
-      //Em.Logger.debug("new height", newHeight);
       $targets.height(newHeight);
       self.appEvents.trigger("ace:resize");
     };
