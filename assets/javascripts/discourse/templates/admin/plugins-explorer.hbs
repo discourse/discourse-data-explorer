@@ -12,7 +12,7 @@
       {{#if showCreate}}
         <div class="query-create">
           {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
-          {{d-button action=(action "create") disabled=createDisabled label="explorer.create" icon="plus" class="btn-primary"}}
+          {{d-button action=(action "create") disabled=createDisabled label="explorer.create" icon="plus"}}
         </div>
       {{/if}}
 
@@ -76,10 +76,10 @@
 
             <div class="pull-left">
               {{#if everEditing}}
-                {{d-button action=(action "save") label="explorer.save" disabled=saveDisabled class="btn-primary"}}
+                {{d-button action=(action "save") label="explorer.save" disabled=saveDisable}}
               {{else}}
                 {{#unless editDisabled}}
-                  {{d-button action=(action "editName") label="explorer.edit" icon="pencil" class="btn-primary"}}
+                  {{d-button action=(action "editName") label="explorer.edit" icon="pencil"}}
                 {{/unless}}
               {{/if}}
               {{d-button action=(action "download") label="explorer.export" disabled=runDisabled icon="download"}}
@@ -89,7 +89,7 @@
                 {{d-button action=(action "recover") class="" icon="undo" label="explorer.recover"}}
               {{else}}
                 {{#if everEditing}}
-                  {{d-button action=(action "discard") class="btn-danger" icon="undo" label="explorer.undo" disabled=saveDisabled}}
+                  {{d-button action=(action "discard") icon="undo" label="explorer.undo" disabled=saveDisabled}}
                 {{/if}}
                 {{#unless editDisabled}}
                   {{d-button action=(action "destroy") class="btn-danger" icon="trash" label="explorer.delete"}}
@@ -116,10 +116,10 @@
             {{#if saveDisabled}}
               {{d-button label="explorer.run" disabled="true" class="btn-primary"}}
             {{else}}
-              {{d-button action=(action "saverun") label="explorer.saverun"}}
+              {{d-button action=(action "saverun") icon="play" label="explorer.saverun" class="btn-primary"}}
             {{/if}}
           {{else}}
-            {{d-button action=(action "run") label="explorer.run" disabled=runDisabled class="btn-primary" type="submit"}}
+            {{d-button action=(action "run") icon="play" label="explorer.run" disabled=runDisabled class="btn-primary" type="submit"}}
           {{/if}}
           <label class="query-plan">{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
         </form>
