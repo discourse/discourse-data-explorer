@@ -63,6 +63,11 @@ class Queries
             "id": -11,
             "name": "Most Active Lurkers",
             "description": "active users without posts and excessive read times, it accepts a post_read_count paramteter that sets the threshold for posts read."
+        },
+        "topic-user-notification-level": {
+            "id": -12,
+            "name": "List of topics a user is watching/tracking/muted",
+            "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics."
         }
     }.with_indifferent_access
 
@@ -355,6 +360,17 @@ class Queries
     AND posts IS NULL
     AND posts_read > :post_read_count
     ORDER BY u.id
+    SQL
+
+    queries["topic-user-notification-level"]["sql"] = <<~SQL
+    -- [params]
+    -- null int :user
+    -- null int :notification_level
+
+    SELECT t.category_id AS category_id, t.id AS topic_id, tu.last_visited_at AS topic_last_visited_at
+    FROM topics t
+    JOIN topic_users tu ON tu.topic_id = t.id AND tu.user_id = :user AND tu.notification_level = :notification_level
+    ORDER BY tu.last_visited_at DESC
     SQL
 
   # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
