@@ -31,8 +31,6 @@ pt_BR:
           null_: "Nulo"
       export: "Exportar"
       save: "Salvar Mudanças"
-      saverun: "Salvar alterações e executar consulta"
-      run: "Executar consulta"
       undo: "Descartar mudanças"
       edit: "Editar"
       delete: "Apagar"

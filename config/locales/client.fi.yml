@@ -31,8 +31,6 @@ fi:
           null_: "Tyhjä"
       export: "Vie"
       save: "Tallenna muutokset"
-      saverun: "Tallenna muutokset ja suorita kysely"
-      run: "Suorita kysely"
       undo: "Kumoa muutokset"
       edit: "Muokkaa"
       delete: "Poista"

@@ -26,8 +26,6 @@ hu:
           null_: "Null"
       export: "Exportálás"
       save: "Módosítások mentése"
-      saverun: "Módosítások mentése és a lekérdezés futtatása"
-      run: "Lekérdezés futtatása"
       undo: "Változtatások eldobása"
       edit: "Szerkesztés"
       delete: "Törlés"

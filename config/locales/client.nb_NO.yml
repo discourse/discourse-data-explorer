@@ -28,8 +28,6 @@ nb_NO:
           null_: "Null"
       export: "Eksporter"
       save: "Lagre endringer"
-      saverun: "Lagre endringer og kjør spørring"
-      run: "Kjør spørring"
       undo: "Forkast endringer"
       edit: "Rediger"
       delete: "Slett"

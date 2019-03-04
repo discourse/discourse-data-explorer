@@ -32,8 +32,6 @@ it:
           null_: "Null"
       export: "Esporta"
       save: "Salva Modifiche"
-      saverun: "Salva Modifiche e Esegui Query"
-      run: "Esegui Query"
       undo: "Annulla Modifiche"
       edit: "Modifica"
       delete: "Elimina"

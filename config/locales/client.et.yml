@@ -22,7 +22,6 @@ et:
           'no': "Ei"
       export: "Ekspordi"
       save: "Salvesta muudatused"
-      run: "Käivita päring"
       edit: "Muuda"
       delete: "Kustuta"
       download_json: "JSON"

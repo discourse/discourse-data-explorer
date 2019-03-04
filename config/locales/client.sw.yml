@@ -32,8 +32,6 @@ sw:
           null_: "Hamna Kitu"
       export: "Hamisha"
       save: "Hifadhi Mabadiliko"
-      saverun: "Hifadhi Mabadiliko na Uliza Swali"
-      run: "Uliza Swali"
       undo: "Kataa Mabadiliko"
       edit: "Hariri"
       delete: "Futa"
