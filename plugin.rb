@@ -354,7 +354,9 @@ SQL
     end
 
     def self.enums
-      @enums ||= {
+      return @enums if @enums
+
+      @enums = {
         'badges.badge_type_id': Enum.new(:gold, :silver, :bronze, start: 1),
         'category_groups.permission_type': CategoryGroup.permission_types,
         'directory_items.period_type': DirectoryItem.period_types,
@@ -366,13 +368,18 @@ SQL
         'posts.post_type': Post.types,
         'post_actions.post_action_type_id': PostActionType.types,
         'post_action_types.id': PostActionType.types,
-        'queued_posts.state': QueuedPost.states,
         'site_settings.data_type': SiteSetting.types,
         'topic_users.notification_level': TopicUser.notification_levels,
         'topic_users.notifications_reason_id': TopicUser.notification_reasons,
         'user_histories.action': UserHistory.actions,
         'users.trust_level': TrustLevel.levels,
       }.with_indifferent_access
+
+      # QueuedPost is removed in recent Discourse releases
+      @enums['queued_posts.state'] = QueuedPost.states if defined?(QueuedPost)
+      @enums['reviewables.status'] = Reviewable.statuses if defined?(Reviewable)
+
+      @enums
     end
 
     def self.enum_info
