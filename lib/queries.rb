@@ -62,12 +62,17 @@ class Queries
         "active-lurkers": {
             "id": -11,
             "name": "Most Active Lurkers",
-            "description": "active users without posts and excessive read times, it accepts a post_read_count paramteter that sets the threshold for posts read."
+            "description": "active users without posts and excessive read times, it accepts a post_read_count parameter that sets the threshold for posts read."
         },
         "topic-user-notification-level": {
             "id": -12,
             "name": "List of topics a user is watching/tracking/muted",
             "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics."
+        },
+        "group-members-reply-count": {
+          "id": -13,
+          "name": "Group Members Reply Count",
+          "description": "Number of replies by members of a group over a monthly period. Requires a 'group_name' parameter, and accepts a 'months_ago' and an 'include_pms' parameter."
         }
     }.with_indifferent_access
 
@@ -371,6 +376,52 @@ class Queries
     FROM topics t
     JOIN topic_users tu ON tu.topic_id = t.id AND tu.user_id = :user AND tu.notification_level = :notification_level
     ORDER BY tu.last_visited_at DESC
+    SQL
+
+    queries["group-members-reply-count"]["sql"] = <<~SQL
+    -- [params]
+    -- int :months_ago = 1
+    -- string :group_name
+    -- boolean :include_pms = false
+    
+    WITH query_period AS (
+    SELECT
+    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
+    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
+    ),
+    target_users AS (
+    SELECT
+    u.id AS user_id
+    FROM users u
+    JOIN group_users gu
+    ON gu.user_id = u.id
+    JOIN groups g
+    ON g.id = gu.group_id
+    WHERE g.name = :group_name
+    ),
+    target_posts AS (
+    SELECT
+    p.id,
+    p.user_id
+    FROM posts p
+    JOIN topics t
+    ON t.id = p.topic_id
+    WHERE CASE WHEN :include_pms THEN true ELSE t.archetype = 'regular' END
+    AND t.deleted_at IS NULL
+    AND p.deleted_at IS NULL
+    AND p.created_at >= (SELECT period_start FROM query_period)
+    AND p.created_at <= (SELECT period_end FROM query_period)
+    AND p.post_number > 1
+    )
+    
+    SELECT
+    tu.user_id,
+    COALESCE(COUNT(tp.id), 0) AS reply_count
+    FROM target_users tu
+    LEFT OUTER JOIN target_posts tp
+    ON tp.user_id = tu.user_id
+    GROUP BY tu.user_id
+    ORDER BY reply_count DESC, tu.user_id
     SQL
 
   # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
