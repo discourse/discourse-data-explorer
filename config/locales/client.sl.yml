@@ -7,13 +7,24 @@
 
 sl:
   js:
+    errors:
+      explorer:
+        no_semicolons: "Odstranite podpičja (;) iz poizvedbe."
+        dirty: "Morate shraniti poizvedbo pred zagonom."
     explorer:
+      admins_only: "Raziskovalec podatkov je na voljo samo administratorjem."
+      title: "Raziskovalec podatkov"
+      create: "Ustvari novo"
+      create_placeholder: "Ime poizvedbe..."
+      description_placeholder: "Vnesite opis tukaj"
       import:
         label: "Uvozi"
         modal: "Uvozi poizvedbo"
       schema:
         title: "Shema podatkovne baze"
         filter: "Išči..."
+        sensitive: "Vsebina tega stolpca lahko vsebuje posebaj občutljive in zasebne informacije. Bodite previdni pri uporabi vsebine tega stolpca."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipi</a>"
       types:
         bool:
           'yes': "Da"
@@ -21,8 +32,33 @@ sl:
           null_: "Nič"
       export: "Izvozi"
       save: "Shrani spremembe"
+      saverun: "Shrani spremembe in zaženi"
+      run: "Zaženi"
+      undo: "Zavrži spremembe"
       edit: "Uredi"
       delete: "Izbriši"
+      recover: "Od-izbriši poizvedbo"
       download_json: "JSON"
       download_csv: "CSV"
+      others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
+      run_time: "Poizvedba je končala v {{value}} ms."
+      result_count:
+        one: "%{count} zadetek."
+        two: "%{count} zadetka."
+        few: "%{count} zadetki."
+        other: "%{count} zadetkov."
+      max_result_count:
+        one: "Prikazano samo prvi %{count} zadetek."
+        two: "Prikazano samo prva %{count} zadetka."
+        few: "Prikazano samo prvi %{count} zadetki."
+        other: "Prikazano samo prvih %{count} zadetkov."
       query_name: "Poizvedba"
+      query_description: "Opis"
+      query_time: "Zadnja izvedba"
+      query_user: "Ustvarjen od"
+      column: "Stolpec {{number}}"
+      explain_label: "Vključi načrt za poizvedbo?"
+      save_params: "Nastavi privzete vrednosti"
+      reset_params: "Ponastavi"
+      search_placeholder: "Išči..."
+      no_search_results: "Oprostite, nismo našli nobenega zadetka, ki bi ustrezal vaši poizvedbi."
