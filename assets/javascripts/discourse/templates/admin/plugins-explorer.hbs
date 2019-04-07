@@ -55,15 +55,22 @@
             {{! the SQL editor will show the first time you }}
             {{#if everEditing}}
               <div class="query-editor {{if hideSchema "no-schema"}}">
-                <div class="right-panel">
-                  <div class="schema grippie-target">
-                    {{explorer-schema schema=schema hideSchema=hideSchema}}
+                <div class="panels-flex">
+                  <div class="editor-panel">
+                    {{ace-editor content=selectedItem.sql mode="sql"}}
+                  </div>
+                  <div class="right-panel">
+                    {{#if hideSchema}}
+                      {{d-button action=(action "expandSchema") icon="chevron-left" class="no-text unhide"}}
+                    {{/if}}
+                    <div class="schema">
+                      {{explorer-schema schema=schema hideSchema=hideSchema}}
+                    </div>
                   </div>
                 </div>
-                <div class="editor-panel">
-                  {{ace-editor content=selectedItem.sql mode="sql"}}
+                <div class="grippie">
+                  {{d-icon "discourse-expand"}}
                 </div>
-                <div class="grippie"></div>
                 <div class="clear"></div>
               </div>
             {{else}}

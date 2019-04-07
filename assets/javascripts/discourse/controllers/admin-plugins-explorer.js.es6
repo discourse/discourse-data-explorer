@@ -96,6 +96,10 @@ export default Ember.Controller.extend({
   actions: {
     dummy() {},
 
+    expandSchema() {
+      this.set("hideSchema", false);
+    },
+
     importQuery() {
       showModal("import-query");
       this.set("showCreate", false);

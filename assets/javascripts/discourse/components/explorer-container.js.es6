@@ -15,45 +15,64 @@ export default Ember.Component.extend({
     if (this._state !== "inDOM") {
       return;
     }
-    const $editPane = this.$().find(".query-editor");
+    const $editPane = this.$(".query-editor");
     if (!$editPane.length) {
       return;
     }
+
     const oldGrippie = this.get("grippie");
     if (oldGrippie) {
       oldGrippie.off("mousedown mousemove mouseup");
-      $editPane.off("mousemove mouseup");
     }
 
     const $grippie = $editPane.find(".grippie");
-    const $targets = $editPane.find(".ace-wrapper,.grippie-target");
-    const $body = $("body");
-    const self = this;
+    const $target = $editPane.find(".panels-flex");
+    const $document = Ember.$(document);
+
+    const minWidth = $target.width();
+    const minHeight = $target.height();
 
     this.set("grippie", $grippie);
 
-    const mousemove = function(e) {
-      const diff = self.get("startY") - e.screenY;
-      const newHeight = self.get("startSize") - diff;
-      $targets.height(newHeight);
-      self.appEvents.trigger("ace:resize");
+    const mousemove = e => {
+      const diffY = this.get("startY") - e.screenY;
+      const diffX = this.get("startX") - e.screenX;
+
+      const newHeight = Math.max(minHeight, this.get("startHeight") - diffY);
+      const newWidth = Math.max(minWidth, this.get("startWidth") - diffX);
+
+      $target.height(newHeight);
+      $target.width(newWidth);
+      $grippie.width(newWidth);
+      this.appEvents.trigger("ace:resize");
     };
 
-    let mouseup;
-    mouseup = function(e) {
-      mousemove(e);
-      $body.off("mousemove", mousemove);
-      $body.off("mouseup", mouseup);
-      self.set("startY", null);
-      self.set("startSize", null);
-    };
+    const throttledMousemove = (event => {
+      event.preventDefault();
+      Ember.run.throttle(this, mousemove, event, 20);
+    }).bind(this);
 
-    $grippie.on("mousedown", function(e) {
-      self.set("startY", e.screenY);
-      self.set("startSize", $targets.height());
+    const mouseup = (e => {
+      $document.off("mousemove", throttledMousemove);
+      $document.off("mouseup", mouseup);
+      this.setProperties({
+        startY: null,
+        startX: null,
+        startHeight: null,
+        startWidth: null
+      });
+    }).bind(this);
 
-      $body.on("mousemove", mousemove);
-      $body.on("mouseup", mouseup);
+    $grippie.on("mousedown", e => {
+      this.setProperties({
+        startY: e.screenY,
+        startX: e.screenX,
+        startHeight: $target.height(),
+        startWidth: $target.width()
+      });
+
+      $document.on("mousemove", throttledMousemove);
+      $document.on("mouseup", mouseup);
       e.preventDefault();
     });
   },
