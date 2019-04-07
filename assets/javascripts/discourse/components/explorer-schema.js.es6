@@ -2,9 +2,6 @@ import debounce from "discourse/lib/debounce";
 
 export default Ember.Component.extend({
   actions: {
-    expandSchema() {
-      this.set("hideSchema", false);
-    },
     collapseSchema() {
       this.set("hideSchema", true);
     }
