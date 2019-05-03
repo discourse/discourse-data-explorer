@@ -72,7 +72,7 @@ class Queries
         "group-members-reply-count": {
           "id": -13,
           "name": "Group Members Reply Count",
-          "description": "Number of replies by members of a group over a monthly period. Requires a 'group_name' parameter, and accepts a 'months_ago' and an 'include_pms' parameter."
+          "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter."
         }
     }.with_indifferent_access
 
@@ -380,16 +380,12 @@ class Queries
 
     queries["group-members-reply-count"]["sql"] = <<~SQL
     -- [params]
-    -- int :months_ago = 1
+    -- date :start_date
+    -- date :end_date
     -- string :group_name
     -- boolean :include_pms = false
     
-    WITH query_period AS (
-    SELECT
-    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
-    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
-    ),
-    target_users AS (
+    WITH target_users AS (
     SELECT
     u.id AS user_id
     FROM users u
@@ -398,6 +394,7 @@ class Queries
     JOIN groups g
     ON g.id = gu.group_id
     WHERE g.name = :group_name
+    AND gu.created_at::date <= :end_date
     ),
     target_posts AS (
     SELECT
@@ -409,8 +406,8 @@ class Queries
     WHERE CASE WHEN :include_pms THEN true ELSE t.archetype = 'regular' END
     AND t.deleted_at IS NULL
     AND p.deleted_at IS NULL
-    AND p.created_at >= (SELECT period_start FROM query_period)
-    AND p.created_at <= (SELECT period_end FROM query_period)
+    AND p.created_at::date >= :start_date 
+    AND p.created_at::date <= :end_date 
     AND p.post_number > 1
     )
     
