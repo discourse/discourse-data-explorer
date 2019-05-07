@@ -62,17 +62,17 @@ class Queries
         "active-lurkers": {
             "id": -11,
             "name": "Most Active Lurkers",
-            "description": "active users without posts and excessive read times, it accepts a post_read_count paramteter that sets the threshold for posts read."
+            "description": "active users without posts and excessive read times, it accepts a post_read_count parameter that sets the threshold for posts read."
         },
         "topic-user-notification-level": {
             "id": -12,
             "name": "List of topics a user is watching/tracking/muted",
             "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics."
         },
-        "assigned-topics-report": {
-            "id": -13,
-            "name": "List of assigned topics by user",
-            "description": "This report requires the assign plugin, it will find all assigned topics"
+        "group-members-reply-count": {
+          "id": -13,
+          "name": "Group Members Reply Count",
+          "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter."
         }
     }.with_indifferent_access
 
@@ -378,14 +378,47 @@ class Queries
     ORDER BY tu.last_visited_at DESC
     SQL
 
-    queries["assigned-topics-report"]["sql"] = <<~SQL
-      SELECT value::int user_id, topic_id
-      FROM topic_custom_fields tf
-      JOIN topics t on t.id = topic_id
-      JOIN users u on u.id = value::int
-        WHERE tf.name = 'assigned_to_id'
-         AND t.deleted_at IS NULL
-      ORDER BY username, topic_id
+    queries["group-members-reply-count"]["sql"] = <<~SQL
+    -- [params]
+    -- date :start_date
+    -- date :end_date
+    -- string :group_name
+    -- boolean :include_pms = false
+    
+    WITH target_users AS (
+    SELECT
+    u.id AS user_id
+    FROM users u
+    JOIN group_users gu
+    ON gu.user_id = u.id
+    JOIN groups g
+    ON g.id = gu.group_id
+    WHERE g.name = :group_name
+    AND gu.created_at::date <= :end_date
+    ),
+    target_posts AS (
+    SELECT
+    p.id,
+    p.user_id
+    FROM posts p
+    JOIN topics t
+    ON t.id = p.topic_id
+    WHERE CASE WHEN :include_pms THEN true ELSE t.archetype = 'regular' END
+    AND t.deleted_at IS NULL
+    AND p.deleted_at IS NULL
+    AND p.created_at::date >= :start_date 
+    AND p.created_at::date <= :end_date 
+    AND p.post_number > 1
+    )
+    
+    SELECT
+    tu.user_id,
+    COALESCE(COUNT(tp.id), 0) AS reply_count
+    FROM target_users tu
+    LEFT OUTER JOIN target_posts tp
+    ON tp.user_id = tu.user_id
+    GROUP BY tu.user_id
+    ORDER BY reply_count DESC, tu.user_id
     SQL
 
   # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
