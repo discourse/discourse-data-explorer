@@ -70,9 +70,9 @@ class Queries
             "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics."
         },
         "group-members-reply-count": {
-          "id": -13,
-          "name": "Group Members Reply Count",
-          "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter."
+            "id": -13,
+            "name": "Group Members Reply Count",
+            "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter."
         }
     }.with_indifferent_access
 
@@ -384,7 +384,7 @@ class Queries
     -- date :end_date
     -- string :group_name
     -- boolean :include_pms = false
-    
+
     WITH target_users AS (
     SELECT
     u.id AS user_id
@@ -410,7 +410,7 @@ class Queries
     AND p.created_at::date <= :end_date 
     AND p.post_number > 1
     )
-    
+
     SELECT
     tu.user_id,
     COALESCE(COUNT(tp.id), 0) AS reply_count
