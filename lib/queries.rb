@@ -69,8 +69,13 @@ class Queries
             "name": "List of topics a user is watching/tracking/muted",
             "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics."
         },
-        "group-members-reply-count": {
+        "assigned-topics-report": {
             "id": -13,
+            "name": "List of assigned topics by user",
+            "description": "This report requires the assign plugin, it will find all assigned topics"
+        },
+        "group-members-reply-count": {
+            "id": -14,
             "name": "Group Members Reply Count",
             "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter."
         }
@@ -376,6 +381,16 @@ class Queries
     FROM topics t
     JOIN topic_users tu ON tu.topic_id = t.id AND tu.user_id = :user AND tu.notification_level = :notification_level
     ORDER BY tu.last_visited_at DESC
+    SQL
+
+    queries["assigned-topics-report"]["sql"] = <<~SQL
+      SELECT value::int user_id, topic_id
+      FROM topic_custom_fields tf
+      JOIN topics t on t.id = topic_id
+      JOIN users u on u.id = value::int
+        WHERE tf.name = 'assigned_to_id'
+         AND t.deleted_at IS NULL
+      ORDER BY username, topic_id
     SQL
 
     queries["group-members-reply-count"]["sql"] = <<~SQL
