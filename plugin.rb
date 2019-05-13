@@ -177,6 +177,8 @@ SQL
 
     def self.add_extra_data(pg_result)
       needed_classes = {}
+      ret = {}
+      col_map = {}
 
       pg_result.fields.each_with_index do |col, idx|
         rgx = column_regexes.find { |r| r.match col }
@@ -188,11 +190,11 @@ SQL
           cls = $1.to_sym
           needed_classes[cls] ||= []
           needed_classes[cls] << idx
+        elsif col =~ /^\w+_url$/
+          col_map[idx] = "url"
         end
       end
 
-      ret = {}
-      col_map = {}
       needed_classes.each do |cls, column_nums|
         next unless column_nums.present?
         support_info = extra_data_pluck_fields[cls]
@@ -1126,9 +1128,9 @@ SQL
             json[:explain] = result[:explain] if opts[:explain]
 
             if !params[:download]
-              ext = DataExplorer.add_extra_data(pg_result)
-              json[:colrender] = ext[1]
-              json[:relations] = ext[0]
+              relations, colrender = DataExplorer.add_extra_data(pg_result)
+              json[:relations] = relations
+              json[:colrender] = colrender
             end
 
             json[:rows] = pg_result.values

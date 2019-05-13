@@ -33,6 +33,20 @@ function bound_date_replacement(str, ctx) {
 
 const esc = Handlebars.Utils.escapeExpression;
 
+// consider moving this elsewhere
+function guessUrl(t) {
+  let [dest, name] = [t, t];
+
+  const split = t.split(/,(.+)/);
+
+  if (split.length > 1) {
+    name = split[0];
+    dest = split[1];
+  }
+
+  return [dest, name];
+}
+
 const QueryRowContentComponent = Ember.Component.extend(
   bufferedRender({
     tagName: "tr",
@@ -68,6 +82,12 @@ const QueryRowContentComponent = Ember.Component.extend(
         const lookupFunc = parentView[`lookup${t.name.capitalize()}`];
         if (lookupFunc) {
           ctx[t.name] = parentView[`lookup${t.name.capitalize()}`](id);
+        }
+
+        if (t.name === "url") {
+          let [url, name] = guessUrl(value);
+          ctx["href"] = url;
+          ctx["target"] = name;
         }
 
         if (
