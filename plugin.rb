@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-data-explorer
 # about: Interface for running analysis SQL queries on the live database
 # version: 0.2

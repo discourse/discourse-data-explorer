@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Queries
   def self.default
     # WARNING: Edit the query hash carefully
@@ -421,8 +423,8 @@ class Queries
     WHERE CASE WHEN :include_pms THEN true ELSE t.archetype = 'regular' END
     AND t.deleted_at IS NULL
     AND p.deleted_at IS NULL
-    AND p.created_at::date >= :start_date 
-    AND p.created_at::date <= :end_date 
+    AND p.created_at::date >= :start_date
+    AND p.created_at::date <= :end_date
     AND p.post_number > 1
     )
 
