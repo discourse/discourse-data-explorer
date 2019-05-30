@@ -5,4 +5,21 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nl: {}
+nl:
+  js:
+    explorer:
+      import:
+        label: "Importeren"
+      schema:
+        filter: "Zoeken..."
+      types:
+        bool:
+          'yes': "Ja"
+          'no': "Nee"
+      export: "Exporteren"
+      save: "Wijzigingen opslaan"
+      edit: "Bewerken"
+      delete: "Verwijderen"
+      query_description: "Omschrijving"
+      reset_params: "Terugzetten"
+      search_placeholder: "Zoeken..."

@@ -5,4 +5,21 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fa_IR: {}
+fa_IR:
+  js:
+    explorer:
+      import:
+        label: "ورود داده‌ها"
+      schema:
+        filter: "جستجو..."
+      types:
+        bool:
+          'yes': "بله"
+          'no': "خیر"
+      export: "خروجی گرفتن"
+      save: "ذخیره تغییرات"
+      edit: "ویرایش"
+      delete: "حذف"
+      query_description: "توضیح"
+      reset_params: "بازنشانی"
+      search_placeholder: "جستجو..."

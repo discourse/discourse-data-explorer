@@ -5,4 +5,20 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-vi: {}
+vi:
+  js:
+    explorer:
+      import:
+        label: "Nhập"
+      schema:
+        filter: "Tìm kiến..."
+      types:
+        bool:
+          'yes': "Đồng ý"
+          'no': "Không"
+      export: "Xuất"
+      save: "Lưu thay đổi"
+      edit: "Sửa"
+      delete: "Xóa"
+      query_description: "Mô tả"
+      search_placeholder: "Tìm kiến..."

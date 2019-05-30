@@ -5,4 +5,18 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk: {}
+uk:
+  js:
+    explorer:
+      import:
+        label: "Імпорт"
+      types:
+        bool:
+          'yes': "Так"
+          'no': "Ні"
+      export: "Експорт"
+      save: "Зберегти зміни"
+      edit: "Редагувати"
+      delete: "Видалити"
+      query_description: "Опис"
+      reset_params: "Скинути"

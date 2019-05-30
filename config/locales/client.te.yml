@@ -5,4 +5,15 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-te: {}
+te:
+  js:
+    explorer:
+      types:
+        bool:
+          'yes': "అవును"
+          'no': "లేదు"
+      export: "ఎగుమతి"
+      save: "మార్పులను భద్రపరచు"
+      edit: "సవరించు"
+      delete: "తొలగించు"
+      query_description: "వివరణ"

@@ -5,4 +5,21 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_TW: {}
+zh_TW:
+  js:
+    explorer:
+      import:
+        label: "匯入"
+      schema:
+        filter: "搜尋..."
+      types:
+        bool:
+          'yes': "是"
+          'no': "否"
+      export: "匯出"
+      save: "儲存變更"
+      edit: "編輯"
+      delete: "刪除"
+      query_description: "描述"
+      reset_params: "重置"
+      search_placeholder: "搜尋..."

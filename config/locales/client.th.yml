@@ -5,4 +5,15 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-th: {}
+th:
+  js:
+    explorer:
+      types:
+        bool:
+          'yes': "ใช่"
+          'no': "ไม่ใช่"
+      export: "ส่งออก"
+      save: "บันทึกการเปลี่ยนแปลง"
+      edit: "แก้ไข"
+      delete: "ลบ"
+      query_description: "รายละเอียด"

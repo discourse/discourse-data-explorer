@@ -31,5 +31,7 @@ hu:
       delete: "Törlés"
       download_json: "JSON"
       download_csv: "CSV"
+      query_description: "Leírás"
       column: "Oszlop {{number}}"
       reset_params: "Alaphelyzet"
+      search_placeholder: "Keresés..."

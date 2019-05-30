@@ -26,6 +26,7 @@ zh_CN:
           null_: "空"
       export: "导出"
       save: "保存更改"
+      run: "运行"
       undo: "放弃更改"
       edit: "编辑"
       delete: "删除"

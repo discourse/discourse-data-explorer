@@ -9,6 +9,20 @@ ko:
   js:
     explorer:
       description_placeholder: "여기에 설명을 입력하세요"
+      import:
+        label: "가져오기"
+      schema:
+        filter: "검색..."
+      types:
+        bool:
+          'yes': "네"
+          'no': "아니오"
+      export: "내보내기"
+      save: "변경사항 저장"
+      edit: "수정"
+      delete: "삭제"
       query_name: "쿼리"
       query_description: "설명"
       query_time: "마지막 실행"
+      reset_params: "리셋"
+      search_placeholder: "검색..."

@@ -24,5 +24,7 @@ tr_TR:
       delete: "Sil"
       download_json: "JSON"
       download_csv: "CSV"
+      query_description: "Açıklama"
       save_params: "Varsayılan belirle"
       reset_params: "Sıfırla"
+      search_placeholder: "Ara..."
