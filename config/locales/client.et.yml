@@ -8,6 +8,7 @@
 et:
   js:
     explorer:
+      title: "Andmete eksportija"
       create: "Loo uus"
       create_placeholder: "Päringu nimi..."
       import:
@@ -20,13 +21,18 @@ et:
         bool:
           'yes': "Jah"
           'no': "Ei"
+          null_: "Nulli"
       export: "Ekspordi"
       save: "Salvesta muudatused"
+      saverun: "Salvesta muudatused ja käivita"
+      run: "Käivita"
+      undo: "Loobu muudatustest"
       edit: "Muuda"
       delete: "Kustuta"
       download_json: "JSON"
       download_csv: "CSV"
       query_description: "Kirjeldus"
+      column: "Veerg {{number}}"
       save_params: "Määra vaikeväärtused"
       reset_params: "Nulli"
       search_placeholder: "Otsi..."
