@@ -52,7 +52,7 @@ export default Ember.Component.extend({
       Ember.run.throttle(this, mousemove, event, 20);
     }).bind(this);
 
-    const mouseup = (e => {
+    const mouseup = (() => {
       $document.off("mousemove", throttledMousemove);
       $document.off("mouseup", mouseup);
       this.setProperties({
