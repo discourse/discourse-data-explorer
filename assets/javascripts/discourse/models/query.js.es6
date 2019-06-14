@@ -72,7 +72,14 @@ const Query = RestModel.extend({
 });
 
 Query.reopenClass({
-  updatePropertyNames: ["name", "description", "sql", "created_by", "created_at", "last_run_at"]
+  updatePropertyNames: [
+    "name",
+    "description",
+    "sql",
+    "created_by",
+    "created_at",
+    "last_run_at"
+  ]
 });
 
 export default Query;
