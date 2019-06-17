@@ -9,15 +9,21 @@ zh_CN:
   js:
     errors:
       explorer:
+        no_semicolons: "从查询中移除分号"
         dirty: "运行 query 之前必须先保存 query"
     explorer:
+      admins_only: "数据探索器仅admin可用。"
       title: "数据查看"
       create: "创建新的"
+      create_placeholder: "查询名称..."
       description_placeholder: "在此键入描述"
       import:
         label: "导入"
+        modal: "导入一个查询"
       schema:
+        title: "数据库结构"
         filter: "搜索"
+        sensitive: "此列的内容可能含有敏感的或隐私的信息。请谨慎使用此列的内容。"
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>类型</a>"
       types:
         bool:
@@ -26,19 +32,26 @@ zh_CN:
           null_: "空"
       export: "导出"
       save: "保存更改"
+      saverun: "保存更改并运行"
       run: "运行"
       undo: "放弃更改"
       edit: "编辑"
       delete: "删除"
+      recover: "恢复删除的查询"
       download_json: "JSON"
       download_csv: "CSV"
+      others_dirty: "查询包含未保存的更改，如果您离开，这些更改将会丢失。"
+      run_time: "查询在{{value}}ms内完成。"
       result_count:
         other: "%{count}结果"
       max_result_count:
         other: "显示前%{count}个结果。"
+      query_name: "查询"
       query_description: "描述"
       query_time: "最后运行"
       query_user: "创建于"
+      column: "列{{number}}"
+      explain_label: "包括查询计划？"
       save_params: "设置为默认"
       reset_params: "重置"
       search_placeholder: "搜索……"

@@ -53,7 +53,7 @@ fr:
       query_time: "Dernière exécution"
       query_user: "Créée par"
       column: "Colonne {{number}}"
-      explain_label: "Inclure plan d'exécution?"
+      explain_label: "Inclure plan d'exécution ?"
       save_params: "Définir valeurs par défaut"
       reset_params: "Réinitialiser"
       search_placeholder: "Rechercher..."
