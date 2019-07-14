@@ -35,11 +35,11 @@ export default Ember.Component.extend({
     this.set("grippie", $grippie);
 
     const mousemove = e => {
-      const diffY = this.get("startY") - e.screenY;
-      const diffX = this.get("startX") - e.screenX;
+      const diffY = this.startY - e.screenY;
+      const diffX = this.startX - e.screenX;
 
-      const newHeight = Math.max(minHeight, this.get("startHeight") - diffY);
-      const newWidth = Math.max(minWidth, this.get("startWidth") - diffX);
+      const newHeight = Math.max(minHeight, this.startHeight - diffY);
+      const newWidth = Math.max(minWidth, this.startWidth - diffX);
 
       $target.height(newHeight);
       $target.width(newWidth);

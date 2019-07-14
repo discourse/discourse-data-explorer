@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   classNameBindings: [":schema-table", "open"],
   tagName: "li",
 
-  open: Ember.computed.alias("table.open"),
+  open: Ember.computed.reads("table.open"),
 
   @on("didInsertElement")
   _bindClicks() {
