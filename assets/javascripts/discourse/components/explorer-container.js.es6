@@ -27,7 +27,7 @@ export default Ember.Component.extend({
 
     const $grippie = $editPane.find(".grippie");
     const $target = $editPane.find(".panels-flex");
-    const $document = Ember.$(document);
+    const $document = $(document);
 
     const minWidth = $target.width();
     const minHeight = $target.height();
