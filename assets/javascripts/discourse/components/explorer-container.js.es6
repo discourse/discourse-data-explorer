@@ -87,7 +87,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     if (this.everEditing) {
-      this.grippie.off("mousedown");
+      this.grippie && this.grippie.off("mousedown");
       this.set("grippie", null);
     }
   }
