@@ -1,3 +1,5 @@
+import { default as computed, on, observes } from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   fileInput: null,
   loading: false,
@@ -6,80 +8,77 @@ export default Ember.Component.extend({
 
   classNames: ["json-uploader"],
 
-  _initialize: function() {
-    const $this = this.$();
-    const self = this;
+  @on("didInsertElement")
+  _initialize() {
+    const $this = $(this.element);
+    const fileInput = this.element.querySelector("#js-file-input");
+    this.set("fileInput", fileInput);
 
-    const $fileInput = $this.find("#js-file-input");
-    this.set("fileInput", $fileInput[0]);
+    $(fileInput).on("change", () => this.fileSelected(this.files));
 
-    $fileInput.on("change", function() {
-      self.fileSelected(this.files);
-    });
-
-    $this.on("dragover", function(e) {
+    $this.on("dragover", e => {
       if (e.preventDefault) e.preventDefault();
       return false;
     });
-    $this.on("dragenter", function(e) {
+    $this.on("dragenter", e => {
       if (e.preventDefault) e.preventDefault();
-      self.set("hover", self.get("hover") + 1);
+      this.set("hover", this.hover + 1);
       return false;
     });
-    $this.on("dragleave", function(e) {
+    $this.on("dragleave", e => {
       if (e.preventDefault) e.preventDefault();
-      self.set("hover", self.get("hover") - 1);
+      this.set("hover", this.hover - 1);
       return false;
     });
-    $this.on("drop", function(e) {
+    $this.on("drop", e => {
       if (e.preventDefault) e.preventDefault();
 
-      self.set("hover", 0);
-      self.fileSelected(e.dataTransfer.files);
+      this.set("hover", 0);
+      this.fileSelected(e.dataTransfer.files);
       return false;
     });
-  }.on("didInsertElement"),
+  },
 
-  accept: function() {
+  @computed("extension")
+  accept(extension) {
     return (
       ".json,application/json,application/x-javascript,text/json" +
-      (this.get("extension") ? "," + this.get("extension") : "")
+      (extension ? `,${extension}` : "")
     );
-  }.property("extension"),
+  },
 
-  setReady: function() {
+  @observes("destination", "expectedRootObjectName")
+  setReady() {
     let parsed;
     try {
-      parsed = JSON.parse(this.get("value"));
+      parsed = JSON.parse(this.value);
     } catch (e) {
       this.set("ready", false);
       return;
     }
 
-    const rootObject = parsed[this.get("expectedRootObjectName")];
+    const rootObject = parsed[this.expectedRootObjectName];
 
     if (rootObject !== null && rootObject !== undefined) {
       this.set("ready", true);
     } else {
       this.set("ready", false);
     }
-  }.observes("destination", "expectedRootObjectName"),
+  },
 
   actions: {
-    selectFile: function() {
-      const $fileInput = $(this.get("fileInput"));
-      $fileInput.click();
+    selectFile() {
+      $(this.fileInput).click();
     }
   },
 
   fileSelected(fileList) {
-    const self = this;
     let files = [];
     for (let i = 0; i < fileList.length; i++) {
       files[i] = fileList[i];
     }
     const fileNameRegex = /\.(json|txt)$/;
-    files = files.filter(function(file) {
+    files = files.filter(file => {
       if (fileNameRegex.test(file.name)) {
         return true;
       }
@@ -92,10 +91,9 @@ export default Ember.Component.extend({
 
     this.set("loading", true);
 
-    let reader = new FileReader();
-    reader.onload = function(evt) {
-      self.set("value", evt.target.result);
-      self.set("loading", false);
+    const reader = new FileReader();
+    reader.onload = evt => {
+      this.setProperties({ value: evt.target.result, loading: false });
     };
 
     reader.readAsText(firstFile);

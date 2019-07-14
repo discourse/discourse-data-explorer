@@ -15,12 +15,12 @@ export default Ember.Component.extend({
     if (this._state !== "inDOM") {
       return;
     }
-    const $editPane = this.$(".query-editor");
+    const $editPane = $(".query-editor");
     if (!$editPane.length) {
       return;
     }
 
-    const oldGrippie = this.get("grippie");
+    const oldGrippie = this.grippie;
     if (oldGrippie) {
       oldGrippie.off("mousedown mousemove mouseup");
     }
@@ -78,14 +78,16 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
+
     this._bindControls();
   },
 
   willDestroyElement() {
-    this._super();
-    if (this.get("everEditing")) {
-      this.get("grippie").off("mousedown");
+    this._super(...arguments);
+
+    if (this.everEditing) {
+      this.grippie.off("mousedown");
       this.set("grippie", null);
     }
   }

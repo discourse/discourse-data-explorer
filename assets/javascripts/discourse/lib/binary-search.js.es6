@@ -4,10 +4,10 @@
 // Modified for use in Discourse
 
 export default function binarySearch(list, target, keyProp) {
-  var min = 0;
-  var max = list.length - 1;
-  var guess;
-  var keyProperty = keyProp || "id";
+  let min = 0;
+  let max = list.length - 1;
+  let guess;
+  const keyProperty = keyProp || "id";
 
   while (min <= max) {
     guess = Math.floor((min + max) / 2);

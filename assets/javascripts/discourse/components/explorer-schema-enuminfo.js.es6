@@ -1,8 +1,10 @@
+import { default as computed } from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   tagName: "ol",
 
-  enuminfo: function() {
-    const hash = this.get("col.enum");
+  @computed("col.enum")
+  enuminfo(hash) {
     let result = [];
     for (let key in hash) {
       if (!hash.hasOwnProperty(key)) {
@@ -11,5 +13,5 @@ export default Ember.Component.extend({
       result.push({ value: key, name: hash[key] });
     }
     return result;
-  }.property("col.enum")
+  }
 });
