@@ -7,19 +7,58 @@
 
 pl_PL:
   js:
+    errors:
+      explorer:
+        no_semicolons: "Usuń średniki z zapytania."
+        dirty: "Musisz zapisać zapytanie zanim je wykonasz."
     explorer:
+      admins_only: "Eksplorator danych jest dostępny wyłącznie dla administratorów."
+      title: "Eksplorator danych"
+      create: "Stwórz nowy"
+      create_placeholder: "Nazwa zapytania…"
+      description_placeholder: "Wprowadź opis zapytania"
       import:
         label: "Import"
+        modal: "Importuj zapytanie"
       schema:
+        title: "Schemat bazy danych"
         filter: "Wyszukiwanie..."
+        sensitive: "Zawartość tej kolumny może zawierać szczególnie wrażliwe lub prywatne dane. Prosimy o zachowanie ostrożności przy używaniu tych danych."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Typy</a>"
       types:
         bool:
           'yes': "Tak"
           'no': "Nie"
+          null_: "Null"
       export: "Eksport"
       save: "Zapisz zmiany"
+      saverun: "Zapisz zmiany i wykonaj"
+      run: "Wykonaj"
+      undo: "Odrzuć zmiany"
       edit: "Edytuj"
       delete: "Usuń"
+      recover: "Przywróć zapytanie"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Zapytanie ma niezapisane zmiany, które utracisz, jeśli przejdziesz w inne miejsce."
+      run_time: "Zapytanie wykonane w {{value}} ms."
+      result_count:
+        one: "%{count}wynik."
+        few: "%{count}wyniki."
+        many: "%{count}wyników."
+        other: "%{count}wyników."
+      max_result_count:
+        one: "Pokazywanie %{count} pierwszego wyniku."
+        few: "Pokazywanie %{count} pierwsze wyniki."
+        many: "Pokazywanie %{count} pierwszych wyników."
+        other: "Pokazywanie %{count} pierwszych wyników."
+      query_name: "Zapytanie"
       query_description: "Opis"
+      query_time: "Ostatnio wykonano"
+      query_user: "Stworzone przez"
+      column: "Kolumna {{number}}"
+      explain_label: "Dołączyć plan zapytania?"
+      save_params: "Ustaw domyślne"
       reset_params: "Przywróć"
       search_placeholder: "Wyszukiwanie..."
+      no_search_results: "Nie znaleziono żadnych wyników."
