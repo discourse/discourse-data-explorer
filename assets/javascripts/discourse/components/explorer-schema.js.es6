@@ -1,3 +1,7 @@
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 import debounce from "discourse/lib/debounce";
 
 export default Ember.Component.extend({
@@ -7,15 +11,14 @@ export default Ember.Component.extend({
     }
   },
 
-  transformedSchema: function() {
-    const schema = this.get("schema");
-
+  @computed("schema")
+  transformedSchema(schema) {
     for (let key in schema) {
       if (!schema.hasOwnProperty(key)) {
         continue;
       }
 
-      schema[key].forEach(function(col) {
+      schema[key].forEach(col => {
         const notes_components = [];
         if (col.primary) {
           notes_components.push("primary key");
@@ -46,17 +49,18 @@ export default Ember.Component.extend({
       });
     }
     return schema;
-  }.property("schema"),
+  },
 
-  rfilter: function() {
-    if (!Ember.isBlank(this.get("filter"))) {
-      return new RegExp(this.get("filter"));
+  @computed("filter")
+  rfilter(filter) {
+    if (!Ember.isBlank(filter)) {
+      return new RegExp(filter);
     }
-  }.property("filter"),
+  },
 
-  filterTables: function(schema) {
+  filterTables(schema) {
     let tables = [];
-    const filter = this.get("rfilter"),
+    const filter = this.rfilter,
       haveFilter = !!filter;
 
     for (let key in schema) {
@@ -89,7 +93,7 @@ export default Ember.Component.extend({
       } else {
         // filter the columns
         let filterCols = [];
-        schema[key].forEach(function(col) {
+        schema[key].forEach(col => {
           if (filter.source === col.column_name) {
             filterCols.unshift(col);
           } else if (filter.test(col.column_name)) {
@@ -108,20 +112,20 @@ export default Ember.Component.extend({
     return tables;
   },
 
+  @observes("filter")
   triggerFilter: debounce(function() {
-    this.set(
-      "filteredTables",
-      this.filterTables(this.get("transformedSchema"))
-    );
+    this.set("filteredTables", this.filterTables(this.transformedSchema));
     this.set("loading", false);
-  }, 500).observes("filter"),
+  }, 500),
 
-  setLoading: function() {
+  @observes("filter")
+  setLoading() {
     this.set("loading", true);
-  }.observes("filter"),
+  },
 
   init() {
-    this._super();
+    this._super(...arguments);
+
     this.set("loading", true);
     this.triggerFilter();
   }

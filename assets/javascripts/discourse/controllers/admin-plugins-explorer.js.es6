@@ -2,7 +2,10 @@ import showModal from "discourse/lib/show-modal";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 
 const NoQuery = Query.create({ name: "No queries", fake: true });
 
@@ -28,69 +31,68 @@ export default Ember.Controller.extend({
   sortedQueries: Ember.computed.sort("model", "sortBy"),
 
   @computed("search", "sortBy")
-  filteredContent() {
-    const regexp = new RegExp(this.get("search"), "i");
-    return this.get("sortedQueries").filter(function(result) {
-      return (
-        regexp.test(result.get("name")) ||
-        regexp.test(result.get("description"))
-      );
+  filteredContent(search) {
+    const regexp = new RegExp(search, "i");
+    return this.sortedQueries.filter(result => {
+      return regexp.test(result.name) || regexp.test(result.description);
     });
   },
 
-  createDisabled: function() {
-    return (this.get("newQueryName") || "").trim().length === 0;
-  }.property("newQueryName"),
+  @computed("newQueryName")
+  createDisabled(newQueryName) {
+    return (newQueryName || "").trim().length === 0;
+  },
 
-  selectedItem: function() {
-    const id = parseInt(this.get("selectedQueryId"));
-    const item = this.get("model").find(q => q.get("id") === id);
+  @computed("selectedQueryId")
+  selectedItem(selectedQueryId) {
+    const id = parseInt(selectedQueryId);
+    const item = this.model.find(q => q.id === id);
     !isNaN(id)
       ? this.set("showRecentQueries", false)
       : this.set("showRecentQueries", true);
     if (id < 0) this.set("editDisabled", true);
     return item || NoQuery;
-  }.property("selectedQueryId"),
+  },
 
-  othersDirty: function() {
-    const selected = this.get("selectedItem");
-    return !!this.get("model").find(q => q !== selected && q.get("dirty"));
-  }.property("selectedItem", "selectedItem.dirty"),
+  @computed("selectedItem", "selectedItem.dirty")
+  othersDirty(selectedItem) {
+    return !!this.model.find(q => q !== selectedItem && q.dirty);
+  },
 
-  setEverEditing: function() {
-    if (this.get("editing") && !this.get("everEditing")) {
+  @observes("editing")
+  setEverEditing() {
+    if (this.editing && !this.everEditing) {
       this.set("everEditing", true);
     }
-  }.observes("editing"),
+  },
 
   addCreatedRecord(record) {
-    this.get("model").pushObject(record);
+    this.model.pushObject(record);
     this.set("selectedQueryId", Ember.get(record, "id"));
-    this.get("selectedItem").set("dirty", false);
-    this.set("showResults", false);
-    this.set("results", null);
-    this.set("editing", true);
+    this.selectedItem.set("dirty", false);
+    this.setProperties({
+      showResults: false,
+      results: null,
+      editing: true
+    });
   },
 
   save() {
-    const self = this;
     this.set("loading", true);
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
-    return this.get("selectedItem")
+    return this.selectedItem
       .save()
-      .then(function() {
-        const query = self.get("selectedItem");
+      .then(() => {
+        const query = this.selectedItem;
         query.markNotDirty();
-        self.set("editing", false);
+        this.set("editing", false);
       })
-      .catch(function(x) {
+      .catch(x => {
         popupAjaxError(x);
         throw x;
       })
-      .finally(function() {
-        self.set("loading", false);
-      });
+      .finally(() => this.set("loading", false));
   },
 
   actions: {
@@ -119,8 +121,7 @@ export default Ember.Controller.extend({
 
     scrollTop() {
       window.scrollTo(0, 0);
-      this.set("editing", false);
-      this.set("everEditing", false);
+      this.setProperties({ editing: false, everEditing: false });
     },
 
     goHome() {
@@ -137,11 +138,11 @@ export default Ember.Controller.extend({
     },
 
     resetParams() {
-      this.get("selectedItem").resetParams();
+      this.selectedItem.resetParams();
     },
 
     saveDefaults() {
-      this.get("selectedItem").saveDefaults();
+      this.selectedItem.saveDefaults();
     },
 
     save() {
@@ -161,10 +162,12 @@ export default Ember.Controller.extend({
     },
 
     create() {
-      const name = this.get("newQueryName").trim();
-      this.set("loading", true);
-      this.set("showCreate", false);
-      this.set("showRecentQueries", false);
+      const name = this.newQueryName.trim();
+      this.setProperties({
+        loading: true,
+        showCreate: false,
+        showRecentQueries: false
+      });
       this.store
         .createRecord("query", { name })
         .save()
@@ -174,65 +177,50 @@ export default Ember.Controller.extend({
     },
 
     discard() {
-      const self = this;
       this.set("loading", true);
       this.store
         .find("query", this.get("selectedItem.id"))
-        .then(function(result) {
-          const query = self.get("selectedItem");
+        .then(result => {
+          const query = this.get("selectedItem");
           query.setProperties(result.getProperties(Query.updatePropertyNames));
           query.markNotDirty();
-          self.set("editing", false);
+          this.set("editing", false);
         })
         .catch(popupAjaxError)
-        .finally(function() {
-          self.set("loading", false);
-        });
+        .finally(() => this.set("loading", false));
     },
 
     destroy() {
-      const self = this;
-      const query = this.get("selectedItem");
-      this.set("loading", true);
-      this.set("showResults", false);
+      const query = this.selectedItem;
+      this.setProperties({ loading: true, showResults: false });
       this.store
         .destroyRecord("query", query)
-        .then(function() {
-          query.set("destroyed", true);
-        })
+        .then(() => query.set("destroyed", true))
         .catch(popupAjaxError)
-        .finally(function() {
-          self.set("loading", false);
-        });
+        .finally(() => this.set("loading", false));
     },
 
     recover() {
-      const self = this;
-      const query = this.get("selectedItem");
-      this.set("loading", true);
-      this.set("showResults", true);
+      const query = this.selectedItem;
+      this.setProperties({ loading: true, showResults: true });
       query
         .save()
-        .then(function() {
-          query.set("destroyed", false);
-        })
+        .then(() => query.set("destroyed", false))
         .catch(popupAjaxError)
-        .finally(function() {
-          self.set("loading", false);
+        .finally(() => {
+          this.set("loading", false);
         });
     },
 
     run() {
-      const self = this;
       if (this.get("selectedItem.dirty")) {
         return;
       }
-      if (this.get("runDisabled")) {
+      if (this.runDisabled) {
         return;
       }
 
-      this.set("loading", true);
-      this.set("showResults", false);
+      this.setProperties({ loading: true, showResults: false });
       ajax(
         "/admin/plugins/explorer/queries/" +
           this.get("selectedItem.id") +
@@ -241,30 +229,28 @@ export default Ember.Controller.extend({
           type: "POST",
           data: {
             params: JSON.stringify(this.get("selectedItem.params")),
-            explain: this.get("explain")
+            explain: this.explain
           }
         }
       )
-        .then(function(result) {
-          self.set("results", result);
+        .then(result => {
+          this.set("results", result);
           if (!result.success) {
-            self.set("showResults", false);
+            this.set("showResults", false);
             return;
           }
 
-          self.set("showResults", true);
+          this.set("showResults", true);
         })
-        .catch(function(err) {
-          self.set("showResults", false);
+        .catch(err => {
+          this.set("showResults", false);
           if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
-            self.set("results", err.jqXHR.responseJSON);
+            this.set("results", err.jqXHR.responseJSON);
           } else {
             popupAjaxError(err);
           }
         })
-        .finally(function() {
-          self.set("loading", false);
-        });
+        .finally(() => this.set("loading", false));
     }
   }
 });

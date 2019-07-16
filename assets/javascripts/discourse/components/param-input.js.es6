@@ -1,4 +1,6 @@
+import { default as computed } from "ember-addons/ember-computed-decorators";
 // import Category from 'discourse/models/category';
+
 const Category = Discourse.Category;
 
 const layoutMap = {
@@ -43,31 +45,29 @@ export default Ember.Component.extend({
 
   value: Ember.computed("params", "info.identifier", {
     get() {
-      return this.get("params")[this.get("info.identifier")];
+      return this.params[this.get("info.identifier")];
     },
     set(key, value) {
-      this.get("params")[this.get("info.identifier")] = value.toString();
+      this.params[this.get("info.identifier")] = value.toString();
       return value;
     }
   }),
 
   valueBool: Ember.computed("params", "info.identifier", {
     get() {
-      return this.get("params")[this.get("info.identifier")] !== "false";
+      return this.params[this.get("info.identifier")] !== "false";
     },
     set(key, value) {
       value = !!value;
-      this.get("params")[this.get("info.identifier")] = value.toString();
+      this.params[this.get("info.identifier")] = value.toString();
       return value;
     }
   }),
 
-  valid: function() {
-    const type = this.get("info.type"),
-      value = this.get("value");
-
-    if (Ember.isEmpty(this.get("value"))) {
-      return this.get("info.nullable");
+  @computed("value", "info.type", "info.nullable")
+  valid(value, type, nullable) {
+    if (Ember.isEmpty(value)) {
+      return nullable;
     }
 
     const intVal = parseInt(value, 10);
@@ -88,9 +88,7 @@ export default Ember.Component.extend({
           /^(-?)NaN$/i.test(value)
         );
       case "int_list":
-        return value.split(",").every(function(i) {
-          return /^(-?\d+|null)$/.test(i.trim());
-        });
+        return value.split(",").every(i => /^(-?\d+|null)$/.test(i.trim()));
       case "post_id":
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case "category_id":
@@ -99,9 +97,7 @@ export default Ember.Component.extend({
         }
 
         if (isPositiveInt) {
-          return !!this.site.categories.find(function(c) {
-            return c.get("id") === intVal;
-          });
+          return !!this.site.categories.find(c => c.id === intVal);
         } else if (/\//.test(value)) {
           const match = /(.*)\/(.*)/.exec(value);
           if (!match) return false;
@@ -116,30 +112,30 @@ export default Ember.Component.extend({
       case "group_id":
         const groups = this.site.get("groups");
         if (isPositiveInt) {
-          return !!groups.find(function(g) {
-            return g.id === intVal;
-          });
+          return !!groups.find(g => g.id === intVal);
         } else {
-          return !!groups.find(function(g) {
-            return g.name === value;
-          });
+          return !!groups.find(g => g.name === value);
         }
     }
     return true;
-  }.property("value", "info.type", "info.nullable"),
+  },
 
-  layoutType: function() {
-    const type = this.get("info.type");
-    if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
+  @computed("info.type")
+  layoutType(type) {
+    if (
+      (type === "time" || type === "date") &&
+      !allowsInputTypeTime()
+    ) {
       return "string";
     }
     if (layoutMap[type]) {
       return layoutMap[type];
     }
     return "generic";
-  }.property("info.type"),
+  },
 
-  layoutName: function() {
-    return "admin/components/q-params/" + this.get("layoutType");
-  }.property("layoutType")
+  @computed("layoutType")
+  layoutName(layoutType) {
+    return `admin/components/q-params/${layoutType}`;
+  }
 });

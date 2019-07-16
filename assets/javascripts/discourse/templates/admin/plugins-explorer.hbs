@@ -43,7 +43,7 @@
                 {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
                 <h1>{{selectedItem.name}}
                   {{#unless editDisabled}}
-                    <a {{action "editName" class="edit-query-name"}}>{{d-icon "pencil"}}</a>
+                    <a {{action "editName" class="edit-query-name"}}>{{d-icon "pencil-alt"}}</a>
                   {{/unless}}
                 </h1>
               </div>
@@ -86,7 +86,7 @@
                 {{d-button action=(action "save") label="explorer.save" disabled=saveDisable}}
               {{else}}
                 {{#unless editDisabled}}
-                  {{d-button action=(action "editName") label="explorer.edit" icon="pencil"}}
+                  {{d-button action=(action "editName") label="explorer.edit" icon="pencil-alt"}}
                 {{/unless}}
               {{/if}}
               {{d-button action=(action "download") label="explorer.export" disabled=runDisabled icon="download"}}
@@ -99,7 +99,7 @@
                   {{d-button action=(action "discard") icon="undo" label="explorer.undo" disabled=saveDisabled}}
                 {{/if}}
                 {{#unless editDisabled}}
-                  {{d-button action=(action "destroy") class="btn-danger" icon="trash" label="explorer.delete"}}
+                  {{d-button action=(action "destroy") class="btn-danger" icon="trash-alt" label="explorer.delete"}}
                 {{/unless}}
               {{/if}}
             </div>
@@ -112,10 +112,6 @@
             <div class="query-params">
               {{#each selectedItem.param_info as |pinfo|}}
                 {{param-input params=selectedItem.params info=pinfo}}
-              {{! <div class="param">
-                {{param-field params=selectedItem.params pname=pinfo.identifier type=pinfo.type}
-                <span class="param-name">{{pinfo.identifier}</span>
-              </div> }}
               {{/each}}
             </div>
           {{/if}}

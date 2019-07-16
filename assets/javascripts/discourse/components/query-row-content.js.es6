@@ -52,17 +52,16 @@ const QueryRowContentComponent = Ember.Component.extend(
     tagName: "tr",
 
     buildBuffer(buffer) {
-      const self = this;
-      const row = this.get("row");
-      const parentView = self.get("parentView");
-      const fallback = this.get("fallbackTemplate");
+      const row = this.row;
+      const parentView = this.parentView;
+      const fallback = this.fallbackTemplate;
       const helpers = {
         "icon-or-image": icon_or_image_replacement,
         "category-link": category_badge_replacement,
         reltime: bound_date_replacement
       };
 
-      const parts = this.get("columnTemplates").map(function(t, idx) {
+      const parts = this.columnTemplates.map((t, idx) => {
         const value = row[idx],
           id = parseInt(value);
 
@@ -108,7 +107,7 @@ const QueryRowContentComponent = Ember.Component.extend(
         }
       });
 
-      buffer.push("<td>" + parts.join("</td><td>") + "</td>");
+      buffer.push(`<td>${parts.join("</td><td>")}</td>`);
     }
   })
 );
