@@ -122,10 +122,7 @@ export default Ember.Component.extend({
 
   @computed("info.type")
   layoutType(type) {
-    if (
-      (type === "time" || type === "date") &&
-      !allowsInputTypeTime()
-    ) {
+    if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
       return "string";
     }
     if (layoutMap[type]) {
