@@ -1,5 +1,5 @@
 <div class="schema-table-name">
-  {{#if table.open}}
+  {{#if open}}
     {{d-icon "caret-down"}}
   {{else}}
     {{d-icon "caret-right"}}
@@ -7,7 +7,7 @@
   {{table.name}}
 </div>
 <div class="schema-table-cols">
-  {{#if table.open}}
+  {{#if open}}
     <dl>
     {{#each table.columns as |col|}}
       <div>

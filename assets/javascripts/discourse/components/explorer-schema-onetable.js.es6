@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     $(this.element)
       .find(".schema-table-name")
       .click(e => {
-        this.set("open", !this.open);
+        this.set("table.open", !this.table.open);
         e.preventDefault();
       });
   },
