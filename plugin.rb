@@ -595,12 +595,13 @@ SQL
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :last_run_at
+    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at
 
     def initialize
       @name = 'Unnamed Query'
       @description = ''
       @sql = 'SELECT 1'
+      @group_ids = []
     end
 
     def slug
@@ -640,6 +641,7 @@ SQL
       [:name, :description, :sql, :created_by, :created_at, :last_run_at].each do |sym|
         query.send("#{sym}=", h[sym].strip) if h[sym]
       end
+      query.group_ids = h[:group_ids]
       query.id = h[:id].to_i if h[:id]
       query
     end
@@ -652,6 +654,7 @@ SQL
         sql: @sql,
         created_by: @created_by,
         created_at: @created_at,
+        group_ids: @group_ids,
         last_run_at: @last_run_at
       }
     end
@@ -972,6 +975,7 @@ SQL
         query.sql = params.second["sql"]
         query.name = params.second["name"]
         query.description = params.second["description"]
+        query.group_ids = params.second["group_ids"]
         query.created_by = Discourse::SYSTEM_USER_ID.to_s
 
         # don't render this query if query with the same id already exists in pstore
@@ -1022,7 +1026,7 @@ SQL
         end
       end
 
-      [:name, :sql, :description, :created_by, :created_at, :last_run_at].each do |sym|
+      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
 
@@ -1046,6 +1050,10 @@ SQL
       if stale?(public: true, etag: schema_version, template: false)
         render json: DataExplorer.schema
       end
+    end
+
+    def groups
+      render json: Group.select(:id, :name)
     end
 
     skip_before_action :check_xhr, only: [:run]
@@ -1157,7 +1165,7 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :last_run_at
+    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
 
     def param_info
       object.params.map(&:to_hash) rescue nil
@@ -1171,6 +1179,7 @@ SQL
   DataExplorer::Engine.routes.draw do
     root to: "query#index"
     get 'schema' => "query#schema"
+    get 'groups' => "query#groups"
     get 'queries' => "query#index"
     post 'queries' => "query#create"
     get 'queries/:id' => "query#show"

@@ -51,7 +51,24 @@ export default Ember.Controller.extend({
       ? this.set("showRecentQueries", false)
       : this.set("showRecentQueries", true);
     if (id < 0) this.set("editDisabled", true);
+
     return item || NoQuery;
+  },
+
+  @computed("selectedItem", "editing")
+  selectedGroupNames(selectedItem) {
+    const group_ids = this.selectedItem.groups_ids || []
+    return group_ids.map(id => {
+      let group = this.groupOptions.find(groupOption => groupOption.id == id)
+      return group.name
+    }).join(', ')
+  },
+
+  @computed("groups")
+  groupOptions(groups) {
+    return groups.query.map(g => {
+      return {id: g.id.toString(), name: g.name}
+    });
   },
 
   @computed("selectedItem", "selectedItem.dirty")
@@ -81,6 +98,7 @@ export default Ember.Controller.extend({
     this.set("loading", true);
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
+
     return this.selectedItem
       .save()
       .then(() => {

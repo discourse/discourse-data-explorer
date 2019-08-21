@@ -85,6 +85,7 @@ Query.reopenClass({
     "sql",
     "created_by",
     "created_at",
+    "group_ids",
     "last_run_at"
   ]
 });

@@ -185,6 +185,16 @@
   &:not(.editing) .desc {
     margin: 10px 0;
   }
+  .groups {
+    margin-bottom: 10px;
+    .label {
+      margin-right: 10px;
+      color: $primary-high;
+    }
+    .name {
+      display: inline;
+    }
+  }
 }
 
 .query-run {
