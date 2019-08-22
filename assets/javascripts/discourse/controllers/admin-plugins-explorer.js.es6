@@ -57,11 +57,13 @@ export default Ember.Controller.extend({
 
   @computed("selectedItem", "editing")
   selectedGroupNames(selectedItem) {
-    const group_ids = this.selectedItem.groups_ids || []
-    return group_ids.map(id => {
-      let group = this.groupOptions.find(groupOption => groupOption.id == id)
-      return group.name
-    }).join(', ')
+    const groupIds = this.selectedItem.group_ids || []
+    const groupNames = groupIds.map(id => {
+      return this.groupOptions
+        .find(groupOption => groupOption.id == id)
+          .name
+    })
+    return groupNames.join(', ')
   },
 
   @computed("groups")
@@ -98,6 +100,9 @@ export default Ember.Controller.extend({
     this.set("loading", true);
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
+    // params not comin in
+    if (this.get("selectedItem.group_ids").length < 1)
+      this.set("selectedItem.group_ids", [-1]) // If this is unset, you cannot remove the last group
 
     return this.selectedItem
       .save()
@@ -228,6 +233,10 @@ export default Ember.Controller.extend({
         .finally(() => {
           this.set("loading", false);
         });
+    },
+
+    cancel() {
+
     },
 
     run() {

@@ -23,7 +23,7 @@ const Query = RestModel.extend({
     this.resetParams();
   },
 
-  @observes("name", "description", "sql")
+  @observes("name", "description", "sql", "group_ids")
   markDirty() {
     this.set("dirty", true);
   },

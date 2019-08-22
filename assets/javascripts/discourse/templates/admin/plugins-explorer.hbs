@@ -39,12 +39,6 @@
                 {{textarea value=selectedItem.description placeholder=(i18n "explorer.description_placeholder")}}
               </div>
 
-              <div class="groups">
-                <span class="label">Allow groups to acess this query</span>
-                <span>
-                  {{ multi-select values=selectedItem.group_ids content=groupOptions }}
-                </span>
-              </div>
             {{else}}
               <div class="name">
                 {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
@@ -57,12 +51,22 @@
               <div class="desc">
                 {{selectedItem.description}}
               </div>
-              <div class="groups">
-                Groups with access:
-                {{ selectedGroupNames }}
-              </div>
             {{/if}}
 
+            <div class="groups">
+              <span class="label">Allow groups to acess this query</span>
+              <span>
+                {{ multi-select values=selectedItem.group_ids content=groupOptions }}
+              </span>
+              {{#if runDisabled }}
+                {{#unless editing}}
+                <span class='setting-controls'>
+                  {{d-button class="ok" action=(action "save") icon="check"}}
+                  {{d-button class="cancel" action=(action "discard") icon="times"}}
+                </span>
+              {{/unless}}
+              {{/if}}
+            </div>
             {{! the SQL editor will show the first time you }}
             {{#if everEditing}}
               <div class="query-editor {{if hideSchema "no-schema"}}">

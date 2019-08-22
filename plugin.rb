@@ -675,7 +675,9 @@ SQL
 
     def save
       check_params!
-      @id = self.class.alloc_id unless @id && @id > 0
+      return save_default_query if @id && @id < 0
+
+      @id = @id ||self.class.alloc_id
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
 
@@ -685,6 +687,7 @@ SQL
       query = Queries.default[id.to_s]
       @id = query["id"]
       @sql = query["sql"]
+      @group_ids = @group_ids || []
       @name = query["name"]
       @description = query["description"]
 
@@ -975,7 +978,7 @@ SQL
         query.sql = params.second["sql"]
         query.name = params.second["name"]
         query.description = params.second["description"]
-        query.group_ids = params.second["group_ids"]
+        query.group_ids = params.second["group_ids"] || []
         query.created_by = Discourse::SYSTEM_USER_ID.to_s
 
         # don't render this query if query with the same id already exists in pstore
