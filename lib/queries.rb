@@ -14,77 +14,92 @@ class Queries
         "most-common-likers": {
             "id": -1,
             "name": "Most Common Likers",
-            "description": "Which users like particular other users the most?"
+            "description": "Which users like particular other users the most?",
+            "group_ids": []
         },
         "most-messages": {
             "id": -2,
             "name": "Who has been sending the most messages in the last week?",
-            "description": "tracking down suspicious PM activity"
+            "description": "tracking down suspicious PM activity",
+            "group_ids": []
         },
         "edited-post-spam": {
             "id": -3,
             "name": "Last 500 posts that were edited by TL0/TL1 users",
-            "description": "fighting human-driven copy-paste spam"
+            "description": "fighting human-driven copy-paste spam",
+            "group_ids": []
         },
         "new-topics": {
             "id": -4,
             "name": "New Topics by Category",
-            "description": "Lists all new topics ordered by category and creation_date. The query accepts a ‘months_ago’ parameter. It defaults to 0 to give you the stats for the current month."
+            "description": "Lists all new topics ordered by category and creation_date. The query accepts a ‘months_ago’ parameter. It defaults to 0 to give you the stats for the current month.",
+            "group_ids": []
         },
         "active-topics": {
             "id": -5,
             "name": "Top 100 Active Topics",
-            "description": "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month."
+            "description": "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+            "group_ids": []
         },
         "top-likers": {
             "id": -6,
             "name": "Top 100 Likers",
-            "description": "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month."
+            "description": "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+            "group_ids": []
         },
         "quality-users": {
             "id": -7,
             "name": "Top 50 Quality Users",
-            "description": "based on post score calculated using reply count, likes, incoming links, bookmarks, time spent and read count."
+            "description": "based on post score calculated using reply count, likes, incoming links, bookmarks, time spent and read count.",
+            "group_ids": []
         },
         "user-participation": {
             "id": -8,
             "name": "User Participation Statistics",
-            "description": "Detailed statistics for the most active users."
+            "description": "Detailed statistics for the most active users.",
+            "group_ids": []
         },
         "largest-uploads": {
             "id": -9,
             "name": "Top 50 Largest Uploads",
-            "description": "sorted by file size."
+            "description": "sorted by file size.",
+            "group_ids": []
         },
         "inactive-users": {
             "id": -10,
             "name": "Inactive Users with no posts",
-            "description": "analyze pre-Discourse signups."
+            "description": "analyze pre-Discourse signups.",
+            "group_ids": []
         },
         "active-lurkers": {
             "id": -11,
             "name": "Most Active Lurkers",
-            "description": "active users without posts and excessive read times, it accepts a post_read_count parameter that sets the threshold for posts read."
+            "description": "active users without posts and excessive read times, it accepts a post_read_count parameter that sets the threshold for posts read.",
+            "group_ids": []
         },
         "topic-user-notification-level": {
             "id": -12,
             "name": "List of topics a user is watching/tracking/muted",
-            "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics."
+            "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics.",
+            "group_ids": []
         },
         "assigned-topics-report": {
             "id": -13,
             "name": "List of assigned topics by user",
-            "description": "This report requires the assign plugin, it will find all assigned topics"
+            "description": "This report requires the assign plugin, it will find all assigned topics",
+            "group_ids": []
         },
         "group-members-reply-count": {
             "id": -14,
             "name": "Group Members Reply Count",
-            "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter."
+            "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter.",
+            "group_ids": []
         },
         "total-assigned-topics-report": {
             "id": -15,
             "name": "Total topics assigned per user",
-            "description": "Count of assigned topis per user linking to assign list"
+            "description": "Count of assigned topis per user linking to assign list",
+            "group_ids": []
         }
     }.with_indifferent_access
 
