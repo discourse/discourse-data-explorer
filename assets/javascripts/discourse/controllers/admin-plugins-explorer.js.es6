@@ -101,7 +101,7 @@ export default Ember.Controller.extend({
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
     // params not comin in
-    if (this.get("selectedItem.group_ids").length < 1)
+    if (!this.get("selectedItem.group_ids") || this.get("selectedItem.group_ids").length < 1)
       this.set("selectedItem.group_ids", [-1]) // If this is unset, you cannot remove the last group
 
     return this.selectedItem

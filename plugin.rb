@@ -1167,6 +1167,14 @@ SQL
     end
   end
 
+  add_to_class(:groups_controller, :show_reports_tab) do
+    DataExplorer::Query.all.map(&:group_ids).each do |group_ids|
+      render json: true and return if group_ids.include?(params["group_id"])
+    end
+
+    render json: false
+  end
+
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
     attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
 
@@ -1192,6 +1200,9 @@ SQL
   end
 
   Discourse::Application.routes.append do
+    get '/explorer/show_reports_tab' => 'groups#show_reports_tab'
+    get '/g/:id/reports' => 'groups#show'
+
     mount ::DataExplorer::Engine, at: '/admin/plugins/explorer', constraints: AdminConstraint.new
   end
 end
