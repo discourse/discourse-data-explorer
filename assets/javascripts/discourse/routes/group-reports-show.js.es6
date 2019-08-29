@@ -4,19 +4,13 @@ import { ajax } from "discourse/lib/ajax";
 export default Discourse.Route.extend({
   controllerName: "group-reports-show",
 
-  model() {
+  model(params) {
     // console.log(this.controller.target.parent.params.name)
-    const query = this.modelFor('query')
-    return { model: query }
-    // return p1
-      // .then(queries => {
-        // return {
-          // model: query,
-        // }
-      // })
-    // .catch(() => {
-      // return { model: null };
-    // });
+    const p1 = this.store.find("query", parseInt(params.query_id));
+    return p1
+      .then(query => {
+        return { model: query }
+      })
   },
 
   setupController(controller, model) {
