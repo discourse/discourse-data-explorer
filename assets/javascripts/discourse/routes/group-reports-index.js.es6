@@ -4,20 +4,19 @@ export default Discourse.Route.extend({
   controllerName: "group-reports",
 
   model() {
+    // console.log(this.controller.target.parent.params.name)
+    const groupId = this.modelFor('group').id
     const p1 = this.store.findAll("query");
-    const p2 = ajax("/admin/plugins/explorer/schema.json", { cache: true });
     return p1
-      .then(model => {
-        model.forEach(query => query.markNotDirty());
-
-        return p2.then(schema => {
-          return { model, schema, groups };
-        })
+      .then(queries => {
+        return {
+          model: queries,
+          groupId: groupId
+        }
       })
-      .catch(() => {
-        p2.catch(() => {});
-          return { model: null, schema: null, disallow: true };
-      });
+    .catch(() => {
+      return { model: null };
+    });
   },
 
   setupController(controller, model) {

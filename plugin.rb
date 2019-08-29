@@ -1202,6 +1202,7 @@ SQL
   Discourse::Application.routes.append do
     get '/explorer/show_reports_tab' => 'groups#show_reports_tab'
     get '/g/:id/reports' => 'groups#show'
+    get '/g/:id/reports/:report_id' => 'groups#show'
 
     mount ::DataExplorer::Engine, at: '/admin/plugins/explorer', constraints: AdminConstraint.new
   end
