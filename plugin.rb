@@ -978,7 +978,6 @@ SQL
         query.sql = params.second["sql"]
         query.name = params.second["name"]
         query.description = params.second["description"]
-        query.group_ids = params.second["group_ids"] || []
         query.created_by = Discourse::SYSTEM_USER_ID.to_s
 
         # don't render this query if query with the same id already exists in pstore

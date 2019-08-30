@@ -6,7 +6,7 @@ export default Discourse.Route.extend({
   model() {
     const p1 = this.store.findAll("query");
     const p2 = ajax("/admin/plugins/explorer/schema.json", { cache: true });
-    const p3 = ajax("/admin/plugins/explorer/groups.json"); // Should cache be true?
+    const p3 = ajax("/admin/plugins/explorer/groups.json");
     return p1
       .then(model => {
         model.forEach(query => query.markNotDirty());
@@ -14,13 +14,13 @@ export default Discourse.Route.extend({
         return p2.then(schema => {
           return p3.then(groups => {
             return { model, schema, groups };
-           })
+          });
         });
       })
       .catch(() => {
         p2.catch(() => {});
-          p3.catch(() => {});
-          return { model: null, schema: null, disallow: true, groups: null };
+        p3.catch(() => {});
+        return { model: null, schema: null, disallow: true, groups: null };
       });
   },
 

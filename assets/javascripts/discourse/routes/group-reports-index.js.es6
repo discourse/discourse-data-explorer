@@ -1,22 +1,22 @@
 import { ajax } from "discourse/lib/ajax";
 
 export default Discourse.Route.extend({
-  controllerName: "group-reports",
+  controllerName: "group-reports-index",
 
   model() {
     // console.log(this.controller.target.parent.params.name)
-    const groupId = this.modelFor('group').id
+    const groupId = this.modelFor("group").id;
     const p1 = this.store.findAll("query");
     return p1
       .then(queries => {
         return {
           model: queries,
           groupId: groupId
-        }
+        };
       })
-    .catch(() => {
-      return { model: null };
-    });
+      .catch(() => {
+        return { model: null };
+      });
   },
 
   setupController(controller, model) {

@@ -1,4 +1,3 @@
-
 import { ajax } from "discourse/lib/ajax";
 
 export default Discourse.Route.extend({
@@ -7,10 +6,9 @@ export default Discourse.Route.extend({
   model(params) {
     // console.log(this.controller.target.parent.params.name)
     const p1 = this.store.find("query", parseInt(params.query_id));
-    return p1
-      .then(query => {
-        return { model: query }
-      })
+    return p1.then(query => {
+      return { model: query };
+    });
   },
 
   setupController(controller, model) {

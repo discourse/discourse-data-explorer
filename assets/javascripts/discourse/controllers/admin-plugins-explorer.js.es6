@@ -57,19 +57,17 @@ export default Ember.Controller.extend({
 
   @computed("selectedItem", "editing")
   selectedGroupNames(selectedItem) {
-    const groupIds = this.selectedItem.group_ids || []
+    const groupIds = this.selectedItem.group_ids || [];
     const groupNames = groupIds.map(id => {
-      return this.groupOptions
-        .find(groupOption => groupOption.id == id)
-          .name
-    })
-    return groupNames.join(', ')
+      return this.groupOptions.find(groupOption => groupOption.id == id).name;
+    });
+    return groupNames.join(", ");
   },
 
   @computed("groups")
   groupOptions(groups) {
     return groups.query.map(g => {
-      return {id: g.id.toString(), name: g.name}
+      return { id: g.id.toString(), name: g.name };
     });
   },
 
@@ -100,9 +98,14 @@ export default Ember.Controller.extend({
     this.set("loading", true);
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
-    // params not comin in
-    if (!this.get("selectedItem.group_ids") || this.get("selectedItem.group_ids").length < 1)
-      this.set("selectedItem.group_ids", [-1]) // If this is unset, you cannot remove the last group
+
+    // group_ids must not be an empty array, as the param will not be sent the server.
+    // By setting group_ids to [-1], the user can remove the all groups
+    if (
+      !this.get("selectedItem.group_ids") ||
+      this.get("selectedItem.group_ids").length < 1
+    )
+      this.set("selectedItem.group_ids", [-1]);
 
     return this.selectedItem
       .save()
@@ -206,6 +209,8 @@ export default Ember.Controller.extend({
         .then(result => {
           const query = this.get("selectedItem");
           query.setProperties(result.getProperties(Query.updatePropertyNames));
+          if (!query.group_ids || !Array.isArray(query.group_ids))
+            query.set("group_ids", []);
           query.markNotDirty();
           this.set("editing", false);
         })
@@ -235,9 +240,7 @@ export default Ember.Controller.extend({
         });
     },
 
-    cancel() {
-
-    },
+    cancel() {},
 
     run() {
       if (this.get("selectedItem.dirty")) {
