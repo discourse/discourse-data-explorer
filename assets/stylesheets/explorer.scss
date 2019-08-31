@@ -1,3 +1,39 @@
+table.group-reports {
+  width: 100%;
+  table-layout: fixed;
+
+  th:first-child {
+    width: 30%;
+  }
+  th:nth-child(2) {
+    width: 60%;
+  }
+  th:last-child {
+    width: 20%;
+    text-align: right;
+  }
+  tbody {
+    border-top: 3px solid #e3ebf2;
+    
+    tr {
+      border-bottom: 1px solid #e3ebf2;
+
+      td {
+        color: #7499bd;
+        padding: 0.8em 0.5em;
+      }
+
+      td:first-child {
+        font-size: 16px;
+      }
+
+      td:last-child {
+        text-align: right;
+      }
+    }
+  }
+}
+
 .https-warning {
   color: $danger;
 }
@@ -252,6 +288,16 @@
 .query-params,
 .https-warning {
   margin: 10px 0;
+}
+
+.query-results {
+  table {
+    width: 100%;
+    margin-top: 10px;
+    td {
+      padding: 8px;
+    }
+  }
 }
 
 .query-list {

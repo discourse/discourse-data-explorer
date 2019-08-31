@@ -7,6 +7,6 @@ import {
 
 export default Ember.Controller.extend({
   queries: Ember.computed.filter('model', function(query) {
-    return query.group_ids.includes(this.groupId.toString())
+    return query.group_ids.includes(this.group.id.toString())
   }),
 })
