@@ -51,7 +51,6 @@ export default Ember.Controller.extend({
       ? this.set("showRecentQueries", false)
       : this.set("showRecentQueries", true);
     if (id < 0) this.set("editDisabled", true);
-
     return item || NoQuery;
   },
 

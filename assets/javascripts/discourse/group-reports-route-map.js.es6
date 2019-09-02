@@ -1,9 +1,9 @@
 export default {
-	resource: "group",
+  resource: "group", 
 
-	map() {
-		this.route("reports", function() {
-			this.route("show", { path: "/:query_id" });
-		});
-	}
+  map() {
+    this.route("reports", function() {
+      this.route("show", { path: "/:query_id" });
+    });
+  }
 };
