@@ -16,7 +16,7 @@
   {{#if results}}
     <div class="query-results">
       {{#if showResults}}
-        {{query-result query=model content=results}}
+        {{query-result query=model content=results group=group}}
       {{else}}
         {{#each results.errors as |err|}}
           <pre class="query-error"><code>{{~err}}</code></pre>
