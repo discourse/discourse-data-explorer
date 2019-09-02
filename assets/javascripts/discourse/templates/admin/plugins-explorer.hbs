@@ -173,6 +173,11 @@
                 {{directory-toggle field="username" labelKey="explorer.query_user" order=order asc=asc}}
               </div>
             </th>
+            <th class='col heading group-names'>
+              <div class='group-names-header'>
+                {{i18n "explorer.query_groups"}}
+              </div>              
+            </th>
             <th class="col heading created-at">
               <div class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
                 {{directory-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc}}
@@ -194,6 +199,11 @@
                     <a href="/users/{{query.username}}/activity">
                       <medium>{{query.username}}</medium>
                     </a>
+                  {{/if}}
+                </td>
+                <td class="query-group-names">
+                  {{#if query.group_names}}
+                    <medium>{{query.group_names}}</medium>
                   {{/if}}
                 </td>
                 <td class="query-created-at">

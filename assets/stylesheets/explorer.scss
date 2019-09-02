@@ -318,7 +318,15 @@ table.group-reports {
 .recent-queries {
   thead {
     .created-by {
-      width: 20%;
+      width: 15%;
+    }
+    .group-names {
+      width: 15%;
+      .group-names-header {
+        position: absolute;
+        bottom: 8px;
+        left: 6px;
+      }
     }
     .created-at {
       width: 15%;
@@ -349,6 +357,9 @@ table.group-reports {
       color: $primary-high;
     }
     .query-created-by {
+      color: $primary-high;
+    }
+    .query-group-names {
       color: $primary-high;
     }
     .query-created-at {

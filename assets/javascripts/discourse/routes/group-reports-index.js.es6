@@ -4,9 +4,8 @@ export default Discourse.Route.extend({
   controllerName: "group-reports-index",
 
   model() {
-    // console.log(this.controller.target.parent.params.name)
     const group = this.modelFor("group");
-    const p1 = this.store.findAll("query");
+    const p1 = ajax(`/g/${group.name}/reports`);
     return p1
       .then(queries => {
         return {
@@ -15,7 +14,7 @@ export default Discourse.Route.extend({
         };
       })
       .catch(() => {
-        return { model: null };
+        this.transitionTo("group.members", group);
       });
   },
   afterModel(model) {

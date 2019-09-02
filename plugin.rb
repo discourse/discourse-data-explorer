@@ -625,6 +625,10 @@ SQL
       result
     end
 
+    def can_be_run_by(group)
+      @group_ids.include?(group.id.to_s)
+    end
+
     # saving/loading functions
     # May want to extract this into a library or something for plugins to use?
     def self.alloc_id
@@ -969,6 +973,15 @@ SQL
       raise Discourse::NotFound unless SiteSetting.data_explorer_enabled?
     end
 
+    def user_included_in_group(group)
+      current_user.admin? || current_user.group_ids.include?(group.id)
+    end
+
+    def user_can_access_query(query)
+      group = Group.find_by(name: params["group_name"])        
+      user_included_in_group(group) && query.can_be_run_by(group)
+    end
+
     def index
       # guardian.ensure_can_use_data_explorer!
       queries = DataExplorer::Query.all
@@ -1000,6 +1013,39 @@ SQL
 
       # guardian.ensure_can_see! query
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+    end
+
+    def group_reports_index
+      respond_to do |format|
+        format.html { render 'groups/show' }
+        format.json do        
+          group = Group.find_by(name: params["group_name"])
+          render status: 404, json: {} and return unless user_included_in_group(group)
+
+          queries = DataExplorer::Query.all
+          queries.select! { |query| query.group_ids.include?(group.id.to_s) }
+          render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
+        end
+      end
+    end
+
+    def group_reports_show
+      respond_to do |format|
+        format.html { render 'groups/show' }
+        format.json do    
+          query = DataExplorer::Query.find(params[:id].to_i)  
+          render status: 404, json: {} and return unless user_can_access_query(query)
+
+          render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+        end
+      end
+    end
+
+    def group_reports_run
+      query = DataExplorer::Query.find(params[:id].to_i)
+      render status: 404, json: {} and return unless user_can_access_query(query)
+
+      run
     end
 
     def create
@@ -1052,10 +1098,6 @@ SQL
       if stale?(public: true, etag: schema_version, template: false)
         render json: DataExplorer.schema
       end
-    end
-
-    def groups
-      render json: Group.select(:id, :name)
     end
 
     skip_before_action :check_xhr, only: [:run]
@@ -1164,15 +1206,7 @@ SQL
         end
       end
     end
-  end
-
-  add_to_class(:groups_controller, :show_reports_tab) do
-    DataExplorer::Query.all.map(&:group_ids).each do |group_ids|
-      render json: true and return if group_ids.include?(params["group_id"])
-    end
-
-    render json: false
-  end
+  end  
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
     attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
@@ -1189,7 +1223,6 @@ SQL
   DataExplorer::Engine.routes.draw do
     root to: "query#index"
     get 'schema' => "query#schema"
-    get 'groups' => "query#groups"
     get 'queries' => "query#index"
     post 'queries' => "query#create"
     get 'queries/:id' => "query#show"
@@ -1199,9 +1232,9 @@ SQL
   end
 
   Discourse::Application.routes.append do
-    get '/explorer/show_reports_tab' => 'groups#show_reports_tab'
-    get '/g/:id/reports' => 'groups#show'
-    get '/g/:id/reports/:report_id' => 'groups#show'
+    get '/g/:group_name/reports' => 'data_explorer/query#group_reports_index'
+    get '/g/:group_name/reports/:id' => 'data_explorer/query#group_reports_show'
+    post '/g/:group_name/reports/:id/run' => 'data_explorer/query#group_reports_run'
 
     mount ::DataExplorer::Engine, at: '/admin/plugins/explorer', constraints: AdminConstraint.new
   end

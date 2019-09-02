@@ -15,18 +15,13 @@ export default Ember.Controller.extend({
   actions: {
     run() {
       this.setProperties({ loading: true, showResults: false });
-      ajax(
-        "/admin/plugins/explorer/queries/" +
-          this.get("model.id") +
-          "/run",
-        {
-          type: "POST",
-          data: {
-            params: JSON.stringify(this.get("model.params")),
-            explain: this.explain
-          }
+      ajax(`/g/${this.get("group.name")}/reports/${this.get("model.id")}/run`, {
+        type: "POST",
+        data: {
+          params: JSON.stringify(this.get("model.params")),
+          explain: this.explain
         }
-      )
+      })
         .then(result => {
           this.set("results", result);
           if (!result.success) {
@@ -46,5 +41,5 @@ export default Ember.Controller.extend({
         })
         .finally(() => this.set("loading", false));
     }
-  },
-})
+  }
+});

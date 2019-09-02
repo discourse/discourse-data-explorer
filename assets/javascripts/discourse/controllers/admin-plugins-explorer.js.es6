@@ -66,7 +66,7 @@ export default Ember.Controller.extend({
 
   @computed("groups")
   groupOptions(groups) {
-    return groups.query.map(g => {
+    return groups.arrangedContent.map(g => {
       return { id: g.id.toString(), name: g.name };
     });
   },
@@ -239,8 +239,6 @@ export default Ember.Controller.extend({
           this.set("loading", false);
         });
     },
-
-    cancel() {},
 
     run() {
       if (this.get("selectedItem.dirty")) {

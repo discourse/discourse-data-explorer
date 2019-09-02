@@ -1,20 +1,20 @@
 import { ajax } from "discourse/lib/ajax";
 
 export default Ember.Component.extend({
-  groupId: null,
+  group: null,
   showReportsTab: false,
 
   checkForReports() {
-    const p1 = ajax(`/explorer/show_reports_tab?group_id=${this.groupId}`);
-    return p1.then(show => {
-      return this.set("showReportsTab", show);
+    const p1 = ajax(`/g/${this.group.name}/reports`);
+    return p1.then(response => {
+      return this.set("showReportsTab", response.queries.length > 0);
     });
   },
 
   init(args) {
-    this.set("groupId", args.groupId);
+    this.set("group", args.group);
     let usersGroupIds = this.currentUser.groups.map(g => g.id);
-    if (usersGroupIds.includes(this.groupId)) {
+    if (usersGroupIds.includes(this.group.id)) {
       // User is apart of the group. Now check if the group has reports
       this.checkForReports();
     }
