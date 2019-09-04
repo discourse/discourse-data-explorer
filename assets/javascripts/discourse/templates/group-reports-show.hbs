@@ -2,7 +2,7 @@
   <h1>{{model.name}}</h1>
   <p>{{model.description}}</p>
   <form class="query-run" {{action "run" on="submit"}}>
-    {{#if model.hasParams}}
+    {{#if hasParams}}
       <div class="query-params">
         {{#each model.param_info as |pinfo|}}
           {{param-input params=model.params info=pinfo}}

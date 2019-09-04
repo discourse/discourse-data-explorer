@@ -11,6 +11,7 @@ export default Ember.Controller.extend({
   explain: false,
   loading: false,
   results: Ember.computed.alias("model.results"),
+  hasParams: Ember.computed.gt("model.param_info.length", 0),
 
   actions: {
     run() {
