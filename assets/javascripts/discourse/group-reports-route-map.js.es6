@@ -1,5 +1,5 @@
 export default {
-  resource: "group", 
+  resource: "group",
 
   map() {
     this.route("reports", function() {

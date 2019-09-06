@@ -25,7 +25,7 @@ function transformedRelTable(table, modelClass) {
 
 const QueryResultComponent = Ember.Component.extend({
   layoutName: "explorer-query-result",
-  
+
   rows: Ember.computed.alias("content.rows"),
   columns: Ember.computed.alias("content.columns"),
   params: Ember.computed.alias("content.params"),
