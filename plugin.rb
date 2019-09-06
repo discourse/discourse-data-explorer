@@ -977,9 +977,13 @@ SQL
       current_user.admin? || current_user.group_ids.include?(group.id)
     end
 
-    def user_can_access_query(query)
-      group = Group.find_by(name: params["group_name"])        
-      user_included_in_group(group) && query.can_be_run_by(group)
+    def user_can_access_query(query)      
+      group = Group.find_by(name: params["group_name"])      
+      return false unless group
+
+      current_user.admin? || 
+      user_included_in_group(group) && 
+      query.can_be_run_by(group)
     end
 
     def index
