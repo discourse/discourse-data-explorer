@@ -10,7 +10,6 @@
       </div>
     {{/if}}
     {{d-button action=(action "run") icon="play" label="explorer.run" class="btn-primary" type="submit"}}
-    <label class="query-plan">{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
   </form>
   {{conditional-loading-spinner condition=loading}}
   {{#if results}}
