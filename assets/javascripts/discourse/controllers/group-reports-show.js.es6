@@ -29,7 +29,7 @@ export default Ember.Controller.extend({
             return;
           }
 
-          this.showResults = true;
+          this.set("showResults", true);
         })
         .catch(err => {
           if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {

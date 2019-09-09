@@ -1068,6 +1068,7 @@ SQL
     def update
       query = DataExplorer::Query.find(params[:id].to_i, ignore_deleted: true)
       hash = params.require(:query)
+      hash[:group_ids] ||= []
 
       # Undeleting
       unless query.id

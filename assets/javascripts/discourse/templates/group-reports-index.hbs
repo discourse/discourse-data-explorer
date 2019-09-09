@@ -15,7 +15,9 @@
     <tbody>
       {{#each queries as |query|}}
         <tr>
-          <td><a href="reports/{{query.id}}">{{query.name}}</a></td>
+          <td>
+            {{#link-to 'group.reports.show' group.name query.id}}{{query.name}}{{/link-to}}
+          </td>
           <td>{{query.description}}</td>
           <td>{{bound-date query.last_run_at}}</td>
         </tr>

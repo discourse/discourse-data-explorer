@@ -97,15 +97,7 @@ export default Ember.Controller.extend({
     this.set("loading", true);
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
-
-    // group_ids must not be an empty array, as the param will not be sent the server.
-    // By setting group_ids to [-1], the user can remove the all groups
-    if (
-      !this.get("selectedItem.group_ids") ||
-      this.get("selectedItem.group_ids").length < 1
-    )
-      this.set("selectedItem.group_ids", [-1]);
-
+      
     return this.selectedItem
       .save()
       .then(() => {
