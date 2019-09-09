@@ -10,9 +10,9 @@ export default Discourse.Route.extend({
 
     return p1
       .then(groups => {
-        let group_names = {};
+        let groupNames = {};
         groups.forEach(g => {
-          group_names[g.id] = g.name;
+          groupNames[g.id] = g.name;
         });
         return p2.then(schema => {
           return p3.then(model => {
@@ -21,7 +21,7 @@ export default Discourse.Route.extend({
               query.set(
                 "group_names",
                 query.group_ids
-                  .map(id => group_names[id])
+                  .map(id => groupNames[id])
                   .filter(n => n)
                   .join(", ")
               );

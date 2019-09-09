@@ -16,24 +16,22 @@ export default Ember.Controller.extend({
   actions: {
     run() {
       this.setProperties({ loading: true, showResults: false });
-      ajax(`/g/${this.get("group.name")}/reports/${this.get("model.id")}/run`, {
+      ajax(`/g/${this.get("group.name")}/reports/${this.model.id}/run`, {
         type: "POST",
         data: {
-          params: JSON.stringify(this.get("model.params")),
+          params: JSON.stringify(this.model.params),
           explain: this.explain
         }
       })
         .then(result => {
           this.set("results", result);
           if (!result.success) {
-            this.set("showResults", false);
             return;
           }
 
-          this.set("showResults", true);
+          this.showResults = true;
         })
         .catch(err => {
-          this.set("showResults", false);
           if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
             this.set("results", err.jqXHR.responseJSON);
           } else {
