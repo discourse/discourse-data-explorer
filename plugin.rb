@@ -1024,7 +1024,7 @@ SQL
         format.html { render 'groups/show' }
         format.json do        
           group = Group.find_by(name: params["group_name"])
-          render status: 404, json: {} and return unless user_included_in_group(group)
+          return render(status: 404, json: {}) unless user_included_in_group(group)
 
           queries = DataExplorer::Query.all
           queries.select! { |query| query.group_ids.include?(group.id.to_s) }
@@ -1038,7 +1038,7 @@ SQL
         format.html { render 'groups/show' }
         format.json do    
           query = DataExplorer::Query.find(params[:id].to_i)  
-          render status: 404, json: {} and return unless user_can_access_query(query)
+          return render(status: 404, json: {}) unless user_can_access_query(query)
 
           render_serialized query, DataExplorer::QuerySerializer, root: 'query'
         end

@@ -56,9 +56,9 @@
             <div class="groups">
               <span class="label">Allow groups to acess this query</span>
               <span>
-                {{ multi-select values=selectedItem.group_ids content=groupOptions }}
+                {{multi-select values=selectedItem.group_ids content=groupOptions}}
               </span>
-              {{#if runDisabled }}
+              {{#if runDisabled}}
                 {{#unless editing}}
                 <span class='setting-controls'>
                   {{d-button class="ok" action=(action "save") icon="check"}}
