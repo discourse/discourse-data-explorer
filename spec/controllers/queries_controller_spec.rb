@@ -292,6 +292,23 @@ describe DataExplorer::QueryController do
         expect(response_json['queries'].length).to eq(1)
         expect(response_json['queries'][0]['name']).to eq('A')
       end      
+
+      it "returns a 404 when the user should not have access to the query " do
+        user = Fabricate(:user)
+        log_in_user(user)
+
+        get :group_reports_index, params: { group_name: group.name }, format: :json
+        expect(response.status).to eq(404)
+      end
+
+      it "return a 200 when the user has access the the query" do
+        user = Fabricate(:user)
+        log_in_user(user)
+        group.add(user)
+
+        get :group_reports_index, params: { group_name: group.name }, format: :json
+        expect(response.status).to eq(200)
+      end
     end
 
     describe "#group_reports_run" do
@@ -301,6 +318,50 @@ describe DataExplorer::QueryController do
 
         get :group_reports_run, params: { group_name: group.name, id: query.id }, format: :json        
       end
+
+      it "returns a 404 when the user should not have access to the query " do
+        user = Fabricate(:user)
+        log_in_user(user)
+        group.add(user)
+        query = make_query('SELECT 1 as value', {}, [])
+
+        get :group_reports_run, params: { group_name: group.name, id: query.id }, format: :json
+        expect(response.status).to eq(404)
+      end
+
+      it "return a 200 when the user has access the the query" do
+        user = Fabricate(:user)
+        log_in_user(user)
+        group.add(user)
+        query = make_query('SELECT 1 as value', {}, [group.id.to_s])
+
+        get :group_reports_run, params: { group_name: group.name, id: query.id }, format: :json
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  describe "#group_reports_show" do
+    let(:group) { Fabricate(:group) }
+
+    it "returns a 404 when the user should not have access to the query " do
+      user = Fabricate(:user)
+      log_in_user(user)
+      group.add(user)
+      query = make_query('SELECT 1 as value', {}, [])
+
+      get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
+      expect(response.status).to eq(404)
+    end
+
+    it "return a 200 when the user has access the the query" do
+      user = Fabricate(:user)
+      log_in_user(user)
+      group.add(user)
+      query = make_query('SELECT 1 as value', {}, [group.id.to_s])
+
+      get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
+      expect(response.status).to eq(200)
     end
   end
 
@@ -330,16 +391,12 @@ describe DataExplorer::QueryController do
   describe "#user_can_access_query" do
     let(:group) { Fabricate(:group) }
 
-    before do
-      controller
-        .stubs(:params)
-        .returns({'group_name': group.name}.with_indifferent_access)
-    end
-
     it "is true if the user is an admin" do
       admin = Fabricate(:admin)
       log_in_user(admin)
       query = make_query('SELECT 1 as value')
+      controller.params = { group_name: group.name }
+      
       expect(controller.user_can_access_query(query)).to eq(true)
     end
 
@@ -348,6 +405,7 @@ describe DataExplorer::QueryController do
       user = Fabricate(:user)
       log_in_user(user)
       group.add(user)
+      controller.params = { group_name: group.name }
       
       expect(controller.user_can_access_query(query)).to eq(true)
     end
@@ -357,6 +415,7 @@ describe DataExplorer::QueryController do
       user = Fabricate(:user)
       log_in_user(user)
       group.add(user)
+      controller.params = { group_name: group.name }
       
       expect(controller.user_can_access_query(query)).to eq(false)
     end
@@ -365,6 +424,7 @@ describe DataExplorer::QueryController do
       query = make_query('SELECT 1 as value', {}, ["#{group.id}"])
       user = Fabricate(:user)
       log_in_user(user)
+      controller.params = { group_name: group.name }
       
       expect(controller.user_can_access_query(query)).to eq(false)
     end
