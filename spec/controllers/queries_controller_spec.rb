@@ -278,9 +278,6 @@ describe DataExplorer::QueryController do
       end
     end
 
-    describe '#user_can_access_query' do
-    end
-
     describe "#group_reports_index" do
 
       it "only returns queries that the group has access to" do   
@@ -339,94 +336,30 @@ describe DataExplorer::QueryController do
         expect(response.status).to eq(200)
       end
     end
-  end
 
-  describe "#group_reports_show" do
-    let(:group) { Fabricate(:group) }
+    describe "#group_reports_show" do
+      let(:group) { Fabricate(:group) }
 
-    it "returns a 404 when the user should not have access to the query " do
-      user = Fabricate(:user)
-      log_in_user(user)
-      group.add(user)
-      query = make_query('SELECT 1 as value', {}, [])
+      it "returns a 404 when the user should not have access to the query " do
+        user = Fabricate(:user)
+        log_in_user(user)
+        group.add(user)
+        query = make_query('SELECT 1 as value', {}, [])
 
-      get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
-      expect(response.status).to eq(404)
-    end
+        get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
+        expect(response.status).to eq(404)
+      end
 
-    it "return a 200 when the user has access the the query" do
-      user = Fabricate(:user)
-      log_in_user(user)
-      group.add(user)
-      query = make_query('SELECT 1 as value', {}, [group.id.to_s])
+      it "return a 200 when the user has access the the query" do
+        user = Fabricate(:user)
+        log_in_user(user)
+        group.add(user)
+        query = make_query('SELECT 1 as value', {}, [group.id.to_s])
 
-      get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
-      expect(response.status).to eq(200)
-    end
-  end
-
-  describe "#user_included_in_group" do
-    let(:group) { Fabricate(:group) }
-
-    it "is true when the user is an admin" do
-      admin = Fabricate(:admin)
-      log_in_user(admin)
-      expect(controller.user_included_in_group(group)).to eq(true)
-    end
-
-    it "is true when the user is not an admin, but is a member of the group" do
-      user = Fabricate(:user)
-      log_in_user(user)
-      group.add(user)
-      expect(controller.user_included_in_group(group)).to eq(true)
-    end
-
-    it "is false when the user is not an admin, and is not a member of the group" do
-      user = Fabricate(:user)
-      log_in_user(user)
-      expect(controller.user_included_in_group(group)).to eq(false)
-    end
-  end
-
-  describe "#user_can_access_query" do
-    let(:group) { Fabricate(:group) }
-
-    it "is true if the user is an admin" do
-      admin = Fabricate(:admin)
-      log_in_user(admin)
-      query = make_query('SELECT 1 as value')
-      controller.params = { group_name: group.name }
-      
-      expect(controller.user_can_access_query(query)).to eq(true)
-    end
-
-    it "is true if the user is a member of the group, and query contains the group id" do
-      query = make_query('SELECT 1 as value', {}, ["#{group.id}"])
-      user = Fabricate(:user)
-      log_in_user(user)
-      group.add(user)
-      controller.params = { group_name: group.name }
-      
-      expect(controller.user_can_access_query(query)).to eq(true)
-    end
-
-    it "is false if the query does not contain the group id" do
-      query = make_query('SELECT 1 as value', {}, [])
-      user = Fabricate(:user)
-      log_in_user(user)
-      group.add(user)
-      controller.params = { group_name: group.name }
-      
-      expect(controller.user_can_access_query(query)).to eq(false)
-    end
-
-    it "is false if the user is not member of the group" do
-      query = make_query('SELECT 1 as value', {}, ["#{group.id}"])
-      user = Fabricate(:user)
-      log_in_user(user)
-      controller.params = { group_name: group.name }
-      
-      expect(controller.user_can_access_query(query)).to eq(false)
+        get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
+        expect(response.status).to eq(200)
+      end
     end
   end
 end
+

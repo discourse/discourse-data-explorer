@@ -44,6 +44,19 @@ end
 
 after_initialize do
 
+  add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
+    return false if !current_user
+    return true if current_user.admin?
+    return current_user.group_ids.include?(group.id)
+  end
+
+  add_to_class(:guardian, :user_can_access_query?) do |group, query|
+    return false if !current_user
+    return true if current_user.admin?
+    return user_is_a_member_of_group?(group) &&
+           query.group_ids.include?(group.id.to_s)
+  end
+
   module ::DataExplorer
     class Engine < ::Rails::Engine
       engine_name "data_explorer"
@@ -968,22 +981,21 @@ SQL
     requires_plugin DataExplorer.plugin_name
 
     before_action :check_enabled
+    before_action :set_group, only: [:group_reports_index, :group_reports_show, :group_reports_run] 
+    before_action :set_query, only: [:group_reports_show, :group_reports_run]
+
+    attr_reader :group, :query 
 
     def check_enabled
       raise Discourse::NotFound unless SiteSetting.data_explorer_enabled?
     end
 
-    def user_included_in_group(group)
-      current_user.admin? || current_user.group_ids.include?(group.id)
+    def set_group
+      @group = Group.find_by(name: params["group_name"])
     end
 
-    def user_can_access_query(query)      
-      group = Group.find_by(name: params["group_name"])      
-      return false unless group
-
-      current_user.admin? || 
-      user_included_in_group(group) && 
-      query.can_be_run_by(group)
+    def set_query
+      @query = DataExplorer::Query.find(params[:id].to_i)
     end
 
     def index
@@ -1020,12 +1032,11 @@ SQL
     end
 
     def group_reports_index
+      return raise Discourse::NotFound unless guardian.user_is_a_member_of_group?(group)  
+
       respond_to do |format|
         format.html { render 'groups/show' }
-        format.json do        
-          group = Group.find_by(name: params["group_name"])
-          return render(status: 404, json: {}) unless current_user && user_included_in_group(group)
-
+        format.json do
           queries = DataExplorer::Query.all
           queries.select! { |query| query.group_ids.include?(group.id.to_s) }
           render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
@@ -1034,20 +1045,18 @@ SQL
     end
 
     def group_reports_show
+      return raise Discourse::NotFound unless guardian.user_can_access_query?(group, query)
+
       respond_to do |format|
         format.html { render 'groups/show' }
-        format.json do    
-          query = DataExplorer::Query.find(params[:id].to_i)
-          return render(status: 404, json: {}) unless current_user && user_can_access_query(query)
-
+        format.json do
           render_serialized query, DataExplorer::QuerySerializer, root: 'query'
         end
       end
     end
 
     def group_reports_run
-      query = DataExplorer::Query.find(params[:id].to_i)
-      return render(status: 404, json: {}) unless current_user && user_can_access_query(query)
+      return raise Discourse::NotFound unless guardian.user_can_access_query?(group, query)
 
       run
     end
@@ -1211,7 +1220,7 @@ SQL
         end
       end
     end
-  end  
+    end  
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
     attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at

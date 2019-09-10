@@ -5,8 +5,7 @@ export default Discourse.Route.extend({
 
   model() {
     const group = this.modelFor("group");
-    const p1 = ajax(`/g/${group.name}/reports`);
-    return p1
+    return ajax(`/g/${group.name}/reports`)
       .then(queries => {
         return {
           model: queries,

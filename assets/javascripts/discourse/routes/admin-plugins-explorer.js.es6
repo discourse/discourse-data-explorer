@@ -4,18 +4,18 @@ export default Discourse.Route.extend({
   controllerName: "admin-plugins-explorer",
 
   model() {
-    const p1 = this.store.findAll("group");
-    const p2 = ajax("/admin/plugins/explorer/schema.json", { cache: true });
-    const p3 = this.store.findAll("query");
+    const groupPromise = this.store.findAll("group");
+    const schemaPromise = ajax("/admin/plugins/explorer/schema.json", { cache: true });
+    const queryPromise = this.store.findAll("query");
 
-    return p1
+    return groupPromise
       .then(groups => {
         let groupNames = {};
         groups.forEach(g => {
           groupNames[g.id] = g.name;
         });
-        return p2.then(schema => {
-          return p3.then(model => {
+        return schemaPromise.then(schema => {
+          return queryPromise.then(model => {
             model.forEach(query => {
               query.markNotDirty();
               query.set(
@@ -31,8 +31,8 @@ export default Discourse.Route.extend({
         });
       })
       .catch(() => {
-        p2.catch(() => {});
-        p3.catch(() => {});
+        schemaPromise.catch(() => {});
+        queryPromise.catch(() => {});
         return { model: null, schema: null, disallow: true, groups: null };
       });
   },
