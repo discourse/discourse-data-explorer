@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Guardian do
 
+  before { SiteSetting.data_explorer_enabled = true }
+
   def make_query(group_ids = [])
     q = DataExplorer::Query.new
     q.id = Fabrication::Sequencer.sequence("query-id", 1)
-    q.name ="Query number #{q.id}"
+    q.name = "Query number #{q.id}"
     q.sql = "SELECT 1"
     q.group_ids = group_ids
     q.save
@@ -14,7 +18,7 @@ describe Guardian do
 
   let(:user) { build(:user) }
   let(:admin) { build(:admin) }
-  
+
   describe "#user_is_a_member_of_group?" do
     let(:group) { Fabricate(:group) }
 
@@ -49,13 +53,13 @@ describe Guardian do
 
     it "is false if the query does not contain the group id" do
       group.add(user)
-      
+
       expect(Guardian.new(user).user_can_access_query?(group, make_query)).to eq(false)
     end
 
     it "is false if the user is not member of the group" do
       query = make_query(["#{group.id}"])
-      
+
       expect(Guardian.new(user).user_can_access_query?(group, query)).to eq(false)
     end
   end

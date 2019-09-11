@@ -694,7 +694,7 @@ SQL
       check_params!
       return save_default_query if @id && @id < 0
 
-      @id = @id ||self.class.alloc_id
+      @id = @id || self.class.alloc_id
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
 
@@ -981,10 +981,10 @@ SQL
     requires_plugin DataExplorer.plugin_name
 
     before_action :check_enabled
-    before_action :set_group, only: [:group_reports_index, :group_reports_show, :group_reports_run] 
+    before_action :set_group, only: [:group_reports_index, :group_reports_show, :group_reports_run]
     before_action :set_query, only: [:group_reports_show, :group_reports_run]
 
-    attr_reader :group, :query 
+    attr_reader :group, :query
 
     def check_enabled
       raise Discourse::NotFound unless SiteSetting.data_explorer_enabled?
@@ -1032,7 +1032,7 @@ SQL
     end
 
     def group_reports_index
-      return raise Discourse::NotFound unless guardian.user_is_a_member_of_group?(group)  
+      return raise Discourse::NotFound unless guardian.user_is_a_member_of_group?(group)
 
       respond_to do |format|
         format.html { render 'groups/show' }
@@ -1220,7 +1220,7 @@ SQL
         end
       end
     end
-    end  
+  end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
     attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
