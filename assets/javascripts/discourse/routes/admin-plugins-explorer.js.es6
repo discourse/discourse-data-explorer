@@ -5,7 +5,9 @@ export default Discourse.Route.extend({
 
   model() {
     const groupPromise = this.store.findAll("group");
-    const schemaPromise = ajax("/admin/plugins/explorer/schema.json", { cache: true });
+    const schemaPromise = ajax("/admin/plugins/explorer/schema.json", {
+      cache: true
+    });
     const queryPromise = this.store.findAll("query");
 
     return groupPromise

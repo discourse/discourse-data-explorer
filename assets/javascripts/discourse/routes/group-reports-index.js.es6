@@ -16,12 +16,13 @@ export default Discourse.Route.extend({
         this.transitionTo("group.members", group);
       });
   },
+
   afterModel(model) {
     if (
       !model.group.get("is_group_user") &&
       !(this.currentUser && this.currentUser.admin)
     ) {
-      this.transitionTo("group.members", group);
+      this.transitionTo("group.members", model.group);
     }
   },
 

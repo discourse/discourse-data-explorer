@@ -55,10 +55,10 @@ export default Ember.Controller.extend({
   },
 
   @computed("selectedItem", "editing")
-  selectedGroupNames(selectedItem) {
+  selectedGroupNames() {
     const groupIds = this.selectedItem.group_ids || [];
     const groupNames = groupIds.map(id => {
-      return this.groupOptions.find(groupOption => groupOption.id == id).name;
+      return this.groupOptions.find(groupOption => groupOption.id === id).name;
     });
     return groupNames.join(", ");
   },
@@ -97,7 +97,7 @@ export default Ember.Controller.extend({
     this.set("loading", true);
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
-      
+
     return this.selectedItem
       .save()
       .then(() => {
