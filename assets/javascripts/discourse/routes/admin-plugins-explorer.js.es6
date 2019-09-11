@@ -22,7 +22,7 @@ export default Discourse.Route.extend({
               query.markNotDirty();
               query.set(
                 "group_names",
-                query.group_ids
+                (query.group_ids || [])
                   .map(id => groupNames[id])
                   .filter(n => n)
                   .join(", ")
