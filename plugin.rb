@@ -44,6 +44,19 @@ end
 
 after_initialize do
 
+  add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
+    return false if !current_user
+    return true if current_user.admin?
+    return current_user.group_ids.include?(group.id)
+  end
+
+  add_to_class(:guardian, :user_can_access_query?) do |group, query|
+    return false if !current_user
+    return true if current_user.admin?
+    return user_is_a_member_of_group?(group) &&
+           query.group_ids.include?(group.id.to_s)
+  end
+
   module ::DataExplorer
     class Engine < ::Rails::Engine
       engine_name "data_explorer"
@@ -595,12 +608,13 @@ SQL
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :last_run_at
+    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at
 
     def initialize
       @name = 'Unnamed Query'
       @description = ''
       @sql = 'SELECT 1'
+      @group_ids = []
     end
 
     def slug
@@ -624,6 +638,10 @@ SQL
       result
     end
 
+    def can_be_run_by(group)
+      @group_ids.include?(group.id.to_s)
+    end
+
     # saving/loading functions
     # May want to extract this into a library or something for plugins to use?
     def self.alloc_id
@@ -640,6 +658,7 @@ SQL
       [:name, :description, :sql, :created_by, :created_at, :last_run_at].each do |sym|
         query.send("#{sym}=", h[sym].strip) if h[sym]
       end
+      query.group_ids = h[:group_ids]
       query.id = h[:id].to_i if h[:id]
       query
     end
@@ -652,6 +671,7 @@ SQL
         sql: @sql,
         created_by: @created_by,
         created_at: @created_at,
+        group_ids: @group_ids,
         last_run_at: @last_run_at
       }
     end
@@ -672,7 +692,9 @@ SQL
 
     def save
       check_params!
-      @id = self.class.alloc_id unless @id && @id > 0
+      return save_default_query if @id && @id < 0
+
+      @id = @id ||self.class.alloc_id
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
 
@@ -682,6 +704,7 @@ SQL
       query = Queries.default[id.to_s]
       @id = query["id"]
       @sql = query["sql"]
+      @group_ids = @group_ids || []
       @name = query["name"]
       @description = query["description"]
 
@@ -958,9 +981,21 @@ SQL
     requires_plugin DataExplorer.plugin_name
 
     before_action :check_enabled
+    before_action :set_group, only: [:group_reports_index, :group_reports_show, :group_reports_run] 
+    before_action :set_query, only: [:group_reports_show, :group_reports_run]
+
+    attr_reader :group, :query 
 
     def check_enabled
       raise Discourse::NotFound unless SiteSetting.data_explorer_enabled?
+    end
+
+    def set_group
+      @group = Group.find_by(name: params["group_name"])
+    end
+
+    def set_query
+      @query = DataExplorer::Query.find(params[:id].to_i)
     end
 
     def index
@@ -996,6 +1031,36 @@ SQL
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
     end
 
+    def group_reports_index
+      return raise Discourse::NotFound unless guardian.user_is_a_member_of_group?(group)  
+
+      respond_to do |format|
+        format.html { render 'groups/show' }
+        format.json do
+          queries = DataExplorer::Query.all
+          queries.select! { |query| query.group_ids.include?(group.id.to_s) }
+          render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
+        end
+      end
+    end
+
+    def group_reports_show
+      return raise Discourse::NotFound unless guardian.user_can_access_query?(group, query)
+
+      respond_to do |format|
+        format.html { render 'groups/show' }
+        format.json do
+          render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+        end
+      end
+    end
+
+    def group_reports_run
+      return raise Discourse::NotFound unless guardian.user_can_access_query?(group, query)
+
+      run
+    end
+
     def create
       # guardian.ensure_can_create_explorer_query!
 
@@ -1012,6 +1077,7 @@ SQL
     def update
       query = DataExplorer::Query.find(params[:id].to_i, ignore_deleted: true)
       hash = params.require(:query)
+      hash[:group_ids] ||= []
 
       # Undeleting
       unless query.id
@@ -1022,7 +1088,7 @@ SQL
         end
       end
 
-      [:name, :sql, :description, :created_by, :created_at, :last_run_at].each do |sym|
+      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
 
@@ -1154,10 +1220,10 @@ SQL
         end
       end
     end
-  end
+    end  
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :last_run_at
+    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
 
     def param_info
       object.params.map(&:to_hash) rescue nil
@@ -1180,6 +1246,10 @@ SQL
   end
 
   Discourse::Application.routes.append do
+    get '/g/:group_name/reports' => 'data_explorer/query#group_reports_index'
+    get '/g/:group_name/reports/:id' => 'data_explorer/query#group_reports_show'
+    post '/g/:group_name/reports/:id/run' => 'data_explorer/query#group_reports_run'
+
     mount ::DataExplorer::Engine, at: '/admin/plugins/explorer', constraints: AdminConstraint.new
   end
 end

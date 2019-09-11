@@ -146,6 +146,12 @@ const QueryResultComponent = Ember.Component.extend({
     return this.site.get("categoriesById")[id];
   },
 
+  download_url() {
+    return this.group
+      ? `/g/${this.group.name}/reports/`
+      : "/admin/plugins/explorer/queries/";
+  },
+
   downloadResult(format) {
     // Create a frame to submit the form in (?)
     // to avoid leaving an about:blank behind
@@ -161,7 +167,7 @@ const QueryResultComponent = Ember.Component.extend({
     form.setAttribute(
       "action",
       Discourse.getURL(
-        "/admin/plugins/explorer/queries/" +
+        this.download_url() +
           this.get("query.id") +
           "/run." +
           format +
