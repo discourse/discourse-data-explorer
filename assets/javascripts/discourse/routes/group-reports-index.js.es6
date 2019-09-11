@@ -9,7 +9,7 @@ export default Discourse.Route.extend({
       .then(queries => {
         return {
           model: queries,
-          group: group
+          group
         };
       })
       .catch(() => {

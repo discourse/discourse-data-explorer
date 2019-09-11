@@ -9,7 +9,7 @@ export default Discourse.Route.extend({
       .then(response => {
         return {
           model: Object.assign({ params: {} }, response.query),
-          group: group
+          group
         };
       })
       .catch(() => {
