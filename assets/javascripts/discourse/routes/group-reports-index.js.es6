@@ -12,9 +12,7 @@ export default Discourse.Route.extend({
           group
         };
       })
-      .catch(() => {
-        this.transitionTo("group.members", group);
-      });
+      .catch(() => this.transitionTo("group.members", group));
   },
 
   afterModel(model) {
