@@ -1038,7 +1038,7 @@ SQL
         format.html { render 'groups/show' }
         format.json do
           queries = DataExplorer::Query.all
-          queries.select! { |query| query.group_ids.include?(group.id.to_s) }
+          queries.select! { |query| query.group_ids&.include?(group.id.to_s) }
           render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
         end
       end
