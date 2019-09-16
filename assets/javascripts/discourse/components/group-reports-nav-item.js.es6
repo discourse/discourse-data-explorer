@@ -12,10 +12,13 @@ export default Ember.Component.extend({
 
   init(args) {
     this.set("group", args.group);
-    if (this.currentUser.groups.some(g => g.id === this.group.id)) {
+    if (
+      (this.get("currentUser.groups") || []).some(g => g.id === this.group.id)
+    ) {
       // User is a part of the group. Now check if the group has reports
       this.checkForReports();
     }
+
     this._super(args);
   }
 });
