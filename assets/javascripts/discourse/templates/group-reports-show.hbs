@@ -1,0 +1,26 @@
+<section class='user-content'>
+  <h1>{{model.name}}</h1>
+  <p>{{model.description}}</p>
+  <form class="query-run" {{action "run" on="submit"}}>
+    {{#if hasParams}}
+      <div class="query-params">
+        {{#each model.param_info as |pinfo|}}
+          {{param-input params=model.params info=pinfo}}
+        {{/each}}
+      </div>
+    {{/if}}
+    {{d-button action=(action "run") icon="play" label="explorer.run" class="btn-primary" type="submit"}}
+  </form>
+  {{conditional-loading-spinner condition=loading}}
+  {{#if results}}
+    <div class="query-results">
+      {{#if showResults}}
+        {{query-result query=model content=results group=group}}
+      {{else}}
+        {{#each results.errors as |err|}}
+          <pre class="query-error"><code>{{~err}}</code></pre>
+        {{/each}}
+      {{/if}}
+    </div>
+  {{/if}}
+</section>

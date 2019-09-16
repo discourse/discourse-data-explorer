@@ -54,6 +54,22 @@ export default Ember.Controller.extend({
     return item || NoQuery;
   },
 
+  @computed("selectedItem", "editing")
+  selectedGroupNames() {
+    const groupIds = this.selectedItem.group_ids || [];
+    const groupNames = groupIds.map(id => {
+      return this.groupOptions.find(groupOption => groupOption.id === id).name;
+    });
+    return groupNames.join(", ");
+  },
+
+  @computed("groups")
+  groupOptions(groups) {
+    return groups.arrangedContent.map(g => {
+      return { id: g.id.toString(), name: g.name };
+    });
+  },
+
   @computed("selectedItem", "selectedItem.dirty")
   othersDirty(selectedItem) {
     return !!this.model.find(q => q !== selectedItem && q.dirty);
@@ -81,6 +97,7 @@ export default Ember.Controller.extend({
     this.set("loading", true);
     if (this.get("selectedItem.description") === "")
       this.set("selectedItem.description", "");
+
     return this.selectedItem
       .save()
       .then(() => {
@@ -183,6 +200,8 @@ export default Ember.Controller.extend({
         .then(result => {
           const query = this.get("selectedItem");
           query.setProperties(result.getProperties(Query.updatePropertyNames));
+          if (!query.group_ids || !Array.isArray(query.group_ids))
+            query.set("group_ids", []);
           query.markNotDirty();
           this.set("editing", false);
         })

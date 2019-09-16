@@ -38,6 +38,7 @@
               <div class="desc">
                 {{textarea value=selectedItem.description placeholder=(i18n "explorer.description_placeholder")}}
               </div>
+
             {{else}}
               <div class="name">
                 {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
@@ -52,6 +53,20 @@
               </div>
             {{/if}}
 
+            <div class="groups">
+              <span class="label">Allow groups to acess this query</span>
+              <span>
+                {{multi-select values=selectedItem.group_ids content=groupOptions}}
+              </span>
+              {{#if runDisabled}}
+                {{#unless editing}}
+                <span class='setting-controls'>
+                  {{d-button class="ok" action=(action "save") icon="check"}}
+                  {{d-button class="cancel" action=(action "discard") icon="times"}}
+                </span>
+              {{/unless}}
+              {{/if}}
+            </div>
             {{! the SQL editor will show the first time you }}
             {{#if everEditing}}
               <div class="query-editor {{if hideSchema "no-schema"}}">
@@ -158,6 +173,11 @@
                 {{directory-toggle field="username" labelKey="explorer.query_user" order=order asc=asc}}
               </div>
             </th>
+            <th class='col heading group-names'>
+              <div class='group-names-header'>
+                {{i18n "explorer.query_groups"}}
+              </div>              
+            </th>
             <th class="col heading created-at">
               <div class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
                 {{directory-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc}}
@@ -179,6 +199,11 @@
                     <a href="/users/{{query.username}}/activity">
                       <medium>{{query.username}}</medium>
                     </a>
+                  {{/if}}
+                </td>
+                <td class="query-group-names">
+                  {{#if query.group_names}}
+                    <medium>{{query.group_names}}</medium>
                   {{/if}}
                 </td>
                 <td class="query-created-at">
