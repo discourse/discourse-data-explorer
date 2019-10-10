@@ -20,6 +20,9 @@ da:
       save: "Gem ændringer"
       edit: "Rediger"
       delete: "Slet"
+      query_groups: "grupper"
       query_description: "Beskrivelse"
       reset_params: "Nulstil"
       search_placeholder: "Søg..."
+    group:
+      reports: "Rapporter"

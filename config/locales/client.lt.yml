@@ -20,5 +20,6 @@ lt:
       save: "Išsaugoti pakeitimus"
       edit: "Redaguoti"
       delete: "Pašalinti"
+      query_groups: "Grupės"
       query_description: "Aprašymas"
       search_placeholder: "Paieška..."

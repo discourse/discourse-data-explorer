@@ -20,5 +20,6 @@ bg:
       save: "Запази промените"
       edit: "Редактирай"
       delete: "Изтрий"
+      query_groups: "Групи"
       query_description: "Описание"
       search_placeholder: "Търсене ... "

@@ -20,6 +20,9 @@ nl:
       save: "Wijzigingen opslaan"
       edit: "Bewerken"
       delete: "Verwijderen"
+      query_groups: "Groepen"
       query_description: "Omschrijving"
       reset_params: "Terugzetten"
       search_placeholder: "Zoeken..."
+    group:
+      reports: "Rapporten"

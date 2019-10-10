@@ -36,6 +36,7 @@ nb_NO:
       download_csv: "CSV"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
       run_time: "Spørring fullført på {{value}} ms."
+      query_groups: "Grupper"
       query_description: "Beskrivelse"
       column: "Kolonne {{number}}"
       explain_label: "Inkluder spørringsplan?"

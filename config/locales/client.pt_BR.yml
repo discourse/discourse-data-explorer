@@ -49,6 +49,7 @@ pt_BR:
         one: "Mostrando os %{count} principais resultados."
         other: "Mostrando os principais %{count} resultados."
       query_name: "Consulta"
+      query_groups: "Grupos"
       query_description: "Descrição"
       query_time: "Última execução"
       query_user: "Criado por"
@@ -58,3 +59,5 @@ pt_BR:
       reset_params: "Redefinir"
       search_placeholder: "Pesquisar..."
       no_search_results: "Desculpe, não conseguimos encontrar nenhum resultado contendo o seu texto."
+    group:
+      reports: "Relatórios"

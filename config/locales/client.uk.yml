@@ -18,5 +18,6 @@ uk:
       save: "Зберегти зміни"
       edit: "Редагувати"
       delete: "Видалити"
+      query_groups: "Групи"
       query_description: "Опис"
       reset_params: "Скинути"

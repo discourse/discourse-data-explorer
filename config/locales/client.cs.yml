@@ -24,6 +24,7 @@ cs:
       delete: "Smazat"
       download_json: "JSON"
       download_csv: "CSV"
+      query_groups: "Skupiny"
       query_description: "Popis"
       column: "Sloupec {{number}}"
       reset_params: "obnovit výchozí"

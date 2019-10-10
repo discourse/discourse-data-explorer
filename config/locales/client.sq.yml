@@ -18,5 +18,6 @@ sq:
       save: "Ruaj ndryshimet"
       edit: "Redakto"
       delete: "Fshij"
+      query_groups: "Grupet"
       query_description: "Përshkrimi"
       reset_params: "Rivendos"

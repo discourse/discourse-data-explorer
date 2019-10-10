@@ -49,6 +49,8 @@ de:
         one: "Zeige die ersten %{count} Ergebnisse."
         other: "Zeige die ersten %{count} Ergebnisse."
       query_name: "Anfrage"
+      query_groups: "Gruppen"
+      report_name: "Bericht"
       query_description: "Beschreibung"
       query_time: "Letzter Lauf"
       query_user: "Erstellt von"
@@ -58,3 +60,5 @@ de:
       reset_params: "Zurücksetzen"
       search_placeholder: "Suche…"
       no_search_results: "Sorry, wir konnten keine Ergebnisse finden, die deinem Text entsprechen."
+    group:
+      reports: "Berichte"

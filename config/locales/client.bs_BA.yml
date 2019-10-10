@@ -14,8 +14,13 @@ bs_BA:
         bool:
           'yes': "Da"
           'no': "Ne"
+      export: "Izvoz"
       save: "Spremiti promjene"
       edit: "Izmijeni"
       delete: "Delete"
+      query_groups: "Grupa"
       query_description: "Opis"
+      reset_params: "Resetovati"
       search_placeholder: "Pretraga..."
+    group:
+      reports: "Izvještaji"

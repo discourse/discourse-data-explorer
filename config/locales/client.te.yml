@@ -16,4 +16,5 @@ te:
       save: "మార్పులను భద్రపరచు"
       edit: "సవరించు"
       delete: "తొలగించు"
+      query_groups: "గుంపులు"
       query_description: "వివరణ"

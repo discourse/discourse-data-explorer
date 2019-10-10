@@ -18,5 +18,6 @@ sv:
       save: "Spara ändringar"
       edit: "Redigera"
       delete: "Radera"
+      query_groups: "Grupper"
       query_description: "Beskrivning"
       reset_params: "Återställ"

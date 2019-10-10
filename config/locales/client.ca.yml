@@ -23,7 +23,7 @@ ca:
       schema:
         title: "Esquema de base de dades"
         filter: "Cerca..."
-        sensitive: "El contingut d’aquesta columna pot contenir informació particularment sensible o privada. Tingueu precaució quan utilitzeu el contingut d’aquesta columna."
+        sensitive: "El contingut d'aquesta columna pot contenir informació particularment sensible o privada. Tingueu precaució quan utilitzeu el contingut d'aquesta columna."
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipus</a>"
       types:
         bool:
@@ -43,12 +43,14 @@ ca:
       others_dirty: "Una consulta té canvis no desats que es perdran si continueu navegant."
       run_time: "Consulta completada en {{value}} ms."
       result_count:
-        one: "resultat %{count}."
-        other: "Resultats %{count}."
+        one: "%{count} resultat."
+        other: "%{count} resultats."
       max_result_count:
-        one: "Mostrant els millors %{count}resultats."
-        other: "Mostrant els millors %{count} resultats."
+        one: "Mostrant el millor %{count} resultat."
+        other: "Es mostren els millors %{count} resultats."
       query_name: "Consulta"
+      query_groups: "Grups"
+      report_name: "Report"
       query_description: "Descripció"
       query_time: "Darrera execució"
       query_user: "Creat per"
@@ -58,3 +60,5 @@ ca:
       reset_params: "Reinicia"
       search_placeholder: "Cerca..."
       no_search_results: "Ho sentim, no hem trobat cap resultat que coincideixi amb el vostre text."
+    group:
+      reports: "Reports"

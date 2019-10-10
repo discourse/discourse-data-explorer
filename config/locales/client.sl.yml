@@ -53,6 +53,7 @@ sl:
         few: "Prikazano samo prvi %{count} zadetki."
         other: "Prikazano samo prvih %{count} zadetkov."
       query_name: "Poizvedba"
+      query_groups: "Skupine"
       query_description: "Opis"
       query_time: "Zadnja izvedba"
       query_user: "Ustvarjen od"
@@ -62,3 +63,5 @@ sl:
       reset_params: "Ponastavi"
       search_placeholder: "Išči..."
       no_search_results: "Oprostite, nismo našli nobenega zadetka, ki bi ustrezal vaši poizvedbi."
+    group:
+      reports: "Poročila"

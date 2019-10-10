@@ -17,4 +17,5 @@ id:
       save: "Simpan perubahan"
       edit: "Ubah"
       delete: "Hapus"
+      query_groups: "Grup"
       search_placeholder: "Cari..."

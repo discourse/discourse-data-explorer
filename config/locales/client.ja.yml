@@ -20,6 +20,7 @@ ja:
       save: "変更を保存"
       edit: "編集"
       delete: "削除する"
+      query_groups: "グループ"
       query_description: "説明"
       reset_params: "リセット"
       search_placeholder: "検索..."

@@ -20,6 +20,7 @@ el:
       save: "Αποθήκευση Αλλαγών"
       edit: "Επεξεργασία"
       delete: "Σβήσιμο"
+      query_groups: "Ομάδες"
       query_description: "Περιγραφή"
       reset_params: "Επαναφορά"
       search_placeholder: "Αναζήτηση..."

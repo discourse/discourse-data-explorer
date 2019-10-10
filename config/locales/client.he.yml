@@ -53,6 +53,8 @@ he:
         many: "%{count} התוצאות המובילות מופיעות."
         other: "%{count} התוצאות המובילות מופיעות."
       query_name: "שאילתה"
+      query_groups: "קבוצות"
+      report_name: "דוח"
       query_description: "תיאור"
       query_time: "הרצה אחרונה"
       query_user: "נוצר על ידי"
@@ -62,3 +64,5 @@ he:
       reset_params: "איפוס"
       search_placeholder: "חיפוש..."
       no_search_results: "לא הצלחנו למצוא תוצאות שתואמות לטקסט שלך, עמך הסליחה."
+    group:
+      reports: "דוחות"

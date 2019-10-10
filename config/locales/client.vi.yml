@@ -20,5 +20,6 @@ vi:
       save: "Lưu thay đổi"
       edit: "Sửa"
       delete: "Xóa"
+      query_groups: "Nhóm"
       query_description: "Mô tả"
       search_placeholder: "Tìm kiến..."

@@ -21,6 +21,7 @@ ar:
       save: "احفظ التعديلات"
       edit: "عدّل"
       delete: "أحذف"
+      query_groups: "المجموعات"
       query_description: "الوصف"
       reset_params: "اعادة تعيين"
       search_placeholder: "بحث..."

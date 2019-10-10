@@ -16,4 +16,5 @@ sr:
       save: "Sačuvaj izmene"
       edit: "Izmeni"
       delete: "Obriši"
+      query_groups: "Grupe"
       query_description: "Opis"

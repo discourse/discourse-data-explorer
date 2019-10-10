@@ -16,4 +16,5 @@ th:
       save: "บันทึกการเปลี่ยนแปลง"
       edit: "แก้ไข"
       delete: "ลบ"
+      query_groups: "กลุ่ม"
       query_description: "รายละเอียด"

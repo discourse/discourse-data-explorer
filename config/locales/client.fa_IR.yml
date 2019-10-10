@@ -20,6 +20,9 @@ fa_IR:
       save: "ذخیره تغییرات"
       edit: "ویرایش"
       delete: "حذف"
+      query_groups: "گروه ها"
       query_description: "توضیح"
       reset_params: "بازنشانی"
       search_placeholder: "جستجو..."
+    group:
+      reports: "گزارشات"

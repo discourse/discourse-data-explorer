@@ -24,7 +24,10 @@ tr_TR:
       delete: "Sil"
       download_json: "JSON"
       download_csv: "CSV"
+      query_groups: "Gruplar"
       query_description: "Açıklama"
       save_params: "Varsayılan belirle"
       reset_params: "Sıfırla"
       search_placeholder: "Ara..."
+    group:
+      reports: "Raporlar"

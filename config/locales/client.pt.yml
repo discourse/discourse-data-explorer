@@ -20,6 +20,7 @@ pt:
       save: "Guardar alterações"
       edit: "Editar"
       delete: "Eliminar"
+      query_groups: "Grupos"
       query_description: "Descrição"
       reset_params: "Repor"
       search_placeholder: "Pesquisar..."

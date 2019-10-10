@@ -49,6 +49,7 @@ hy:
         one: "Ցուցադրվում են թոփ %{count} արդյունքները:"
         other: "Ցուցադրվում են թոփ %{count} արդյունքները"
       query_name: "Հարցում"
+      query_groups: "Խմբեր"
       query_description: "Նկարագրություն"
       query_time: "Վերջին գործարկումը"
       query_user: "Ստեղծել է՝"
@@ -58,3 +59,5 @@ hy:
       reset_params: "Վերահաստատե;"
       search_placeholder: "Որոնում..."
       no_search_results: "Ներողություն, մենք չկարողացանք գտնել Ձեր տեքստի հետ համընկնող որևէ արդյունք:"
+    group:
+      reports: "Հաշվետվություններ"

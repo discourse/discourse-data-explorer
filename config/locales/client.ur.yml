@@ -49,6 +49,8 @@ ur:
         one: "سب سے اوپر کے %{count} نتائج دکھائیں۔"
         other: "سب سے اوپر کے %{count} نتائج دکھائیں۔"
       query_name: "ڈیٹا کمانڈ"
+      query_groups: "گروپس"
+      report_name: "رپورٹ"
       query_description: "تفصیل"
       query_time: "چلا آخری دفعہ"
       query_user: "نے بنایا"
@@ -58,3 +60,5 @@ ur:
       reset_params: "رِی سَیٹ"
       search_placeholder: "تلاش کریں..."
       no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہ مل سکے۔"
+    group:
+      reports: "رپورٹیں"

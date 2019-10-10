@@ -18,5 +18,6 @@ lv:
       save: "Saglabāt izmaiņas"
       edit: "Labot"
       delete: "Dzēst"
+      query_groups: "Grupas"
       query_description: "Apraksts"
       reset_params: "Atlikt"

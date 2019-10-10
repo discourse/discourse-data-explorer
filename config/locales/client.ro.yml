@@ -20,6 +20,7 @@ ro:
       save: "Salvează schimbările"
       edit: "Editează"
       delete: "Șterge"
+      query_groups: "Grupuri"
       query_description: "Descriere"
       reset_params: "Resetează"
       search_placeholder: "Caută..."

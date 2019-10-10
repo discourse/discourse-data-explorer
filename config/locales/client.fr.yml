@@ -49,6 +49,7 @@ fr:
         one: "Affichage des %{count} premièrs résultats."
         other: "Affichage des %{count} premièrs résultats."
       query_name: "Requête"
+      query_groups: "Groupes"
       query_description: "Description"
       query_time: "Dernière exécution"
       query_user: "Créée par"
@@ -58,3 +59,5 @@ fr:
       reset_params: "Réinitialiser"
       search_placeholder: "Rechercher..."
       no_search_results: "Désolé, nous ne trouvons pas de résultats qui correspondent à votre texte."
+    group:
+      reports: "Rapports"

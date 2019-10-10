@@ -47,6 +47,7 @@ zh_CN:
       max_result_count:
         other: "显示前%{count}个结果。"
       query_name: "查询"
+      query_groups: "群组"
       query_description: "描述"
       query_time: "最后运行"
       query_user: "创建于"
@@ -56,3 +57,5 @@ zh_CN:
       reset_params: "重置"
       search_placeholder: "搜索……"
       no_search_results: "抱歉，我们找不到符合你文本的结果。"
+    group:
+      reports: "报告"

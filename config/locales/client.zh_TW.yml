@@ -20,6 +20,9 @@ zh_TW:
       save: "儲存變更"
       edit: "編輯"
       delete: "刪除"
+      query_groups: "群組"
       query_description: "描述"
       reset_params: "重置"
       search_placeholder: "搜尋..."
+    group:
+      reports: "報告"

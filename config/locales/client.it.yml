@@ -49,6 +49,7 @@ it:
         one: "Mostra i primi %{count} risultati."
         other: "Mostra i primi %{count} risultati."
       query_name: "Query"
+      query_groups: "Gruppi"
       query_description: "Descrizione"
       query_time: "Ultima esecuzione"
       query_user: "Creato da"
@@ -58,3 +59,5 @@ it:
       reset_params: "Azzera"
       search_placeholder: "Cerca..."
       no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."
+    group:
+      reports: "Rapporti"
