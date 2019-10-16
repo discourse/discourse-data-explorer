@@ -658,7 +658,8 @@ SQL
       [:name, :description, :sql, :created_by, :created_at, :last_run_at].each do |sym|
         query.send("#{sym}=", h[sym].strip) if h[sym]
       end
-      query.group_ids = h[:group_ids]
+      group_ids = (h[:group_ids] == "" || !h[:group_ids]) ? [] : h[:group_ids]
+      query.group_ids = group_ids
       query.id = h[:id].to_i if h[:id]
       query
     end
