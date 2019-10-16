@@ -19,8 +19,8 @@ export default Ember.Controller.extend({
   explain: false,
 
   saveDisabled: Ember.computed.not("selectedItem.dirty"),
-  runDisabled: Ember.computed.alias("selectedItem.dirty"),
-  results: Ember.computed.alias("selectedItem.results"),
+  runDisabled: Ember.computed.reads("selectedItem.dirty"),
+  results: Ember.computed.reads("selectedItem.results"),
 
   asc: null,
   order: null,
@@ -33,9 +33,9 @@ export default Ember.Controller.extend({
   @computed("search", "sortBy")
   filteredContent(search) {
     const regexp = new RegExp(search, "i");
-    return this.sortedQueries.filter(result => {
-      return regexp.test(result.name) || regexp.test(result.description);
-    });
+    return this.sortedQueries.filter(
+      result => regexp.test(result.name) || regexp.test(result.description)
+    );
   },
 
   @computed("newQueryName")
