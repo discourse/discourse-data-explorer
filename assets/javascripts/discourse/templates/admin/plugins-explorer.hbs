@@ -56,7 +56,11 @@
             <div class="groups">
               <span class="label">Allow groups to acess this query</span>
               <span>
-                {{multi-select values=selectedItem.group_ids content=groupOptions}}
+                {{multi-select
+                  values=selectedItem.group_ids
+                  content=groupOptions
+                  allowAny=false
+                }}
               </span>
               {{#if runDisabled}}
                 {{#unless editing}}
@@ -176,7 +180,7 @@
             <th class='col heading group-names'>
               <div class='group-names-header'>
                 {{i18n "explorer.query_groups"}}
-              </div>              
+              </div>
             </th>
             <th class="col heading created-at">
               <div class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
