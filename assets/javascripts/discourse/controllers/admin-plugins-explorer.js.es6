@@ -7,7 +7,7 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 
-const NoQuery = Query.create({ name: "No queries", fake: true });
+const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
 export default Ember.Controller.extend({
   queryParams: { selectedQueryId: "id" },
@@ -45,12 +45,17 @@ export default Ember.Controller.extend({
 
   @computed("selectedQueryId")
   selectedItem(selectedQueryId) {
-    const id = parseInt(selectedQueryId);
-    const item = this.model.find(q => q.id === id);
+    const id = parseInt(selectedQueryId, 10);
+    const item = this.model.findBy("id", id);
+
     !isNaN(id)
       ? this.set("showRecentQueries", false)
       : this.set("showRecentQueries", true);
-    if (id < 0) this.set("editDisabled", true);
+
+    if (id < 0) {
+      this.set("editDisabled", true);
+    }
+
     return item || NoQuery;
   },
 
