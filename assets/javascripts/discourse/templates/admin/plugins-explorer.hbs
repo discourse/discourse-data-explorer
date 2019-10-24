@@ -215,7 +215,7 @@
                     <medium>
                       {{bound-date query.last_run_at}}
                     </medium>
-                  {{else}}
+                  {{else if query.created_at}}
                     <medium>
                       {{bound-date query.created_at}}
                     </medium>
