@@ -360,7 +360,10 @@ table.group-reports {
       color: $primary-high;
     }
     .query-group-names {
-      color: $primary-high;
+      color: $tertiary;
+      a {
+        display: inline;
+      }
     }
     .query-created-at {
       color: $primary-medium;
@@ -398,3 +401,22 @@ table.group-reports {
 .explorer-pad-bottom {
   margin-bottom: 200px;
 }
+
+.share-report {
+  cursor: pointer;
+
+  label {
+    color: $primary-high;
+  }
+  input {
+    margin-right: 4px;
+  }
+  .popup {
+    background: white;
+    position: absolute;
+    box-shadow: shadow("card");
+    padding: 12px;
+    z-index: 1;
+  }
+}
+

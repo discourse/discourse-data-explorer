@@ -206,9 +206,9 @@
                   {{/if}}
                 </td>
                 <td class="query-group-names">
-                  {{#if query.group_names}}
-                    <medium>{{query.group_names}}</medium>
-                  {{/if}}
+                  {{#each query.group_names as |group|}}
+                    {{share-report group=group query=query}}
+                  {{/each}}
                 </td>
                 <td class="query-created-at">
                   {{#if query.last_run_at}}

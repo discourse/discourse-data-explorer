@@ -1,0 +1,13 @@
+<div onclick={{action "open"}}>
+  {{d-icon "link"}}
+  {{group}}
+</div>
+{{#if visible}}
+  <div class='popup'>
+    <label>Link for {{group}}</label>
+    <input value={{link}}/>
+    <span onclick={{action "close"}}>
+      {{d-icon "times"}}
+    </span>
+  </div>
+{{/if}}
