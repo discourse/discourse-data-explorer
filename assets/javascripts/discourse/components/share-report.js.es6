@@ -2,8 +2,6 @@ import {
   default as computed,
   on
 } from "ember-addons/ember-computed-decorators";
-import Sharing from "discourse/lib/sharing";
-import { nativeShare } from "discourse/lib/pwa-utils";
 
 export default Ember.Component.extend({
   classNames: ["share-report"],
