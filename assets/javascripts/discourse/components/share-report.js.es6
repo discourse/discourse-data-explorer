@@ -67,7 +67,7 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    open(e) {
+    open() {
       this.set("visible", true);
       window.setTimeout(
         () =>
@@ -79,7 +79,7 @@ export default Ember.Component.extend({
       );
     },
 
-    close(e) {
+    close() {
       this.set("visible", false);
     }
   }
