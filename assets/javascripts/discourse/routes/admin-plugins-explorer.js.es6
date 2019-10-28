@@ -24,8 +24,6 @@ export default Discourse.Route.extend({
                 "group_names",
                 (query.group_ids || [])
                   .map(id => groupNames[id])
-                  .filter(n => n)
-                  .join(", ")
               );
             });
             return { model, schema, groups };
