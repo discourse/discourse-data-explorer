@@ -60,6 +60,7 @@ en:
         other: "Showing top %{count} results."
       query_name: "Query"
       query_groups: "Groups"
+      link: "Link for"
       report_name: "Report"
       query_description: "Description"
       query_time: "Last run"

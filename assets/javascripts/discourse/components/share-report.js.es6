@@ -13,9 +13,7 @@ export default Ember.Component.extend({
   @computed("group", "query")
   link() {
     return (
-      window.location.protocol +
-      "//" +
-      window.location.host +
+      Discourse.BaseUrl +
       "/g/" +
       this.group +
       "/reports/" +
