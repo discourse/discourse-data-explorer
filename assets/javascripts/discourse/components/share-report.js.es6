@@ -12,13 +12,7 @@ export default Ember.Component.extend({
 
   @computed("group", "query")
   link() {
-    return (
-      Discourse.BaseUrl +
-      "/g/" +
-      this.group +
-      "/reports/" +
-      this.query.id
-    );
+    return Discourse.BaseUrl + "/g/" + this.group + "/reports/" + this.query.id;
   },
 
   _mouseDownHandler(event) {

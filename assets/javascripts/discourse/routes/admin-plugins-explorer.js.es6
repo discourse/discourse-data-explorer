@@ -22,8 +22,7 @@ export default Discourse.Route.extend({
               query.markNotDirty();
               query.set(
                 "group_names",
-                (query.group_ids || [])
-                  .map(id => groupNames[id])
+                (query.group_ids || []).map(id => groupNames[id])
               );
             });
             return { model, schema, groups };
