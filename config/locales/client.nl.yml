@@ -7,22 +7,59 @@
 
 nl:
   js:
+    errors:
+      explorer:
+        no_semicolons: "Verwijder de puntkomma's uit de query."
+        dirty: "U moet de query opslaan voor dat u deze uitvoert."
     explorer:
+      admins_only: "De gegevensverkenner is alleen beschikbaar voor beheerders."
+      title: "Gegevensverkenner"
+      create: "Nieuwe maken"
+      create_placeholder: "Querynaam..."
+      description_placeholder: "Voer hier een omschrijving in"
       import:
         label: "Importeren"
+        modal: "Een query importeren"
       schema:
+        title: "Databaseschema"
         filter: "Zoeken..."
+        sensitive: "De inhoud van deze kolom kan bijzonder gevoelige of privégegevens bevatten. Wees voorzichtig bij het gebruiken van de inhoud van deze kolom."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Typen</a>"
       types:
         bool:
           'yes': "Ja"
           'no': "Nee"
+          null_: "Null"
       export: "Exporteren"
       save: "Wijzigingen opslaan"
+      saverun: "Wijzigingen opslaan en uitvoeren"
+      run: "Uitvoeren"
+      undo: "Wijzigingen negeren"
       edit: "Bewerken"
       delete: "Verwijderen"
+      recover: "Query verwijderen ongedaan maken"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als u de pagina verlaat."
+      run_time: "Query voltooid in {{value}} ms."
+      result_count:
+        one: "%{count} resultaat."
+        other: "%{count} resultaten."
+      max_result_count:
+        one: "Bovenste %{count} resultaten worden getoond."
+        other: "Bovenste %{count} resultaten worden getoond."
+      query_name: "Query"
       query_groups: "Groepen"
+      link: "Koppeling voor"
+      report_name: "Rapport"
       query_description: "Omschrijving"
+      query_time: "Laatste uitvoering"
+      query_user: "Gemaakt door"
+      column: "Kolom {{number}}"
+      explain_label: "Queryplan bijvoegen?"
+      save_params: "Standaardwaarden instellen"
       reset_params: "Terugzetten"
       search_placeholder: "Zoeken..."
+      no_search_results: "Er zijn geen resultaten voor uw tekst gevonden."
     group:
       reports: "Rapporten"

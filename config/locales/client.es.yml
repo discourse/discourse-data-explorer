@@ -50,6 +50,7 @@ es:
         other: "Mostrando los %{count} resultados más destacados."
       query_name: "Consulta"
       query_groups: "Grupos"
+      link: "Enlace para"
       report_name: "Reportar"
       query_description: "Descripción"
       query_time: "Última ejecución"

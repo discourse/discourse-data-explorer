@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk: {}
+uk:
+  site_settings:
+    data_explorer_enabled: "Увімкніть Data Explorer в /admin/plugins/explorer"

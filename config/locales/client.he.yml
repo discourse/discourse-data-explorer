@@ -54,6 +54,7 @@ he:
         other: "%{count} התוצאות המובילות מופיעות."
       query_name: "שאילתה"
       query_groups: "קבוצות"
+      link: "קישור אל"
       report_name: "דוח"
       query_description: "תיאור"
       query_time: "הרצה אחרונה"

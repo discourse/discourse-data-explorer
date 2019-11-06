@@ -7,17 +7,63 @@
 
 uk:
   js:
+    errors:
+      explorer:
+        no_semicolons: "Вилучіть крапки з комою з запиту."
+        dirty: "Ви повинні зберегти запит перед запуском."
     explorer:
+      admins_only: "Data explorer доступний лише адміністраторам."
+      title: "Data Explorer"
+      create: "Створити новий"
+      create_placeholder: "Назва запиту..."
+      description_placeholder: "Введіть тут опис"
       import:
         label: "Імпорт"
+        modal: "Імпорт запиту"
+      schema:
+        title: "Схема бази даних"
+        filter: "Пошук..."
+        sensitive: "Вміст цього стовпця може містити особливо чутливу або приватну інформацію. Будьте обережні, використовуючи вміст цього стовпця."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Типи</a>"
       types:
         bool:
           'yes': "Так"
           'no': "Ні"
+          null_: "Null"
       export: "Експорт"
       save: "Зберегти зміни"
+      saverun: "Збережіть зміни та запустіть"
+      run: "Запуск"
+      undo: "Скасувати зміни"
       edit: "Редагувати"
       delete: "Видалити"
+      recover: "Видалити запит"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "У запиті є не збережені зміни, які будуть втрачені, якщо ви перейдете далі."
+      run_time: "Запит виконано за {{value}} мс."
+      result_count:
+        one: "%{count} результат."
+        few: "%{count} результатів."
+        many: "%{count} результатів."
+        other: "%{count} результатів."
+      max_result_count:
+        one: "Показано найкращі результати %{count}"
+        few: "Показано найкращі результати %{count}"
+        many: "Показано найкращі результати %{count}"
+        other: "Показано перші %{count}результати."
+      query_name: "Запит"
       query_groups: "Групи"
+      link: "Посилання для"
+      report_name: "Звіт"
       query_description: "Опис"
+      query_time: "Останній запуск"
+      query_user: "Створено"
+      column: "Стовпець {{number}}"
+      explain_label: "Включити план запитів?"
+      save_params: "Встановити значення за замовчуванням"
       reset_params: "Скинути"
+      search_placeholder: "Пошук ..."
+      no_search_results: "На жаль, не вдалося знайти жодного результату, відповідного вашому тексту."
+    group:
+      reports: "Звіти"
