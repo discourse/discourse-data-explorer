@@ -972,7 +972,7 @@ SQL
           false
         end
       end
-      return ret_params
+      ret_params
     end
   end
 
