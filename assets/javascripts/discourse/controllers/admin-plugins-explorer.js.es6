@@ -70,7 +70,7 @@ export default Ember.Controller.extend({
 
   @computed("groups")
   groupOptions(groups) {
-    return groups.arrangedContent.map(g => {
+    return groups.map(g => {
       return { id: g.id.toString(), name: g.name };
     });
   },
