@@ -4,7 +4,7 @@ export default Discourse.Route.extend({
   controllerName: "admin-plugins-explorer",
 
   model() {
-    const groupPromise = this.store.findAll("group");
+    const groupPromise = ajax("/admin/plugins/explorer/groups.json");
     const schemaPromise = ajax("/admin/plugins/explorer/schema.json", {
       cache: true
     });

@@ -1032,6 +1032,10 @@ SQL
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
     end
 
+    def groups
+      render_serialized(Group.all, BasicGroupSerializer)
+    end
+
     def group_reports_index
       return raise Discourse::NotFound unless guardian.user_is_a_member_of_group?(group)
 
@@ -1239,6 +1243,7 @@ SQL
     root to: "query#index"
     get 'schema' => "query#schema"
     get 'queries' => "query#index"
+    get 'groups' => "query#groups"
     post 'queries' => "query#create"
     get 'queries/:id' => "query#show"
     put 'queries/:id' => "query#update"
