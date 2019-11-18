@@ -63,7 +63,7 @@ const QueryRowContentComponent = Ember.Component.extend(
 
       const parts = this.columnTemplates.map((t, idx) => {
         const value = row[idx],
-          id = parseInt(value);
+          id = parseInt(value, 10);
 
         const ctx = {
           value,
