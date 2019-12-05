@@ -471,13 +471,16 @@ class Queries
         users.id AS user_id,
         users.username,
         users.name,
-        users.trust_level
+        users.trust_level,
+        poll_options.html AS vote_option_full
       FROM
         poll_votes
       INNER JOIN
         polls ON polls.id = poll_votes.poll_id
       INNER JOIN
         users ON users.id = poll_votes.user_id
+      INNER JOIN
+        poll_options ON poll_votes.poll_id = poll_options.poll_id AND poll_votes.poll_option_id = poll_options.id
       WHERE
         polls.name = :poll_name AND
         polls.post_id = :post_id
