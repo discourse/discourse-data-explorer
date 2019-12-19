@@ -7,4 +7,4 @@
 
 nl:
   site_settings:
-    data_explorer_enabled: "De Data Explorer bij /admin/plugins/explorer inschakelen."
+    data_explorer_enabled: "De gegevensverkenner onder /admin/plugins/explorer inschakelen"

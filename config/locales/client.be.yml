@@ -19,3 +19,5 @@ be:
       query_groups: "групы"
       query_description: "апісанне"
       reset_params: "скінуць"
+    group:
+      reports: "Справаздачы"

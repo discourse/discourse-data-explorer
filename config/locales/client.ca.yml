@@ -50,6 +50,7 @@ ca:
         other: "Es mostren els millors %{count} resultats."
       query_name: "Consulta"
       query_groups: "Grups"
+      link: "Enllaç de"
       report_name: "Report"
       query_description: "Descripció"
       query_time: "Darrera execució"

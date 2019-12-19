@@ -50,6 +50,7 @@ de:
         other: "Zeige die ersten %{count} Ergebnisse."
       query_name: "Anfrage"
       query_groups: "Gruppen"
+      link: "Link für"
       report_name: "Bericht"
       query_description: "Beschreibung"
       query_time: "Letzter Lauf"
