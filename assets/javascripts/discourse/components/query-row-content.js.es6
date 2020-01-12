@@ -88,19 +88,13 @@ const QueryRowContentComponent = Ember.Component.extend({
         ctx["target"] = name;
       }
 
-      if (
-        t.name === "category" ||
-        t.name === "badge" ||
-        t.name === "reltime"
-      ) {
+      if (t.name === "category" || t.name === "badge" || t.name === "reltime") {
         // only replace helpers if needed
         params.helpers = helpers;
       }
 
       try {
-        return new Handlebars.SafeString(
-          (t.template || fallback)(ctx, params)
-        );
+        return new Handlebars.SafeString((t.template || fallback)(ctx, params));
       } catch (e) {
         return "error";
       }
