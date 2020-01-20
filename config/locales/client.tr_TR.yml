@@ -7,12 +7,25 @@
 
 tr_TR:
   js:
+    errors:
+      explorer:
+        no_semicolons: "Noktalı virgülleri sorudan kaldırın."
+        dirty: "Çalıştırmadan önce soruyu kaydetmeniz gerekir."
     explorer:
+      admins_only: "Veri gezgini yalnızca yöneticiler tarafından kullanılabilir."
+      allow_groups: "Grupların bu sorguya erişmesine izin ver"
+      title: "Veri Gezgini"
       create: "Yeni Oluştur"
+      create_placeholder: "Sorgu adı ..."
+      description_placeholder: "Buraya bir açıklama girin"
       import:
         label: "İçeri Aktar"
+        modal: "Sorguyu İçe Aktar"
       schema:
+        title: "Veritabanı Şeması"
         filter: "Ara..."
+        sensitive: "Bu sütunun içeriği hassas veya özel bilgiler içerebilir. Lütfen bu sütunun içeriğini kullanırken dikkatli olun."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Türleri</a>"
       types:
         bool:
           'yes': "Evet"
@@ -20,14 +33,34 @@ tr_TR:
           null_: "Boş"
       export: "Dışarı Aktar"
       save: "Değişiklikleri Kaydet"
+      saverun: "Değişiklikleri Kaydet ve Çalıştır"
+      run: "Çalıştır"
+      undo: "Değişiklikleri gözardı et"
       edit: "Düzenle"
       delete: "Sil"
+      recover: "Sorguyu Geri Al"
       download_json: "JSON"
       download_csv: "CSV"
+      others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
+      run_time: "Sorgu, {{value}} ms&#39;de tamamlandı."
+      result_count:
+        one: "%{count} sonucu."
+        other: "%{count} sonuçları."
+      max_result_count:
+        one: "En iyi %{count} sonuç gösteriliyor."
+        other: "En iyi %{count} sonuç gösteriliyor."
+      query_name: "Sorgu"
       query_groups: "Gruplar"
+      link: "Şunun için bağlantı linki:"
+      report_name: "Rapor"
       query_description: "Açıklama"
+      query_time: "Son çalıştırma"
+      query_user: "Tarafından yaratıldı"
+      column: "Sütun {{number}}"
+      explain_label: "Sorgu planı eklensin mi?"
       save_params: "Varsayılan belirle"
       reset_params: "Sıfırla"
       search_placeholder: "Ara..."
+      no_search_results: "Üzgünüz, metninizle eşleşen bir sonuç bulamadık."
     group:
       reports: "Raporlar"

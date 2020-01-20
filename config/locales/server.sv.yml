@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sv: {}
+sv:
+  site_settings:
+    data_explorer_enabled: "Aktivera Datautforskaren på /admin/plugins/explorer"

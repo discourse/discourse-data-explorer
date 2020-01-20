@@ -13,6 +13,7 @@ nl:
         dirty: "U moet de query opslaan voor dat u deze uitvoert."
     explorer:
       admins_only: "De gegevensverkenner is alleen beschikbaar voor beheerders."
+      allow_groups: "Groepen hebben toegang tot deze query"
       title: "Gegevensverkenner"
       create: "Nieuwe maken"
       create_placeholder: "Querynaam..."
