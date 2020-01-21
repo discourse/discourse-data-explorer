@@ -1085,6 +1085,7 @@ SQL
       end
     end
 
+    skip_before_action :check_xhr, only: [:group_reports_run]
     def group_reports_run
       return raise Discourse::NotFound unless guardian.user_can_access_query?(group, query)
 
