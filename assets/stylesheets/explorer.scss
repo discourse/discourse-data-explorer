@@ -191,7 +191,7 @@ table.group-reports {
 }
 
 .query-edit {
-  .name {
+  > .name {
     display: flex;
     align-items: center;
     margin-bottom: 1em;
