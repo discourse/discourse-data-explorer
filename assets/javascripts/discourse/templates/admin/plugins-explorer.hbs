@@ -57,9 +57,10 @@
               <span class="label">{{i18n "explorer.allow_groups"}}</span>
               <span>
                 {{multi-select
-                  values=selectedItem.group_ids
+                  value=selectedItem.group_ids
                   content=groupOptions
                   allowAny=false
+                  onSelect=(action (mut selectedItem.group_ids))
                 }}
               </span>
               {{#if runDisabled}}
