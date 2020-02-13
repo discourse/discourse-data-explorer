@@ -13,6 +13,7 @@ de:
         dirty: "Du musst die Anfrage speicher, bevor du sie startest."
     explorer:
       admins_only: "Dieser Daten-Explorer ist nur für Administratoren verfügbar."
+      allow_groups: "Gruppen erlauben, auf diese Abfrage zuzugreifen"
       title: "Daten-Explorer"
       create: "Neu erstellen"
       create_placeholder: "Name der Anfrage…"

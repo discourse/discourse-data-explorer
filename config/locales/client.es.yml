@@ -13,7 +13,7 @@ es:
         dirty: "Debes guardar la consulta antes de ejecutarla."
     explorer:
       admins_only: "El explorador de datos solo esta disponible para administradores."
-      allow_groups: "Permitir grupos acceder a esta consulta"
+      allow_groups: "Permitir a los grupos acceder a esta consulta"
       title: "Explorador de datos"
       create: "Crear nuevo"
       create_placeholder: "Nombre de la consulta..."
