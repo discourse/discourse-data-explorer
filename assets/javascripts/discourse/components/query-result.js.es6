@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as computed } from "discourse-common/utils/decorators";
 
 function randomIdShort() {
   return "xxxxxxxx".replace(/[xy]/g, () => {

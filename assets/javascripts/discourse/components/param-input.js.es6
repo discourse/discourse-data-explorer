@@ -1,4 +1,4 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as computed } from "discourse-common/utils/decorators";
 // import Category from 'discourse/models/category';
 
 const Category = Discourse.Category;

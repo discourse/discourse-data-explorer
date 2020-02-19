@@ -1,4 +1,4 @@
-import { on } from "ember-addons/ember-computed-decorators";
+import { on } from "discourse-common/utils/decorators";
 
 export default Ember.Component.extend({
   classNameBindings: [":schema-table", "open"],

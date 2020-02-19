@@ -5,7 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import {
   default as computed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 

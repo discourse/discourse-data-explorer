@@ -1,7 +1,7 @@
 import {
   default as computed,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import debounce from "discourse/lib/debounce";
 
 export default Ember.Component.extend({

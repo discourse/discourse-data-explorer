@@ -1,4 +1,4 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as computed } from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 

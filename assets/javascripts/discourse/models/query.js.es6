@@ -2,7 +2,7 @@ import {
   default as computed,
   on,
   observes
-} from "ember-addons/ember-computed-decorators";
+} from "discourse-common/utils/decorators";
 import RestModel from "discourse/models/rest";
 
 const Query = RestModel.extend({
