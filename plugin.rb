@@ -23,7 +23,8 @@ end
 add_admin_route 'explorer.title', 'explorer'
 
 module ::DataExplorer
-  QUERY_RESULT_MAX_LIMIT = 1000
+  QUERY_RESULT_DEFAULT_LIMIT = 1000
+  QUERY_RESULT_MAX_LIMIT = 10000
 
   def self.plugin_name
     'discourse-data-explorer'.freeze
@@ -130,7 +131,7 @@ after_initialize do
 WITH query AS (
 #{query.sql}
 ) SELECT * FROM query
-LIMIT #{opts[:limit] || DataExplorer::QUERY_RESULT_MAX_LIMIT}
+LIMIT #{opts[:limit] || DataExplorer::QUERY_RESULT_DEFAULT_LIMIT}
 SQL
 
           time_start = Time.now
@@ -1179,10 +1180,12 @@ SQL
       opts[:explain] = true if params[:explain] == "true"
 
       opts[:limit] =
-        if params[:limit] == "ALL" || params[:format] == "csv"
-          "ALL"
-        elsif params[:limit]
+        if params[:limit]
           params[:limit].to_i
+        elsif params[:format] == "csv"
+          DataExplorer::QUERY_RESULT_MAX_LIMIT
+        elsif params[:limit] == "ALL"
+          "ALL"
         end
 
       result = DataExplorer.run_query(query, query_params, opts)
@@ -1220,7 +1223,7 @@ SQL
               result_count: pg_result.values.length || 0,
               params: query_params,
               columns: cols,
-              default_limit: DataExplorer::QUERY_RESULT_MAX_LIMIT
+              default_limit: DataExplorer::QUERY_RESULT_DEFAULT_LIMIT
             }
             json[:explain] = result[:explain] if opts[:explain]
 
