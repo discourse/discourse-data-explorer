@@ -1181,11 +1181,9 @@ SQL
 
       opts[:limit] =
         if params[:limit]
-          params[:limit].to_i
+          params[:limit] == "ALL" ? "ALL" : params[:limit].to_i
         elsif params[:format] == "csv"
           DataExplorer::QUERY_RESULT_MAX_LIMIT
-        elsif params[:limit] == "ALL"
-          "ALL"
         end
 
       result = DataExplorer.run_query(query, query_params, opts)
