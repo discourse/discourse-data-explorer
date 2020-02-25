@@ -13,6 +13,7 @@ zh_CN:
         dirty: "运行 query 之前必须先保存 query"
     explorer:
       admins_only: "数据探索器仅admin可用。"
+      allow_groups: "允许群组访问此查询"
       title: "数据查看"
       create: "创建新的"
       create_placeholder: "查询名称..."
@@ -48,6 +49,8 @@ zh_CN:
         other: "显示前%{count}个结果。"
       query_name: "查询"
       query_groups: "群组"
+      link: "连接到"
+      report_name: "报告"
       query_description: "描述"
       query_time: "最后运行"
       query_user: "创建于"
