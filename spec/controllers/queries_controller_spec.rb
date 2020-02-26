@@ -248,6 +248,65 @@ describe DataExplorer::QueryController do
         post :run, params: { id: q.id, download: 1 }, format: :csv
         expect(response.status).to eq(200)
       end
+
+      context "`limit` parameter" do
+        before do
+          create_post
+          create_post
+          create_post
+        end
+
+        it "should limit the results in JSON response" do
+          begin
+            original_const = DataExplorer::QUERY_RESULT_DEFAULT_LIMIT
+            DataExplorer.send(:remove_const, "QUERY_RESULT_DEFAULT_LIMIT")
+            DataExplorer.const_set("QUERY_RESULT_DEFAULT_LIMIT", 2)
+
+            q = make_query <<~SQL
+            SELECT id FROM posts
+            SQL
+
+            run_query q.id
+            expect(response_json['rows'].count).to eq(2)
+
+            post :run, params: { id: q.id, limit: 1 }, format: :json
+            expect(response_json['rows'].count).to eq(1)
+
+            post :run, params: { id: q.id, limit: "ALL" }, format: :json
+            expect(response_json['rows'].count).to eq(3)
+          ensure
+            DataExplorer.send(:remove_const, "QUERY_RESULT_DEFAULT_LIMIT")
+            DataExplorer.const_set("QUERY_RESULT_DEFAULT_LIMIT", original_const)
+          end
+        end
+
+        it "should limit the results in CSV download" do
+          begin
+            original_const = DataExplorer::QUERY_RESULT_MAX_LIMIT
+            DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
+            DataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
+
+            ids = Post.order(:id).pluck(:id)
+
+            q = make_query <<~SQL
+            SELECT id FROM posts
+            SQL
+
+            post :run, params: { id: q.id, download: 1 }, format: :csv
+            expect(response.body.split("\n").count).to eq(3)
+
+            post :run, params: { id: q.id, download: 1, limit: 1 }, format: :csv
+            expect(response.body.split("\n").count).to eq(2)
+
+            # The value `ALL` is not supported in csv exports.
+            post :run, params: { id: q.id, download: 1, limit: "ALL" }, format: :csv
+            expect(response.body.split("\n").count).to eq(1)
+          ensure
+            DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
+            DataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", original_const)
+          end
+        end
+      end
     end
   end
 
