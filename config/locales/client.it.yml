@@ -13,6 +13,7 @@ it:
         dirty: "È necessario salvare la query prima di eseguirla."
     explorer:
       admins_only: "Data explorer è disponibile solo per gli amministratori."
+      allow_groups: "Consenti ai gruppi di accedere a questa query"
       title: "Data Explorer"
       create: "Crea Nuovo"
       create_placeholder: "Nome ricerca..."
@@ -50,6 +51,8 @@ it:
         other: "Mostra i primi %{count} risultati."
       query_name: "Query"
       query_groups: "Gruppi"
+      link: "Collegamento per"
+      report_name: "Rapporto"
       query_description: "Descrizione"
       query_time: "Ultima esecuzione"
       query_user: "Creato da"
