@@ -2,10 +2,7 @@
 log/*.log
 pkg/
 auto_generated
-Gemfile.lock
 .DS_Store
 *.swp
 *.swo
 node_modules/
-
-.rubocop-https---raw-githubusercontent-com-discourse-discourse-master--rubocop-yml
