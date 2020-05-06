@@ -1,6 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { default as computed } from "discourse-common/utils/decorators";
 
 function randomIdShort() {
@@ -31,6 +30,22 @@ const QueryResultComponent = Ember.Component.extend({
   params: Ember.computed.alias("content.params"),
   explainText: Ember.computed.alias("content.explain"),
   hasExplain: Ember.computed.notEmpty("content.explain"),
+
+  init() {
+    this._super(...arguments);
+
+    // TODO: After `__DISCOURSE_RAW_TEMPLATES` is in stable this should be updated
+    // to use only `import { findRawTemplate } from "discourse-common/lib/raw-templates"`
+    if (window.__DISCOURSE_RAW_TEMPLATES) {
+      this.findRawTemplate = requirejs(
+        "discourse-common/lib/raw-templates"
+      ).findRawTemplate;
+    } else {
+      this.findRawTemplate = requirejs(
+        "discourse/lib/raw-templates"
+      ).findRawTemplate;
+    }
+  },
 
   @computed("content.result_count")
   resultCount(count) {
@@ -80,7 +95,7 @@ const QueryResultComponent = Ember.Component.extend({
 
   @computed
   fallbackTemplate() {
-    return getOwner(this).lookup("template:explorer/text.raw");
+    return this.findRawTemplate("javascripts/explorer/text");
   },
 
   @computed("content", "columns.[]")
@@ -94,11 +109,7 @@ const QueryResultComponent = Ember.Component.extend({
         viewName = this.get("content.colrender")[idx];
       }
 
-      // After `findRawTemplates` is in stable this should be updated to use that
-      let template = getOwner(this).lookup(`template:explorer/${viewName}.raw`);
-      if (!template) {
-        template = Discourse.RAW_TEMPLATES[`javascripts/explorer/${viewName}`];
-      }
+      const template = this.findRawTemplate(`javascripts/explorer/${viewName}`);
 
       return { name: viewName, template };
     });
