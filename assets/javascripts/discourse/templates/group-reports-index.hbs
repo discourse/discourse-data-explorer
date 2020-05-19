@@ -19,7 +19,11 @@
             {{#link-to 'group.reports.show' group.name query.id}}{{query.name}}{{/link-to}}
           </td>
           <td>{{query.description}}</td>
-          <td>{{bound-date query.last_run_at}}</td>
+          <td>
+            {{#if query.last_run_at}}
+              {{bound-date query.last_run_at}}
+            {{/if}}
+          </td>
         </tr>
       {{/each}}
     </tbody>
