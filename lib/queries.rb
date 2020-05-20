@@ -90,6 +90,16 @@ class Queries
             "id": -16,
             "name": "Poll results report",
             "description": "Details of a poll result, including details about each vote and voter, useful for analyzing results in external software."
+        },
+        "top-tags-per-year": {
+            "id": -17,
+            "name": "Top tags per year",
+            "description": "List the top tags per year."
+        },
+        "number_of_replies_by_category": {
+            "id": -18,
+            "name": "Number of replies by category",
+            "description": "List the number of replies by category."
         }
     }.with_indifferent_access
 
