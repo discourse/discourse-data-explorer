@@ -509,6 +509,34 @@ class Queries
 	ORDER BY year DESC, qt DESC
     SQL
 
+
+    queries["number_of_replies_by_category"]["sql"] = <<~SQL
+	-- [params]
+	-- boolean :enable_null_category = false
+
+	WITH post AS (SELECT 
+	    id AS post_id,
+	    topic_id,
+	    EXTRACT(YEAR FROM created_at) AS year
+	FROM posts
+	WHERE post_type = 1
+	    AND deleted_at ISNULL
+	    AND post_number != 1)
+	    
+	SELECT 
+	    p.year,
+	    t.category_id AS id, 
+	    c.name category,
+	    COUNT(p.post_id) AS qt
+	FROM post p
+	INNER JOIN topics t ON t.id = p.topic_id
+	LEFT JOIN categories c ON c.id = t.category_id
+	WHERE t.deleted_at ISNULL
+	    AND (:enable_null_category = true OR t.category_id NOTNULL)
+	GROUP BY t.category_id, c.name, p.year
+	ORDER BY p.year DESC, qt DESC
+    SQL
+
   # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
   queries.transform_keys!.with_index { |key, idx| "-#{idx + 1}" }
   queries
