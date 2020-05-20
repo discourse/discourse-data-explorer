@@ -509,7 +509,6 @@ class Queries
 	ORDER BY year DESC, qt DESC
     SQL
 
-
     queries["number_of_replies_by_category"]["sql"] = <<~SQL
 	-- [params]
 	-- boolean :enable_null_category = false
