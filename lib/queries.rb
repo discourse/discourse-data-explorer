@@ -486,6 +486,29 @@ class Queries
         polls.post_id = :post_id
     SQL
 
+    queries["top-tags-per-year"]["sql"] = <<~SQL
+	-- [params]
+	-- integer :rank_max = 5
+
+	WITH data AS (SELECT 
+	    tag_id,
+	    EXTRACT(YEAR FROM created_at) AS year
+	FROM topic_tags)
+
+	SELECT year, rank, name, qt FROM (
+	    SELECT 
+		tag_id,
+		COUNT(tag_id) AS qt,
+		year,
+		rank() OVER (PARTITION BY year ORDER BY COUNT(tag_id) DESC) AS rank    
+	    FROM
+		data
+	    GROUP BY year, tag_id) as rnk
+	INNER JOIN tags ON tags.id = rnk.tag_id
+	WHERE rank <= :rank_max
+	ORDER BY year DESC, qt DESC
+    SQL
+
   # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
   queries.transform_keys!.with_index { |key, idx| "-#{idx + 1}" }
   queries
