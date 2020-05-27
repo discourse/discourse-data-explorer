@@ -50,6 +50,7 @@ pt_BR:
         other: "Mostrando os principais %{count} resultados."
       query_name: "Consulta"
       query_groups: "Grupos"
+      report_name: "Reportar"
       query_description: "Descrição"
       query_time: "Última execução"
       query_user: "Criado por"
