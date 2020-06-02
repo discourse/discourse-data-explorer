@@ -52,7 +52,7 @@ en:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
-      run_time: "Query completed in {{value}} ms."
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} result."
         other: "%{count} results."
@@ -66,7 +66,7 @@ en:
       query_description: "Description"
       query_time: "Last run"
       query_user: "Created by"
-      column: "Column {{number}}"
+      column: "Column %{number}"
       explain_label: "Include query plan?"
       save_params: "Set Defaults"
       reset_params: "Reset"
