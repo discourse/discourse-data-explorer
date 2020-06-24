@@ -24,7 +24,7 @@ add_admin_route 'explorer.title', 'explorer'
 
 module ::DataExplorer
   QUERY_RESULT_DEFAULT_LIMIT = 1000
-  QUERY_RESULT_MAX_LIMIT = 10000
+  QUERY_RESULT_MAX_LIMIT = 100000
 
   def self.plugin_name
     'discourse-data-explorer'.freeze
@@ -1246,14 +1246,14 @@ SQL
               "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, 'discourse')}-#{Date.today}.dcqresult.csv"
 
             require 'csv'
-            text = CSV.generate do |csv|
-              csv << cols
-              pg_result.values.each do |row|
-                csv << row
+            self.response_body = Enumerator.new do |rw|
+              rw << CSV.generate_line(cols)
+              # TODO: this is not stream_each_row
+              pg_result.each_row do |row|
+                rw << CSV.generate_line(row)
               end
             end
-
-            render plain: text
+            return
           end
         end
       end
