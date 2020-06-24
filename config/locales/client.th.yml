@@ -8,6 +8,8 @@
 th:
   js:
     explorer:
+      schema:
+        filter: "ค้นหา..."
       types:
         bool:
           'yes': "ใช่"
@@ -18,3 +20,4 @@ th:
       delete: "ลบ"
       query_groups: "กลุ่ม"
       query_description: "รายละเอียด"
+      search_placeholder: "ค้นหา..."

@@ -10,6 +10,8 @@ gl:
     explorer:
       import:
         label: "Importar"
+      schema:
+        filter: "Buscar..."
       types:
         bool:
           'yes': "Si"
@@ -20,3 +22,6 @@ gl:
       delete: "Eliminar"
       query_groups: "Grupos"
       query_description: "Descrición"
+      search_placeholder: "Buscar..."
+    group:
+      reports: "Informes"

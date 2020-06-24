@@ -41,7 +41,6 @@ hy:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Հարցումն ունի չպահպանված փոփոխություններ, որոնք կկորչեն, եթե Դուք տեղափոխվեք:"
-      run_time: "Հարցումը ավարտվել է {{value}} րոպեում:"
       result_count:
         one: "%{count} արդյունք"
         other: "%{count} արդյունք"
@@ -53,7 +52,6 @@ hy:
       query_description: "Նկարագրություն"
       query_time: "Վերջին գործարկումը"
       query_user: "Ստեղծել է՝"
-      column: "Սյունակ {{number}}"
       explain_label: "Ներառե՞լ հարցման պլանը:"
       save_params: "Սահմանել Լռելյայններ"
       reset_params: "Վերահաստատե;"

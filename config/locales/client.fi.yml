@@ -41,7 +41,6 @@ fi:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois. "
-      run_time: "Kysely suoritettiin ajassa {{value}} ms."
       result_count:
         one: "%{count} tulos. "
         other: "%{count} tulokset. "
@@ -53,7 +52,6 @@ fi:
       query_description: "Kuvaus"
       query_time: "Viimeksi suoritettu"
       query_user: "Luonut"
-      column: "Sarake {{number}}"
       explain_label: "Sisällytä kyselysuunnitelma?"
       save_params: "Aseta oletusarvot"
       reset_params: "Nollaa"

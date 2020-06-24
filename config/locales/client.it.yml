@@ -42,7 +42,6 @@ it:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
-      run_time: "Query completata in {{value}} ms."
       result_count:
         one: "%{count} risultato."
         other: "%{count} risultati."
@@ -56,7 +55,6 @@ it:
       query_description: "Descrizione"
       query_time: "Ultima esecuzione"
       query_user: "Creato da"
-      column: "Colonna {{number}}"
       explain_label: "Includere il query plan?"
       save_params: "Imposta Predefiniti"
       reset_params: "Azzera"

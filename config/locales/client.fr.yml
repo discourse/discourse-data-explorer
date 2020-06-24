@@ -12,7 +12,7 @@ fr:
         no_semicolons: "Enlever les points-virgules de la requête."
         dirty: "Vous devez sauvegarder la requête avant de l'exécuter."
     explorer:
-      admins_only: "L'explorateur de données n'est disponible qu'aux administrateurs"
+      admins_only: "L'explorateur de données n'est disponible qu'aux administrateurs."
       allow_groups: "Autoriser les groupes à accéder à cette requête"
       title: "Explorateur de données"
       create: "Créer un nouveau"
@@ -42,12 +42,12 @@ fr:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "La requête a des modifications non sauvegardées qui seront perdues si vous poursuivez la navigation."
-      run_time: "Requête exécutée en {{count}} secondes."
+      run_time: "Requête exécutée en %{value} millisecondes."
       result_count:
         one: "%{count} résultat."
         other: "%{count} résultats."
       max_result_count:
-        one: "Affichage des %{count} premièrs résultats."
+        one: "Affichage du %{count} premier résultat."
         other: "Affichage des %{count} premiers résultats."
       query_name: "Requête"
       query_groups: "Groupes"
@@ -56,7 +56,7 @@ fr:
       query_description: "Description"
       query_time: "Dernière exécution"
       query_user: "Créée par"
-      column: "Colonne {{number}}"
+      column: "Colonne %{number}"
       explain_label: "Inclure le plan d'exécution ?"
       save_params: "Définir les valeurs par défaut"
       reset_params: "Réinitialiser"

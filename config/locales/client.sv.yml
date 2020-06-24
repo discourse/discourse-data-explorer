@@ -42,7 +42,7 @@ sv:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "En sökning har ändringar som inte har sparats och kommer att förloras om du lämnar sidan."
-      run_time: "Sökning slutförd efter {{value}} ms."
+      run_time: "Sökning slutförd efter %{value} ms."
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultat."
@@ -56,7 +56,7 @@ sv:
       query_description: "Beskrivning"
       query_time: "Senast körd"
       query_user: "Skapad av"
-      column: "Kolumn {{number}}"
+      column: "Kolumn %{number}"
       explain_label: "Inkludera sökningsplan?"
       save_params: "Ange förvalda värden"
       reset_params: "Återställ"

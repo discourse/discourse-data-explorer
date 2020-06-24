@@ -41,7 +41,6 @@ pt_BR:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Uma consulta tem alterações não salvas que serão perdidas se você sair desta página."
-      run_time: "Consulta concluída em {{value}} ms."
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
@@ -54,7 +53,6 @@ pt_BR:
       query_description: "Descrição"
       query_time: "Última execução"
       query_user: "Criado por"
-      column: "Coluna {{number}}"
       explain_label: "Incluir plano de consulta?"
       save_params: "Definir Padrões"
       reset_params: "Redefinir"

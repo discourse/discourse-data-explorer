@@ -41,7 +41,6 @@ sl:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
-      run_time: "Poizvedba je končala v {{value}} ms."
       result_count:
         one: "%{count} zadetek."
         two: "%{count} zadetka."
@@ -57,7 +56,6 @@ sl:
       query_description: "Opis"
       query_time: "Zadnja izvedba"
       query_user: "Ustvarjen od"
-      column: "Stolpec {{number}}"
       explain_label: "Vključi načrt za poizvedbo?"
       save_params: "Nastavi privzete vrednosti"
       reset_params: "Ponastavi"

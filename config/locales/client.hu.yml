@@ -33,6 +33,5 @@ hu:
       download_csv: "CSV"
       query_groups: "Csoportok"
       query_description: "Leírás"
-      column: "Oszlop {{number}}"
       reset_params: "Alaphelyzet"
       search_placeholder: "Keresés..."

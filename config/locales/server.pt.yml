@@ -7,4 +7,4 @@
 
 pt:
   site_settings:
-    data_explorer_enabled: "Activar o Data Explorer em \"/admin/plugins/explorer\""
+    data_explorer_enabled: "Ativar o «Explorador de Dados» em \"/admin/plugins/explorer\""

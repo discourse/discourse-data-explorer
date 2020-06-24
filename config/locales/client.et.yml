@@ -33,7 +33,6 @@ et:
       download_csv: "CSV"
       query_groups: "Grupid"
       query_description: "Kirjeldus"
-      column: "Veerg {{number}}"
       save_params: "Määra vaikeväärtused"
       reset_params: "Nulli"
       search_placeholder: "Otsi..."

@@ -41,7 +41,6 @@ ur:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "ایک ڈیٹا کمانڈ کی غیرمحفوظ کردہ تبدیلیاں موجود ہیں جو آپ کے یہاں سے جانے کے بعد کھو جائیں گی۔"
-      run_time: "ڈیٹا کمانڈ {{value}} ملیسیکنڈ میں مکمل ہوئی۔"
       result_count:
         one: "%{count} نتیجہ۔"
         other: "%{count} نتائج۔"
@@ -54,7 +53,6 @@ ur:
       query_description: "تفصیل"
       query_time: "چلا آخری دفعہ"
       query_user: "نے بنایا"
-      column: "کالم {{number}}"
       explain_label: "ڈیٹا کمانڈ پلَین شامل کریں؟"
       save_params: "ڈیفالٹس سَیٹ کریں"
       reset_params: "رِی سَیٹ"

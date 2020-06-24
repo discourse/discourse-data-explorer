@@ -42,7 +42,7 @@ nl:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als u de pagina verlaat."
-      run_time: "Query voltooid in {{value}} ms."
+      run_time: "Query voltooid in %{value} ms."
       result_count:
         one: "%{count} resultaat."
         other: "%{count} resultaten."
@@ -56,7 +56,7 @@ nl:
       query_description: "Omschrijving"
       query_time: "Laatste uitvoering"
       query_user: "Gemaakt door"
-      column: "Kolom {{number}}"
+      column: "Kolom %{number}"
       explain_label: "Queryplan bijvoegen?"
       save_params: "Standaardwaarden instellen"
       reset_params: "Terugzetten"

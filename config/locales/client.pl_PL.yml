@@ -41,7 +41,6 @@ pl_PL:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Zapytanie ma niezapisane zmiany, które utracisz, jeśli przejdziesz w inne miejsce."
-      run_time: "Zapytanie wykonane w {{value}} ms."
       result_count:
         one: "%{count}wynik."
         few: "%{count}wyniki."
@@ -59,7 +58,6 @@ pl_PL:
       query_description: "Opis"
       query_time: "Ostatnio wykonano"
       query_user: "Stworzone przez"
-      column: "Kolumna {{number}}"
       explain_label: "Dołączyć plan zapytania?"
       save_params: "Ustaw domyślne"
       reset_params: "Przywróć"

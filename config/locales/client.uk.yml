@@ -41,7 +41,6 @@ uk:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "У запиті є не збережені зміни, які будуть втрачені, якщо ви перейдете далі."
-      run_time: "Запит виконано за {{value}} мс."
       result_count:
         one: "%{count} результат."
         few: "%{count} результатів."
@@ -59,7 +58,6 @@ uk:
       query_description: "Опис"
       query_time: "Останній запуск"
       query_user: "Створено"
-      column: "Стовпець {{number}}"
       explain_label: "Включити план запитів?"
       save_params: "Встановити значення за замовчуванням"
       reset_params: "Скинути"

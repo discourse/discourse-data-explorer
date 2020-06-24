@@ -26,6 +26,5 @@ cs:
       download_csv: "CSV"
       query_groups: "Skupiny"
       query_description: "Popis"
-      column: "Sloupec {{number}}"
       reset_params: "obnovit výchozí"
       search_placeholder: "Hledat..."

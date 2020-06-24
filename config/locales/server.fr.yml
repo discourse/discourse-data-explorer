@@ -7,4 +7,4 @@
 
 fr:
   site_settings:
-    data_explorer_enabled: "Activer l'explorateur de données à /admin/plugins/explorer"
+    data_explorer_enabled: "Activer l'explorateur de données sur /admin/plugins/explorer"

@@ -27,6 +27,5 @@ sk:
       download_csv: "CSV"
       query_groups: "Skupiny"
       query_description: "Popis"
-      column: "Stĺpec {{number}}"
       save_params: "Predvolené"
       search_placeholder: "Hľadať"

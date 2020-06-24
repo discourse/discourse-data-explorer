@@ -42,7 +42,6 @@ de:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Eine Anfrage hat ungespeicherte Änderungen, die verloren gehen, wenn du woanders hingehst."
-      run_time: "Anfrage abgeschlossen in {{value}} ms."
       result_count:
         one: "%{count} Ergebnis."
         other: "%{count} Ergebnisse."
@@ -56,7 +55,6 @@ de:
       query_description: "Beschreibung"
       query_time: "Letzter Lauf"
       query_user: "Erstellt von"
-      column: "Spalte {{number}}"
       explain_label: "Anfrageplan beinhalten?"
       save_params: "Standard festlegen"
       reset_params: "Zurücksetzen"

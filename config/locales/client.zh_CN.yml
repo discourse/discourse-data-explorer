@@ -42,7 +42,7 @@ zh_CN:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "查询包含未保存的更改，如果您离开，这些更改将会丢失。"
-      run_time: "查询在{{value}}ms内完成。"
+      run_time: "在%{value}ms内完成了查询"
       result_count:
         other: "%{count}结果"
       max_result_count:
@@ -54,7 +54,7 @@ zh_CN:
       query_description: "描述"
       query_time: "最后运行"
       query_user: "创建于"
-      column: "列{{number}}"
+      column: "列 %{number}"
       explain_label: "包括查询计划？"
       save_params: "设置为默认"
       reset_params: "重置"

@@ -41,7 +41,7 @@ ca:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Una consulta té canvis no desats que es perdran si continueu navegant."
-      run_time: "Consulta completada en {{value}} ms."
+      run_time: "La consulta s'ha completat en %{value} ms."
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultats."
@@ -55,7 +55,7 @@ ca:
       query_description: "Descripció"
       query_time: "Darrera execució"
       query_user: "Creat per"
-      column: "Columna {{number}}"
+      column: "Columna %{number}"
       explain_label: "Hi incloem pla de consulta?"
       save_params: "Estableix valors per defecte"
       reset_params: "Reinicia"

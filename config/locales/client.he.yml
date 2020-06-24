@@ -42,7 +42,7 @@ he:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד בעת ניווט למקום אחר."
-      run_time: "השאילתה הושלמה תוך {{value}} מילישניות."
+      run_time: "השאילתה הושלמה תוך %{value} מילישניות"
       result_count:
         one: "תוצאה אחת."
         two: "2 תוצאות."
@@ -60,7 +60,7 @@ he:
       query_description: "תיאור"
       query_time: "הרצה אחרונה"
       query_user: "נוצר על ידי"
-      column: "עמודה {{number}}"
+      column: "עמודה %{number}"
       explain_label: "לכלול תכנית שאילתה?"
       save_params: "הגדרת בררות מחדל"
       reset_params: "איפוס"
