@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import { default as computed } from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 function randomIdShort() {
   return "xxxxxxxx".replace(/[xy]/g, () => {
@@ -177,7 +178,7 @@ const QueryResultComponent = Ember.Component.extend({
     form.setAttribute("method", "post");
     form.setAttribute(
       "action",
-      Discourse.getURL(
+      getURL(
         this.download_url() +
           this.get("query.id") +
           "/run." +
