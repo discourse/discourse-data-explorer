@@ -3,6 +3,7 @@ import {
   on,
   observes
 } from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 import RestModel from "discourse/models/rest";
 
 const Query = RestModel.extend({
@@ -56,9 +57,7 @@ const Query = RestModel.extend({
   @computed("id")
   downloadUrl(id) {
     // TODO - can we change this to use the store/adapter?
-    return Discourse.getURL(
-      `/admin/plugins/explorer/queries/${id}.json?export=1`
-    );
+    return getURL(`/admin/plugins/explorer/queries/${id}.json?export=1`);
   },
 
   createProperties() {
