@@ -135,7 +135,12 @@ export default Ember.Controller.extend({
     },
 
     toggleQueryVisibility(query) {
-      query.set("is_hidden", !query.is_hidden);
+      const item = this.model.findBy("id", query.id);
+      const isHidden = item.is_hidden == "true";
+
+      isHidden ? item.set("is_hidden", String.valueOf(!isHidden)) : item.set("is_hidden", !isHidden);
+      item.markNotDirty();
+      item.save();
     },
 
     showCreate() {

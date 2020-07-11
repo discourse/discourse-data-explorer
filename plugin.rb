@@ -641,7 +641,6 @@ SQL
       @description = ''
       @sql = 'SELECT 1'
       @group_ids = []
-      @is_hidden = false
     end
 
     def slug
@@ -1038,7 +1037,6 @@ SQL
         query.name = params.second["name"]
         query.description = params.second["description"]
         query.created_by = Discourse::SYSTEM_USER_ID.to_s
-        query.is_hidden = false
 
         # don't render this query if query with the same id already exists in pstore
         queries.push(query) unless DataExplorer.pstore_get("q:#{query.id}").present?
@@ -1105,7 +1103,6 @@ SQL
       query.created_by = current_user.id.to_s
       query.last_run_at = Time.now
       query.id = nil # json import will assign an id, which is wrong
-      query.is_hidden = false
       query.save
 
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'

@@ -167,13 +167,9 @@
     {{#if showRecentQueries}}
       <div class="container">
         {{#if hiddenQueriesVisible}}
-          <div class="buttons">
-            {{d-button label="explorer.query_hidden.all_hide" action=(action "toggleHiddenQueriesVisibility") icon="far-eye-slash"}}
-          </div>
+          {{d-button label="explorer.query_hidden.all_hide" action=(action "toggleHiddenQueriesVisibility") icon="far-eye-slash"}}
         {{else}}
-          <div class="buttons">
-            {{d-button label="explorer.query_hidden.all_show" action=(action "toggleHiddenQueriesVisibility") icon="far-eye"}}
-          </div>
+          {{d-button label="explorer.query_hidden.all_show" action=(action "toggleHiddenQueriesVisibility") icon="far-eye"}}
         {{/if}}
 
         <table class="recent-queries">
@@ -234,9 +230,7 @@
                     {{/if}}
                   </td>
                   <td class="query-hide">
-                    <div class="buttons">
-                      {{d-button label="explorer.query_hidden.query_hide" action=(action "toggleQueryVisibility" query) icon="far-eye-slash"}}
-                    </div>
+                    {{d-button label="explorer.query_hidden.query_hide" action=(action "toggleQueryVisibility" query) icon="far-eye-slash"}}
                   </td>
                 </tr>
               {{else}}
@@ -272,9 +266,7 @@
                       {{/if}}
                     </td>
                     <td class="query-hide">
-                      <div class="buttons">
-                        {{d-button label="explorer.query_hidden.query_show" action=(action "toggleQueryVisibility" query) icon="far-eye"}}
-                      </div>
+                      {{d-button label="explorer.query_hidden.query_show" action=(action "toggleQueryVisibility" query) icon="far-eye"}}
                     </td>
                   </tr>
                 {{/if}}

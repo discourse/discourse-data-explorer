@@ -24,7 +24,7 @@ const Query = RestModel.extend({
     this.resetParams();
   },
 
-  @observes("name", "description", "sql", "group_ids", "isHidden")
+  @observes("name", "description", "sql", "group_ids", "is_hidden")
   markDirty() {
     this.set("dirty", true);
   },
