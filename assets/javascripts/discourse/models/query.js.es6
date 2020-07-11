@@ -24,7 +24,7 @@ const Query = RestModel.extend({
     this.resetParams();
   },
 
-  @observes("name", "description", "sql", "group_ids")
+  @observes("name", "description", "sql", "group_ids", "isHidden")
   markDirty() {
     this.set("dirty", true);
   },
@@ -85,7 +85,8 @@ Query.reopenClass({
     "created_by",
     "created_at",
     "group_ids",
-    "last_run_at"
+    "last_run_at",
+    "is_hidden"
   ]
 });
 

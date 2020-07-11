@@ -166,6 +166,16 @@
 
     {{#if showRecentQueries}}
       <div class="container">
+        {{#if hiddenQueriesVisible}}
+          <div class="buttons">
+            {{d-button label="explorer.query_hidden.all_hide" action=(action "toggleHiddenQueriesVisibility") icon="far-eye-slash"}}
+          </div>
+        {{else}}
+          <div class="buttons">
+            {{d-button label="explorer.query_hidden.all_show" action=(action "toggleHiddenQueriesVisibility") icon="far-eye"}}
+          </div>
+        {{/if}}
+
         <table class="recent-queries">
           <thead class="heading-container">
             <th class="col heading name">
@@ -192,37 +202,83 @@
           <tr></tr>
           <tbody>
             {{#each filteredContent as |query|}}
-              <tr class="query-row">
-                <td>
-                  <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
-                    <b class="query-name">{{query.name}}</b>
-                    <medium class="query-desc">{{query.description}}</medium>
-                  </a>
-                </td>
-                <td class="query-created-by">
-                  {{#if query.username}}
-                    <a href="/users/{{query.username}}/activity">
-                      <medium>{{query.username}}</medium>
+              {{#unless query.is_hidden}}
+                <tr class="query-row">
+                  <td>
+                    <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                      <b class="query-name">{{query.name}}</b>
+                      <medium class="query-desc">{{query.description}}</medium>
                     </a>
-                  {{/if}}
-                </td>
-                <td class="query-group-names">
-                  {{#each query.group_names as |group|}}
-                    {{share-report group=group query=query}}
-                  {{/each}}
-                </td>
-                <td class="query-created-at">
-                  {{#if query.last_run_at}}
-                    <medium>
-                      {{bound-date query.last_run_at}}
-                    </medium>
-                  {{else if query.created_at}}
-                    <medium>
-                      {{bound-date query.created_at}}
-                    </medium>
-                  {{/if}}
-                </td>
-              </tr>
+                  </td>
+                  <td class="query-created-by">
+                    {{#if query.username}}
+                      <a href="/users/{{query.username}}/activity">
+                        <medium>{{query.username}}</medium>
+                      </a>
+                    {{/if}}
+                  </td>
+                  <td class="query-group-names">
+                    {{#each query.group_names as |group|}}
+                      {{share-report group=group query=query}}
+                    {{/each}}
+                  </td>
+                  <td class="query-created-at">
+                    {{#if query.last_run_at}}
+                      <medium>
+                        {{bound-date query.last_run_at}}
+                      </medium>
+                    {{else if query.created_at}}
+                      <medium>
+                        {{bound-date query.created_at}}
+                      </medium>
+                    {{/if}}
+                  </td>
+                  <td class="query-hide">
+                    <div class="buttons">
+                      {{d-button label="explorer.query_hidden.query_hide" action=(action "toggleQueryVisibility" query) icon="far-eye-slash"}}
+                    </div>
+                  </td>
+                </tr>
+              {{else}}
+                {{#if hiddenQueriesVisible}}
+                  <tr class="query-row" style="background-color: lightgray;">
+                    <td>
+                      <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                        <b class="query-name">{{query.name}}</b>
+                        <medium class="query-desc">{{query.description}}</medium>
+                      </a>
+                    </td>
+                    <td class="query-created-by">
+                      {{#if query.username}}
+                        <a href="/users/{{query.username}}/activity">
+                          <medium>{{query.username}}</medium>
+                        </a>
+                      {{/if}}
+                    </td>
+                    <td class="query-group-names">
+                      {{#each query.group_names as |group|}}
+                        {{share-report group=group query=query}}
+                      {{/each}}
+                    </td>
+                    <td class="query-created-at">
+                      {{#if query.last_run_at}}
+                        <medium>
+                          {{bound-date query.last_run_at}}
+                        </medium>
+                      {{else if query.created_at}}
+                        <medium>
+                          {{bound-date query.created_at}}
+                        </medium>
+                      {{/if}}
+                    </td>
+                    <td class="query-hide">
+                      <div class="buttons">
+                        {{d-button label="explorer.query_hidden.query_show" action=(action "toggleQueryVisibility" query) icon="far-eye"}}
+                      </div>
+                    </td>
+                  </tr>
+                {{/if}}
+              {{/unless}}
             {{else}}
               <br>
               <em class="no-search-results"> {{i18n "explorer.no_search_results"}}</em>

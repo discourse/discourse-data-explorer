@@ -634,13 +634,14 @@ SQL
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at
+    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at, :is_hidden
 
     def initialize
       @name = 'Unnamed Query'
       @description = ''
       @sql = 'SELECT 1'
       @group_ids = []
+      @is_hidden = false
     end
 
     def slug
@@ -681,7 +682,7 @@ SQL
 
     def self.from_hash(h)
       query = DataExplorer::Query.new
-      [:name, :description, :sql, :created_by, :created_at, :last_run_at].each do |sym|
+      [:name, :description, :sql, :created_by, :created_at, :last_run_at, :is_hidden].each do |sym|
         query.send("#{sym}=", h[sym].strip) if h[sym]
       end
       group_ids = (h[:group_ids] == "" || !h[:group_ids]) ? [] : h[:group_ids]
@@ -699,7 +700,8 @@ SQL
         created_by: @created_by,
         created_at: @created_at,
         group_ids: @group_ids,
-        last_run_at: @last_run_at
+        last_run_at: @last_run_at,
+        is_hidden: @is_hidden
       }
     end
 
@@ -734,6 +736,7 @@ SQL
       @group_ids = @group_ids || []
       @name = query["name"]
       @description = query["description"]
+      @is_hidden = @is_hidden
 
       DataExplorer.pstore_set "q:#{id}", to_hash
     end
@@ -1035,6 +1038,7 @@ SQL
         query.name = params.second["name"]
         query.description = params.second["description"]
         query.created_by = Discourse::SYSTEM_USER_ID.to_s
+        query.is_hidden = false
 
         # don't render this query if query with the same id already exists in pstore
         queries.push(query) unless DataExplorer.pstore_get("q:#{query.id}").present?
@@ -1101,6 +1105,7 @@ SQL
       query.created_by = current_user.id.to_s
       query.last_run_at = Time.now
       query.id = nil # json import will assign an id, which is wrong
+      query.is_hidden = false
       query.save
 
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
@@ -1120,7 +1125,7 @@ SQL
         end
       end
 
-      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at].each do |sym|
+      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at, :is_hidden].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
 
@@ -1261,7 +1266,7 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
+    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at, :is_hidden
 
     def param_info
       object.params.map(&:to_hash) rescue nil

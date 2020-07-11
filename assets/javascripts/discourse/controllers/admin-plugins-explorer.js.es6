@@ -17,6 +17,7 @@ export default Ember.Controller.extend({
   hideSchema: false,
   loading: false,
   explain: false,
+  hiddenQueriesVisible: false,
 
   saveDisabled: Ember.computed.not("selectedItem.dirty"),
   runDisabled: Ember.computed.reads("selectedItem.dirty"),
@@ -127,6 +128,14 @@ export default Ember.Controller.extend({
     importQuery() {
       showModal("import-query");
       this.set("showCreate", false);
+    },
+
+    toggleHiddenQueriesVisibility() {
+      this.toggleProperty("hiddenQueriesVisible");
+    },
+
+    toggleQueryVisibility(query) {
+      query.set("is_hidden", !query.is_hidden);
     },
 
     showCreate() {
