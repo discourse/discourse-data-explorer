@@ -236,6 +236,32 @@ export default Ember.Controller.extend({
         });
     },
 
+    hide() {
+      const query = this.selectedItem;
+      this.setProperties({ loading: true, showResults: false });
+
+      query.set("isNew", true);
+
+      this.store
+        .destroyRecord("query", query)
+        .then(() => query.set("hidden", true))
+        .catch(popupAjaxError)
+        .finally(() => {
+          query.set("isNew", false);
+          this.set("loading", false);
+        });
+    },
+
+    unhide() {
+      const query = this.selectedItem;
+      this.setProperties({ loading: true, showResults: true });
+      query
+        .save()
+        .then(() => query.set("hidden", false))
+        .catch(popupAjaxError)
+        .finally(() => this.set("loading", false));
+    },
+
     run() {
       if (this.get("selectedItem.dirty")) {
         return;
