@@ -49,8 +49,6 @@ en:
       edit: "Edit"
       delete: "Delete"
       recover: "Undelete Query"
-      hide: "Hide"
-      unhide: "Unhide Query"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."

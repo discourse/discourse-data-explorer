@@ -118,14 +118,9 @@
                 {{#if everEditing}}
                   {{d-button action=(action "discard") icon="undo" label="explorer.undo" disabled=saveDisabled}}
                 {{/if}}
-                {{#if selectedItem.hidden}}
-                  {{d-button action=(action "unhide") icon="undo" label="explorer.unhide"}}
-                {{else}}
-                  {{d-button action=(action "hide") icon="far-eye-slash" label="explorer.hide"}}
-                  {{#unless editDisabled}}
-                    {{d-button action=(action "destroy") class="btn-danger" icon="trash-alt" label="explorer.delete"}}
-                  {{/unless}}
-                {{/if}}
+                {{#unless editDisabled}}
+                  {{d-button action=(action "destroy") class="btn-danger" icon="trash-alt" label="explorer.delete"}}
+                {{/unless}}
               {{/if}}
             </div>
             <div class="clear"></div>
