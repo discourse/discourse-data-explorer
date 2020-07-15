@@ -634,13 +634,14 @@ SQL
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at
+    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at, :hidden
 
     def initialize
       @name = 'Unnamed Query'
       @description = ''
       @sql = 'SELECT 1'
       @group_ids = []
+      @hidden = false
     end
 
     def slug
@@ -687,6 +688,7 @@ SQL
       group_ids = (h[:group_ids] == "" || !h[:group_ids]) ? [] : h[:group_ids]
       query.group_ids = group_ids
       query.id = h[:id].to_i if h[:id]
+      query.hidden = h[:hidden]
       query
     end
 
@@ -699,7 +701,8 @@ SQL
         created_by: @created_by,
         created_at: @created_at,
         group_ids: @group_ids,
-        last_run_at: @last_run_at
+        last_run_at: @last_run_at,
+        hidden: @hidden
       }
     end
 
@@ -739,7 +742,18 @@ SQL
     end
 
     def destroy
-      DataExplorer.pstore_delete "q:#{id}"
+      Rails.logger.warn "Logging from DataExplorer::Query in def destroy"
+
+      # Instead of deleting the query from the store, we can set
+      # it to be hidden and not send it to the frontend
+      @hidden = true
+      DataExplorer.pstore_set "q:#{id}", to_hash
+
+      Rails.logger.warn "Hash for query #{id}: #{to_hash}"
+      Rails.logger.warn "Set hidden to true for query #{id}"
+      Rails.logger.warn "#{name}: hidden #{hidden}"
+
+      # DataExplorer.pstore_delete "q:#{id}"
     end
 
     def read_attribute_for_serialization(attr)
@@ -1026,8 +1040,15 @@ SQL
     end
 
     def index
+      Rails.logger.warn "Logging from DataExplorer::QueryController in def index"
+
       # guardian.ensure_can_use_data_explorer!
-      queries = DataExplorer::Query.all
+      queries = []
+      DataExplorer::Query.all.each do |query|
+        Rails.logger.warn "#{query.name}: hidden #{query.hidden}" if query.hidden
+        queries.push(query) unless query.hidden
+      end
+
       Queries.default.each do |params|
         query = DataExplorer::Query.new
         query.id = params.second["id"]
@@ -1107,9 +1128,13 @@ SQL
     end
 
     def update
+      Rails.logger.warn "Logging from DataExplorer::QueryController in def update"
+
       query = DataExplorer::Query.find(params[:id].to_i, ignore_deleted: true)
       hash = params.require(:query)
       hash[:group_ids] ||= []
+
+      Rails.logger.warn "With hash #{hash}"
 
       # Undeleting
       unless query.id
@@ -1120,11 +1145,14 @@ SQL
         end
       end
 
-      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at].each do |sym|
+      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at, :hidden].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
 
       query.check_params!
+      query.hidden = false
+
+      Rails.logger.warn "Set hidden to false for query #{query.id}"
       query.save
 
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
@@ -1133,7 +1161,12 @@ SQL
     end
 
     def destroy
+      Rails.logger.warn "Logging from DataExplorer::QueryController in def destroy"
+
       query = DataExplorer::Query.find(params[:id].to_i)
+
+      Rails.logger.warn "With query #{query.id}"
+
       query.destroy
 
       render json: { success: true, errors: [] }
@@ -1261,7 +1294,7 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
+    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at, :hidden
 
     def param_info
       object.params.map(&:to_hash) rescue nil
