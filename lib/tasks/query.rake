@@ -49,25 +49,27 @@ task 'query:hide_all:only_default' => :environment do |t|
   puts "-----------------"
 end
 
-desc "Unhides a query by id"
-task 'query:unhide', [:id] => :environment do |t, args|
-  id = args.id.to_i
+desc "Unhides a query by one or multiple ids"
+task 'query:unhide' => :environment do |t, args|
+  args.extras.each do |arg|
+    id = arg.to_i
 
-  if DataExplorer.pstore_get("q:#{id}").nil?
-    puts "-----------------"
-    puts "Query with id #{id} does not exist"
-    puts "-----------------"
-  else
-    q = DataExplorer::Query.find(id)
-    puts "-----------------"
-    if q
-      puts "Found query with id #{id}"
+    if DataExplorer.pstore_get("q:#{id}").nil?
+      puts "-----------------"
+      puts "Query with id #{id} does not exist"
+      puts "-----------------"
+    else
+      q = DataExplorer::Query.find(id)
+      puts "-----------------"
+      if q
+        puts "Found query with id #{id}"
+      end
+
+      q.hidden = false
+      q.save
+      puts "Unhide query with id #{id}" unless q.hidden
+      puts "-----------------"
     end
-
-    q.hidden = false
-    q.save
-    puts "Unhide query with id #{id}" unless q.hidden
-    puts "-----------------"
   end
 end
 
