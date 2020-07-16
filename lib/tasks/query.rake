@@ -5,7 +5,7 @@ task 'query:list_hidden' => :environment do |t|
   hidden_queries = []
   puts "-----------------"
   puts "Hidden Queries"
-  puts "-----------------"
+  puts "================="
 
   DataExplorer::Query.all.each do |query|
     hidden_queries.push(query) if query.hidden
@@ -24,10 +24,10 @@ task 'query:hide_all' => :environment do |t|
   DataExplorer::Query.all.each do |query|
     unless query.hidden
       puts "-----------------"
-      puts "Query with id #{query.id}"
+      puts "Found query with id #{query.id}"
       query.hidden = true
       query.save
-      puts "Hide query with id #{query.id}" if query.hidden
+      puts "Query no.#{query.id} is now hidden" if query.hidden
     end
   end
   puts "-----------------"
@@ -39,10 +39,10 @@ task 'query:hide_all:only_default' => :environment do |t|
     unless query.hidden
       if query.id < 0
         puts "-----------------"
-        puts "Default query with id #{query.id}"
+        puts "Found default query with id #{query.id}"
         query.hidden = true
         query.save
-        puts "Hide default query with id #{query.id}" if query.hidden
+        puts "Default query no.#{query.id} is now hidden" if query.hidden
       end
     end
   end
@@ -56,7 +56,7 @@ task 'query:unhide' => :environment do |t, args|
 
     if DataExplorer.pstore_get("q:#{id}").nil?
       puts "-----------------"
-      puts "Query with id #{id} does not exist"
+      puts "Error finding query with id #{id}"
       puts "-----------------"
     else
       q = DataExplorer::Query.find(id)
@@ -67,7 +67,7 @@ task 'query:unhide' => :environment do |t, args|
 
       q.hidden = false
       q.save
-      puts "Unhide query with id #{id}" unless q.hidden
+      puts "Query no.#{id} is now visible" unless q.hidden
       puts "-----------------"
     end
   end
@@ -78,10 +78,10 @@ task 'query:unhide_all' => :environment do |t|
   DataExplorer::Query.all.each do |query|
     if query.hidden
       puts "-----------------"
-      puts "Query with id #{query.id}"
+      puts "Found query with id #{query.id}"
       query.hidden = false
       query.save
-      puts "Unhide query with id #{query.id}" unless query.hidden
+      puts "Query no.#{query.id} is now visible" unless query.hidden
     end
   end
   puts "-----------------"
@@ -93,10 +93,10 @@ task 'query:unhide_all:exclude_default' => :environment do |t|
     if query.hidden
       unless query.id < 0
         puts "-----------------"
-        puts "Query with id #{query.id}"
+        puts "Found query with id #{query.id}"
         query.hidden = false
         query.save
-        puts "Unhide query with id #{query.id}" unless query.hidden
+        puts "Query no.#{query.id} is now visible" unless query.hidden
       end
     end
   end
