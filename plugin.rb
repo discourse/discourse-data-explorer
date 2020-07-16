@@ -746,8 +746,6 @@ SQL
       # it to be hidden and not send it to the frontend
       @hidden = true
       DataExplorer.pstore_set "q:#{id}", to_hash
-
-      # DataExplorer.pstore_delete "q:#{id}"
     end
 
     def read_attribute_for_serialization(attr)
