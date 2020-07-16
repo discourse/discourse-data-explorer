@@ -19,24 +19,30 @@ task 'query:list_hidden' => :environment do |t|
   end
 end
 
-desc "Hides all queries, w/ boolean arg to hide only default ones"
-task 'query:hide_all', [:only_default] => :environment do |t, args|
-  only_default = args.only_default ? args.only_default.downcase == "true" : false
-
+desc "Hides all queries"
+task 'query:hide_all' => :environment do |t|
   DataExplorer::Query.all.each do |query|
     unless query.hidden
-      if only_default && query.id < 0
+      puts "-----------------"
+      puts "Query with id #{query.id}"
+      query.hidden = true
+      query.save
+      puts "Hide query with id #{query.id}" if query.hidden
+    end
+  end
+  puts "-----------------"
+end
+
+desc "Hide only default queries"
+task 'query:hide_all:only_default' => :environment do |t|
+  DataExplorer::Query.all.each do |query|
+    unless query.hidden
+      if query.id < 0
         puts "-----------------"
         puts "Default query with id #{query.id}"
         query.hidden = true
         query.save
         puts "Hide default query with id #{query.id}" if query.hidden
-      elsif !only_default
-        puts "-----------------"
-        puts "Query with id #{query.id}"
-        query.hidden = true
-        query.save
-        puts "Hide query with id #{query.id}" if query.hidden
       end
     end
   end
@@ -65,13 +71,25 @@ task 'query:unhide', [:id] => :environment do |t, args|
   end
 end
 
-desc "Unhides all hidden queries, w/ boolean arg to exclude default ones"
-task 'query:unhide_all', [:exclude_default] => :environment do |t, args|
-  exclude_default = args.exclude_default ? args.exclude_default.downcase == "true" : false
-
+desc "Unhides all hidden queries"
+task 'query:unhide_all' => :environment do |t|
   DataExplorer::Query.all.each do |query|
     if query.hidden
-      unless exclude_default && query.id < 0
+      puts "-----------------"
+      puts "Query with id #{query.id}"
+      query.hidden = false
+      query.save
+      puts "Unhide query with id #{query.id}" unless query.hidden
+    end
+  end
+  puts "-----------------"
+end
+
+desc "Unhides all non-default queries"
+task 'query:unhide_all:exclude_default' => :environment do |t|
+  DataExplorer::Query.all.each do |query|
+    if query.hidden
+      unless query.id < 0
         puts "-----------------"
         puts "Query with id #{query.id}"
         query.hidden = false
