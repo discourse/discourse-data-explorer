@@ -74,12 +74,19 @@
             </div>
             {{! the SQL editor will show the first time you }}
             {{#if everEditing}}
-              <label>{{input type="checkbox" checked=useCustomParams name="custom_params"}} {{i18n "explorer.custom_params"}}</label>
-              {{#if useCustomParams}}
-                <p>To add and use your own custom params, put the following above your query:</p>
+              <details>
+                <summary>
+                  {{i18n "explorer.custom_params"}}
+                </summary>
+                <p>
+                  {{i18n "explorer.custom_params_description1"}}<br>
+                  {{i18n "explorer.custom_params_description2"}}<br>
+                  <strong>{{i18n "explorer.custom_params_description3"}}</strong>
+                </p>
                 <pre><code>-- [params]\n-- int :custom_var = 1\n\nSELECT :custom_var</code></pre>
-              {{/if}}
-              
+              </details>
+              <hr>
+
               <div class="query-editor {{if hideSchema "no-schema"}}">
                 <div class="panels-flex">
                   <div class="editor-panel">
