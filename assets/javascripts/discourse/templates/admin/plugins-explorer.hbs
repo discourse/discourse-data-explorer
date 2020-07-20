@@ -74,6 +74,8 @@
             </div>
             {{! the SQL editor will show the first time you }}
             {{#if everEditing}}
+              <p>To add and use your own custom params, put the following above your query:</p>
+              <pre><code>-- [params]\n-- int :custom_var = 1\n\nSELECT :custom_var</code></pre>
               <div class="query-editor {{if hideSchema "no-schema"}}">
                 <div class="panels-flex">
                   <div class="editor-panel">
