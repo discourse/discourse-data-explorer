@@ -18,7 +18,13 @@ en:
         label: "Help"
         modal:
           title: "Data Explorer Beginner's Guide: Query Creation"
-          code: "-- [params]\n-- int :num = 1\n\nSELECT :num"
+          custom_params:
+            title: "Creating Custom Parameters"
+            body: "To create custom parameters for your queries, put this at the top of your query and follow the format:"
+            code: "-- [params]\n-- int :num = 1\n\nSELECT :num"
+          query_data_types:
+            title: "Query Data Types"
+            body: "Data types go here"
       schema:
         title: "Database Schema"
         filter: "Search..."
