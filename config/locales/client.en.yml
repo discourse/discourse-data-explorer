@@ -33,6 +33,9 @@ en:
         modal: "Import A Query"
       help:
         label: "Help"
+        modal:
+          title: "Data Explorer Beginner's Guide: Query Creation"
+          code: "-- [params]\n-- int :num = 1\n\nSELECT :num"
       schema:
         title: "Database Schema"
         filter: "Search..."
