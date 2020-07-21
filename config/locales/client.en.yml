@@ -14,6 +14,8 @@ en:
       import:
         label: "Import"
         modal: "Import A Query"
+      help:
+        label: "Help"
       schema:
         title: "Database Schema"
         filter: "Search..."
@@ -55,10 +57,6 @@ en:
       explain_label: "Include query plan?"
       save_params: "Set Defaults"
       reset_params: "Reset"
-      custom_params: "Using custom parameters"
-      custom_params_description1: "To add and use your own custom params, follow this format."
-      custom_params_description2: "Once you declare your variables, a text field will show up where you can input different values."
-      custom_params_description3: "Note: including [params] and two dashes before each custom param is required to make it work."
       search_placeholder: "Search..."
       no_search_results: "Sorry, we couldn't find any results matching your text."
     group:
