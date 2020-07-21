@@ -159,6 +159,10 @@ export default Ember.Controller.extend({
       this.transitionToRoute("adminPlugins.explorer");
     },
 
+    showHelpModal() {
+      showModal("query-help");
+    },
+
     resetParams() {
       this.selectedItem.resetParams();
     },
