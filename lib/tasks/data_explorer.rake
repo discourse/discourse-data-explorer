@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require 'rainbow'
-
 # rake data_explorer:list_hidden_queries
 desc "Shows a list of hidden queries"
 task 'data_explorer:list_hidden_queries' => :environment do |t|
   hidden_queries = []
   puts " "
-  puts Rainbow("Hidden Queries").green.bright
+  puts "Hidden Queries"
   puts " "
 
   DataExplorer::Query.all.each do |query|
@@ -15,9 +13,9 @@ task 'data_explorer:list_hidden_queries' => :environment do |t|
   end
 
   hidden_queries.each do |query|
-    puts Rainbow("Name: #{query.name}").green
-    puts Rainbow("Description: #{query.description}").green
-    puts Rainbow("ID: ").green + Rainbow(query.id).yellow.bright
+    puts "Name: #{query.name}"
+    puts "Description: #{query.description}"
+    puts "ID: #{query.id}"
     puts " "
   end
 end
@@ -31,17 +29,17 @@ task 'data_explorer' => :environment do |t, args|
     id = arg.to_i
 
     if DataExplorer.pstore_get("q:#{id}").nil?
-      puts Rainbow("Error finding query with id #{id}").red
+      puts "Error finding query with id #{id}"
       puts " "
     else
       q = DataExplorer::Query.find(id)
       if q
-        puts Rainbow("Found query with id #{id}").green
+        puts "Found query with id #{id}"
       end
 
       q.hidden = true
       q.save
-      puts Rainbow("Query no.#{id} is now hidden").green if q.hidden
+      puts "Query no.#{id} is now hidden" if q.hidden
       puts " "
     end
   end
@@ -56,17 +54,17 @@ task 'data_explorer:unhide_query' => :environment do |t, args|
     id = arg.to_i
 
     if DataExplorer.pstore_get("q:#{id}").nil?
-      puts Rainbow("Error finding query with id #{id}").red
+      puts "Error finding query with id #{id}"
       puts " "
     else
       q = DataExplorer::Query.find(id)
       if q
-        puts Rainbow("Found query with id #{id}").green
+        puts "Found query with id #{id}"
       end
 
       q.hidden = false
       q.save
-      puts Rainbow("Query no.#{id} is now visible").green unless q.hidden
+      puts "Query no.#{id} is now visible" unless q.hidden
       puts " "
     end
   end
@@ -81,21 +79,21 @@ task 'data_explorer:hard_delete' => :environment do |t, args|
     id = arg.to_i
 
     if DataExplorer.pstore_get("q:#{id}").nil?
-      puts Rainbow("Error finding query with id #{id}").red
+      puts "Error finding query with id #{id}"
       puts " "
     else
       q = DataExplorer::Query.find(id)
       if q
-        puts Rainbow("Found query with id #{id}").green
+        puts "Found query with id #{id}"
       end
 
       if q.hidden
         DataExplorer.pstore_delete "q:#{id}"
-        puts Rainbow("Query no.#{id} has been deleted").green
+        puts "Query no.#{id} has been deleted"
         puts " "
       else
-        puts Rainbow("Query no.#{id} must be hidden in order to hard delete").red
-        puts Rainbow("To hide the query, run: ").yellow + Rainbow("rake data_explorer[#{id}]").yellow.bright
+        puts "Query no.#{id} must be hidden in order to hard delete"
+        puts "To hide the query, run: " + "rake data_explorer[#{id}]"
         puts " "
       end
     end
