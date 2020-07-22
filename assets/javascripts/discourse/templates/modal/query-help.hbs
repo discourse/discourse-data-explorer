@@ -2,7 +2,50 @@
   <h3>{{i18n "explorer.help.modal.custom_params.title"}}</h3>
   <p>{{i18n "explorer.help.modal.custom_params.body"}}</p>
   <pre><code class="sql">{{html-safe (i18n "explorer.help.modal.custom_params.code")}}</code></pre>
+  <strong><p>{{i18n "explorer.help.modal.custom_params.body2"}}</p></strong>
+
+  <p>{{i18n "explorer.help.modal.custom_params.body3"}}</p>
+  <pre><code class="sql">{{html-safe (i18n "explorer.help.modal.custom_params.code2")}}</code></pre>
+  <hr>
 
   <h3>{{i18n "explorer.help.modal.query_data_types.title"}}</h3>
   <p>{{i18n "explorer.help.modal.query_data_types.body"}}</p>
+  <table class="topic-list">
+    <thead>
+      <th>{{i18n "explorer.help.modal.query_data_types.table.header.col1"}}</th>
+      <th>{{i18n "explorer.help.modal.query_data_types.table.header.col2"}}</th>
+      <th>{{i18n "explorer.help.modal.query_data_types.table.header.col3"}}</th>
+      <th>{{i18n "explorer.help.modal.query_data_types.table.header.col4"}}</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>boolean</td>
+        <td>bool</td>
+        <td>boolean</td>
+        <td>logical Boolean (true/false)</td>
+      </tr>
+      <tr>
+        <td>date</td>
+        <td></td>
+        <td>date/time</td>
+        <td>calendar date (year, month, day)</td>
+      </tr>
+      <tr>
+        <td>integer</td>
+        <td>int, int4</td>
+        <td>numeric</td>
+        <td>signed four-byte Integer</td>
+      </tr>
+      <tr>
+        <td>text</td>
+        <td></td>
+        <td>string</td>
+        <td>variable-length character string</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    {{i18n "explorer.help.modal.query_data_types.body2"}}
+    {{html-safe (i18n "explorer.schema.type_help")}}
+  </p>
 {{/d-modal-body}}
