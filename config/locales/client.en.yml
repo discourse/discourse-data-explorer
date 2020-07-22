@@ -22,9 +22,19 @@ en:
             title: "Creating Custom Parameters"
             body: "To create custom parameters for your queries, put this at the top of your query and follow the format:"
             code: "-- [params]\n-- int :num = 1\n\nSELECT :num"
+            body2: "Note: the first line with [params] is required, along with two dashes preceding it and every custom parameter you want to declare."
+            body3: "You can declare parameters with or without default values. Default values will show up in a text field below the query editor, which you can edit to your needs. Parameters declared without default values will still generate a text field, but will be empty and highlighted red."
+            code2: "-- [params]\n-- text :username = my_username\n-- int :age"
           query_data_types:
             title: "Query Data Types"
-            body: "Data types go here"
+            body: "Here are common data types used in data explorer:"
+            table:
+              header:
+                col1: "Name"
+                col2: "Aliases"
+                col3: "Type"
+                col4: "Description"
+            body2: "For more information on data types, visit this website: "
       schema:
         title: "Database Schema"
         filter: "Search..."
