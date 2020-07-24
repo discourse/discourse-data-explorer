@@ -133,4 +133,65 @@ describe 'Data Explorer rake tasks' do
       end
     end
   end
+
+  describe '#hard_delete' do
+    it 'hard deletes a single query' do
+      DataExplorer::Query.destroy_all
+      make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
+      make_query('SELECT 1 as value', id: 2, name: 'B', hidden: true)
+      # rake data_explorer:hard_delete[1] => hard delete query with ID 1
+      Rake::Task['data_explorer:hard_delete'].invoke(1)
+
+      # Hard deletion: query list should be shorter by 1
+      expect(DataExplorer::Query.all.length).to eq(1)
+      # Array of hidden queries should have exactly 1 element
+      expect(hidden_queries.length).to eq(1)
+      # There should be one remaining hidden element
+      expect(hidden_queries[0].id).to eq(2)
+    end
+
+    it 'hard deletes multiple queries' do
+      DataExplorer::Query.destroy_all
+      make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
+      make_query('SELECT 1 as value', id: 2, name: 'B', hidden: true)
+      make_query('SELECT 1 as value', id: 3, name: 'C', hidden: true)
+      make_query('SELECT 1 as value', id: 4, name: 'D', hidden: true)
+      # rake data_explorer:hard_delete[1,2,4] => hard delete queries with IDs 1, 2 and 4
+      Rake::Task['data_explorer:hard_delete'].invoke(1, 2, 4)
+
+      # Hard deletion: query list should be shorter by 3
+      expect(DataExplorer::Query.all.length).to eq(1)
+      # Array of hidden queries should have exactly 1 element
+      expect(hidden_queries.length).to eq(1)
+      # There should be one remaining hidden element
+      expect(hidden_queries[0].id).to eq(3)
+    end
+
+    context 'query does not exist in PluginStore' do
+      it 'should not hard delete the query' do
+        DataExplorer::Query.destroy_all
+        make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
+        make_query('SELECT 1 as value', id: 2, name: 'B', hidden: true)
+        # rake data_explorer:hard_delete[3] => try to hard delete query with ID 3
+        Rake::Task['data_explorer:hard_delete'].invoke(3)
+        # rake data_explorer:hard_delete[3,4,5] => try to hard delete queries with IDs 3, 4 and 5
+        Rake::Task['data_explorer:hard_delete'].invoke(3, 4, 5)
+
+        # Array of hidden queries shouldn't change
+        expect(hidden_queries.length).to eq(2)
+      end
+    end
+
+    context 'query is not hidden' do
+      it 'should not hard delete the query' do
+        DataExplorer::Query.destroy_all
+        make_query('SELECT 1 as value', id: 1, name: 'A')
+        # rake data_explorer:hard_delete[1] => try to hard delete query with ID 1
+        Rake::Task['data_explorer:hard_delete'].invoke(1)
+
+        # List of queries shouldn't change
+        expect(DataExplorer::Query.all.length).to eq(1)
+      end
+    end
+  end
 end
