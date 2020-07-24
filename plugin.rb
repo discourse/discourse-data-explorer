@@ -8,7 +8,7 @@
 
 enabled_site_setting :data_explorer_enabled
 
-load File.expand_path('../lib/discourse_data_explorer/engine.rb', __FILE__)
+require File.expand_path('../lib/discourse_data_explorer/engine.rb', __FILE__)
 register_asset 'stylesheets/explorer.scss'
 
 if respond_to?(:register_svg_icon)
