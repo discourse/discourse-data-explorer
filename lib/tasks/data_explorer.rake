@@ -2,6 +2,7 @@
 
 # rake data_explorer:list_hidden_queries
 desc "Shows a list of hidden queries"
+task('data_explorer:list_hidden_queries').clear
 task 'data_explorer:list_hidden_queries' => :environment do |t|
   hidden_queries = []
   puts " "
@@ -23,6 +24,7 @@ end
 # rake data_explorer[-1]
 # rake data_explorer[1,-2,3,-4,5]
 desc "Hides one or multiple queries by ID"
+task('data_explorer').clear
 task 'data_explorer' => :environment do |t, args|
   puts " "
   args.extras.each do |arg|
@@ -48,6 +50,7 @@ end
 # rake data_explorer:unhide_query[-1]
 # rake data_explorer:unhide_query[1,-2,3,-4,5]
 desc "Unhides one or multiple queries by ID"
+task('data_explorer:unhide_query').clear
 task 'data_explorer:unhide_query' => :environment do |t, args|
   puts " "
   args.extras.each do |arg|
@@ -73,6 +76,7 @@ end
 # rake data_explorer:hard_delete[-1]
 # rake data_explorer:hard_delete[1,-2,3,-4,5]
 desc "Hard deletes one or multiple queries by ID"
+task('data_explorer:hard_delete').clear
 task 'data_explorer:hard_delete' => :environment do |t, args|
   puts " "
   args.extras.each do |arg|
