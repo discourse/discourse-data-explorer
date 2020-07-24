@@ -84,4 +84,53 @@ describe 'Data Explorer rake tasks' do
       end
     end
   end
+
+  describe '#unhide_query' do
+    it 'unhides a single query' do
+      DataExplorer::Query.destroy_all
+      make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
+      make_query('SELECT 1 as value', id: 2, name: 'B', hidden: true)
+      # rake data_explorer:unhide_query[1] => unhide query with ID 1
+      Rake::Task['data_explorer:unhide_query'].invoke(1)
+
+      # Soft deletion: PluginStoreRow should not be modified
+      expect(DataExplorer::Query.all.length).to eq(2)
+      # Array of hidden queries should have exactly 1 element
+      expect(hidden_queries.length).to eq(1)
+      # There should be one remaining element that is still hidden
+      expect(hidden_queries[0].id).to eq(2)
+    end
+
+    it 'unhides multiple queries' do
+      DataExplorer::Query.destroy_all
+      make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
+      make_query('SELECT 1 as value', id: 2, name: 'B', hidden: true)
+      make_query('SELECT 1 as value', id: 3, name: 'C', hidden: true)
+      make_query('SELECT 1 as value', id: 4, name: 'D', hidden: true)
+      # rake data_explorer:unhide_query[1,2,4] => unhide queries with IDs 1, 2 and 4
+      Rake::Task['data_explorer:unhide_query'].invoke(1, 2, 4)
+
+      # Soft deletion: PluginStoreRow should not be modified
+      expect(DataExplorer::Query.all.length).to eq(4)
+      # Array of hidden queries should have exactly 1 element
+      expect(hidden_queries.length).to eq(1)
+      # There should be one remaining element that is still hidden
+      expect(hidden_queries[0].id).to eq(3)
+    end
+
+    context 'query does not exist in PluginStore' do
+      it 'should not unhide the query' do
+        DataExplorer::Query.destroy_all
+        make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
+        make_query('SELECT 1 as value', id: 2, name: 'B', hidden: true)
+        # rake data_explorer:unhide_query[3] => try to unhide query with ID 3
+        Rake::Task['data_explorer:unhide_query'].invoke(3)
+        # rake data_explorer:unhide_query[3,4,5] => try to unhide queries with IDs 3, 4 and 5
+        Rake::Task['data_explorer:unhide_query'].invoke(3, 4, 5)
+
+        # Array of hidden queries shouldn't change
+        expect(hidden_queries.length).to eq(2)
+      end
+    end
+  end
 end
