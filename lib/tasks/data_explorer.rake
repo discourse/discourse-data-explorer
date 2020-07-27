@@ -5,9 +5,7 @@ desc "Shows a list of hidden queries"
 task('data_explorer:list_hidden_queries').clear
 task 'data_explorer:list_hidden_queries' => :environment do |t|
   hidden_queries = []
-  puts " "
-  puts "Hidden Queries"
-  puts " "
+  puts "\nHidden Queries\n\n"
 
   DataExplorer::Query.all.each do |query|
     hidden_queries.push(query) if query.hidden
@@ -16,8 +14,7 @@ task 'data_explorer:list_hidden_queries' => :environment do |t|
   hidden_queries.each do |query|
     puts "Name: #{query.name}"
     puts "Description: #{query.description}"
-    puts "ID: #{query.id}"
-    puts " "
+    puts "ID: #{query.id}\n\n"
   end
 end
 
@@ -26,25 +23,23 @@ end
 desc "Hides one or multiple queries by ID"
 task('data_explorer').clear
 task 'data_explorer' => :environment do |t, args|
-  puts " "
   args.extras.each do |arg|
     id = arg.to_i
 
     if DataExplorer.pstore_get("q:#{id}").nil?
-      puts "Error finding query with id #{id}"
-      puts " "
+      puts "\nError finding query with id #{id}"
     else
       q = DataExplorer::Query.find(id)
       if q
-        puts "Found query with id #{id}"
+        puts "\nFound query with id #{id}"
       end
 
       q.hidden = true
       q.save
       puts "Query no.#{id} is now hidden" if q.hidden
-      puts " "
     end
   end
+  puts ""
 end
 
 # rake data_explorer:unhide_query[-1]
@@ -52,25 +47,23 @@ end
 desc "Unhides one or multiple queries by ID"
 task('data_explorer:unhide_query').clear
 task 'data_explorer:unhide_query' => :environment do |t, args|
-  puts " "
   args.extras.each do |arg|
     id = arg.to_i
 
     if DataExplorer.pstore_get("q:#{id}").nil?
-      puts "Error finding query with id #{id}"
-      puts " "
+      puts "\nError finding query with id #{id}"
     else
       q = DataExplorer::Query.find(id)
       if q
-        puts "Found query with id #{id}"
+        puts "\nFound query with id #{id}"
       end
 
       q.hidden = false
       q.save
       puts "Query no.#{id} is now visible" unless q.hidden
-      puts " "
     end
   end
+  puts ""
 end
 
 # rake data_explorer:hard_delete[-1]
@@ -78,28 +71,25 @@ end
 desc "Hard deletes one or multiple queries by ID"
 task('data_explorer:hard_delete').clear
 task 'data_explorer:hard_delete' => :environment do |t, args|
-  puts " "
   args.extras.each do |arg|
     id = arg.to_i
 
     if DataExplorer.pstore_get("q:#{id}").nil?
-      puts "Error finding query with id #{id}"
-      puts " "
+      puts "\nError finding query with id #{id}"
     else
       q = DataExplorer::Query.find(id)
       if q
-        puts "Found query with id #{id}"
+        puts "\nFound query with id #{id}"
       end
 
       if q.hidden
         DataExplorer.pstore_delete "q:#{id}"
         puts "Query no.#{id} has been deleted"
-        puts " "
       else
         puts "Query no.#{id} must be hidden in order to hard delete"
         puts "To hide the query, run: " + "rake data_explorer[#{id}]"
-        puts " "
       end
     end
   end
+  puts ""
 end

@@ -6,3 +6,4 @@ auto_generated
 *.swp
 *.swo
 node_modules/
+.idea/
