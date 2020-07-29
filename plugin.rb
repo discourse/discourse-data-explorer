@@ -7,6 +7,8 @@
 # url: https://github.com/discourse/discourse-data-explorer
 
 enabled_site_setting :data_explorer_enabled
+
+require File.expand_path('../lib/discourse_data_explorer/engine.rb', __FILE__)
 register_asset 'stylesheets/explorer.scss'
 
 if respond_to?(:register_svg_icon)
@@ -634,13 +636,14 @@ SQL
   # Reimplement a couple ActiveRecord methods, but use PluginStore for storage instead
   require_dependency File.expand_path('../lib/queries.rb', __FILE__)
   class DataExplorer::Query
-    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at
+    attr_accessor :id, :name, :description, :sql, :created_by, :created_at, :group_ids, :last_run_at, :hidden
 
     def initialize
       @name = 'Unnamed Query'
       @description = ''
       @sql = 'SELECT 1'
       @group_ids = []
+      @hidden = false
     end
 
     def slug
@@ -687,6 +690,7 @@ SQL
       group_ids = (h[:group_ids] == "" || !h[:group_ids]) ? [] : h[:group_ids]
       query.group_ids = group_ids
       query.id = h[:id].to_i if h[:id]
+      query.hidden = h[:hidden]
       query
     end
 
@@ -699,7 +703,8 @@ SQL
         created_by: @created_by,
         created_at: @created_at,
         group_ids: @group_ids,
-        last_run_at: @last_run_at
+        last_run_at: @last_run_at,
+        hidden: @hidden
       }
     end
 
@@ -739,7 +744,10 @@ SQL
     end
 
     def destroy
-      DataExplorer.pstore_delete "q:#{id}"
+      # Instead of deleting the query from the store, we can set
+      # it to be hidden and not send it to the frontend
+      @hidden = true
+      DataExplorer.pstore_set "q:#{id}", to_hash
     end
 
     def read_attribute_for_serialization(attr)
@@ -1027,7 +1035,11 @@ SQL
 
     def index
       # guardian.ensure_can_use_data_explorer!
-      queries = DataExplorer::Query.all
+      queries = []
+      DataExplorer::Query.all.each do |query|
+        queries.push(query) unless query.hidden
+      end
+
       Queries.default.each do |params|
         query = DataExplorer::Query.new
         query.id = params.second["id"]
@@ -1120,11 +1132,12 @@ SQL
         end
       end
 
-      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at].each do |sym|
+      [:name, :sql, :description, :created_by, :created_at, :group_ids, :last_run_at, :hidden].each do |sym|
         query.send("#{sym}=", hash[sym]) if hash[sym]
       end
 
       query.check_params!
+      query.hidden = false
       query.save
 
       render_serialized query, DataExplorer::QuerySerializer, root: 'query'
@@ -1261,7 +1274,7 @@ SQL
   end
 
   class DataExplorer::QuerySerializer < ActiveModel::Serializer
-    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at
+    attributes :id, :sql, :name, :description, :param_info, :created_by, :created_at, :username, :group_ids, :last_run_at, :hidden
 
     def param_info
       object.params.map(&:to_hash) rescue nil

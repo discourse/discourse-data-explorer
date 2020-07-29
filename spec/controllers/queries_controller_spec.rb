@@ -18,6 +18,7 @@ describe DataExplorer::QueryController do
     q.description = "A description for query number #{q.id}"
     q.group_ids = group_ids
     q.sql = sql
+    q.hidden = opts[:hidden] || false
     q.save
     q
   end
@@ -79,6 +80,16 @@ describe DataExplorer::QueryController do
         expect(response_json['queries'].length).to eq(Queries.default.count + 2)
         expect(response_json['queries'][0]['name']).to eq('A')
         expect(response_json['queries'][1]['name']).to eq('B')
+      end
+
+      it "doesn't show hidden/deleted queries" do
+        DataExplorer::Query.destroy_all
+        make_query('SELECT 1 as value', name: 'A', hidden: false)
+        make_query('SELECT 1 as value', name: 'B', hidden: true)
+        make_query('SELECT 1 as value', name: 'C', hidden: true)
+        get :index, format: :json
+        expect(response.status).to eq(200)
+        expect(response_json['queries'].length).to eq(Queries.default.count + 1)
       end
     end
 
