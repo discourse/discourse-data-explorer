@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 lv:
   js:
@@ -12,8 +11,8 @@ lv:
         label: "Importēt"
       types:
         bool:
-          'yes': "Jā"
-          'no': "Nē"
+          yes: "Jā"
+          no: "Nē"
       export: "Eksportēt"
       save: "Saglabāt izmaiņas"
       edit: "Labot"

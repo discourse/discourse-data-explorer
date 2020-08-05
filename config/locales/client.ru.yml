@@ -1,52 +1,69 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ru:
   js:
     errors:
       explorer:
         no_semicolons: "Удалите точку с запятой из запроса."
-        dirty: "Вы должны сохранить запрос перед запуском."
+        dirty: "Вы должны сохранить запрос перед его выполнением."
     explorer:
-      admins_only: "Исследование данных доступен только для администраторов."
+      admins_only: "Исследование данных доступно только для администраторов."
+      allow_groups: "Разрешить группам доступ к этому запросу"
       title: "Проводник данных"
-      create: "Создавать новое"
+      create: "Создать"
       create_placeholder: "Имя запроса..."
-      description_placeholder: "Введите описание здесь"
+      description_placeholder: "Введите описание"
       import:
         label: "Импорт"
         modal: "Импорт запроса"
       schema:
-        title: "Database Schema"
+        title: "Схема базы данных"
         filter: "Поиск..."
-        sensitive: "Содержимое этого столбца может содержать особенно конфиденциальную или конфиденциальную информацию. Будьте осторожны при использовании содержимого этой колонки."
+        sensitive: "Эта колонка может содержать конфиденциальную информацию. Будьте осторожны при использовании её содержимого."
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Типы</a>"
       types:
         bool:
-          'yes': "Да"
-          'no': "Нет"
+          yes: "Да"
+          no: "Нет"
           null_: "Null"
       export: "Экспорт"
       save: "Сохранить изменения"
+      saverun: "Сохранить изменения и выполнить запрос"
+      run: "Выполнить запрос"
       undo: "Отменить изменения"
       edit: "Редактировать"
       delete: "Удалить"
       recover: "Отменить запрос"
       download_json: "JSON"
       download_csv: "CSV"
-      others_dirty: "Запрос имеет несохраненные изменения, которые будут потеряны, если вы уйдете."
+      others_dirty: "Запрос имеет несохранённые изменения, которые будут потеряны, если вы уйдёте со страницы."
+      run_time: "Запрос завершен за %{value} мс."
+      result_count:
+        one: "%{count} результат."
+        few: "%{count} результата."
+        many: "%{count} результатов."
+        other: "%{count} результатов."
+      max_result_count:
+        one: "Показан %{count} лучший результат."
+        few: "Показаны %{count} лучших результата."
+        many: "Показаны %{count} лучших результатов."
+        other: "Показаны %{count} лучших результатов."
       query_name: "Запрос"
       query_groups: "Группы"
+      link: "Ссылка для"
+      report_name: "Отчёт"
       query_description: "Описание"
-      query_time: "Последний запуск"
+      query_time: "Время выполнения последнего запроса"
       query_user: "Создано"
+      column: "Колонка %{number}"
       explain_label: "Включить план запроса?"
       save_params: "Установка значений по умолчанию"
       reset_params: "Сброс"
-      search_placeholder: "Искать..."
+      search_placeholder: "Поиск..."
+      no_search_results: "К сожалению, мы не смогли найти результаты, соответствующие вашему запросу."
     group:
-      reports: "Отчеты"
+      reports: "Отчёты"

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 it:
   js:
@@ -28,8 +27,8 @@ it:
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipi</a>"
       types:
         bool:
-          'yes': "Sì"
-          'no': "No"
+          yes: "Sì"
+          no: "No"
           null_: "Null"
       export: "Esporta"
       save: "Salva Modifiche"

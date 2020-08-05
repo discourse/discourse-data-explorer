@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 zh_TW:
   js:
@@ -14,8 +13,8 @@ zh_TW:
         filter: "搜尋..."
       types:
         bool:
-          'yes': "是"
-          'no': "否"
+          yes: "是"
+          no: "否"
       export: "匯出"
       save: "儲存變更"
       edit: "編輯"

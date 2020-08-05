@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 hu:
   js:
@@ -21,8 +20,8 @@ hu:
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Típusok</a>"
       types:
         bool:
-          'yes': "Igen"
-          'no': "Nem"
+          yes: "Igen"
+          no: "Nem"
           null_: "Null"
       export: "Exportálás"
       save: "Módosítások mentése"
