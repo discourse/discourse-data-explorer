@@ -1080,15 +1080,16 @@ SQL
       respond_to do |format|
         format.html { render 'groups/show' }
         format.json do
-          queries = DataExplorer::Query.all
-          queries.select! { |query| query.group_ids&.include?(group.id.to_s) }
-          render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
+          queries = DataExplorer::Query.all.select do |query|
+            !query.hidden && query.group_ids&.include?(group.id.to_s)
+          end
+          render_serialized(queries, DataExplorer::QuerySerializer, root: 'queries')
         end
       end
     end
 
     def group_reports_show
-      return raise Discourse::NotFound unless guardian.user_can_access_query?(group, query)
+      return raise Discourse::NotFound if !guardian.user_can_access_query?(group, query) || query.hidden
 
       respond_to do |format|
         format.html { render 'groups/show' }
@@ -1100,7 +1101,7 @@ SQL
 
     skip_before_action :check_xhr, only: [:group_reports_run]
     def group_reports_run
-      return raise Discourse::NotFound unless guardian.user_can_access_query?(group, query)
+      return raise Discourse::NotFound if !guardian.user_can_access_query?(group, query) || query.hidden
 
       run
     end
