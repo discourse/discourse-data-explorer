@@ -170,12 +170,12 @@
           <thead class="heading-container">
             <th class="col heading name">
               <div class="heading-toggle" {{action "sortByProperty" "name"}}>
-                {{directory-toggle field="name" labelKey="explorer.query_name" order=order asc=asc}}
+                {{table-header-toggle field="name" labelKey="explorer.query_name" order=order asc=asc}}
               </div>
             </th>
             <th class="col heading created-by">
               <div class="heading-toggle" {{action "sortByProperty" "username"}}>
-                {{directory-toggle field="username" labelKey="explorer.query_user" order=order asc=asc}}
+                {{table-header-toggle field="username" labelKey="explorer.query_user" order=order asc=asc}}
               </div>
             </th>
             <th class='col heading group-names'>
@@ -185,7 +185,7 @@
             </th>
             <th class="col heading created-at">
               <div class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
-                {{directory-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc}}
+                {{table-header-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc}}
               </div>
             </th>
           </thead>
