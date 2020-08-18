@@ -12,15 +12,11 @@ describe DataExplorer::QueryController do
   end
 
   def make_query(sql, opts = {}, group_ids = [])
-    q = DataExplorer::Query.new
-    q.id = Fabrication::Sequencer.sequence("query-id", 1)
-    q.name = opts[:name] || "Query number #{q.id}"
-    q.description = "A description for query number #{q.id}"
-    q.group_ids = group_ids
-    q.sql = sql
-    q.hidden = opts[:hidden] || false
-    q.save
-    q
+    query = DataExplorer::Query.create!(name: opts[:name] || "Query number", description: "A description for query number", sql: sql, hidden: opts[:hidden] || false)
+    group_ids.each do |group_id|
+      query.query_groups.create!(group_id: group_id)
+    end
+    query
   end
 
   describe "Admin" do
