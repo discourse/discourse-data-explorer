@@ -1,6 +1,5 @@
 class DataExplorer::SmallPostWithExcerptSerializer < ApplicationSerializer
-  attributes :id, :topic_id, :post_number, :excerpt
-  attributes :username, :avatar_template
+  attributes :id, :topic_id, :post_number, :excerpt, :username, :avatar_template
   def excerpt
     Post.excerpt(object.cooked, 70)
   end

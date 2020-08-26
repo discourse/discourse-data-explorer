@@ -5,10 +5,10 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
     create_table :data_explorer_queries do |t|
       t.string :name
       t.text :description
-      t.text :sql
+      t.text :sql, default: "SELECT 1", null: false
       t.integer :user_id
       t.datetime :last_run_at
-      t.boolean :hidden, default: false
+      t.boolean :hidden, default: false, null: false
       t.timestamps
     end
 
@@ -18,29 +18,57 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
       t.index :query_id
       t.index :group_id
     end
+    add_index(:data_explorer_query_groups, [:query_id, :group_id], unique: true)
 
-    DB.exec <<~SQL
+    DB.exec <<~SQL, now: Time.zone.now
       INSERT INTO data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
-      SELECT 
-        (value::json->>'id')::integer,
+      SELECT
+        (replace(key, 'q:',''))::integer,
         value::json->>'name',
         value::json->>'description',
         value::json->>'sql',
         (value::json->>'created_by')::integer,
         CASE WHEN (value::json->'last_run_at')::text = 'null' THEN 
-          now()
+          null
+        WHEN (value::json->'last_run_at')::text = '""' THEN
+          null
         ELSE
-          (value::json->'last_run_at')::text::timestamp
+          (value::json->'last_run_at')::text::timestamptz
+        END,
+        CASE WHEN (value::json->'hidden')::text = 'null' THEN
+          false
+        ELSE
+          (value::json->'hidden')::text::boolean
+        END,
+        :now,
+        :now
+      FROM plugin_store_rows
+      WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON' AND (replace(key, 'q:',''))::integer < 0
+    SQL
+
+    DB.exec <<~SQL, now: Time.zone.now
+      INSERT INTO data_explorer_queries(name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
+      SELECT
+        value::json->>'name',
+        value::json->>'description',
+        value::json->>'sql',
+        (value::json->>'created_by')::integer,
+        CASE WHEN (value::json->'last_run_at')::text = 'null' THEN
+          null
+        WHEN (value::json->'last_run_at')::text = '""' THEN
+          null
+        ELSE
+          (value::json->'last_run_at')::text::timestamptz
         END,
         CASE WHEN (value::json->'hidden')::text = 'null' THEN 
           false
-        ELSE 
+        ELSE
           (value::json->'hidden')::text::boolean
         END,
-        now(),
-        now()
+        :now,
+        :now
       FROM plugin_store_rows
-      WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON'
+      WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON' AND (replace(key, 'q:',''))::integer > 0
     SQL
 
     DB.query("SELECT * FROM plugin_store_rows WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON'").each do |row|

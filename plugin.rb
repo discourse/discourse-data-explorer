@@ -57,7 +57,7 @@ after_initialize do
   add_to_class(:guardian, :group_and_user_can_access_query?) do |group, query|
     return false if !current_user
     return true if current_user.admin?
-    return user_is_a_member_of_group?(group) && query.groups.where(id: group.id).present?
+    return user_is_a_member_of_group?(group) && query.groups.exists?(id: group.id)
   end
 
   module ::DataExplorer

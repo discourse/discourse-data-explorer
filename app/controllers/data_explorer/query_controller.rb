@@ -1,97 +1,78 @@
 class DataExplorer::QueryController < ::ApplicationController
   requires_plugin DataExplorer.plugin_name
 
-  before_action :check_enabled
   before_action :set_group, only: %i(group_reports_index group_reports_show group_reports_run)
-  before_action :set_query, only: %i(group_reports_show group_reports_run)
-
-  attr_reader :group, :query
-
-  def check_enabled
-    raise Discourse::NotFound unless SiteSetting.data_explorer_enabled?
-  end
-
-  def set_group
-    @group = Group.find_by(name: params["group_name"])
-  end
-
-  def set_query
-    @query = DataExplorer::Query.find(params[:id])
-  end
+  before_action :set_query, only: %i(group_reports_show group_reports_run show update)
+  skip_before_action :check_xhr, only: %i(show group_reports_run run)
 
   def index
-    queries = DataExplorer::Query.where(hidden: false).order(:last_run_at, :name).to_a
+    queries = DataExplorer::Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
 
     database_queries_ids = DataExplorer::Query.pluck(:id)
     Queries.default.each do |params|
       attributes = params.last
+      next if database_queries_ids.include?(attributes["id"])
       query = DataExplorer::Query.new
       query.id = attributes["id"]
       query.sql = attributes["sql"]
       query.name = attributes["name"]
       query.description = attributes["description"]
       query.user_id = Discourse::SYSTEM_USER_ID.to_s
-      queries << query unless database_queries_ids.include?(query.id)
+      queries << query 
     end
 
     render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
   end
 
-  skip_before_action :check_xhr, only: [:show]
   def show
     check_xhr unless params[:export]
 
-    query = DataExplorer::Query.find(params[:id])
-
     if params[:export]
-      response.headers['Content-Disposition'] = "attachment; filename=#{query.slug}.dcquery.json"
+      response.headers['Content-Disposition'] = "attachment; filename=#{@query.slug}.dcquery.json"
       response.sending_file = true
     end
 
-    return raise Discourse::NotFound if !guardian.user_can_access_query?(query) || query.hidden
-    render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+    return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
+    render_serialized @query, DataExplorer::QuerySerializer, root: 'query'
   end
 
   def groups
-    render_serialized(Group.all, BasicGroupSerializer)
+    render json: Group.all.select(:id, :name), root: false
   end
 
   def group_reports_index
-    return raise Discourse::NotFound unless guardian.user_is_a_member_of_group?(group)
+    return raise Discourse::NotFound unless guardian.user_is_a_member_of_group?(@group)
 
     respond_to do |format|
-      format.html { render 'groups/show' }
       format.json do
         queries = DataExplorer::Query
           .where(hidden: false)
-          .joins("INNER JOIN data_explorer_query_groups data_explorer_query_groups 
+          .joins("INNER JOIN data_explorer_query_groups
                     ON data_explorer_query_groups.query_id = data_explorer_queries.id 
-                    AND data_explorer_query_groups.group_id = #{group.id}")
+                    AND data_explorer_query_groups.group_id = #{@group.id}")
         render_serialized(queries, DataExplorer::QuerySerializer, root: 'queries')
       end
     end
   end
 
   def group_reports_show
-    return raise Discourse::NotFound if !guardian.group_and_user_can_access_query?(group, query) || query.hidden
+    return raise Discourse::NotFound if !guardian.group_and_user_can_access_query?(@group, @query) || @query.hidden
 
     respond_to do |format|
-      format.html { render 'groups/show' }
       format.json do
-        render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+        render_serialized @query, DataExplorer::QuerySerializer, root: 'query'
       end
     end
   end
 
-  skip_before_action :check_xhr, only: [:group_reports_run]
   def group_reports_run
-    return raise Discourse::NotFound if !guardian.group_and_user_can_access_query?(group, query) || query.hidden
+    return raise Discourse::NotFound if !guardian.group_and_user_can_access_query?(@group, @query) || @query.hidden
 
     run
   end
 
   def create
-    query = DataExplorer::Query.create!(params.require(:query).permit(:name, :description, :sql).merge(user_id: current_user.id, last_run_at: Time.now).permit!)
+    query = DataExplorer::Query.create!(params.require(:query).permit(:name, :description, :sql).merge(user_id: current_user.id, last_run_at: Time.now))
     group_ids = params.require(:query)[:group_ids]
     group_ids&.each do |group_id|
       query.query_groups.find_or_create_by!(group_id: group_id)
@@ -100,16 +81,17 @@ class DataExplorer::QueryController < ::ApplicationController
   end
 
   def update
-    query = DataExplorer::Query.find(params[:id])
-    query.update!(params.require(:query).permit(:name, :sql, :description).merge(hidden: false))
+    ActiveRecord::Base.transaction do
+      @query.update!(params.require(:query).permit(:name, :sql, :description).merge(hidden: false))
 
-    group_ids = params.require(:query)[:group_ids]
-    DataExplorer::QueryGroup.where.not(group_id: group_ids).delete_all
-    group_ids&.each do |group_id|
-      query.query_groups.find_or_create_by!(group_id: group_id)
+      group_ids = params.require(:query)[:group_ids]
+      DataExplorer::QueryGroup.where.not(group_id: group_ids).where(query_id: @query.id).delete_all
+      group_ids&.each do |group_id|
+        @query.query_groups.find_or_create_by!(group_id: group_id)
+      end
     end
 
-    render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+    render_serialized @query, DataExplorer::QuerySerializer, root: 'query'
   rescue DataExplorer::ValidationError => e
     render_json_error e.message
   end
@@ -128,7 +110,6 @@ class DataExplorer::QueryController < ::ApplicationController
     end
   end
 
-  skip_before_action :check_xhr, only: [:run]
   # Return value:
   # success - true/false. if false, inspect the errors value.
   # errors - array of strings.
@@ -232,5 +213,16 @@ class DataExplorer::QueryController < ::ApplicationController
         end
       end
     end
+  end
+
+  private
+
+  def set_group
+    @group = Group.find_by(name: params["group_name"])
+  end
+
+  def set_query
+    @query = DataExplorer::Query.find_by(id: params[:id])
+    raise Discourse::NotFound unless @query
   end
 end
