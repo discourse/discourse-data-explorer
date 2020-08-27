@@ -27,7 +27,11 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         value::json->>'name',
         value::json->>'description',
         value::json->>'sql',
-        (value::json->>'created_by')::integer,
+        CASE WHEN (value::jsonb ? 'created_by') THEN
+          (value::json->>'created_by')::integer
+        ELSE
+          null
+        END,
         CASE WHEN (value::json->'last_run_at')::text = 'null' THEN 
           null
         WHEN (value::json->'last_run_at')::text = '""' THEN
@@ -54,7 +58,11 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         value::json->>'name',
         value::json->>'description',
         value::json->>'sql',
-        (value::json->>'created_by')::integer,
+        CASE WHEN (value::jsonb ? 'created_by') THEN
+          (value::json->>'created_by')::integer
+        ELSE
+          null
+        END,
         CASE WHEN (value::json->'last_run_at')::text = 'null' THEN
           null
         WHEN (value::json->'last_run_at')::text = '""' THEN
@@ -82,6 +90,7 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
                           name = ? AND sql = ?", json['name'], json['sql']).first.id
 
       json['group_ids'].each do |group_id|
+        next if group_id.blank? || query_id.blank?
         DB.exec <<~SQL
           INSERT INTO data_explorer_query_groups(query_id, group_id) 
           VALUES(#{query_id}, #{group_id})
