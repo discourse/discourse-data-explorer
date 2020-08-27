@@ -37,8 +37,10 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         END,
         CASE WHEN (value::json->'hidden')::text = 'null' THEN
           false
-        ELSE
+        WHEN (value::jsonb ? 'hidden') THEN
           (value::json->'hidden')::text::boolean
+        ELSE
+          false
         END,
         :now,
         :now
@@ -60,10 +62,12 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         ELSE
           (value::json->'last_run_at')::text::timestamptz
         END,
-        CASE WHEN (value::json->'hidden')::text = 'null' THEN 
+        CASE WHEN (value::json->'hidden')::text = 'null' THEN
           false
-        ELSE
+        WHEN (value::jsonb ? 'hidden') THEN
           (value::json->'hidden')::text::boolean
+        ELSE
+          false
         END,
         :now,
         :now
