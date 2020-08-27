@@ -82,7 +82,7 @@ Query.reopenClass({
     "name",
     "description",
     "sql",
-    "created_by",
+    "user_id",
     "created_at",
     "group_ids",
     "last_run_at"
