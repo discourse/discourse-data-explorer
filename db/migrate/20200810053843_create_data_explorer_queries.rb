@@ -27,7 +27,11 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         value::json->>'name',
         value::json->>'description',
         value::json->>'sql',
-        CASE WHEN (value::jsonb ? 'created_by') THEN
+        CASE WHEN (value::json->'created_by')::text = 'null' THEN
+          null
+        WHEN (value::json->'created_by')::text = '""' THEN
+          null
+        WHEN (value::jsonb ? 'created_by') THEN
           (value::json->>'created_by')::integer
         ELSE
           null
@@ -58,7 +62,11 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         value::json->>'name',
         value::json->>'description',
         value::json->>'sql',
-        CASE WHEN (value::jsonb ? 'created_by') THEN
+        CASE WHEN (value::json->'created_by')::text = 'null' THEN
+          null
+        WHEN (value::json->'created_by')::text = '""' THEN
+          null
+        WHEN (value::jsonb ? 'created_by') THEN
           (value::json->>'created_by')::integer
         ELSE
           null
