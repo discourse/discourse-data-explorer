@@ -8,4 +8,3 @@ module DataExplorer
     belongs_to :group
   end
 end
-

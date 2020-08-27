@@ -37,4 +37,3 @@ module DataExplorer
     end
   end
 end
-

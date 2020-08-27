@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DataExplorer::SmallPostWithExcerptSerializer < ApplicationSerializer
   attributes :id, :topic_id, :post_number, :excerpt, :username, :avatar_template
   def excerpt

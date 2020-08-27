@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DataExplorer::QueryController < ::ApplicationController
   requires_plugin DataExplorer.plugin_name
 
@@ -18,7 +20,7 @@ class DataExplorer::QueryController < ::ApplicationController
       query.name = attributes["name"]
       query.description = attributes["description"]
       query.user_id = Discourse::SYSTEM_USER_ID.to_s
-      queries << query 
+      queries << query
     end
 
     render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
@@ -48,7 +50,7 @@ class DataExplorer::QueryController < ::ApplicationController
         queries = DataExplorer::Query
           .where(hidden: false)
           .joins("INNER JOIN data_explorer_query_groups
-                    ON data_explorer_query_groups.query_id = data_explorer_queries.id 
+                    ON data_explorer_query_groups.query_id = data_explorer_queries.id
                     AND data_explorer_query_groups.group_id = #{@group.id}")
         render_serialized(queries, DataExplorer::QuerySerializer, root: 'queries')
       end
