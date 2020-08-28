@@ -395,6 +395,7 @@ SQL
         'topic_timers.status_type': TopicTimer.types,
         'topic_users.notification_level': TopicUser.notification_levels,
         'topic_users.notifications_reason_id': TopicUser.notification_reasons,
+        'user_actions.action_type': UserAction.types,
         'user_histories.action': UserHistory.actions,
         'user_security_keys.factor_type': UserSecurityKey.factor_types,
         'users.trust_level': TrustLevel.levels,
