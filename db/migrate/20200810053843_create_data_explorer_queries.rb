@@ -36,41 +36,6 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         ELSE
           null
         END,
-        CASE WHEN (value::json->'last_run_at')::text = 'null' THEN 
-          null
-        WHEN (value::json->'last_run_at')::text = '""' THEN
-          null
-        ELSE
-          (value::json->'last_run_at')::text::timestamptz
-        END,
-        CASE WHEN (value::json->'hidden')::text = 'null' THEN
-          false
-        WHEN (value::jsonb ? 'hidden') THEN
-          (value::json->'hidden')::text::boolean
-        ELSE
-          false
-        END,
-        :now,
-        :now
-      FROM plugin_store_rows
-      WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON' AND (replace(key, 'q:',''))::integer < 0
-    SQL
-
-    DB.exec <<~SQL, now: Time.zone.now
-      INSERT INTO data_explorer_queries(name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
-      SELECT
-        value::json->>'name',
-        value::json->>'description',
-        value::json->>'sql',
-        CASE WHEN (value::json->'created_by')::text = 'null' THEN
-          null
-        WHEN (value::json->'created_by')::text = '""' THEN
-          null
-        WHEN (value::jsonb ? 'created_by') THEN
-          (value::json->>'created_by')::integer
-        ELSE
-          null
-        END,
         CASE WHEN (value::json->'last_run_at')::text = 'null' THEN
           null
         WHEN (value::json->'last_run_at')::text = '""' THEN
@@ -88,7 +53,7 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
         :now,
         :now
       FROM plugin_store_rows
-      WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON' AND (replace(key, 'q:',''))::integer > 0
+      WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON'
     SQL
 
     DB.query("SELECT * FROM plugin_store_rows WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON'").each do |row|
@@ -100,11 +65,19 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
       json['group_ids'].each do |group_id|
         next if group_id.blank? || query_id.blank?
         DB.exec <<~SQL
-          INSERT INTO data_explorer_query_groups(query_id, group_id) 
+          INSERT INTO data_explorer_query_groups(query_id, group_id)
           VALUES(#{query_id}, #{group_id})
         SQL
       end
     end
+
+    DB.exec <<~SQL
+      SELECT
+        setval(
+          pg_get_serial_sequence('data_explorer_queries', 'id'),
+          (select max(id) from data_explorer_queries)
+        );
+    SQL
   end
 
   def down
