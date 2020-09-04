@@ -15,21 +15,17 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
 
       return if movements.blank?
 
-      offset = DB.query("SELECT max(id) AS id FROM data_explorer_queries").first.id + 20 # 18 system queries with negative ids
-
       # If there are new queries, they still may have conflict
       # We just want to move their ids to safe space and we will not move them back
-      additional_conflicts = DB.query(<<~SQL, from: movements.map{ |m| m.from }, to: movements.map { |m| m.to } ).map { |conflict| OpenStruct.new(from: conflict.id, to: conflict.id + offset) }
+      additional_conflicts = DB.query(<<~SQL, from: movements.map{ |m| m.from }, to: movements.map { |m| m.to } ).map { |conflict| conflict.id }
         SELECT id FROM data_explorer_queries
         WHERE id IN (:to)
         AND id NOT IN (:from)
       SQL
 
-      movements = additional_conflicts | movements
-
       DB.exec <<-SQL
         CREATE TEMPORARY TABLE tmp_data_explorer_queries(
-          id INTEGER,
+          id INTEGER PRIMARY KEY,
           name VARCHAR,
           description TEXT,
           sql TEXT,
@@ -41,6 +37,8 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
         )
       SQL
 
+
+
       movements.each do |movement|
         # insert moved and conflict queries to temporary table
         DB.exec <<-SQL
@@ -49,7 +47,34 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
           FROM data_explorer_queries
           WHERE id = #{movement.from}
         SQL
+      end
 
+      # insert rest to temporary table
+      DB.exec(<<-SQL, already_moved_ids: movements.map(&:from) | additional_conflicts)
+        INSERT INTO tmp_data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
+        SELECT id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at
+        FROM data_explorer_queries
+        WHERE id NOT IN (:already_moved_ids)
+      SQL
+
+      # insert additional_conflicts to temporary table
+      new_id = DB.query("select max(id) from tmp_data_explorer_queries").first.max + 1
+      additional_conflicts.each do |conflict_id|
+        DB.exec <<-SQL
+          INSERT INTO tmp_data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
+          SELECT #{new_id}, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at
+          FROM data_explorer_queries
+          WHERE id = #{conflict_id}
+        SQL
+        DB.exec <<~SQL
+          UPDATE data_explorer_query_groups
+          SET query_id = #{new_id}
+          WHERE query_id= #{conflict_id}
+        SQL
+        new_id = new_id + 1
+      end
+
+      movements.each do |movement|
         # update group ids for moved queries
         DB.exec(<<~SQL, to: movement.to, from: movement.from)
           UPDATE data_explorer_query_groups
@@ -57,14 +82,6 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
           WHERE query_id= :from
         SQL
       end
-
-      # insert rest to temporary table
-      DB.exec(<<-SQL, already_moved_ids: movements.map(&:from))
-        INSERT INTO tmp_data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
-        SELECT id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at
-        FROM data_explorer_queries
-        WHERE id NOT IN (:already_moved_ids)
-      SQL
 
       # clear original table and copy data from temporary table
       DB.exec("DELETE FROM data_explorer_queries")
