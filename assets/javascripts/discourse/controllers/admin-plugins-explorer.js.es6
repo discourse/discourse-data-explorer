@@ -4,7 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import {
   default as computed,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
@@ -34,7 +34,7 @@ export default Ember.Controller.extend({
   filteredContent(search) {
     const regexp = new RegExp(search, "i");
     return this.sortedQueries.filter(
-      result => regexp.test(result.name) || regexp.test(result.description)
+      (result) => regexp.test(result.name) || regexp.test(result.description)
     );
   },
 
@@ -58,22 +58,23 @@ export default Ember.Controller.extend({
   @computed("selectedItem", "editing")
   selectedGroupNames() {
     const groupIds = this.selectedItem.group_ids || [];
-    const groupNames = groupIds.map(id => {
-      return this.groupOptions.find(groupOption => groupOption.id === id).name;
+    const groupNames = groupIds.map((id) => {
+      return this.groupOptions.find((groupOption) => groupOption.id === id)
+        .name;
     });
     return groupNames.join(", ");
   },
 
   @computed("groups")
   groupOptions(groups) {
-    return groups.map(g => {
+    return groups.map((g) => {
       return { id: g.id, name: g.name };
     });
   },
 
   @computed("selectedItem", "selectedItem.dirty")
   othersDirty(selectedItem) {
-    return !!this.model.find(q => q !== selectedItem && q.dirty);
+    return !!this.model.find((q) => q !== selectedItem && q.dirty);
   },
 
   @observes("editing")
@@ -90,7 +91,7 @@ export default Ember.Controller.extend({
     this.setProperties({
       showResults: false,
       results: null,
-      editing: true
+      editing: true,
     });
   },
 
@@ -106,7 +107,7 @@ export default Ember.Controller.extend({
         query.markNotDirty();
         this.set("editing", false);
       })
-      .catch(x => {
+      .catch((x) => {
         popupAjaxError(x);
         throw x;
       })
@@ -149,7 +150,7 @@ export default Ember.Controller.extend({
         showResults: false,
         editDisabled: false,
         selectedQueryId: null,
-        sortBy: ["last_run_at:desc"]
+        sortBy: ["last_run_at:desc"],
       });
       this.send("refreshModel");
       this.transitionToRoute("adminPlugins.explorer");
@@ -184,12 +185,12 @@ export default Ember.Controller.extend({
       this.setProperties({
         loading: true,
         showCreate: false,
-        showRecentQueries: false
+        showRecentQueries: false,
       });
       this.store
         .createRecord("query", { name })
         .save()
-        .then(result => this.addCreatedRecord(result.target))
+        .then((result) => this.addCreatedRecord(result.target))
         .catch(popupAjaxError)
         .finally(() => this.set("loading", false));
     },
@@ -198,7 +199,7 @@ export default Ember.Controller.extend({
       this.set("loading", true);
       this.store
         .find("query", this.get("selectedItem.id"))
-        .then(result => {
+        .then((result) => {
           const query = this.get("selectedItem");
           query.setProperties(result.getProperties(Query.updatePropertyNames));
           if (!query.group_ids || !Array.isArray(query.group_ids))
@@ -249,11 +250,11 @@ export default Ember.Controller.extend({
           type: "POST",
           data: {
             params: JSON.stringify(this.get("selectedItem.params")),
-            explain: this.explain
-          }
+            explain: this.explain,
+          },
         }
       )
-        .then(result => {
+        .then((result) => {
           this.set("results", result);
           if (!result.success) {
             this.set("showResults", false);
@@ -262,7 +263,7 @@ export default Ember.Controller.extend({
 
           this.set("showResults", true);
         })
-        .catch(err => {
+        .catch((err) => {
           this.set("showResults", false);
           if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
             this.set("results", err.jqXHR.responseJSON);
@@ -271,6 +272,6 @@ export default Ember.Controller.extend({
           }
         })
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });

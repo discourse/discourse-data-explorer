@@ -7,10 +7,10 @@ export default DiscourseRoute.extend({
   model() {
     const group = this.modelFor("group");
     return ajax(`/g/${group.name}/reports`)
-      .then(queries => {
+      .then((queries) => {
         return {
           model: queries,
-          group
+          group,
         };
       })
       .catch(() => this.transitionTo("group.members", group));
@@ -33,6 +33,6 @@ export default DiscourseRoute.extend({
     refreshModel() {
       this.refresh();
       return false;
-    }
-  }
+    },
+  },
 });

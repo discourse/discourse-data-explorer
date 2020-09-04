@@ -61,17 +61,13 @@ export default Ember.Component.extend({
     open() {
       this.set("visible", true);
       window.setTimeout(
-        () =>
-          $(this.element)
-            .find("input")
-            .select()
-            .focus(),
+        () => $(this.element).find("input").select().focus(),
         160
       );
     },
 
     close() {
       this.set("visible", false);
-    }
-  }
+    },
+  },
 });

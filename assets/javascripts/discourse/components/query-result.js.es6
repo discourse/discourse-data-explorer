@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import Badge from "discourse/models/badge";
@@ -13,7 +14,7 @@ function randomIdShort() {
 
 function transformedRelTable(table, modelClass) {
   const result = {};
-  table.forEach(item => {
+  table.forEach((item) => {
     if (modelClass) {
       result[item.id] = modelClass.create(item);
     } else {
@@ -62,7 +63,7 @@ const QueryResultComponent = Ember.Component.extend({
   @computed("content.duration")
   duration(contentDuration) {
     return I18n.t("explorer.run_time", {
-      value: I18n.toNumber(contentDuration, { precision: 1 })
+      value: I18n.toNumber(contentDuration, { precision: 1 }),
     });
   },
 
@@ -82,7 +83,7 @@ const QueryResultComponent = Ember.Component.extend({
     if (!columns) {
       return [];
     }
-    return columns.map(colName => {
+    return columns.map((colName) => {
       if (colName.endsWith("_id")) {
         return colName.slice(0, -3);
       }
@@ -201,7 +202,7 @@ const QueryResultComponent = Ember.Component.extend({
     addInput("explain", this.hasExplain);
     addInput("limit", "1000000");
 
-    ajax("/session/csrf.json").then(csrf => {
+    ajax("/session/csrf.json").then((csrf) => {
       addInput("authenticity_token", csrf.csrf);
 
       document.body.appendChild(form);
@@ -216,8 +217,8 @@ const QueryResultComponent = Ember.Component.extend({
     },
     downloadResultCsv() {
       this.downloadResult("csv");
-    }
-  }
+    },
+  },
 });
 
 export default QueryResultComponent;

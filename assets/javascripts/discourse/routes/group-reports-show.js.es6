@@ -7,7 +7,7 @@ export default DiscourseRoute.extend({
   model(params) {
     const group = this.modelFor("group");
     return ajax(`/g/${group.name}/reports/${params.query_id}`)
-      .then(response => {
+      .then((response) => {
         const queryParamInfo = response.query.param_info;
         const queryParams = queryParamInfo.reduce((acc, param) => {
           acc[param.identifier] = param.default;
@@ -16,7 +16,7 @@ export default DiscourseRoute.extend({
 
         return {
           model: Object.assign({ params: queryParams }, response.query),
-          group
+          group,
         };
       })
       .catch(() => {
@@ -32,6 +32,6 @@ export default DiscourseRoute.extend({
     refreshModel() {
       this.refresh();
       return false;
-    }
-  }
+    },
+  },
 });

@@ -13,5 +13,5 @@ export default Ember.Component.extend({
       result.push({ value: key, name: hash[key] });
     }
     return result;
-  }
+  },
 });

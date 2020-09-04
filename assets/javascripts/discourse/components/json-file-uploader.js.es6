@@ -1,7 +1,7 @@
 import {
   default as computed,
   on,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 
 export default Ember.Component.extend({
@@ -20,21 +20,21 @@ export default Ember.Component.extend({
 
     $(fileInput).on("change", () => this.fileSelected(fileInput.files));
 
-    $this.on("dragover", e => {
+    $this.on("dragover", (e) => {
       if (e.preventDefault) e.preventDefault();
       return false;
     });
-    $this.on("dragenter", e => {
+    $this.on("dragenter", (e) => {
       if (e.preventDefault) e.preventDefault();
       this.set("hover", this.hover + 1);
       return false;
     });
-    $this.on("dragleave", e => {
+    $this.on("dragleave", (e) => {
       if (e.preventDefault) e.preventDefault();
       this.set("hover", this.hover - 1);
       return false;
     });
-    $this.on("drop", e => {
+    $this.on("drop", (e) => {
       if (e.preventDefault) e.preventDefault();
 
       this.set("hover", 0);
@@ -73,7 +73,7 @@ export default Ember.Component.extend({
   actions: {
     selectFile() {
       $(this.fileInput).click();
-    }
+    },
   },
 
   fileSelected(fileList) {
@@ -82,7 +82,7 @@ export default Ember.Component.extend({
       files[i] = fileList[i];
     }
     const fileNameRegex = /\.(json|txt)$/;
-    files = files.filter(file => {
+    files = files.filter((file) => {
       if (fileNameRegex.test(file.name)) {
         return true;
       }
@@ -96,10 +96,10 @@ export default Ember.Component.extend({
     this.set("loading", true);
 
     const reader = new FileReader();
-    reader.onload = evt => {
+    reader.onload = (evt) => {
       this.setProperties({ value: evt.target.result, loading: false });
     };
 
     reader.readAsText(firstFile);
-  }
+  },
 });

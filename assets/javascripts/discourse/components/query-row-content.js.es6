@@ -1,3 +1,4 @@
+import Handlebars from "handlebars";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { iconHTML, convertIconClass } from "discourse-common/lib/icon-library";
@@ -19,7 +20,7 @@ function icon_or_image_replacement(str, ctx) {
 function category_badge_replacement(str, ctx) {
   const category = Ember.get(ctx.contexts[0], str);
   return categoryLinkHTML(category, {
-    allowUncategorized: true
+    allowUncategorized: true,
   });
 }
 
@@ -57,7 +58,7 @@ const QueryRowContentComponent = Ember.Component.extend({
     const helpers = {
       "icon-or-image": icon_or_image_replacement,
       "category-link": category_badge_replacement,
-      reltime: bound_date_replacement
+      reltime: bound_date_replacement,
     };
 
     const parts = this.columnTemplates.map((t, idx) => {
@@ -67,7 +68,7 @@ const QueryRowContentComponent = Ember.Component.extend({
       const ctx = {
         value,
         id,
-        baseuri: Discourse.BaseUri === "/" ? "" : Discourse.BaseUri
+        baseuri: Discourse.BaseUri === "/" ? "" : Discourse.BaseUri,
       };
       const params = {};
 
@@ -101,7 +102,7 @@ const QueryRowContentComponent = Ember.Component.extend({
     });
 
     this.set("rowContents", `<td>${parts.join("</td><td>")}</td>`.htmlSafe());
-  }
+  },
 });
 
 export default QueryRowContentComponent;

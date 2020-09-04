@@ -5,7 +5,7 @@ export default {
 
     if (!String.prototype.endsWith) {
       // eslint-disable-next-line no-extend-native
-      String.prototype.endsWith = function(searchString, position) {
+      String.prototype.endsWith = function (searchString, position) {
         const subjectString = this.toString();
         if (position === undefined || position > subjectString.length) {
           position = subjectString.length;
@@ -15,5 +15,5 @@ export default {
         return lastIndex !== -1 && lastIndex === position;
       };
     }
-  }
+  },
 };
