@@ -7,23 +7,23 @@ export default DiscourseRoute.extend({
   model() {
     const groupPromise = ajax("/admin/plugins/explorer/groups.json");
     const schemaPromise = ajax("/admin/plugins/explorer/schema.json", {
-      cache: true
+      cache: true,
     });
     const queryPromise = this.store.findAll("query");
 
     return groupPromise
-      .then(groups => {
+      .then((groups) => {
         let groupNames = {};
-        groups.forEach(g => {
+        groups.forEach((g) => {
           groupNames[g.id] = g.name;
         });
-        return schemaPromise.then(schema => {
-          return queryPromise.then(model => {
-            model.forEach(query => {
+        return schemaPromise.then((schema) => {
+          return queryPromise.then((model) => {
+            model.forEach((query) => {
               query.markNotDirty();
               query.set(
                 "group_names",
-                (query.group_ids || []).map(id => groupNames[id])
+                (query.group_ids || []).map((id) => groupNames[id])
               );
             });
             return { model, schema, groups };
@@ -45,6 +45,6 @@ export default DiscourseRoute.extend({
     refreshModel() {
       this.refresh();
       return false;
-    }
-  }
+    },
+  },
 });

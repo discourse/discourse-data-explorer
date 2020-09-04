@@ -34,7 +34,7 @@ export default Ember.Component.extend({
 
     this.set("grippie", $grippie);
 
-    const mousemove = e => {
+    const mousemove = (e) => {
       const diffY = this.startY - e.screenY;
       const diffX = this.startX - e.screenX;
 
@@ -47,7 +47,7 @@ export default Ember.Component.extend({
       this.appEvents.trigger("ace:resize");
     };
 
-    const throttledMousemove = (event => {
+    const throttledMousemove = ((event) => {
       event.preventDefault();
       Ember.run.throttle(this, mousemove, event, 20);
     }).bind(this);
@@ -59,16 +59,16 @@ export default Ember.Component.extend({
         startY: null,
         startX: null,
         startHeight: null,
-        startWidth: null
+        startWidth: null,
       });
     }).bind(this);
 
-    $grippie.on("mousedown", e => {
+    $grippie.on("mousedown", (e) => {
       this.setProperties({
         startY: e.screenY,
         startX: e.screenX,
         startHeight: $target.height(),
-        startWidth: $target.width()
+        startWidth: $target.width(),
       });
 
       $document.on("mousemove", throttledMousemove);
@@ -90,5 +90,5 @@ export default Ember.Component.extend({
       this.grippie && this.grippie.off("mousedown");
       this.set("grippie", null);
     }
-  }
+  },
 });

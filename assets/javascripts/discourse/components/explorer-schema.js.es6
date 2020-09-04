@@ -1,6 +1,6 @@
 import {
   default as computed,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 import debounce from "discourse/lib/debounce";
 
@@ -8,7 +8,7 @@ export default Ember.Component.extend({
   actions: {
     collapseSchema() {
       this.set("hideSchema", true);
-    }
+    },
   },
 
   @computed("schema")
@@ -18,7 +18,7 @@ export default Ember.Component.extend({
         continue;
       }
 
-      schema[key].forEach(col => {
+      schema[key].forEach((col) => {
         const notes_components = [];
         if (col.primary) {
           notes_components.push("primary key");
@@ -71,7 +71,7 @@ export default Ember.Component.extend({
         tables.push({
           name: key,
           columns: schema[key],
-          open: false
+          open: false,
         });
         continue;
       }
@@ -81,19 +81,19 @@ export default Ember.Component.extend({
         tables.unshift({
           name: key,
           columns: schema[key],
-          open: haveFilter
+          open: haveFilter,
         });
       } else if (filter.test(key)) {
         // whole table matches
         tables.push({
           name: key,
           columns: schema[key],
-          open: haveFilter
+          open: haveFilter,
         });
       } else {
         // filter the columns
         let filterCols = [];
-        schema[key].forEach(col => {
+        schema[key].forEach((col) => {
           if (filter.source === col.column_name) {
             filterCols.unshift(col);
           } else if (filter.test(col.column_name)) {
@@ -104,7 +104,7 @@ export default Ember.Component.extend({
           tables.push({
             name: key,
             columns: filterCols,
-            open: haveFilter
+            open: haveFilter,
           });
         }
       }
@@ -113,7 +113,7 @@ export default Ember.Component.extend({
   },
 
   @observes("filter")
-  triggerFilter: debounce(function() {
+  triggerFilter: debounce(function () {
     this.set("filteredTables", this.filterTables(this.transformedSchema));
     this.set("loading", false);
   }, 500),
@@ -128,5 +128,5 @@ export default Ember.Component.extend({
 
     this.set("loading", true);
     this.triggerFilter();
-  }
+  },
 });

@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   showReportsTab: false,
 
   checkForReports() {
-    return ajax(`/g/${this.group.name}/reports`).then(response => {
+    return ajax(`/g/${this.group.name}/reports`).then((response) => {
       return this.set("showReportsTab", response.queries.length > 0);
     });
   },
@@ -13,12 +13,12 @@ export default Ember.Component.extend({
   init(args) {
     this.set("group", args.group);
     if (
-      (this.get("currentUser.groups") || []).some(g => g.id === this.group.id)
+      (this.get("currentUser.groups") || []).some((g) => g.id === this.group.id)
     ) {
       // User is a part of the group. Now check if the group has reports
       this.checkForReports();
     }
 
     this._super(args);
-  }
+  },
 });

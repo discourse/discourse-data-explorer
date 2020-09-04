@@ -30,7 +30,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.store
         .createRecord("query", object)
         .save()
-        .then(query => {
+        .then((query) => {
           this.send("closeModal");
           this.set("loading", false);
 
@@ -38,6 +38,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
           parentController.addCreatedRecord(query.target);
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

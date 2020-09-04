@@ -3,5 +3,5 @@ export default {
   path: "/plugins",
   map() {
     this.route("explorer");
-  }
+  },
 };

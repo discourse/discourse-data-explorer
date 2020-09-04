@@ -6,4 +6,6 @@ auto_generated
 *.swp
 *.swo
 node_modules/
-.idea/
+.idea/node_modules
+yarn-error.log
+.rubocop-https---raw-githubusercontent-com-discourse-*
