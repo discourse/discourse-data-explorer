@@ -1,7 +1,7 @@
 import {
   default as computed,
   on,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import RestModel from "discourse/models/rest";
@@ -39,7 +39,7 @@ const Query = RestModel.extend({
     const newParams = {};
     const oldParams = this.params;
     const paramInfo = this.param_info || [];
-    paramInfo.forEach(pinfo => {
+    paramInfo.forEach((pinfo) => {
       const name = pinfo.identifier;
       if (oldParams[pinfo.identifier]) {
         newParams[name] = oldParams[name];
@@ -74,7 +74,7 @@ const Query = RestModel.extend({
       props.id = this.id;
     }
     return props;
-  }
+  },
 });
 
 Query.reopenClass({
@@ -82,11 +82,11 @@ Query.reopenClass({
     "name",
     "description",
     "sql",
-    "created_by",
+    "user_id",
     "created_at",
     "group_ids",
-    "last_run_at"
-  ]
+    "last_run_at",
+  ],
 });
 
 export default Query;

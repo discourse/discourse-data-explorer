@@ -13,25 +13,15 @@ describe 'Data Explorer rake tasks' do
   end
 
   def make_query(sql, opts = {}, group_ids = [])
-    q = DataExplorer::Query.new
-    q.id = opts[:id] || Fabrication::Sequencer.sequence("query-id", 1)
-    q.name = opts[:name] || "Query number #{q.id}"
-    q.description = "A description for query number #{q.id}"
-    q.group_ids = group_ids
-    q.sql = sql
-    q.hidden = opts[:hidden] || false
-    q.save
-    q
+    query = DataExplorer::Query.create!(id: opts[:id], name: opts[:name] || "Query number", description: "A description for query number", sql: sql, hidden: opts[:hidden] || false)
+    group_ids.each do |group_id|
+      query.query_groups.create!(group_id: group_id)
+    end
+    query
   end
 
   def hidden_queries
-    hidden_queries = []
-
-    DataExplorer::Query.all.each do |query|
-      hidden_queries.push(query) if query.hidden
-    end
-
-    hidden_queries
+    DataExplorer::Query.where(hidden: true)
   end
 
   describe 'data_explorer' do

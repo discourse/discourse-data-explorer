@@ -10,7 +10,7 @@ export default Ember.Component.extend({
   _bindClicks() {
     $(this.element)
       .find(".schema-table-name")
-      .click(e => {
+      .click((e) => {
         this.set("table.open", !this.table.open);
         e.preventDefault();
       });
@@ -18,8 +18,6 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _cleanup() {
-    $(this.element)
-      .find(".schema-table-name")
-      .off("click");
-  }
+    $(this.element).find(".schema-table-name").off("click");
+  },
 });

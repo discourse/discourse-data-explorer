@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { default as computed } from "discourse-common/utils/decorators";
 // import Category from 'discourse/models/category';
 
@@ -20,7 +21,7 @@ const layoutMap = {
   badge_id: "generic",
   int_list: "generic",
   string_list: "generic",
-  user_list: "user_list"
+  user_list: "user_list",
 };
 
 function allowsInputTypeTime() {
@@ -40,7 +41,7 @@ export default Ember.Component.extend({
   boolTypes: [
     { name: I18n.t("explorer.types.bool.true"), id: "Y" },
     { name: I18n.t("explorer.types.bool.false"), id: "N" },
-    { name: I18n.t("explorer.types.bool.null_"), id: "#null" }
+    { name: I18n.t("explorer.types.bool.null_"), id: "#null" },
   ],
 
   value: Ember.computed("params", "info.identifier", {
@@ -50,7 +51,7 @@ export default Ember.Component.extend({
     set(key, value) {
       this.params[this.get("info.identifier")] = value.toString();
       return value;
-    }
+    },
   }),
 
   valueBool: Ember.computed("params", "info.identifier", {
@@ -61,7 +62,7 @@ export default Ember.Component.extend({
       value = !!value;
       this.params[this.get("info.identifier")] = value.toString();
       return value;
-    }
+    },
   }),
 
   @computed("value", "info.type", "info.nullable")
@@ -88,7 +89,7 @@ export default Ember.Component.extend({
           /^(-?)NaN$/i.test(value)
         );
       case "int_list":
-        return value.split(",").every(i => /^(-?\d+|null)$/.test(i.trim()));
+        return value.split(",").every((i) => /^(-?\d+|null)$/.test(i.trim()));
       case "post_id":
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case "category_id":
@@ -97,7 +98,7 @@ export default Ember.Component.extend({
         }
 
         if (isPositiveInt) {
-          return !!this.site.categories.find(c => c.id === intVal);
+          return !!this.site.categories.find((c) => c.id === intVal);
         } else if (/\//.test(value)) {
           const match = /(.*)\/(.*)/.exec(value);
           if (!match) return false;
@@ -112,9 +113,9 @@ export default Ember.Component.extend({
       case "group_id":
         const groups = this.site.get("groups");
         if (isPositiveInt) {
-          return !!groups.find(g => g.id === intVal);
+          return !!groups.find((g) => g.id === intVal);
         } else {
-          return !!groups.find(g => g.name === value);
+          return !!groups.find((g) => g.name === value);
         }
     }
     return true;
@@ -134,5 +135,5 @@ export default Ember.Component.extend({
   @computed("layoutType")
   layoutName(layoutType) {
     return `admin/components/q-params/${layoutType}`;
-  }
+  },
 });

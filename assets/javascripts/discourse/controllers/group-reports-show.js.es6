@@ -15,10 +15,10 @@ export default Ember.Controller.extend({
         type: "POST",
         data: {
           params: JSON.stringify(this.model.params),
-          explain: this.explain
-        }
+          explain: this.explain,
+        },
       })
-        .then(result => {
+        .then((result) => {
           this.set("results", result);
           if (!result.success) {
             return;
@@ -26,7 +26,7 @@ export default Ember.Controller.extend({
 
           this.set("showResults", true);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
             this.set("results", err.jqXHR.responseJSON);
           } else {
@@ -34,6 +34,6 @@ export default Ember.Controller.extend({
           }
         })
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });

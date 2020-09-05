@@ -7,13 +7,13 @@ describe Guardian do
   before { SiteSetting.data_explorer_enabled = true }
 
   def make_query(group_ids = [])
-    q = DataExplorer::Query.new
-    q.id = Fabrication::Sequencer.sequence("query-id", 1)
-    q.name = "Query number #{q.id}"
-    q.sql = "SELECT 1"
-    q.group_ids = group_ids
-    q.save
-    q
+    query = DataExplorer::Query.create!(name: "Query number #{Fabrication::Sequencer.sequence("query-id", 1)}", sql: "SELECT 1")
+
+    group_ids.each do |group_id|
+      query.query_groups.create!(group_id: group_id)
+    end
+
+    query
   end
 
   let(:user) { build(:user) }
@@ -37,30 +37,30 @@ describe Guardian do
     end
   end
 
-  describe "#user_can_access_query?" do
+  describe "#group_and_user_can_access_query?" do
     let(:group) { Fabricate(:group) }
 
     it "is true if the user is an admin" do
-      expect(Guardian.new(admin).user_can_access_query?(group, make_query)).to eq(true)
+      expect(Guardian.new(admin).group_and_user_can_access_query?(group, make_query)).to eq(true)
     end
 
     it "is true if the user is a member of the group, and query contains the group id" do
       query = make_query(["#{group.id}"])
       group.add(user)
 
-      expect(Guardian.new(user).user_can_access_query?(group, query)).to eq(true)
+      expect(Guardian.new(user).group_and_user_can_access_query?(group, query)).to eq(true)
     end
 
     it "is false if the query does not contain the group id" do
       group.add(user)
 
-      expect(Guardian.new(user).user_can_access_query?(group, make_query)).to eq(false)
+      expect(Guardian.new(user).group_and_user_can_access_query?(group, make_query)).to eq(false)
     end
 
     it "is false if the user is not member of the group" do
       query = make_query(["#{group.id}"])
 
-      expect(Guardian.new(user).user_can_access_query?(group, query)).to eq(false)
+      expect(Guardian.new(user).group_and_user_can_access_query?(group, query)).to eq(false)
     end
   end
 end
