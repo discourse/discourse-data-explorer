@@ -58,7 +58,7 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
       SQL
 
       # insert additional_conflicts to temporary table
-      new_id = DB.query("select greatest(max(id), 1) from tmp_data_explorer_queries").first.max + 1
+      new_id = DB.query("select greatest(max(id), 1) from tmp_data_explorer_queries").first.greatest + 1
       additional_conflicts.each do |conflict_id|
         DB.exec <<-SQL
           INSERT INTO tmp_data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
