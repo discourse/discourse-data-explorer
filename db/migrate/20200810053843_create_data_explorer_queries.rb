@@ -75,7 +75,7 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
       SELECT
         setval(
           pg_get_serial_sequence('data_explorer_queries', 'id'),
-          (select max(id) from data_explorer_queries)
+          (select greatest(max(id), 1) from data_explorer_queries)
         );
     SQL
   end
