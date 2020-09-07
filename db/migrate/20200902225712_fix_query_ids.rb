@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixQueryIds < ActiveRecord::Migration[6.0]
   def up
     ActiveRecord::Base.transaction do
@@ -17,7 +19,7 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
 
       # If there are new queries, they still may have conflict
       # We just want to move their ids to safe space and we will not move them back
-      additional_conflicts = DB.query(<<~SQL, from: movements.map{ |m| m.from }, to: movements.map { |m| m.to } ).map { |conflict| conflict.id }
+      additional_conflicts = DB.query(<<~SQL, from: movements.map { |m| m.from }, to: movements.map { |m| m.to }).map { |conflict| conflict.id }
         SELECT id FROM data_explorer_queries
         WHERE id IN (:to)
         AND id NOT IN (:from)
@@ -36,8 +38,6 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
           updated_at TIMESTAMP
         )
       SQL
-
-
 
       movements.each do |movement|
         # insert moved and conflict queries to temporary table
