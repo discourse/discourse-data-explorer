@@ -58,7 +58,7 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
       SQL
 
       # insert additional_conflicts to temporary table
-      new_id = DB.query("select max(id) from tmp_data_explorer_queries").first.max + 1
+      new_id = DB.query("select greatest(max(id), 1) from tmp_data_explorer_queries").first.max + 1
       additional_conflicts.each do |conflict_id|
         DB.exec <<-SQL
           INSERT INTO tmp_data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
@@ -92,7 +92,7 @@ class FixQueryIds < ActiveRecord::Migration[6.0]
         SELECT
           setval(
             pg_get_serial_sequence('data_explorer_queries', 'id'),
-            (select max(id) from data_explorer_queries)
+            (select greatest(max(id), 1) from data_explorer_queries)
           );
       SQL
     end
