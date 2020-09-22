@@ -46,7 +46,7 @@ sv:
         one: "%{count} resultat."
         other: "%{count} resultat."
       max_result_count:
-        one: "Visar topp %{count} resultat."
+        one: "Visar resultat nr %{count}, det översta."
         other: "Visar de %{count} översta resultaten."
       query_name: "Sökning"
       query_groups: "Grupper"
