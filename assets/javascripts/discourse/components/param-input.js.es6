@@ -101,7 +101,9 @@ export default Ember.Component.extend({
           return !!this.site.categories.find((c) => c.id === intVal);
         } else if (/\//.test(value)) {
           const match = /(.*)\/(.*)/.exec(value);
-          if (!match) return false;
+          if (!match) {
+            return false;
+          }
           const result = Category.findBySlug(
             match[2].dasherize(),
             match[1].dasherize()

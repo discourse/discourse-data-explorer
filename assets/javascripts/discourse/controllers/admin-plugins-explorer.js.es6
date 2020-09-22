@@ -97,8 +97,9 @@ export default Ember.Controller.extend({
 
   save() {
     this.set("loading", true);
-    if (this.get("selectedItem.description") === "")
+    if (this.get("selectedItem.description") === "") {
       this.set("selectedItem.description", "");
+    }
 
     return this.selectedItem
       .save()
@@ -202,8 +203,9 @@ export default Ember.Controller.extend({
         .then((result) => {
           const query = this.get("selectedItem");
           query.setProperties(result.getProperties(Query.updatePropertyNames));
-          if (!query.group_ids || !Array.isArray(query.group_ids))
+          if (!query.group_ids || !Array.isArray(query.group_ids)) {
             query.set("group_ids", []);
+          }
           query.markNotDirty();
           this.set("editing", false);
         })

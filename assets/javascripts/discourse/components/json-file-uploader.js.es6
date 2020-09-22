@@ -21,21 +21,29 @@ export default Ember.Component.extend({
     $(fileInput).on("change", () => this.fileSelected(fileInput.files));
 
     $this.on("dragover", (e) => {
-      if (e.preventDefault) e.preventDefault();
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
       return false;
     });
     $this.on("dragenter", (e) => {
-      if (e.preventDefault) e.preventDefault();
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
       this.set("hover", this.hover + 1);
       return false;
     });
     $this.on("dragleave", (e) => {
-      if (e.preventDefault) e.preventDefault();
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
       this.set("hover", this.hover - 1);
       return false;
     });
     $this.on("drop", (e) => {
-      if (e.preventDefault) e.preventDefault();
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
 
       this.set("hover", 0);
       this.fileSelected(e.dataTransfer.files);
