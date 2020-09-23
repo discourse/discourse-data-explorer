@@ -99,7 +99,7 @@ export default Ember.Component.extend({
       }
       return false;
     });
-    const firstFile = fileList[0];
+    const firstFile = files[0];
 
     this.set("loading", true);
 
