@@ -5,6 +5,7 @@ import {
 } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import RestModel from "discourse/models/rest";
+import getURL from "discourse-common/lib/get-url";
 
 const Query = RestModel.extend({
   dirty: false,
