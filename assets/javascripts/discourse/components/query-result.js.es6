@@ -3,7 +3,6 @@ import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import Badge from "discourse/models/badge";
 import { default as computed } from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
 
 function randomIdShort() {
   return "xxxxxxxx".replace(/[xy]/g, () => {
