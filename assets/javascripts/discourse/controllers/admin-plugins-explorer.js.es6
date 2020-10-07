@@ -67,9 +67,11 @@ export default Ember.Controller.extend({
 
   @computed("groups")
   groupOptions(groups) {
-    return groups.filter(g => g.id !== 0).map(g => {
-      return { id: g.id.toString(), name: g.name };
-    });
+    return groups
+      .filter((g) => g.id !== 0)
+      .map((g) => {
+        return { id: g.id.toString(), name: g.name };
+      });
   },
 
   @computed("selectedItem", "selectedItem.dirty")
