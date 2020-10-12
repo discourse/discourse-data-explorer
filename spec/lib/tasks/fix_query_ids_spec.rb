@@ -133,6 +133,7 @@ describe 'fix query ids rake task' do
 
   def attributes(name)
     {
+      id: DataExplorer::Query.count == 0 ? 5 : DataExplorer::Query.maximum(:id) + 1,
       name: name,
       description: 'A Query',
       sql: "SELECT 1",
