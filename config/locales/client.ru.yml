@@ -60,7 +60,7 @@ ru:
       query_time: "Время выполнения последнего запроса"
       query_user: "Создано"
       column: "Колонка %{number}"
-      explain_label: "Включить план запроса?"
+      explain_label: "Отобразить план запроса"
       save_params: "Установка значений по умолчанию"
       reset_params: "Сброс"
       search_placeholder: "Поиск..."
