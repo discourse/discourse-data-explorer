@@ -70,7 +70,7 @@ const QueryResultComponent = Ember.Component.extend({
   @computed("params.[]")
   parameterAry(params) {
     let arr = [];
-    for (let key in params) {
+    for (var key in params) {
       if (params.hasOwnProperty(key)) {
         arr.push({ key, value: params[key] });
       }
