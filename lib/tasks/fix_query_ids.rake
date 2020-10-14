@@ -25,6 +25,9 @@ task 'data_explorer:fix_query_ids' => :environment do
       SQL
       additional_conflicts = additional_conflicts.map(&:id)
 
+      DB.exec "DROP TABLE IF EXISTS tmp_data_explorer_queries"
+      DB.exec "DROP TABLE IF EXISTS tmp_data_explorer_query_groups"
+
       # Create temporary tables
       DB.exec <<~SQL
         CREATE TEMPORARY TABLE tmp_data_explorer_queries(
