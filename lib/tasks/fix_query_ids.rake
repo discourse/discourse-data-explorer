@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 desc 'Fix query IDs to match the old ones used in the plugin store (q:id)'
+
+task('data_explorer:fix_query_ids').clear
 task 'data_explorer:fix_query_ids' => :environment do
   ActiveRecord::Base.transaction do
     # Only queries with unique title can be fixed
@@ -25,9 +27,6 @@ task 'data_explorer:fix_query_ids' => :environment do
       SQL
       additional_conflicts = additional_conflicts.map(&:id)
 
-      DB.exec "DROP TABLE IF EXISTS tmp_data_explorer_queries"
-      DB.exec "DROP TABLE IF EXISTS tmp_data_explorer_query_groups"
-
       # Create temporary tables
       DB.exec <<~SQL
         CREATE TEMPORARY TABLE tmp_data_explorer_queries(
@@ -40,7 +39,7 @@ task 'data_explorer:fix_query_ids' => :environment do
           hidden BOOLEAN,
           created_at TIMESTAMP,
           updated_at TIMESTAMP
-        )
+        ) ON COMMIT DROP
       SQL
 
       DB.exec <<-SQL
@@ -48,7 +47,7 @@ task 'data_explorer:fix_query_ids' => :environment do
           id INTEGER PRIMARY KEY,
           query_id INTEGER,
           group_id INTEGER
-        )
+        ) ON COMMIT DROP
       SQL
 
       movements.each do |movement|
