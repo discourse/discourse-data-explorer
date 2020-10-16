@@ -361,16 +361,22 @@ SQL
       @enums = {
         'application_requests.req_type': ApplicationRequest.req_types,
         'badges.badge_type_id': Enum.new(:gold, :silver, :bronze, start: 1),
+        'bookmarks.auto_delete_preference': Bookmark.auto_delete_preferences,
+        'bookmarks.reminder_type': Bookmark.reminder_types,
         'category_groups.permission_type': CategoryGroup.permission_types,
         'category_users.notification_level': CategoryUser.notification_levels,
         'directory_items.period_type': DirectoryItem.period_types,
+        'email_change_requests.change_state': EmailChangeRequest.states,
         'groups.id': Group::AUTO_GROUPS,
         'groups.mentionable_level': Group::ALIAS_LEVELS,
         'groups.messageable_level': Group::ALIAS_LEVELS,
         'groups.members_visibility_level': Group.visibility_levels,
         'groups.visibility_level': Group.visibility_levels,
         'groups.default_notification_level': GroupUser.notification_levels,
+        'group_histories.action': GroupHistory.actions,
         'group_users.notification_level': GroupUser.notification_levels,
+        'imap_sync_logs.level': ImapSyncLog.levels,
+        'invites.emailed_status': Invite.emailed_status_types,
         'notifications.notification_type': Notification.types,
         'polls.results': Poll.results,
         'polls.status': Poll.statuses,
@@ -381,6 +387,7 @@ SQL
         'posts.cook_method': Post.cook_methods,
         'posts.hidden_reason_id': Post.hidden_reasons,
         'posts.post_type': Post.types,
+        'reviewables.status': Reviewable.statuses,
         'reviewable_histories.reviewable_history_type': ReviewableHistory.types,
         'reviewable_scores.status': ReviewableScore.statuses,
         'screened_emails.action_type': ScreenedEmail.actions,
@@ -391,21 +398,30 @@ SQL
         'site_settings.data_type': SiteSetting.types,
         'skipped_email_logs.reason_type': SkippedEmailLog.reason_types,
         'tag_group_permissions.permission_type': TagGroupPermission.permission_types,
+        'theme_fields.type_id': ThemeField.types,
         'theme_settings.data_type': ThemeSetting.types,
         'topic_timers.status_type': TopicTimer.types,
         'topic_users.notification_level': TopicUser.notification_levels,
         'topic_users.notifications_reason_id': TopicUser.notification_reasons,
+        'uploads.verification_status': Upload.verification_statuses,
         'user_actions.action_type': UserAction.types,
         'user_histories.action': UserHistory.actions,
+        'user_options.email_previous_replies': UserOption.previous_replies_type,
+        'user_options.like_notification_frequency': UserOption.like_notification_frequency_type,
+        'user_options.text_size_key': UserOption.text_sizes,
+        'user_options.title_count_mode_key': UserOption.title_count_modes,
+        'user_options.email_level': UserOption.email_level_types,
+        'user_options.email_messages_level': UserOption.email_level_types,
+        'user_second_factors.method': UserSecondFactor.methods,
         'user_security_keys.factor_type': UserSecurityKey.factor_types,
         'users.trust_level': TrustLevel.levels,
+        'watched_words.action': WatchedWord.actions,
         'web_hooks.content_type': WebHook.content_types,
         'web_hooks.last_delivery_status': WebHook.last_delivery_statuses,
       }.with_indifferent_access
 
       # QueuedPost is removed in recent Discourse releases
       @enums['queued_posts.state'] = QueuedPost.states if defined?(QueuedPost)
-      @enums['reviewables.status'] = Reviewable.statuses if defined?(Reviewable)
 
       @enums
     end
