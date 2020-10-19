@@ -70,7 +70,7 @@ export default Ember.Controller.extend({
     return groups
       .filter((g) => g.id !== 0)
       .map((g) => {
-        return { id: g.id.toString(), name: g.name };
+        return { id: g.id, name: g.name };
       });
   },
 
