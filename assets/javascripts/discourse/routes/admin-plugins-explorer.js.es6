@@ -1,10 +1,16 @@
 import { ajax } from "discourse/lib/ajax";
+import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   controllerName: "admin-plugins-explorer",
 
   model() {
+    if (!User.currentProp("admin")) {
+      // display "Only available to admins" message
+      return { model: null, schema: null, disallow: true, groups: null };
+    }
+
     const groupPromise = ajax("/admin/plugins/explorer/groups.json");
     const schemaPromise = ajax("/admin/plugins/explorer/schema.json", {
       cache: true,
@@ -29,11 +35,6 @@ export default DiscourseRoute.extend({
             return { model, schema, groups };
           });
         });
-      })
-      .catch(() => {
-        schemaPromise.catch(() => {});
-        queryPromise.catch(() => {});
-        return { model: null, schema: null, disallow: true, groups: null };
       });
   },
 
