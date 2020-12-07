@@ -17,25 +17,24 @@ export default DiscourseRoute.extend({
     });
     const queryPromise = this.store.findAll("query");
 
-    return groupPromise
-      .then((groups) => {
-        let groupNames = {};
-        groups.forEach((g) => {
-          groupNames[g.id] = g.name;
-        });
-        return schemaPromise.then((schema) => {
-          return queryPromise.then((model) => {
-            model.forEach((query) => {
-              query.markNotDirty();
-              query.set(
-                "group_names",
-                (query.group_ids || []).map((id) => groupNames[id])
-              );
-            });
-            return { model, schema, groups };
+    return groupPromise.then((groups) => {
+      let groupNames = {};
+      groups.forEach((g) => {
+        groupNames[g.id] = g.name;
+      });
+      return schemaPromise.then((schema) => {
+        return queryPromise.then((model) => {
+          model.forEach((query) => {
+            query.markNotDirty();
+            query.set(
+              "group_names",
+              (query.group_ids || []).map((id) => groupNames[id])
+            );
           });
+          return { model, schema, groups };
         });
       });
+    });
   },
 
   setupController(controller, model) {
