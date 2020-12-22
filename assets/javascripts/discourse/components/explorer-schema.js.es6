@@ -2,7 +2,8 @@ import {
   default as computed,
   observes,
 } from "discourse-common/utils/decorators";
-import debounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
+import debounce from "@ember/runloop";
 
 export default Ember.Component.extend({
   actions: {
@@ -113,10 +114,19 @@ export default Ember.Component.extend({
   },
 
   @observes("filter")
-  triggerFilter: debounce(function () {
-    this.set("filteredTables", this.filterTables(this.transformedSchema));
-    this.set("loading", false);
-  }, 500),
+  triggerFilter() {
+    // TODO: Use discouseDebounce after the 2.7 release.
+    let debounceFunc = discourseDebounce || debounce;
+
+    debounceFunc(
+      this,
+      function () {
+        this.set("filteredTables", this.filterTables(this.transformedSchema));
+        this.set("loading", false);
+      },
+      500
+    );
+  },
 
   @observes("filter")
   setLoading() {
