@@ -12,6 +12,7 @@ hy:
         dirty: "Դուք պետք է պահպանեք հարցումը գործարկելուց առաջ"
     explorer:
       admins_only: "Տվյալների ուսումնասիրումը հասանելի է միասյն ադմիններին:"
+      allow_groups: "Allow groups to access this query"
       title: "Տվյալների Ուսումնասիրում"
       create: "Ստեղծել Նոր"
       create_placeholder: "Հարցման անուն..."
@@ -40,6 +41,7 @@ hy:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Հարցումն ունի չպահպանված փոփոխություններ, որոնք կկորչեն, եթե Դուք տեղափոխվեք:"
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} արդյունք"
         other: "%{count} արդյունք"
@@ -48,9 +50,12 @@ hy:
         other: "Ցուցադրվում են թոփ %{count} արդյունքները"
       query_name: "Հարցում"
       query_groups: "Խմբեր"
+      link: "Link for"
+      report_name: "Report"
       query_description: "Նկարագրություն"
       query_time: "Վերջին գործարկումը"
       query_user: "Ստեղծել է՝"
+      column: "Column %{number}"
       explain_label: "Ներառե՞լ հարցման պլանը:"
       save_params: "Սահմանել Լռելյայններ"
       reset_params: "Վերահաստատե;"

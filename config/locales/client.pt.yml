@@ -12,9 +12,11 @@ pt:
         dirty: "Deve guardar a consulta antes de executar."
     explorer:
       admins_only: "O explorador de dados está disponível apenas para os administradores."
+      allow_groups: "Allow groups to access this query"
       title: "Explorador de Dados"
       create: "Criar Nova"
       create_placeholder: "Nome da consulta..."
+      description_placeholder: "Enter a description here"
       import:
         label: "Importar"
         modal: "Importar Uma Consulta"
@@ -27,6 +29,7 @@ pt:
         bool:
           yes: "Sim"
           no: "Não"
+          null_: "Null"
       export: "Exportar"
       save: "Guardar alterações"
       saverun: "Guardar Alterações e Executar"
@@ -39,10 +42,24 @@ pt:
       download_csv: "CSV"
       others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
       run_time: "Consulta concluída em %{value} ms."
+      result_count:
+        one: "%{count} result."
+        other: "%{count} results."
+      max_result_count:
+        one: "Showing top %{count} results."
+        other: "Showing top %{count} results."
+      query_name: "Query"
       query_groups: "Grupos"
+      link: "Link for"
+      report_name: "Report"
       query_description: "Descrição"
+      query_time: "Last run"
+      query_user: "Created by"
       column: "Coluna %{number}"
       explain_label: "Incluir plano de consulta?"
       save_params: "Definir Predefinições"
       reset_params: "Repor"
       search_placeholder: "Pesquisar..."
+      no_search_results: "Sorry, we couldn't find any results matching your text."
+    group:
+      reports: "Reports"

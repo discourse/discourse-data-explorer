@@ -12,6 +12,7 @@ ur:
         dirty: "چلانے سے پہلے آپ کا کمانڈ کو محفوظ کرنا لازمی ہے۔"
     explorer:
       admins_only: "ڈیٹا ایکسپلورر صرف ایڈمنوں کو دستیاب ہے۔"
+      allow_groups: "Allow groups to access this query"
       title: "ڈیٹا ایکسپلورر"
       create: "نیا بنائیں"
       create_placeholder: "ڈیٹا کمانڈ کا نام..."
@@ -40,6 +41,7 @@ ur:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "ایک ڈیٹا کمانڈ کی غیرمحفوظ کردہ تبدیلیاں موجود ہیں جو آپ کے یہاں سے جانے کے بعد کھو جائیں گی۔"
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} نتیجہ۔"
         other: "%{count} نتائج۔"
@@ -48,10 +50,12 @@ ur:
         other: "سب سے اوپر کے %{count} نتائج دکھائیں۔"
       query_name: "ڈیٹا کمانڈ"
       query_groups: "گروپس"
+      link: "Link for"
       report_name: "رپورٹ"
       query_description: "تفصیل"
       query_time: "چلا آخری دفعہ"
       query_user: "نے بنایا"
+      column: "Column %{number}"
       explain_label: "ڈیٹا کمانڈ پلَین شامل کریں؟"
       save_params: "ڈیفالٹس سَیٹ کریں"
       reset_params: "رِی سَیٹ"

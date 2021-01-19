@@ -6,17 +6,24 @@
 
 hu:
   js:
+    errors:
+      explorer:
+        no_semicolons: "Remove the semicolons from the query."
+        dirty: "You must save the query before running."
     explorer:
       admins_only: "A data explorer csak az adminoknak érhető el."
+      allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
       create: "Új létrehozása"
       create_placeholder: "Lekérdezés neve..."
+      description_placeholder: "Enter a description here"
       import:
         label: "Importálás"
         modal: "Lekérdezés importálása"
       schema:
         title: "Adatbázis séma"
         filter: "Keresés..."
+        sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Típusok</a>"
       types:
         bool:
@@ -25,12 +32,34 @@ hu:
           null_: "Null"
       export: "Exportálás"
       save: "Módosítások mentése"
+      saverun: "Save Changes and Run"
+      run: "Run"
       undo: "Változtatások eldobása"
       edit: "Szerkesztés"
       delete: "Törlés"
+      recover: "Undelete Query"
       download_json: "JSON"
       download_csv: "CSV"
+      others_dirty: "A query has unsaved changes that will be lost if you navigate away."
+      run_time: "Query completed in %{value} ms."
+      result_count:
+        one: "%{count} result."
+        other: "%{count} results."
+      max_result_count:
+        one: "Showing top %{count} results."
+        other: "Showing top %{count} results."
+      query_name: "Query"
       query_groups: "Csoportok"
+      link: "Link for"
+      report_name: "Report"
       query_description: "Leírás"
+      query_time: "Last run"
+      query_user: "Created by"
+      column: "Column %{number}"
+      explain_label: "Include query plan?"
+      save_params: "Set Defaults"
       reset_params: "Alaphelyzet"
       search_placeholder: "Keresés..."
+      no_search_results: "Sorry, we couldn't find any results matching your text."
+    group:
+      reports: "Reports"

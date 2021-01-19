@@ -12,6 +12,7 @@ ca:
         dirty: "Cal desar la consulta abans d'executar-la"
     explorer:
       admins_only: "L'explorador de dades sols és disponible per a administradors."
+      allow_groups: "Allow groups to access this query"
       title: "Explorador de dades"
       create: "Crea'n un de nou"
       create_placeholder: "Nom de consulta..."

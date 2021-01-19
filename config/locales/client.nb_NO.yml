@@ -12,14 +12,19 @@ nb_NO:
         dirty: "Du må lagre spørringen før du kjører den."
     explorer:
       admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
+      allow_groups: "Allow groups to access this query"
       title: "Datautforsker"
       create: "Opprett ny"
       create_placeholder: "Spørringsnavn…"
+      description_placeholder: "Enter a description here"
       import:
         label: "Importer"
         modal: "Importer en spørring"
       schema:
+        title: "Database Schema"
         filter: "Søk…"
+        sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Types</a>"
       types:
         bool:
           yes: "Ja"
@@ -27,6 +32,8 @@ nb_NO:
           null_: "Null"
       export: "Eksporter"
       save: "Lagre endringer"
+      saverun: "Save Changes and Run"
+      run: "Run"
       undo: "Forkast endringer"
       edit: "Rediger"
       delete: "Slett"
@@ -34,9 +41,25 @@ nb_NO:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
+      run_time: "Query completed in %{value} ms."
+      result_count:
+        one: "%{count} result."
+        other: "%{count} results."
+      max_result_count:
+        one: "Showing top %{count} results."
+        other: "Showing top %{count} results."
+      query_name: "Query"
       query_groups: "Grupper"
+      link: "Link for"
+      report_name: "Report"
       query_description: "Beskrivelse"
+      query_time: "Last run"
+      query_user: "Created by"
+      column: "Column %{number}"
       explain_label: "Inkluder spørringsplan?"
       save_params: "Sett forvalg"
       reset_params: "Tilbakestill"
       search_placeholder: "Søk…"
+      no_search_results: "Sorry, we couldn't find any results matching your text."
+    group:
+      reports: "Reports"

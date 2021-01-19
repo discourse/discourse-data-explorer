@@ -12,6 +12,7 @@ uk:
         dirty: "Ви повинні зберегти запит перед запуском."
     explorer:
       admins_only: "Data explorer доступний лише адміністраторам."
+      allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
       create: "Створити новий"
       create_placeholder: "Назва запиту..."
@@ -40,6 +41,7 @@ uk:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "У запиті є не збережені зміни, які будуть втрачені, якщо ви перейдете далі."
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} результат."
         few: "%{count} результатів."
@@ -57,6 +59,7 @@ uk:
       query_description: "Опис"
       query_time: "Останній запуск"
       query_user: "Створено"
+      column: "Column %{number}"
       explain_label: "Включити план запитів?"
       save_params: "Встановити значення за замовчуванням"
       reset_params: "Скинути"

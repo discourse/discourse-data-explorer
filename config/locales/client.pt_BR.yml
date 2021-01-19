@@ -12,6 +12,7 @@ pt_BR:
         dirty: "Você precisa salvar a consulta antes de executar."
     explorer:
       admins_only: "O explorador de dados só está disponível para administradores."
+      allow_groups: "Allow groups to access this query"
       title: "Explorador de Dados"
       create: "Criar Nova"
       create_placeholder: "Nome da consulta…"
@@ -40,6 +41,7 @@ pt_BR:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Uma consulta tem alterações não salvas que serão perdidas se você sair desta página."
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
@@ -48,10 +50,12 @@ pt_BR:
         other: "Mostrando os principais %{count} resultados."
       query_name: "Consulta"
       query_groups: "Grupos"
+      link: "Link for"
       report_name: "Reportar"
       query_description: "Descrição"
       query_time: "Última execução"
       query_user: "Criado por"
+      column: "Column %{number}"
       explain_label: "Incluir plano de consulta?"
       save_params: "Definir Padrões"
       reset_params: "Redefinir"

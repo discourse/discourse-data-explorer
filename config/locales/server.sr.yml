@@ -4,4 +4,6 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-sr: 
+sr:
+  site_settings:
+    data_explorer_enabled: "Enable the Data Explorer at /admin/plugins/explorer"

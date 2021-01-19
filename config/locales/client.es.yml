@@ -41,6 +41,7 @@ es:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Una consulta tiene cambios no guardados que se perderán si sales."
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
@@ -54,6 +55,7 @@ es:
       query_description: "Descripción"
       query_time: "Última ejecución"
       query_user: "Creada por"
+      column: "Column %{number}"
       explain_label: "¿Incluir plan de consulta?"
       save_params: "Establecer configuración por defecto"
       reset_params: "Resetear"

@@ -12,6 +12,7 @@ fi:
         dirty: "Kysely täytyy tallentaa ennen suorittamista."
     explorer:
       admins_only: "Dataselain on vain ylläpitäjille."
+      allow_groups: "Allow groups to access this query"
       title: "Dataselain"
       create: "Luo uusi"
       create_placeholder: "Kyselyn nimi"
@@ -40,6 +41,7 @@ fi:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois. "
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} tulos. "
         other: "%{count} tulokset. "
@@ -48,9 +50,12 @@ fi:
         other: "Näytetään osuvimmat %{count} tulokset. "
       query_name: "Kysely"
       query_groups: "Ryhmät"
+      link: "Link for"
+      report_name: "Report"
       query_description: "Kuvaus"
       query_time: "Viimeksi suoritettu"
       query_user: "Luonut"
+      column: "Column %{number}"
       explain_label: "Sisällytä kyselysuunnitelma?"
       save_params: "Aseta oletusarvot"
       reset_params: "Nollaa"

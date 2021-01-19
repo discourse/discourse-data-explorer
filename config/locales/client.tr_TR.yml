@@ -41,6 +41,7 @@ tr_TR:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
+      run_time: "Query completed in %{value} ms."
       result_count:
         one: "%{count} sonucu."
         other: "%{count} sonuçları."
@@ -54,6 +55,7 @@ tr_TR:
       query_description: "Açıklama"
       query_time: "Son çalıştırma"
       query_user: "Tarafından yaratıldı"
+      column: "Column %{number}"
       explain_label: "Sorgu planı eklensin mi?"
       save_params: "Varsayılan belirle"
       reset_params: "Sıfırla"
