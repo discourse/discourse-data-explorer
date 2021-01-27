@@ -1,7 +1,7 @@
 import {
   default as computed,
-  on,
   observes,
+  on,
 } from "discourse-common/utils/decorators";
 
 export default Ember.Component.extend({

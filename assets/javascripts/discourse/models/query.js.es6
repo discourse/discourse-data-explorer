@@ -1,7 +1,7 @@
 import {
   default as computed,
-  on,
   observes,
+  on,
 } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import RestModel from "discourse/models/rest";
