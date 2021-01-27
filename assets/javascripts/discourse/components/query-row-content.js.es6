@@ -1,7 +1,7 @@
 import Handlebars from "handlebars";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { iconHTML, convertIconClass } from "discourse-common/lib/icon-library";
+import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
 
 function icon_or_image_replacement(str, ctx) {
   str = Ember.get(ctx.contexts[0], str);
