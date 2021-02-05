@@ -32,6 +32,7 @@ const QueryResultComponent = Ember.Component.extend({
   params: Ember.computed.alias("content.params"),
   explainText: Ember.computed.alias("content.explain"),
   hasExplain: Ember.computed.notEmpty("content.explain"),
+  showGraph: false,
 
   init() {
     this._super(...arguments);
@@ -139,6 +140,61 @@ const QueryResultComponent = Ember.Component.extend({
     return transformedRelTable(groups);
   },
 
+  @computed(
+    "rows.[]",
+    "content.colrender.[]",
+    "content.result_count",
+    "colCount"
+  )
+  canShowGraph(rows, colrender, result_count, colCount) {
+    const hasTwoColumns = colCount === 2;
+    const secondColumnContainsNumber =
+      result_count > 0 && typeof rows[0][1] === "number";
+    const secondColumnContainsId = colrender[1] !== undefined;
+
+    return (
+      hasTwoColumns && secondColumnContainsNumber && !secondColumnContainsId
+    );
+  },
+
+  @computed("content.rows.[]", "content.colrender.[]")
+  graphLabels(rows, colRender) {
+    const labelSelectors = new Map([
+      ["user", (user) => user.username],
+      ["badge", (badge) => badge.name],
+      ["topic", (topic) => topic.title],
+      ["group", (group) => group.name],
+      ["category", (category) => category.name],
+    ]);
+
+    const relationName = colRender[0];
+
+    if (relationName) {
+      const lookupFunc = this[`lookup${relationName.capitalize()}`];
+      const labelSelector = labelSelectors.get(relationName);
+
+      if (lookupFunc && labelSelector) {
+        return rows.map((r) => {
+          const relation = lookupFunc.call(this, r[0]);
+          const label = labelSelector(relation);
+          return this._cutGraphLabel(label);
+        });
+      }
+    }
+
+    return rows.map((r) => this._cutGraphLabel(r[0]));
+  },
+
+  @computed("content.rows.[]")
+  graphValues(rows) {
+    return rows.map((r) => r[1]);
+  },
+
+  @computed("columnDispNames.[]")
+  graphDatasetName(columnDispNames) {
+    return columnDispNames[1];
+  },
+
   lookupUser(id) {
     return this.transformedUserTable[id];
   },
@@ -211,12 +267,22 @@ const QueryResultComponent = Ember.Component.extend({
     });
   },
 
+  _cutGraphLabel(label) {
+    return label.toString().substring(0, 25);
+  },
+
   actions: {
     downloadResultJson() {
       this.downloadResult("json");
     },
     downloadResultCsv() {
       this.downloadResult("csv");
+    },
+    showGraph() {
+      this.set("showGraph", true);
+    },
+    showTable() {
+      this.set("showGraph", false);
     },
   },
 });

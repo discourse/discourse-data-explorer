@@ -34,6 +34,8 @@ en:
       recover: "Undelete Query"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "Table"
+      show_graph: "Graph"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in %{value} ms."
       result_count:
