@@ -164,7 +164,7 @@ discourseModule(
               ],
             },
             result_count: 2,
-            columns: ["user_id", "like_count"],
+            columns: ["topic_id", "user_id"],
             rows: [
               [1, 10],
               [2, 20],
