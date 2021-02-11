@@ -90,6 +90,7 @@ export default Ember.Component.extend({
       const canvas = this.element.querySelector("canvas");
       const context = canvas.getContext("2d");
       const config = this.get("config");
+      // eslint-disable-next-line
       this.chart = new Chart(context, config);
     });
   },

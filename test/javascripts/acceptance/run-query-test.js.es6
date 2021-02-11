@@ -4,6 +4,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import I18n from "I18n";
 
 acceptance("Data Explorer Plugin | Run Query", function (needs) {
   needs.user();
