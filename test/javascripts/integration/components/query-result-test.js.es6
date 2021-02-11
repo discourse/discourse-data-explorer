@@ -25,6 +25,7 @@ discourseModule(
                 icon: "fa-user",
                 id: 1,
                 name: "badge name",
+                displayName: "badge display name",
               },
             ],
           },
@@ -39,7 +40,7 @@ discourseModule(
         assert.ok(
           queryAll(
             "table tbody tr:nth-child(1) td:nth-child(1) span"
-          ).text() === "badge name"
+          ).text() === "badge display name"
         );
       },
     });
