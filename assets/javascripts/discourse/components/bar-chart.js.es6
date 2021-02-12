@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   barsHoverColor: themeColor("--tertiary-high"),
   gridColor: themeColor("--primary-low"),
   labelsColor: themeColor("--primary-medium"),
-  chart: undefined,
+  chart: null,
 
   @computed("data", "options")
   config(data, options) {

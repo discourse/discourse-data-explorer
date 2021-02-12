@@ -32,6 +32,7 @@ const QueryResultComponent = Ember.Component.extend({
   params: Ember.computed.alias("content.params"),
   explainText: Ember.computed.alias("content.explain"),
   hasExplain: Ember.computed.notEmpty("content.explain"),
+  graphDatasetName: Ember.computed.reads("columnDispNames.1"),
   showGraph: false,
 
   init() {
@@ -187,12 +188,7 @@ const QueryResultComponent = Ember.Component.extend({
 
   @computed("content.rows.[]")
   graphValues(rows) {
-    return rows.map((r) => r[1]);
-  },
-
-  @computed("columnDispNames.[]")
-  graphDatasetName(columnDispNames) {
-    return columnDispNames[1];
+    return rows.mapBy(1);
   },
 
   lookupUser(id) {
