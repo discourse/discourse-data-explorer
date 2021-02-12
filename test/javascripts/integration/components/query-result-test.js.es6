@@ -25,7 +25,7 @@ discourseModule(
                 icon: "fa-user",
                 id: 1,
                 name: "badge name",
-                displayName: "badge display name",
+                display_name: "badge display name",
               },
             ],
           },
