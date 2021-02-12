@@ -13,15 +13,15 @@ export default Ember.Component.extend({
   config(data, options) {
     return {
       type: "bar",
-      data: data,
-      options: options,
+      data,
+      options,
     };
   },
 
   @computed("labels.[]", "values.[]", "datasetName")
   data(labels, values, datasetName) {
     return {
-      labels: labels,
+      labels,
       datasets: [
         {
           label: datasetName,
