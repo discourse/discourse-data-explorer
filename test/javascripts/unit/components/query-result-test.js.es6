@@ -97,7 +97,7 @@ test("it cuts too long graph labels", function (assert) {
   });
 
   assert.deepEqual(this.subject().graphLabels, [
-    "This string is too long t",
-    "This string is too long t",
+    "This string is too long t...",
+    "This string is too long t...",
   ]);
 });

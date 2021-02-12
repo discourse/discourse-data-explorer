@@ -264,7 +264,13 @@ const QueryResultComponent = Ember.Component.extend({
   },
 
   _cutGraphLabel(label) {
-    return label.toString().substring(0, 25);
+    const labelString = label.toString();
+    if (labelString.length > 25) {
+      return `${labelString.substring(0, 25)}...`;
+    }
+    else {
+      return labelString;
+    }
   },
 
   actions: {
