@@ -76,7 +76,7 @@ export default Ember.Component.extend({
 
   didUpdate() {
     this._super(...arguments);
-    this.chart.data = this.get("data");
+    this.chart.data = this.data;
     this.chart.update();
   },
 
@@ -89,7 +89,7 @@ export default Ember.Component.extend({
     loadScript("/javascripts/Chart.min.js").then(() => {
       const canvas = this.element.querySelector("canvas");
       const context = canvas.getContext("2d");
-      const config = this.get("config");
+      const config = this.config;
       // eslint-disable-next-line
       this.chart = new Chart(context, config);
     });

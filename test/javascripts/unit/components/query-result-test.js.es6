@@ -18,19 +18,19 @@ test("it transforms data for a graph", function (assert) {
   });
 
   assert.deepEqual(
-    this.subject().get("graphLabels"),
+    this.subject().graphLabels,
     ["user1", "user2"],
     "labels are correct"
   );
 
   assert.deepEqual(
-    this.subject().get("graphValues"),
+    this.subject().graphValues,
     [10, 20],
     "values are correct"
   );
 
   assert.deepEqual(
-    this.subject().get("graphDatasetName"),
+    this.subject().graphDatasetName,
     "like_count",
     "the dataset name is correct"
   );
@@ -56,7 +56,7 @@ test("it uses descriptive graph labels instead of identifiers", function (assert
     content: results,
   });
 
-  assert.deepEqual(this.subject().get("graphLabels"), ["user1", "user2"]);
+  assert.deepEqual(this.subject().graphLabels, ["user1", "user2"]);
 });
 
 test("it uses an identifier as a graph label if labelSelector doesn't exist", function (assert) {
@@ -79,7 +79,7 @@ test("it uses an identifier as a graph label if labelSelector doesn't exist", fu
     content: results,
   });
 
-  assert.deepEqual(this.subject().get("graphLabels"), ["1", "2"]);
+  assert.deepEqual(this.subject().graphLabels, ["1", "2"]);
 });
 
 test("it cuts too long graph labels", function (assert) {
@@ -96,7 +96,7 @@ test("it cuts too long graph labels", function (assert) {
     content: results,
   });
 
-  assert.deepEqual(this.subject().get("graphLabels"), [
+  assert.deepEqual(this.subject().graphLabels, [
     "This string is too long t",
     "This string is too long t",
   ]);
