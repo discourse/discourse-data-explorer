@@ -23,11 +23,7 @@ test("it transforms data for a graph", function (assert) {
     "labels are correct"
   );
 
-  assert.deepEqual(
-    this.subject().graphValues,
-    [10, 20],
-    "values are correct"
-  );
+  assert.deepEqual(this.subject().graphValues, [10, 20], "values are correct");
 
   assert.deepEqual(
     this.subject().graphDatasetName,
