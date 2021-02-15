@@ -263,8 +263,7 @@ const QueryResultComponent = Ember.Component.extend({
     const labelString = label.toString();
     if (labelString.length > 25) {
       return `${labelString.substring(0, 25)}...`;
-    }
-    else {
+    } else {
       return labelString;
     }
   },
