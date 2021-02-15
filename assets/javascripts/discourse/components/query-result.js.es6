@@ -33,6 +33,7 @@ const QueryResultComponent = Ember.Component.extend({
   explainText: Ember.computed.alias("content.explain"),
   hasExplain: Ember.computed.notEmpty("content.explain"),
   graphDatasetName: Ember.computed.reads("columnDispNames.1"),
+  graphValues: Ember.computed.mapBy("content.rows", "1"),
   showGraph: false,
 
   init() {
@@ -151,7 +152,7 @@ const QueryResultComponent = Ember.Component.extend({
     const hasTwoColumns = colCount === 2;
     const secondColumnContainsNumber =
       result_count > 0 && typeof rows[0][1] === "number";
-    const secondColumnContainsId = colrender[1] !== undefined;
+    const secondColumnContainsId = colrender[1];
 
     return (
       hasTwoColumns && secondColumnContainsNumber && !secondColumnContainsId
@@ -160,19 +161,19 @@ const QueryResultComponent = Ember.Component.extend({
 
   @computed("content.rows.[]", "content.colrender.[]")
   graphLabels(rows, colRender) {
-    const labelSelectors = new Map([
-      ["user", (user) => user.username],
-      ["badge", (badge) => badge.name],
-      ["topic", (topic) => topic.title],
-      ["group", (group) => group.name],
-      ["category", (category) => category.name],
-    ]);
+    const labelSelectors = {
+      user: (user) => user.username,
+      badge: (badge) => badge.name,
+      topic: (topic) => topic.title,
+      group: (group) => group.name,
+      category: (category) => category.name,
+    };
 
     const relationName = colRender[0];
 
     if (relationName) {
       const lookupFunc = this[`lookup${relationName.capitalize()}`];
-      const labelSelector = labelSelectors.get(relationName);
+      const labelSelector = labelSelectors[relationName];
 
       if (lookupFunc && labelSelector) {
         return rows.map((r) => {
@@ -184,11 +185,6 @@ const QueryResultComponent = Ember.Component.extend({
     }
 
     return rows.map((r) => this._cutGraphLabel(r[0]));
-  },
-
-  @computed("content.rows.[]")
-  graphValues(rows) {
-    return rows.mapBy(1);
   },
 
   lookupUser(id) {
