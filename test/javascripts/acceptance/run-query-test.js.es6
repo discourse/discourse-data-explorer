@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
@@ -159,14 +160,14 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     await visit("admin/plugins/explorer?id=-6");
 
     assert.ok(
-      queryAll("div.name h1").text().trim() === "Top 100 Likers",
+      query("div.name h1").innerText.trim() === "Top 100 Likers",
       "the query name was rendered"
     );
 
     assert.ok(exists("div.query-edit"), "the query code was rendered");
 
     assert.ok(
-      queryAll("form.query-run button span").text().trim() ===
+      query("form.query-run button span").innerText.trim() ===
         I18n.t("explorer.run"),
       "the run button was rendered"
     );
@@ -178,7 +179,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       "the table with query results was rendered"
     );
     assert.ok(
-      queryAll("div.result-info button:nth-child(3) span").text().trim() ===
+      query("div.result-info button:nth-child(3) span").innerText.trim() ===
         I18n.t("explorer.show_graph"),
       "the chart button was rendered"
     );

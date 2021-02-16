@@ -4,7 +4,7 @@ import componentTest, {
 import {
   discourseModule,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -33,19 +33,19 @@ discourseModule(
 
       test(assert) {
         assert.ok(
-          queryAll("div.result-info button:nth-child(1) span").text() ===
+          query("div.result-info button:nth-child(1) span").innerText ===
             I18n.t("explorer.download_json"),
           "it renders the JSON button"
         );
 
         assert.ok(
-          queryAll("div.result-info button:nth-child(2) span").text() ===
+          query("div.result-info button:nth-child(2) span").innerText ===
             I18n.t("explorer.download_csv"),
           "it renders the CSV button"
         );
 
         assert.ok(
-          queryAll("div.result-info button:nth-child(3) span").text() ===
+          query("div.result-info button:nth-child(3) span").innerText ===
             I18n.t("explorer.show_graph"),
           "it renders the chart button"
         );
@@ -53,16 +53,16 @@ discourseModule(
         assert.ok(exists("div.result-about"), "it renders a query summary");
 
         assert.ok(
-          queryAll("table thead tr th:nth-child(1)").text() === "user_name" &&
-            queryAll("table thead tr th:nth-child(2)").text() ===
+          query("table thead tr th:nth-child(1)").innerText === "user_name" &&
+            query("table thead tr th:nth-child(2)").innerText ===
               "like_count" &&
-            queryAll("table tbody tr:nth-child(1) td:nth-child(1)").text() ===
+            query("table tbody tr:nth-child(1) td:nth-child(1)").innerText ===
               "user1" &&
-            queryAll("table tbody tr:nth-child(1) td:nth-child(2)").text() ===
+            query("table tbody tr:nth-child(1) td:nth-child(2)").innerText ===
               "10" &&
-            queryAll("table tbody tr:nth-child(2) td:nth-child(1)").text() ===
+            query("table tbody tr:nth-child(2) td:nth-child(1)").innerText ===
               "user2" &&
-            queryAll("table tbody tr:nth-child(2) td:nth-child(2)").text() ===
+            query("table tbody tr:nth-child(2) td:nth-child(2)").innerText ===
               "20",
           "it renders a table with data"
         );
@@ -95,9 +95,8 @@ discourseModule(
 
       test(assert) {
         assert.ok(
-          queryAll(
-            "table tbody tr:nth-child(1) td:nth-child(1) span"
-          ).text() === "badge display name"
+          query("table tbody tr:nth-child(1) td:nth-child(1) span")
+            .innerText === "badge display name"
         );
       },
     });
@@ -127,7 +126,7 @@ discourseModule(
 
       async test(assert) {
         assert.equal(
-          queryAll("div.result-info button:nth-child(3) span").text(),
+          query("div.result-info button:nth-child(3) span").innerText,
           I18n.t("explorer.show_graph"),
           "the chart button was rendered"
         );
@@ -136,7 +135,7 @@ discourseModule(
         await click("div.result-info button:nth-child(3)");
 
         assert.equal(
-          queryAll("div.result-info button:nth-child(3) span").text(),
+          query("div.result-info button:nth-child(3) span").innerText,
           I18n.t("explorer.show_table"),
           "the chart button was changed to the table button"
         );
@@ -147,7 +146,7 @@ discourseModule(
 
         await click("div.result-info button:nth-child(3)");
         assert.equal(
-          queryAll("div.result-info button:nth-child(3) span").text(),
+          query("div.result-info button:nth-child(3) span").innerText,
           I18n.t("explorer.show_graph"),
           "the table button was changed to the chart button"
         );
@@ -175,7 +174,7 @@ discourseModule(
 
         test(assert) {
           assert.equal(
-            queryAll("div.result-info button:nth-child(3) span").text(),
+            query("div.result-info button:nth-child(3) span").innerText,
             I18n.t("explorer.show_graph")
           );
         },
