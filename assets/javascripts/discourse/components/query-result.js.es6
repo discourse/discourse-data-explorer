@@ -148,11 +148,11 @@ const QueryResultComponent = Ember.Component.extend({
     "content.result_count",
     "colCount"
   )
-  canShowGraph(rows, colrender, result_count, colCount) {
+  canShowGraph(rows, colRender, resultCount, colCount) {
     const hasTwoColumns = colCount === 2;
     const secondColumnContainsNumber =
-      result_count > 0 && typeof rows[0][1] === "number";
-    const secondColumnContainsId = colrender[1];
+      resultCount > 0 && typeof rows[0][1] === "number";
+    const secondColumnContainsId = colRender[1];
 
     return (
       hasTwoColumns && secondColumnContainsNumber && !secondColumnContainsId
