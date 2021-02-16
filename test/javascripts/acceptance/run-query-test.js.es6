@@ -180,14 +180,14 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     assert.ok(
       queryAll("div.result-info button:nth-child(3) span").text().trim() ===
         I18n.t("explorer.show_graph"),
-      "the graph button was rendered"
+      "the chart button was rendered"
     );
 
     await click("div.result-info button:nth-child(3)");
 
     assert.ok(
       exists("canvas.chartjs-render-monitor"),
-      "the graph was rendered"
+      "the chart was rendered"
     );
   });
 });

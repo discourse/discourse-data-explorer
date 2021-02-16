@@ -47,7 +47,7 @@ discourseModule(
         assert.ok(
           queryAll("div.result-info button:nth-child(3) span").text() ===
             I18n.t("explorer.show_graph"),
-          "it renders the graph button"
+          "it renders the chart button"
         );
 
         assert.ok(exists("div.result-about"), "it renders a query summary");
@@ -105,11 +105,11 @@ discourseModule(
 );
 
 discourseModule(
-  "Data Explorer Plugin | Integration | Component | query-result | graph",
+  "Data Explorer Plugin | Integration | Component | query-result | chart",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    componentTest("navigation between a table and a graph works", {
+    componentTest("navigation between a table and a chart works", {
       template: hbs`{{query-result content=content}}`,
 
       beforeEach() {
@@ -129,7 +129,7 @@ discourseModule(
         assert.equal(
           queryAll("div.result-info button:nth-child(3) span").text(),
           I18n.t("explorer.show_graph"),
-          "the graph button was rendered"
+          "the chart button was rendered"
         );
         assert.ok(exists("table"), "the table was rendered");
 
@@ -138,25 +138,25 @@ discourseModule(
         assert.equal(
           queryAll("div.result-info button:nth-child(3) span").text(),
           I18n.t("explorer.show_table"),
-          "the graph button was changed to the table button"
+          "the chart button was changed to the table button"
         );
         assert.ok(
           exists("canvas.chartjs-render-monitor"),
-          "the graph was rendered"
+          "the chart was rendered"
         );
 
         await click("div.result-info button:nth-child(3)");
         assert.equal(
           queryAll("div.result-info button:nth-child(3) span").text(),
           I18n.t("explorer.show_graph"),
-          "the table button was changed to the graph button"
+          "the table button was changed to the chart button"
         );
         assert.ok(exists("table"), "the table was rendered");
       },
     });
 
     componentTest(
-      "it renders a graph button when data has two columns and numbers in the second column",
+      "it renders a chart button when data has two columns and numbers in the second column",
       {
         template: hbs`{{query-result content=content}}`,
 
@@ -183,7 +183,7 @@ discourseModule(
     );
 
     componentTest(
-      "it doesn't render a graph button when data contains identifiers in the second column",
+      "it doesn't render a chart button when data contains identifiers in the second column",
       {
         template: hbs`{{query-result content=content}}`,
 
@@ -213,7 +213,7 @@ discourseModule(
     );
 
     componentTest(
-      "it doesn't render a graph button when data contains one column",
+      "it doesn't render a chart button when data contains one column",
       {
         template: hbs`{{query-result content=content}}`,
 
@@ -234,7 +234,7 @@ discourseModule(
     );
 
     componentTest(
-      "it doesn't render a graph button when data contains more than two columns",
+      "it doesn't render a chart button when data contains more than two columns",
       {
         template: hbs`{{query-result content=content}}`,
 

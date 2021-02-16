@@ -32,9 +32,9 @@ const QueryResultComponent = Ember.Component.extend({
   params: Ember.computed.alias("content.params"),
   explainText: Ember.computed.alias("content.explain"),
   hasExplain: Ember.computed.notEmpty("content.explain"),
-  graphDatasetName: Ember.computed.reads("columnDispNames.1"),
-  graphValues: Ember.computed.mapBy("content.rows", "1"),
-  showGraph: false,
+  chartDatasetName: Ember.computed.reads("columnDispNames.1"),
+  chartValues: Ember.computed.mapBy("content.rows", "1"),
+  showChart: false,
 
   init() {
     this._super(...arguments);
@@ -148,7 +148,7 @@ const QueryResultComponent = Ember.Component.extend({
     "content.result_count",
     "colCount"
   )
-  canShowGraph(rows, colRender, resultCount, colCount) {
+  canShowChart(rows, colRender, resultCount, colCount) {
     const hasTwoColumns = colCount === 2;
     const secondColumnContainsNumber =
       resultCount > 0 && typeof rows[0][1] === "number";
@@ -160,7 +160,7 @@ const QueryResultComponent = Ember.Component.extend({
   },
 
   @computed("content.rows.[]", "content.colrender.[]")
-  graphLabels(rows, colRender) {
+  chartLabels(rows, colRender) {
     const labelSelectors = {
       user: (user) => user.username,
       badge: (badge) => badge.name,
@@ -179,12 +179,12 @@ const QueryResultComponent = Ember.Component.extend({
         return rows.map((r) => {
           const relation = lookupFunc.call(this, r[0]);
           const label = labelSelector(relation);
-          return this._cutGraphLabel(label);
+          return this._cutChartLabel(label);
         });
       }
     }
 
-    return rows.map((r) => this._cutGraphLabel(r[0]));
+    return rows.map((r) => this._cutChartLabel(r[0]));
   },
 
   lookupUser(id) {
@@ -259,7 +259,7 @@ const QueryResultComponent = Ember.Component.extend({
     });
   },
 
-  _cutGraphLabel(label) {
+  _cutChartLabel(label) {
     const labelString = label.toString();
     if (labelString.length > 25) {
       return `${labelString.substring(0, 25)}...`;
@@ -275,11 +275,11 @@ const QueryResultComponent = Ember.Component.extend({
     downloadResultCsv() {
       this.downloadResult("csv");
     },
-    showGraph() {
-      this.set("showGraph", true);
+    showChart() {
+      this.set("showChart", true);
     },
     showTable() {
-      this.set("showGraph", false);
+      this.set("showChart", false);
     },
   },
 });

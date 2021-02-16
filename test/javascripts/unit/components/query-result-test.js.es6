@@ -3,7 +3,7 @@ import { test } from "qunit";
 
 moduleFor("component:query-result");
 
-test("it transforms data for a graph", function (assert) {
+test("it transforms data for a chart", function (assert) {
   const results = {
     colrender: [],
     result_count: 2,
@@ -18,21 +18,21 @@ test("it transforms data for a graph", function (assert) {
   });
 
   assert.deepEqual(
-    this.subject().graphLabels,
+    this.subject().chartLabels,
     ["user1", "user2"],
     "labels are correct"
   );
 
-  assert.deepEqual(this.subject().graphValues, [10, 20], "values are correct");
+  assert.deepEqual(this.subject().chartValues, [10, 20], "values are correct");
 
   assert.deepEqual(
-    this.subject().graphDatasetName,
+    this.subject().chartDatasetName,
     "like_count",
     "the dataset name is correct"
   );
 });
 
-test("it uses descriptive graph labels instead of identifiers", function (assert) {
+test("it uses descriptive chart labels instead of identifiers", function (assert) {
   const results = {
     colrender: { 0: "user" },
     relations: {
@@ -52,10 +52,10 @@ test("it uses descriptive graph labels instead of identifiers", function (assert
     content: results,
   });
 
-  assert.deepEqual(this.subject().graphLabels, ["user1", "user2"]);
+  assert.deepEqual(this.subject().chartLabels, ["user1", "user2"]);
 });
 
-test("it uses an identifier as a graph label if labelSelector doesn't exist", function (assert) {
+test("it uses an identifier as a chart label if labelSelector doesn't exist", function (assert) {
   const results = {
     colrender: { 0: "unknown_entity" },
     relations: {
@@ -75,24 +75,24 @@ test("it uses an identifier as a graph label if labelSelector doesn't exist", fu
     content: results,
   });
 
-  assert.deepEqual(this.subject().graphLabels, ["1", "2"]);
+  assert.deepEqual(this.subject().chartLabels, ["1", "2"]);
 });
 
-test("it cuts too long graph labels", function (assert) {
+test("it cuts too long chart labels", function (assert) {
   const results = {
     colrender: [],
     result_count: 2,
     columns: ["user", "like_count"],
     rows: [
-      ["This string is too long to be used as a label on a graph", 10],
-      ["This string is too long to be used as a label on a graph", 20],
+      ["This string is too long to be used as a label on a chart", 10],
+      ["This string is too long to be used as a label on a chart", 20],
     ],
   };
   this.subject().setProperties({
     content: results,
   });
 
-  assert.deepEqual(this.subject().graphLabels, [
+  assert.deepEqual(this.subject().chartLabels, [
     "This string is too long t...",
     "This string is too long t...",
   ]);

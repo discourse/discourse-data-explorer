@@ -9,7 +9,7 @@ discourseModule(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    componentTest("it renders a graph", {
+    componentTest("it renders a chart", {
       template: hbs`{{bar-chart}}`,
 
       beforeEach() {
