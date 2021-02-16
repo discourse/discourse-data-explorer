@@ -5,12 +5,12 @@ import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
-  "Data Explorer Plugin | Integration | Component | bar-chart",
+  "Data Explorer Plugin | Integration | Component | data-explorer-bar-chart",
   function (hooks) {
     setupRenderingTest(hooks);
 
     componentTest("it renders a chart", {
-      template: hbs`{{bar-chart}}`,
+      template: hbs`{{data-explorer-bar-chart}}`,
 
       beforeEach() {
         this.set("labels", ["label_1", "label_2"]);
