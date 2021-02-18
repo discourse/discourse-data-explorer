@@ -80,7 +80,7 @@ const QueryRowContentComponent = Ember.Component.extend({
 
       const lookupFunc = parentView[`lookup${t.name.capitalize()}`];
       if (lookupFunc) {
-        ctx[t.name] = parentView[`lookup${t.name.capitalize()}`](id);
+        ctx[t.name] = lookupFunc.call(parentView, id);
       }
 
       if (t.name === "url") {

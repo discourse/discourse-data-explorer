@@ -32,6 +32,9 @@ const QueryResultComponent = Ember.Component.extend({
   params: Ember.computed.alias("content.params"),
   explainText: Ember.computed.alias("content.explain"),
   hasExplain: Ember.computed.notEmpty("content.explain"),
+  chartDatasetName: Ember.computed.reads("columnDispNames.1"),
+  chartValues: Ember.computed.mapBy("content.rows", "1"),
+  showChart: false,
 
   init() {
     this._super(...arguments);
@@ -139,6 +142,51 @@ const QueryResultComponent = Ember.Component.extend({
     return transformedRelTable(groups);
   },
 
+  @computed(
+    "rows.[]",
+    "content.colrender.[]",
+    "content.result_count",
+    "colCount"
+  )
+  canShowChart(rows, colRender, resultCount, colCount) {
+    const hasTwoColumns = colCount === 2;
+    const secondColumnContainsNumber =
+      resultCount > 0 && typeof rows[0][1] === "number";
+    const secondColumnContainsId = colRender[1];
+
+    return (
+      hasTwoColumns && secondColumnContainsNumber && !secondColumnContainsId
+    );
+  },
+
+  @computed("content.rows.[]", "content.colrender.[]")
+  chartLabels(rows, colRender) {
+    const labelSelectors = {
+      user: (user) => user.username,
+      badge: (badge) => badge.name,
+      topic: (topic) => topic.title,
+      group: (group) => group.name,
+      category: (category) => category.name,
+    };
+
+    const relationName = colRender[0];
+
+    if (relationName) {
+      const lookupFunc = this[`lookup${relationName.capitalize()}`];
+      const labelSelector = labelSelectors[relationName];
+
+      if (lookupFunc && labelSelector) {
+        return rows.map((r) => {
+          const relation = lookupFunc.call(this, r[0]);
+          const label = labelSelector(relation);
+          return this._cutChartLabel(label);
+        });
+      }
+    }
+
+    return rows.map((r) => this._cutChartLabel(r[0]));
+  },
+
   lookupUser(id) {
     return this.transformedUserTable[id];
   },
@@ -211,12 +259,27 @@ const QueryResultComponent = Ember.Component.extend({
     });
   },
 
+  _cutChartLabel(label) {
+    const labelString = label.toString();
+    if (labelString.length > 25) {
+      return `${labelString.substring(0, 25)}...`;
+    } else {
+      return labelString;
+    }
+  },
+
   actions: {
     downloadResultJson() {
       this.downloadResult("json");
     },
     downloadResultCsv() {
       this.downloadResult("csv");
+    },
+    showChart() {
+      this.set("showChart", true);
+    },
+    showTable() {
+      this.set("showChart", false);
     },
   },
 });
