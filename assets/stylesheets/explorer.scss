@@ -280,7 +280,19 @@ table.group-reports {
   margin: 10px 0;
 }
 
+.query-create {
+  display: flex;
+  input {
+    margin-right: 0.5em;
+    margin-bottom: 0;
+  }
+}
+
 .query-results {
+  section {
+    width: 100%;
+    overflow-x: auto;
+  }
   table {
     width: 100%;
     margin-top: 10px;
