@@ -2,8 +2,7 @@ import {
   default as computed,
   observes,
 } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
-import debounce from "@ember/runloop";
+import { debounce } from "@ember/runloop";
 
 export default Ember.Component.extend({
   actions: {
@@ -116,7 +115,11 @@ export default Ember.Component.extend({
   @observes("filter")
   triggerFilter() {
     // TODO: Use discouseDebounce after the 2.7 release.
-    let debounceFunc = discourseDebounce || debounce;
+    let debounceFunc = debounce;
+
+    try {
+      debounceFunc = require("discourse-common/lib/debounce").default;
+    } catch (_) {}
 
     debounceFunc(
       this,
