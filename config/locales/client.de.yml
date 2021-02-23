@@ -40,6 +40,8 @@ de:
       recover: "Anfrage wiederherstellen"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "Tabelle"
+      show_graph: "Diagramm"
       others_dirty: "Eine Anfrage hat ungespeicherte Änderungen, die verloren gehen, wenn du woanders hingehst."
       run_time: "Abfrage in %{value} ms abgeschlossen."
       result_count:

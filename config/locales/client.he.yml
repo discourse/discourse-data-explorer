@@ -40,6 +40,8 @@ he:
       recover: "ביטול מחיקת השאילתה"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "טבלה"
+      show_graph: "תרשים"
       others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד בעת ניווט למקום אחר."
       run_time: "השאילתה הושלמה תוך %{value} מילישניות"
       result_count:

@@ -40,6 +40,8 @@ sv:
       recover: "Återställ sökning"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "Tabell"
+      show_graph: "Graf"
       others_dirty: "En sökning har ändringar som inte har sparats och kommer att förloras om du lämnar sidan."
       run_time: "Sökning slutförd efter %{value} ms."
       result_count:
