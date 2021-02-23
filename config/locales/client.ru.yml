@@ -40,6 +40,8 @@ ru:
       recover: "Восстановить запрос"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "Таблица"
+      show_graph: "График"
       others_dirty: "Запрос имеет несохранённые изменения, которые будут потеряны, если вы уйдёте со страницы."
       run_time: "Запрос завершен за %{value} мс."
       result_count:
