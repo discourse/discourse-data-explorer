@@ -1,3 +1,4 @@
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
@@ -35,22 +36,6 @@ const QueryResultComponent = Ember.Component.extend({
   chartDatasetName: Ember.computed.reads("columnDispNames.1"),
   chartValues: Ember.computed.mapBy("content.rows", "1"),
   showChart: false,
-
-  init() {
-    this._super(...arguments);
-
-    // TODO: After `__DISCOURSE_RAW_TEMPLATES` is in stable this should be updated
-    // to use only `import { findRawTemplate } from "discourse-common/lib/raw-templates"`
-    if (window.__DISCOURSE_RAW_TEMPLATES) {
-      this.findRawTemplate = requirejs(
-        "discourse-common/lib/raw-templates"
-      ).findRawTemplate;
-    } else {
-      this.findRawTemplate = requirejs(
-        "discourse/lib/raw-templates"
-      ).findRawTemplate;
-    }
-  },
 
   @computed("content.result_count")
   resultCount(count) {
@@ -100,7 +85,7 @@ const QueryResultComponent = Ember.Component.extend({
 
   @computed
   fallbackTemplate() {
-    return this.findRawTemplate("javascripts/explorer/text");
+    return findRawTemplate("javascripts/explorer/text");
   },
 
   @computed("content", "columns.[]")
@@ -114,7 +99,7 @@ const QueryResultComponent = Ember.Component.extend({
         viewName = this.get("content.colrender")[idx];
       }
 
-      const template = this.findRawTemplate(`javascripts/explorer/${viewName}`);
+      const template = findRawTemplate(`javascripts/explorer/${viewName}`);
 
       return { name: viewName, template };
     });
