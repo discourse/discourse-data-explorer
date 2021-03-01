@@ -2,7 +2,7 @@
 
 # name: discourse-data-explorer
 # about: Interface for running analysis SQL queries on the live database
-# version: 0.2
+# version: 0.3
 # authors: Riking
 # url: https://github.com/discourse/discourse-data-explorer
 
