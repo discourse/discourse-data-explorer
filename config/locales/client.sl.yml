@@ -40,6 +40,8 @@ sl:
       recover: "Povrni poizvedbo"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "Tabela"
+      show_graph: "Graf"
       others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
       run_time: "Poizvedba končana v %{value} ms."
       result_count:
