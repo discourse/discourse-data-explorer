@@ -47,10 +47,6 @@ const Query = RestModel.extend({
         newParams[name] = pinfo["default"];
       } else if (pinfo["type"] === "boolean") {
         newParams[name] = "false";
-      } else if (pinfo["type"] === "user_id") {
-        newParams[name] = null;
-      } else if (pinfo["type"] === "user_list") {
-        newParams[name] = null;
       } else {
         newParams[name] = "";
       }
