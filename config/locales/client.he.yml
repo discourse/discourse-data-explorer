@@ -11,7 +11,7 @@ he:
         no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
         dirty: "עליך לשמור את השאילתה בטרם ההרצה."
     explorer:
-      admins_only: "דפדפן הנתונים זמין רק למנהלים."
+      admins_only: "דפדפן הנתונים זמין למנהלים בלבד."
       allow_groups: "לאפשר לקבוצות לגשת לשאילתה הזאת"
       title: "דפדפן נתונים"
       create: "יצירת חדשה"
@@ -21,7 +21,7 @@ he:
         label: "ייבוא"
         modal: "ייבוא שאילתה"
       schema:
-        title: "סכימת מסד הנתונים"
+        title: "סכמת מסד הנתונים"
         filter: "חיפוש…"
         sensitive: "תכני העמודה הזו עשויים להכיל מידע רגיש או פרטי. נא לנקוט במשנה זהירות בעת השימוש בעמודה זו."
         type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>סוגים</a>"
@@ -42,8 +42,8 @@ he:
       download_csv: "CSV"
       show_table: "טבלה"
       show_graph: "תרשים"
-      others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד בעת ניווט למקום אחר."
-      run_time: "השאילתה הושלמה תוך %{value} מילישניות"
+      others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד עקב ניווט למקום אחר."
+      run_time: "השאילתה הושלמה תוך %{value} מילישניות."
       result_count:
         one: "תוצאה אחת."
         two: "2 תוצאות."
@@ -65,7 +65,7 @@ he:
       explain_label: "לכלול תכנית שאילתה?"
       save_params: "הגדרת בררות מחדל"
       reset_params: "איפוס"
-      search_placeholder: "חיפוש..."
-      no_search_results: "לא הצלחנו למצוא תוצאות שתואמות לטקסט שלך, עמך הסליחה."
+      search_placeholder: "חיפוש…"
+      no_search_results: "לא הצלחנו למצוא תוצאות שעונות לטקסט שלך, עמך הסליחה."
     group:
       reports: "דוחות"
