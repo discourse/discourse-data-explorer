@@ -13,9 +13,12 @@ export default Ember.Component.extend({
   init(args) {
     this.set("group", args.group);
     if (
-      (this.get("currentUser.groups") || []).some((g) => g.id === this.group.id)
+      (this.get("currentUser.groups") || []).some(
+        (g) => g.id === this.group.id
+      ) ||
+      this.get("currentUser.admin")
     ) {
-      // User is a part of the group. Now check if the group has reports
+      // User is a part of the group (or an admin). Now check if the group has reports
       this.checkForReports();
     }
 
