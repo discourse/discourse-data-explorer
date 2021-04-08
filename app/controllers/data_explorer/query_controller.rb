@@ -47,11 +47,7 @@ class DataExplorer::QueryController < ::ApplicationController
 
     respond_to do |format|
       format.json do
-        queries = DataExplorer::Query
-          .where(hidden: false)
-          .joins("INNER JOIN data_explorer_query_groups
-                    ON data_explorer_query_groups.query_id = data_explorer_queries.id
-                    AND data_explorer_query_groups.group_id = #{@group.id}")
+        queries = DataExplorer::Query.for_group(@group)
         render_serialized(queries, DataExplorer::QuerySerializer, root: 'queries')
       end
     end

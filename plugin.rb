@@ -60,6 +60,14 @@ after_initialize do
     return user_is_a_member_of_group?(group) && query.groups.exists?(id: group.id)
   end
 
+  add_to_serializer(:group_show, :has_visible_data_explorer_queries, false) do
+    DataExplorer::Query.for_group(object).exists?
+  end
+
+  add_to_serializer(:group_show, :include_has_visible_data_explorer_queries?, false) do
+    SiteSetting.data_explorer_enabled && scope.user_is_a_member_of_group?(object)
+  end
+
   module ::DataExplorer
     class Engine < ::Rails::Engine
       engine_name "data_explorer"
