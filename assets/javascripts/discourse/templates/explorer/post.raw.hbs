@@ -1,5 +1,5 @@
 {{#if post}}
-  <aside class="quote" data-post="{{post.post_number}}" data-topic="{{post.topic_id}}">
+  <aside class="quote" data-post={{post.post_number}} data-topic={{post.topic_id}}>
     <div class="title">
       <div class="quote-controls">
         <a href="/t/via-quote/{{post.topic_id}}/{{post.post_number}}"
@@ -13,7 +13,7 @@
     </div>
     <blockquote>
       <p>
-        {{{post.excerpt}}}
+        {{html-safe post.excerpt}}
       </p>
     </blockquote>
   </aside>

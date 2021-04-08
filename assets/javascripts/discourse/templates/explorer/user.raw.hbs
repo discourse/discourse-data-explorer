@@ -1,6 +1,7 @@
 {{#if user}}
-  <a href="{{baseuri}}/u/{{user.username}}/activity"
-     data-user-card="{{user.username}}">{{avatar user imageSize="tiny"}} {{user.username}}</a>
+  <a href="{{baseuri}}/u/{{user.username}}/activity" data-user-card={{user.username}}>
+    {{avatar user imageSize="tiny"}} {{user.username}}
+  </a>
 {{else}}
   {{id}}
 {{/if}}

@@ -30,7 +30,7 @@
           {{#if selectedItem}}
             {{#if editing}}
               <div class="name">
-                  {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
+                {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
                 <div class="name-text-field">
                   {{text-field value=selectedItem.name}}
                 </div>
@@ -42,9 +42,10 @@
             {{else}}
               <div class="name">
                 {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
-                <h1>{{selectedItem.name}}
+                <h1>
+                  {{selectedItem.name}}
                   {{#unless editDisabled}}
-                    <a {{action "editName" class="edit-query-name"}}>{{d-icon "pencil-alt"}}</a>
+                    <a href {{action "editName" class="edit-query-name"}}>{{d-icon "pencil-alt"}}</a>
                   {{/unless}}
                 </h1>
               </div>
@@ -212,32 +213,32 @@
                       <medium>{{query.username}}</medium>
                     </a>
                   {{/if}}
-                </td>
-                <td class="query-group-names">
-                  {{#each query.group_names as |group|}}
-                    {{share-report group=group query=query}}
-                  {{/each}}
-                </td>
-                <td class="query-created-at">
-                  {{#if query.last_run_at}}
-                    <medium>
-                      {{bound-date query.last_run_at}}
-                    </medium>
-                  {{else if query.created_at}}
-                    <medium>
-                      {{bound-date query.created_at}}
-                    </medium>
-                  {{/if}}
-                </td>
-              </tr>
-            {{else}}
-              <br>
-              <em class="no-search-results"> {{i18n "explorer.no_search_results"}}</em>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-    {{/if}}
+                  </td>
+                  <td class="query-group-names">
+                    {{#each query.group_names as |group|}}
+                      {{share-report group=group query=query}}
+                    {{/each}}
+                  </td>
+                  <td class="query-created-at">
+                    {{#if query.last_run_at}}
+                      <medium>
+                        {{bound-date query.last_run_at}}
+                      </medium>
+                    {{else if query.created_at}}
+                      <medium>
+                        {{bound-date query.created_at}}
+                      </medium>
+                    {{/if}}
+                  </td>
+                </tr>
+              {{else}}
+                <br>
+                <em class="no-search-results"> {{i18n "explorer.no_search_results"}}</em>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/if}}
 
       <div class="explorer-pad-bottom"></div>
 

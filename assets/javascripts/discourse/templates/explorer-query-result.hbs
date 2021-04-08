@@ -37,19 +37,19 @@
     {{else}}
       <table>
         <thead>
-        <tr class="headers">
-          {{#each columnDispNames as |col|}}
-            <th>{{col}}</th>
-          {{/each}}
-        </tr>
+          <tr class="headers">
+            {{#each columnDispNames as |col|}}
+              <th>{{col}}</th>
+            {{/each}}
+          </tr>
         </thead>
         <tbody>
-        {{#each rows as |row|}}
-          {{query-row-content
-            row=row
-            fallbackTemplate=fallbackTemplate
-            columnTemplates=columnTemplates}}
-        {{/each}}
+          {{#each rows as |row|}}
+            {{query-row-content
+              row=row
+              fallbackTemplate=fallbackTemplate
+              columnTemplates=columnTemplates}}
+          {{/each}}
         </tbody>
       </table>
     {{/if}}

@@ -1,4 +1,4 @@
-<div class="{{if hideSchema "hidden"}}">
+<div class={{if hideSchema "hidden"}}>
   {{text-field value=filter placeholderKey="explorer.schema.filter"}}
   {{d-button action=(action "collapseSchema") icon="chevron-right" class="no-text"}}
   {{conditional-loading-spinner condition=loading}}
