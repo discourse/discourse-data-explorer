@@ -16,30 +16,30 @@ en:
         modal: "Import A Query"
       help:
         label: "Help"
-        modal:
-          title: "Data Explorer Beginner's Guide: Query Creation"
-          custom_params:
-            title: "Creating Custom Parameters"
-            body: "To create custom parameters for your queries, put this at the top of your query and follow the format:"
-            code: "-- [params]\n-- int :num = 1\n\nSELECT :num"
-            body2: "Note: the first line with [params] is required, along with two dashes preceding it and every custom parameter you want to declare."
-            body3: "You can declare parameters with or without default values. Default values will show up in a text field below the query editor, which you can edit to your needs. Parameters declared without default values will still generate a text field, but will be empty and highlighted red."
-            code2: "-- [params]\n-- text :username = my_username\n-- int :age"
-          query_data_types:
-            title: "Query Data Types"
-            body: "Here are common data types used in data explorer:"
+        modal_title: "Data Explorer Help"
+        custom_params:
+          title: "Creating Custom Parameters"
+          description: "To create custom parameters for your queries, put this at the top of your query and follow the format:"
+          code: "-- [params]\n-- int :num = 1\n\nSELECT :num"
+          note: "Note: the first line with [params] is required, along with two dashes preceding it and every custom parameter you want to declare."
+          default_values:
+            title: "Default Values"
+            description: "You can declare parameters with or without default values. Default values will show up in a text field below the query editor, which you can edit to your needs. Parameters declared without default values will still generate a text field, but will be empty and highlighted red."
+            code: "-- [params]\n-- text :username = my_username\n-- int :age"
+          data_types:
+            title: "Data Types"
+            description: "Here are common data types you can use:"
             table:
               header:
-                col1: "Name"
-                col2: "Aliases"
-                col3: "Type"
-                col4: "Description"
-            body2: "For more information on data types, visit this website: "
+                name: "Name"
+                aliases: "Aliases"
+                description: "Description"
+            more: "For more information on data types, visit this website: "
       schema:
         title: "Database Schema"
         filter: "Search..."
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Types</a>"
+        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Data Types</a>"
       types:
         bool:
           yes: "Yes"
