@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "eslint-config-discourse": "^1.1.8"
+  },
+  "devDependencies": {
+    "@arkweid/lefthook": "^0.7.2"
   }
 }
