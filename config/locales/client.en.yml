@@ -17,6 +17,13 @@ en:
       help:
         label: "Help"
         modal_title: "Data Explorer Help"
+        auto_resolution:
+          title: "Automatic Entity Resolution"
+          description: "When your query returns an entity id, Data Explorer may automatically substitute it with
+          the entity name and other useful information in query results. Automatic resolution is available for
+          <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i>
+          and <i><b>badge_id</b></i>. To try this out run this query:"
+          code: "SELECT user_id\nFROM posts"
         custom_params:
           title: "Creating Custom Parameters"
           description: "To create custom parameters for your queries, put this at the top of your query and follow the format:"
