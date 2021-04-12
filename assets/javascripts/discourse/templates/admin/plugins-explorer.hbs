@@ -74,9 +74,6 @@
                 {{/if}}
               </div>
             </div>
-            <div class="pull-right">
-              {{d-button action=(action "showHelpModal") label="explorer.help.label" icon="question-circle"}}
-            </div>
             <div class="clear"></div>
 
             {{! the SQL editor will show the first time you }}
@@ -117,6 +114,7 @@
                 {{/unless}}
               {{/if}}
               {{d-button action=(action "download") label="explorer.export" disabled=runDisabled icon="download"}}
+              {{d-button action=(action "showHelpModal") label="explorer.help.label" icon="question-circle"}}
             </div>
             <div class="pull-right">
               {{#if selectedItem.destroyed}}
