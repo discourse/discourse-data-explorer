@@ -114,7 +114,9 @@
                 {{/unless}}
               {{/if}}
               {{d-button action=(action "download") label="explorer.export" disabled=runDisabled icon="download"}}
-              {{d-button action=(action "showHelpModal") label="explorer.help.label" icon="question-circle"}}
+              {{#if everEditing}}
+                {{d-button action=(action "showHelpModal") label="explorer.help.label" icon="question-circle"}}
+              {{/if}}
             </div>
             <div class="pull-right">
               {{#if selectedItem.destroyed}}
