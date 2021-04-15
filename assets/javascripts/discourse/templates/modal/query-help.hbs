@@ -1,50 +1,6 @@
 {{#d-modal-body title="explorer.help.modal_title"}}
-  <h2>{{i18n "explorer.help.auto_resolution.title"}}</h2>
-  <p>{{html-safe (i18n "explorer.help.auto_resolution.description")}}</p>
-  <pre><code class="sql">{{html-safe (i18n "explorer.help.auto_resolution.code")}}</code></pre>
-  <h2>{{i18n "explorer.help.custom_params.title"}}</h2>
-  <p>{{i18n "explorer.help.custom_params.description"}}</p>
-  <pre><code class="sql">{{html-safe (i18n "explorer.help.custom_params.code")}}</code></pre>
-  <p><i>{{i18n "explorer.help.custom_params.note"}}</i></p>
-
-  <h3>{{i18n "explorer.help.custom_params.default_values.title"}}</h3>
-  <p>{{i18n "explorer.help.custom_params.default_values.description"}}</p>
-  <pre><code class="sql">{{html-safe (i18n "explorer.help.custom_params.default_values.code")}}</code></pre>
-  <hr>
-
-  <h3>{{i18n "explorer.help.custom_params.data_types.title"}}</h3>
-  <p>{{i18n "explorer.help.custom_params.data_types.description"}}</p>
-  <table class="topic-list">
-    <thead>
-      <th>{{i18n "explorer.help.custom_params.data_types.table.header.name"}}</th>
-      <th>{{i18n "explorer.help.custom_params.data_types.table.header.aliases"}}</th>
-      <th>{{i18n "explorer.help.custom_params.data_types.table.header.description"}}</th>
-    </thead>
-    <tbody>
-      <tr>
-        <td>integer</td>
-        <td>int, int4</td>
-        <td>signed four-byte Integer</td>
-      </tr>
-      <tr>
-        <td>text</td>
-        <td></td>
-        <td>variable-length character string</td>
-      </tr>
-      <tr>
-        <td>boolean</td>
-        <td>bool</td>
-        <td>logical Boolean (true/false)</td>
-      </tr>
-      <tr>
-        <td>date</td>
-        <td></td>
-        <td>calendar date (year, month, day)</td>
-      </tr>
-    </tbody>
-  </table>
-  <p>
-    {{i18n "explorer.help.custom_params.data_types.more"}}
-    {{html-safe (i18n "explorer.schema.type_help")}}.
-  </p>
+  {{html-safe (i18n "explorer.help.auto_resolution")}}
+  {{html-safe (i18n "explorer.help.custom_params")}}
+  {{html-safe (i18n "explorer.help.default_values")}}
+  {{html-safe (i18n "explorer.help.data_types")}}
 {{/d-modal-body}}
