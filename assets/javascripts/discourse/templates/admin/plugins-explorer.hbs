@@ -53,25 +53,29 @@
               </div>
             {{/if}}
 
-            <div class="groups">
-              <span class="label">{{i18n "explorer.allow_groups"}}</span>
-              <span>
-                {{multi-select
-                  value=selectedItem.group_ids
-                  content=groupOptions
-                  allowAny=false
-                  onSelect=(action (mut selectedItem.group_ids))
-                }}
-              </span>
-              {{#if runDisabled}}
-                {{#unless editing}}
-                <span class='setting-controls'>
-                  {{d-button class="ok" action=(action "save") icon="check"}}
-                  {{d-button class="cancel" action=(action "discard") icon="times"}}
+            <div class="pull-left">
+              <div class="groups">
+                <span class="label">{{i18n "explorer.allow_groups"}}</span>
+                <span>
+                  {{multi-select
+                    value=selectedItem.group_ids
+                    content=groupOptions
+                    allowAny=false
+                    onSelect=(action (mut selectedItem.group_ids))
+                  }}
                 </span>
-              {{/unless}}
-              {{/if}}
+                {{#if runDisabled}}
+                  {{#unless editing}}
+                  <span class='setting-controls'>
+                    {{d-button class="ok" action=(action "save") icon="check"}}
+                    {{d-button class="cancel" action=(action "discard") icon="times"}}
+                  </span>
+                {{/unless}}
+                {{/if}}
+              </div>
             </div>
+            <div class="clear"></div>
+
             {{! the SQL editor will show the first time you }}
             {{#if everEditing}}
               <div class="query-editor {{if hideSchema "no-schema"}}">
@@ -110,6 +114,9 @@
                 {{/unless}}
               {{/if}}
               {{d-button action=(action "download") label="explorer.export" disabled=runDisabled icon="download"}}
+              {{#if everEditing}}
+                {{d-button action=(action "showHelpModal") label="explorer.help.label" icon="question-circle"}}
+              {{/if}}
             </div>
             <div class="pull-right">
               {{#if selectedItem.destroyed}}

@@ -14,11 +14,39 @@ en:
       import:
         label: "Import"
         modal: "Import A Query"
+      help:
+        label: "Help"
+        modal_title: "Data Explorer Help"
+        auto_resolution: "<h2>Automatic Entity Resolution</h2>
+          <p>When your query returns an entity id, Data Explorer may automatically substitute it with
+          the entity name and other useful information in query results. Automatic resolution is available for
+          <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i>
+          and <i><b>badge_id</b></i>. To try this out run this query:</p>
+          <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Creating Custom Parameters</h2>
+          <p>To create custom parameters for your queries, put this at the top of your query and follow the format:</p>
+          <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre>
+          <p><i>Note: the first line with [params] is required, along with two dashes preceding it and every
+          custom parameter you want to declare.</i></p>"
+        default_values: "<h3>Default Values</h3>
+          <p>You can declare parameters with or without default values. Default values will show up in a text field
+          below the query editor, which you can edit to your needs. Parameters declared without default values will
+          still generate a text field, but will be empty and highlighted red.</p>
+          <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Data Types</h3>
+          <p>Here are common data types you can use:</p>
+          <ul>
+            <li><b>integer</b> - signed four-byte Integer</li>
+            <li><b>text</b> - variable-length character string</li>
+            <li><b>boolean</b> – true/false</li>
+            <li><b>date</b> - calendar date (year, month, day)</li>
+          </ul>
+          <p>For more information on data types, visit
+          <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>this website</a>.</p>"
       schema:
         title: "Database Schema"
         filter: "Search..."
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Types</a>"
       types:
         bool:
           yes: "Yes"
