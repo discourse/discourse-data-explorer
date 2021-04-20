@@ -24,7 +24,6 @@ de:
         title: "Datenbank-Schema"
         filter: "Suchen..."
         sensitive: "Die Inhalte dieser Spalte enthalten möglicherweise besonders sensible oder persönliche Informationen. Bitte gehe behutsam mit den Inhalten dieser Spalte um."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Typen</a>"
       types:
         bool:
           yes: "Ja"

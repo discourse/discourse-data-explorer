@@ -20,11 +20,14 @@ pl_PL:
       import:
         label: "Import"
         modal: "Importuj zapytanie"
+      help:
+        label: "Pomoc"
+        modal_title: "Pomoc eksploratora danych"
+        data_types: "<h3>Typy danych</h3> <p>Tutaj są powszechnie używane typy danych, których możesz użyć:</p> <ul> <li><b>liczba całkowita</b> - podpisane czterobajtowe liczby całkowite</li> <li><b>tekst</b> - ciąg znaków o zmiennej długości</li> <li><b>liczba logiczna</b> - prawda/fałsz</li> <li><b>data</b> - data kalendarzowa (rok, miesiąc, dzień)</li> </ul> <p>Aby uzyskać więcej informacji na temat typów danych, odwiedź <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>tę stronę</a></p>"
       schema:
         title: "Schemat bazy danych"
         filter: "Wyszukiwanie..."
         sensitive: "Zawartość tej kolumny może zawierać szczególnie wrażliwe lub prywatne dane. Prosimy o zachowanie ostrożności przy używaniu tych danych."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Typy</a>"
       types:
         bool:
           yes: "Tak"

@@ -23,7 +23,6 @@ ca:
         title: "Esquema de base de dades"
         filter: "Cerca..."
         sensitive: "El contingut d'aquesta columna pot contenir informació particularment sensible o privada. Tingueu precaució quan utilitzeu el contingut d'aquesta columna."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipus</a>"
       types:
         bool:
           yes: "Sí"

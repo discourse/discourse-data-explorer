@@ -23,7 +23,6 @@ fi:
         title: "Tietokantakaava"
         filter: "Hae..."
         sensitive: "Tämän sarakkeen sisältö voi sisältää erityisen arkaluontoista tai yksityistä tietoa. Noudata erityistä harkintaa kun käytät sarakkeen sisältämää tietoa."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tyypit</a>"
       types:
         bool:
           yes: "Kyllä"

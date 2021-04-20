@@ -24,7 +24,6 @@ fr:
         title: "Schéma de base de données"
         filter: "Rechercher…"
         sensitive: "Le contenu de cette colonne peut contenir des informations particulièrement sensibles ou privées. Veuillez faire preuve de prudence lorsque vous utilisez le contenu de cette colonne."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Types</a>"
       types:
         bool:
           yes: "Oui"
