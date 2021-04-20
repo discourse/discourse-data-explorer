@@ -24,7 +24,6 @@ tr_TR:
         title: "Veritabanı Şeması"
         filter: "Ara..."
         sensitive: "Bu sütunun içeriği hassas veya özel bilgiler içerebilir. Lütfen bu sütunun içeriğini kullanırken dikkatli olun."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Türleri</a>"
       types:
         bool:
           yes: "Evet"

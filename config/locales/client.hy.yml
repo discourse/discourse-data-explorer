@@ -23,7 +23,6 @@ hy:
         title: "Տվյալների Բազայի Սխեմա"
         filter: "Որոնում..."
         sensitive: "Այս սյունակը կարող է պարունակել մասնակի անձնական կամ անձնական տեղեկություններ: Խնդրում ենք ուշադիր լինել այս սյունակի բովանդակությունն օգտագործելիս:"
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Տիպեր</a>"
       types:
         bool:
           yes: "Այո"

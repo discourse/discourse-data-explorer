@@ -24,7 +24,6 @@ sl:
         title: "Shema zbirke podatkov"
         filter: "Išči..."
         sensitive: "Vsebina tega stolpca lahko vsebuje posebno občutljive ali zasebne podatke. Pri uporabi vsebine tega stolpca bodite previdni."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipi</a>"
       types:
         bool:
           yes: "Da"

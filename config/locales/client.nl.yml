@@ -24,7 +24,6 @@ nl:
         title: "Databaseschema"
         filter: "Zoeken..."
         sensitive: "De inhoud van deze kolom kan bijzonder gevoelige of privégegevens bevatten. Wees voorzichtig bij het gebruiken van de inhoud van deze kolom."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Typen</a>"
       types:
         bool:
           yes: "Ja"

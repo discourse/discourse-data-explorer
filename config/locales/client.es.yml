@@ -24,7 +24,6 @@ es:
         title: "Esquema de base de datos"
         filter: "Buscar..."
         sensitive: "Los contenidos de esta parte pueden incluir información particularmente sensible o privada. Por favor, ten cuidado cuando utilices estos contenidos."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>Tipos</a>"
       types:
         bool:
           yes: "Sí"

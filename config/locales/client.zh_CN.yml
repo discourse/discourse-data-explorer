@@ -24,7 +24,6 @@ zh_CN:
         title: "数据库结构"
         filter: "搜索"
         sensitive: "此列的内容可能含有敏感的或隐私的信息。请谨慎使用此列的内容。"
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>类型</a>"
       types:
         bool:
           yes: "是"

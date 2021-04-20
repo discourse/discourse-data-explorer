@@ -20,11 +20,13 @@ he:
       import:
         label: "ייבוא"
         modal: "ייבוא שאילתה"
+      help:
+        label: "עזרה"
+        modal_title: "עזרה עם דפדפן הנתונים"
       schema:
         title: "סכמת מסד הנתונים"
         filter: "חיפוש…"
         sensitive: "תכני העמודה הזו עשויים להכיל מידע רגיש או פרטי. נא לנקוט במשנה זהירות בעת השימוש בעמודה זו."
-        type_help: "<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>סוגים</a>"
       types:
         bool:
           yes: "כן"
