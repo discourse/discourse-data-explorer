@@ -8,10 +8,10 @@ de:
   js:
     errors:
       explorer:
-        no_semicolons: "Entfernt die Semikolons aus der Anfrage."
+        no_semicolons: "Entferne die Semikolons aus der Anfrage."
         dirty: "Du musst die Anfrage speicher, bevor du sie startest."
     explorer:
-      admins_only: "Dieser Daten-Explorer ist nur für Administratoren verfügbar."
+      admins_only: "Der Daten-Explorer ist nur für Administratoren verfügbar."
       allow_groups: "Gruppen erlauben, auf diese Abfrage zuzugreifen"
       title: "Daten-Explorer"
       create: "Neu erstellen"
@@ -20,6 +20,13 @@ de:
       import:
         label: "Importieren"
         modal: "Anfrage importieren"
+      help:
+        label: "Hilfe"
+        modal_title: "Data Explorer Hilfe"
+        auto_resolution: "<h2>Automatische Entitätsauflösung</h2> <p>Wenn Ihre Anfrage eine Entitäts-Id zurückgibt, kann der Data Explorer diese automatisch durch den Entitätsnamen und andere nützliche Informationen in den Abfrageergebnissen ersetzen. Automatische Auflösung ist Verfügbar für <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> und <i><b>badge_id</b></i>. Um dies auszuprobieren, führen Sie diese Abfrage aus:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Benutzerdefinierte Parameter erstellen</h2> <p>Um benutzerdefinierte Parameter für deine Abfragen zu erstellen, setze diese an den Anfang der Abfrage und folge diesem Format:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Hinweis: Die erste Zeile mit [params] ist erforderlich, zusammen mit zwei vorangestellten Bindestrichen und allen benutzerdefinierten Parametern, die du deklarieren möchtest.</i></p>"
+        default_values: "<h3>Standardwerte</h3> <p>Sie können Parameter mit oder ohne Standardwerte deklarieren. Standardwerte werden in einem Textfeld unterhalb des Abfrage-Editors angezeigt, das Sie nach Ihren Bedürfnissen bearbeiten können. Parameter, die ohne Standardwerte deklariert wurden, erzeugen auch ein Textfeld, sind jedoch leer und rot hervorgehoben.</p> <pre><code>— [params]\n— text:username = mein_Benutzername\n— int:age</code></pre>"
+        data_types: "<h3>Datentypen</h3> <p>Hier sind gängige Datentypen, die du verwenden kannst:</p> <ul> <li><b>Ganzzahl (integer)</b> - Vorzeichenbehaftete Vier-Byte-Ganzzahl</li> <li><b>Text</b> - Zeichenkette variabler Länge</li> <li><b>Boolean</b> – Wahr/Falsch</li> <li><b>Datum</b> - Kalenderdatum (Jahr, Monat, Tag)</li> </ul> <p>Weitere Informationen zu Datentypen findest du auf <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>dieser Website</a>.</p>"
       schema:
         title: "Datenbank-Schema"
         filter: "Suchen..."
@@ -31,8 +38,8 @@ de:
           null_: "Null"
       export: "Exportieren"
       save: "Änderungen speichern"
-      saverun: "Änderungen speichern und los"
-      run: "los"
+      saverun: "Änderungen speichern und ausführen"
+      run: "Ausführen"
       undo: "Änderungen verwerfen"
       edit: "Bearbeiten"
       delete: "Löschen"
@@ -41,7 +48,7 @@ de:
       download_csv: "CSV"
       show_table: "Tabelle"
       show_graph: "Diagramm"
-      others_dirty: "Eine Anfrage hat ungespeicherte Änderungen, die verloren gehen, wenn du woanders hingehst."
+      others_dirty: "Eine Anfrage hat ungespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Abfrage in %{value} ms abgeschlossen."
       result_count:
         one: "%{count} Ergebnis."
@@ -49,7 +56,7 @@ de:
       max_result_count:
         one: "Zeige die ersten %{count} Ergebnisse."
         other: "Zeige die ersten %{count} Ergebnisse."
-      query_name: "Anfrage"
+      query_name: "Abfrage"
       query_groups: "Gruppen"
       link: "Link für"
       report_name: "Bericht"
@@ -57,10 +64,10 @@ de:
       query_time: "Letzter Lauf"
       query_user: "Erstellt von"
       column: "Spalte %{number}"
-      explain_label: "Anfrageplan beinhalten?"
+      explain_label: "Abfrageplan einbeziehen?"
       save_params: "Standard festlegen"
       reset_params: "Zurücksetzen"
-      search_placeholder: "Suche…"
-      no_search_results: "Sorry, wir konnten keine Ergebnisse finden, die deinem Text entsprechen."
+      search_placeholder: "Suchen…"
+      no_search_results: "Leider konnten wir keine Ergebnisse finden, die deinem Text entsprechen."
     group:
       reports: "Berichte"
