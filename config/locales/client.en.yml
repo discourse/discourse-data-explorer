@@ -1,5 +1,7 @@
 en:
   js:
+    name: "Name"
+    last_run_at: "Last ran"
     errors:
       explorer:
         no_semicolons: "Remove the semicolons from the query."
