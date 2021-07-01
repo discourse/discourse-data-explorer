@@ -5,6 +5,7 @@ en:
         no_semicolons: "Remove the semicolons from the query."
         dirty: "You must save the query before running."
     explorer:
+      or: "or"
       admins_only: "The data explorer is only available to admins."
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
