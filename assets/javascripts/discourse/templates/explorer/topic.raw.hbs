@@ -1,6 +1,8 @@
 {{#if topic}}
-  <a href="{{baseuri}}/t/{{topic.slug}}/{{topic.id}}"
-          >{{{topic.fancy_title}}}</a> ({{topic.posts_count}})
+  <a href="{{baseuri}}/t/{{topic.slug}}/{{topic.id}}">
+    {{html-safe topic.fancy_title}}
+  </a>
+  ({{topic.posts_count}})
 {{else}}
   <a href="{{baseuri}}/t/{{id}}">{{id}}</a>
 {{/if}}
