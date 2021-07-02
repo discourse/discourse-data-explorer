@@ -1,11 +1,1 @@
-.bundle/
-log/*.log
-pkg/
-auto_generated
-.DS_Store
-*.swp
-*.swo
-node_modules/
-.idea/node_modules
-yarn-error.log
-.rubocop-https---raw-githubusercontent-com-discourse-*
+node_modules

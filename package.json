@@ -1,8 +1,11 @@
 {
-  "dependencies": {
-    "eslint-config-discourse": "^1.1.8"
-  },
+  "name": "discourse-data-explorer",
+  "version": "0.3.0",
+  "repository": "git@github.com:discourse/discourse-data-explorer.git",
+  "author": "Riking",
+  "license": "MIT",
   "devDependencies": {
-    "@arkweid/lefthook": "^0.7.2"
+    "@arkweid/lefthook": "^0.7.2",
+    "eslint-config-discourse": "^1.1.8"
   }
 }
