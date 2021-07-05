@@ -1,8 +1,8 @@
 import {
   acceptance,
+  count,
   exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import I18n from "I18n";
@@ -162,8 +162,9 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
       "the import button was rendered"
     );
 
-    assert.ok(
-      queryAll("div.container table.recent-queries tbody tr").length === 2,
+    assert.equal(
+      count("div.container table.recent-queries tbody tr"),
+      3,
       "the list of queries was rendered"
     );
 
