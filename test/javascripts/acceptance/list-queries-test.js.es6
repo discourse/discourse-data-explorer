@@ -164,7 +164,7 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
 
     assert.equal(
       count("div.container table.recent-queries tbody tr"),
-      3,
+      2,
       "the list of queries was rendered"
     );
 
