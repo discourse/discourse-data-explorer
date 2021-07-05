@@ -1,7 +1,8 @@
-<div onclick={{action "open"}}>
+<div role="button" onclick={{action "open"}}>
   {{d-icon "link"}}
   {{group}}
 </div>
+
 {{#if visible}}
   <div class="popup">
     <label>{{i18n "explorer.link"}} {{group}}</label>
