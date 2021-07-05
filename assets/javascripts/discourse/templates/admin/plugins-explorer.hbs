@@ -67,14 +67,15 @@
                 </span>
                 {{#if runDisabled}}
                   {{#unless editing}}
-                  <span class='setting-controls'>
-                    {{d-button class="ok" action=(action "save") icon="check"}}
-                    {{d-button class="cancel" action=(action "discard") icon="times"}}
-                  </span>
-                {{/unless}}
+                    <span class="setting-controls">
+                      {{d-button class="ok" action=(action "save") icon="check"}}
+                      {{d-button class="cancel" action=(action "discard") icon="times"}}
+                    </span>
+                  {{/unless}}
                 {{/if}}
               </div>
             </div>
+
             <div class="clear"></div>
 
             {{! the SQL editor will show the first time you }}
@@ -93,9 +94,11 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="grippie">
                   {{d-icon "discourse-expand"}}
                 </div>
+
                 <div class="clear"></div>
               </div>
             {{else}}
@@ -119,6 +122,7 @@
                 {{d-button action=(action "showHelpModal") label="explorer.help.label" icon="question-circle"}}
               {{/if}}
             </div>
+
             <div class="pull-right">
               {{#if selectedItem.destroyed}}
                 {{d-button action=(action "recover") class="" icon="undo" label="explorer.recover"}}
@@ -131,6 +135,7 @@
                 {{/unless}}
               {{/if}}
             </div>
+
             <div class="clear"></div>
           {{/if}}
         </div>
@@ -143,6 +148,7 @@
               {{/each}}
             </div>
           {{/if}}
+
           {{#if runDisabled}}
             {{#if saveDisabled}}
               {{d-button label="explorer.run" disabled="true" class="btn-primary"}}
@@ -152,12 +158,15 @@
           {{else}}
             {{d-button action=(action "run") icon="play" label="explorer.run" disabled=runDisabled class="btn-primary" type="submit"}}
           {{/if}}
+
           <label class="query-plan">{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
         </form>
 
         <hr>
       {{/unless}}
+
       {{conditional-loading-spinner condition=loading}}
+
       {{#unless selectedItem.fake}}
         {{#if results}}
           <div class="query-results">
@@ -172,47 +181,47 @@
         {{/if}}
       {{/unless}}
 
-    {{#if showRecentQueries}}
-      <div class="container">
-        <table class="recent-queries">
-          <thead class="heading-container">
-            <th class="col heading name">
-              <div class="heading-toggle" {{action "sortByProperty" "name"}}>
-                {{table-header-toggle field="name" labelKey="explorer.query_name" order=order asc=asc automatic=true}}
-              </div>
-            </th>
-            <th class="col heading created-by">
-              <div class="heading-toggle" {{action "sortByProperty" "username"}}>
-                {{table-header-toggle field="username" labelKey="explorer.query_user" order=order asc=asc automatic=true}}
-              </div>
-            </th>
-            <th class='col heading group-names'>
-              <div class='group-names-header'>
-                {{i18n "explorer.query_groups"}}
-              </div>
-            </th>
-            <th class="col heading created-at">
-              <div class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
-                {{table-header-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc automatic=true}}
-              </div>
-            </th>
-          </thead>
-          <tr></tr>
-          <tbody>
-            {{#each filteredContent as |query|}}
-              <tr class="query-row">
-                <td>
-                  <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
-                    <b class="query-name">{{query.name}}</b>
-                    <medium class="query-desc">{{query.description}}</medium>
-                  </a>
-                </td>
-                <td class="query-created-by">
-                  {{#if query.username}}
-                    <a href="/u/{{query.username}}/activity">
-                      <medium>{{query.username}}</medium>
+      {{#if showRecentQueries}}
+        <div class="container">
+          <table class="recent-queries">
+            <thead class="heading-container">
+              <th class="col heading name">
+                <div role="button" class="heading-toggle" {{action "sortByProperty" "name"}}>
+                  {{table-header-toggle field="name" labelKey="explorer.query_name" order=order asc=asc automatic=true}}
+                </div>
+              </th>
+              <th class="col heading created-by">
+                <div role="button" class="heading-toggle" {{action "sortByProperty" "username"}}>
+                  {{table-header-toggle field="username" labelKey="explorer.query_user" order=order asc=asc automatic=true}}
+                </div>
+              </th>
+              <th class="col heading group-names">
+                <div class="group-names-header">
+                  {{i18n "explorer.query_groups"}}
+                </div>
+              </th>
+              <th class="col heading created-at">
+                <div role="button" class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
+                  {{table-header-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc automatic=true}}
+                </div>
+              </th>
+            </thead>
+            <tbody>
+              <tr></tr>
+              {{#each filteredContent as |query|}}
+                <tr class="query-row">
+                  <td>
+                    <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                      <b class="query-name">{{query.name}}</b>
+                      <medium class="query-desc">{{query.description}}</medium>
                     </a>
-                  {{/if}}
+                  </td>
+                  <td class="query-created-by">
+                    {{#if query.username}}
+                      <a href="/u/{{query.username}}/activity">
+                        <medium>{{query.username}}</medium>
+                      </a>
+                    {{/if}}
                   </td>
                   <td class="query-group-names">
                     {{#each query.group_names as |group|}}
@@ -241,7 +250,6 @@
       {{/if}}
 
       <div class="explorer-pad-bottom"></div>
-
     {{/if}}
   {{/if}}
 {{/explorer-container}}
