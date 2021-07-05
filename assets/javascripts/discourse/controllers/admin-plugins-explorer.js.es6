@@ -30,6 +30,16 @@ export default Ember.Controller.extend({
   sortBy: ["last_run_at:desc"],
   sortedQueries: Ember.computed.sort("model", "sortBy"),
 
+  @computed
+  acceptedImportFileTypes() {
+    return [
+      ".json",
+      "application/json",
+      "application/x-javascript",
+      "text/json",
+    ];
+  },
+
   @computed("search", "sortBy")
   filteredContent(search) {
     const regexp = new RegExp(search, "i");
@@ -117,6 +127,30 @@ export default Ember.Controller.extend({
       .finally(() => this.set("loading", false));
   },
 
+  _readQueryFile(file) {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      this._importQuery(evt.target.result);
+    };
+
+    reader.readAsText(file);
+  },
+
+  _importQuery(file) {
+    const query = JSON.parse(file).query;
+    query.id = 0; // 0 means no Id yet
+
+    this.set("loading", true);
+    this.store
+      .createRecord("query", query)
+      .save()
+      .then((q) => {
+        this.set("loading", false);
+        this.addCreatedRecord(q.target);
+      })
+      .catch(popupAjaxError);
+  },
+
   actions: {
     dummy() {},
 
@@ -124,9 +158,10 @@ export default Ember.Controller.extend({
       this.set("hideSchema", false);
     },
 
-    importQuery() {
-      showModal("import-query");
-      this.set("showCreate", false);
+    import(files) {
+      this.set("loading", true);
+      const file = files[0];
+      this._readQueryFile(file);
     },
 
     showCreate() {

@@ -315,6 +315,9 @@ table.group-reports {
   li.none {
     display: none;
   }
+  .import-btn {
+    display: flex;
+  }
 }
 
 .recent-queries {
@@ -421,3 +424,4 @@ table.group-reports {
     z-index: 1;
   }
 }
+
