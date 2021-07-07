@@ -36,7 +36,8 @@ export default Ember.Controller.extend({
       ".json",
       "application/json",
       "application/x-javascript",
-      "text/json"];
+      "text/json",
+    ];
   },
 
   @computed("search", "sortBy")
@@ -143,9 +144,9 @@ export default Ember.Controller.extend({
     this.store
       .createRecord("query", query)
       .save()
-      .then((query) => {
+      .then((q) => {
         this.set("loading", false);
-        this.addCreatedRecord(query.target);
+        this.addCreatedRecord(q.target);
       })
       .catch(popupAjaxError);
   },
