@@ -11,6 +11,7 @@ sv:
         no_semicolons: "Ta bort semikolon från sökningen."
         dirty: "Du måste spara sökningen innan du kör."
     explorer:
+      or: "eller"
       admins_only: "Datautforskaren är endast tillgänglig för administratörer."
       allow_groups: "Tillåt att grupper går till denna sökning"
       title: "Datautforskaren"
