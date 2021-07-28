@@ -10,7 +10,7 @@ import {
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
 export default Ember.Controller.extend({
-  queryParams: { selectedQueryId: "id" },
+  queryParams: { selectedQueryId: "id", params: "params" },
   selectedQueryId: null,
   editDisabled: false,
   showResults: false,
@@ -29,6 +29,11 @@ export default Ember.Controller.extend({
   showRecentQueries: true,
   sortBy: ["last_run_at:desc"],
   sortedQueries: Ember.computed.sort("model", "sortBy"),
+
+  @computed("params")
+  parsedParams(params) {
+    return params ? JSON.parse(params) : null;
+  },
 
   @computed("search", "sortBy")
   filteredContent(search) {
@@ -152,11 +157,13 @@ export default Ember.Controller.extend({
         order: null,
         showResults: false,
         editDisabled: false,
+        showRecentQueries: true,
         selectedQueryId: null,
+        params: null,
         sortBy: ["last_run_at:desc"],
       });
       this.send("refreshModel");
-      this.transitionToRoute("adminPlugins.explorer");
+      this.transitionToRoute("adminPlugins.explorer", { queryParams: { id: null, params: null }});
     },
 
     showHelpModal() {
@@ -249,7 +256,11 @@ export default Ember.Controller.extend({
         return;
       }
 
-      this.setProperties({ loading: true, showResults: false });
+      this.setProperties({ 
+        loading: true, 
+        showResults: false,
+        params: JSON.stringify(this.selectedItem.params)
+      });
       ajax(
         "/admin/plugins/explorer/queries/" +
           this.get("selectedItem.id") +
