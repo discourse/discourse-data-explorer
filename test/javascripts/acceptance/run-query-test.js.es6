@@ -193,10 +193,6 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     );
   });
 
-  function decodeQueryParam(p) {
-    return decodeURIComponent(p.replace(/\+/g, ' '));
-  }
-
   test("it puts params for the query into the url", async function (assert) {
     await visit("admin/plugins/explorer?id=-6");
     const monthsAgoValue = "2"
