@@ -155,8 +155,7 @@ export default Ember.Controller.extend({
         selectedQueryId: null,
         sortBy: ["last_run_at:desc"],
       });
-      this.send("refreshModel");
-      this.transitionToRoute("adminPlugins.explorer");
+      this.transitionToRoute({ queryParams: { id: null } });
     },
 
     showHelpModal() {
