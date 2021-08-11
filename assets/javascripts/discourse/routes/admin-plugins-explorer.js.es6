@@ -40,11 +40,4 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     controller.setProperties(model);
   },
-
-  actions: {
-    refreshModel() {
-      this.refresh();
-      return false;
-    },
-  },
 });
