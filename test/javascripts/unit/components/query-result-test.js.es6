@@ -1,11 +1,13 @@
-import {module, test} from "qunit";
-import {setupTest} from "ember-qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 
-module("Data Explorer Plugin | Unit | Component | query-result", function (hooks) {
+module(
+  "Data Explorer Plugin | Unit | Component | query-result",
+  function (hooks) {
     setupTest(hooks);
 
     test("it transforms data for a chart", function (assert) {
-      const component = this.owner.lookup('component:query-result');
+      const component = this.owner.lookup("component:query-result");
       component.content = {
         colrender: [],
         result_count: 2,
@@ -32,13 +34,13 @@ module("Data Explorer Plugin | Unit | Component | query-result", function (hooks
     });
 
     test("it uses descriptive chart labels instead of identifiers", function (assert) {
-      const component = this.owner.lookup('component:query-result');
+      const component = this.owner.lookup("component:query-result");
       component.content = {
-        colrender: {0: "user"},
+        colrender: { 0: "user" },
         relations: {
           user: [
-            {id: 1, username: "user1"},
-            {id: 2, username: "user2"},
+            { id: 1, username: "user1" },
+            { id: 2, username: "user2" },
           ],
         },
         result_count: 2,
@@ -53,13 +55,13 @@ module("Data Explorer Plugin | Unit | Component | query-result", function (hooks
     });
 
     test("it uses an identifier as a chart label if labelSelector doesn't exist", function (assert) {
-      const component = this.owner.lookup('component:query-result');
+      const component = this.owner.lookup("component:query-result");
       component.content = {
-        colrender: {0: "unknown_entity"},
+        colrender: { 0: "unknown_entity" },
         relations: {
           unknown_entity: [
-            {id: 1, username: "user1"},
-            {id: 2, username: "user2"},
+            { id: 1, username: "user1" },
+            { id: 2, username: "user2" },
           ],
         },
         result_count: 2,
@@ -74,7 +76,7 @@ module("Data Explorer Plugin | Unit | Component | query-result", function (hooks
     });
 
     test("it cuts too long chart labels", function (assert) {
-      const component = this.owner.lookup('component:query-result');
+      const component = this.owner.lookup("component:query-result");
       component.content = {
         colrender: [],
         result_count: 2,
