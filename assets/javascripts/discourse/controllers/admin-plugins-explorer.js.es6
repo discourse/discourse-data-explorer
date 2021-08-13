@@ -35,10 +35,7 @@ export default Ember.Controller.extend({
   @computed
   acceptedImportFileTypes() {
     return [
-      ".json",
       "application/json",
-      "application/x-javascript",
-      "text/json",
     ];
   },
 
