@@ -6,6 +6,8 @@ import {
   default as computed,
   observes,
 } from "discourse-common/utils/decorators";
+import I18n from "I18n";
+import { Promise } from "rsvp";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
@@ -127,28 +129,34 @@ export default Ember.Controller.extend({
       .finally(() => this.set("loading", false));
   },
 
-  _readQueryFile(file) {
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      this._importQuery(evt.target.result);
-    };
-
-    reader.readAsText(file);
+  async _importQuery(file) {
+    const json = await this._readFileAsTextAsync(file);
+    const query = await this._parseQuery(json);
+    const record = this.store.createRecord("query", query);
+    const response = await record.save();
+    return response.target;
   },
 
-  _importQuery(file) {
-    const query = JSON.parse(file).query;
+  async _parseQuery(json) {
+    const parsed = JSON.parse(json);
+    const query = parsed.query;
+    if (!query || !query.sql) {
+      throw new TypeError();
+    }
     query.id = 0; // 0 means no Id yet
+    return query;
+  },
 
-    this.set("loading", true);
-    this.store
-      .createRecord("query", query)
-      .save()
-      .then((q) => {
-        this.set("loading", false);
-        this.addCreatedRecord(q.target);
-      })
-      .catch(popupAjaxError);
+  _readFileAsTextAsync(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
   },
 
   actions: {
@@ -161,7 +169,22 @@ export default Ember.Controller.extend({
     import(files) {
       this.set("loading", true);
       const file = files[0];
-      this._readQueryFile(file);
+      this._importQuery(file)
+        .then((record) => this.addCreatedRecord(record))
+        .catch((e) => {
+          if (e.jqXHR) {
+            popupAjaxError(e);
+          } else if (e instanceof SyntaxError) {
+            bootbox.alert(I18n.t("js.explorer.import.unparseable_json"));
+          } else if (e instanceof TypeError) {
+            bootbox.alert(I18n.t("js.explorer.import.wrong_json"));
+          } else {
+            throw e;
+          }
+        })
+        .finally(() => {
+          this.set("loading", false);
+        });
     },
 
     showCreate() {
