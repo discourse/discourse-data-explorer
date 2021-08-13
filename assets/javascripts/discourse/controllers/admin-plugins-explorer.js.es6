@@ -34,9 +34,7 @@ export default Ember.Controller.extend({
 
   @computed
   acceptedImportFileTypes() {
-    return [
-      "application/json",
-    ];
+    return ["application/json"];
   },
 
   @computed("search", "sortBy")
