@@ -174,7 +174,7 @@ export default Ember.Controller.extend({
           } else if (e instanceof TypeError) {
             bootbox.alert(I18n.t("explorer.import.wrong_json"));
           } else {
-            bootbox.alert(I18n.t("errors.desc.unknown"))
+            bootbox.alert(I18n.t("errors.desc.unknown"));
             // eslint-disable-next-line no-console
             console.error(e);
           }
