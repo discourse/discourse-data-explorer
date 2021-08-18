@@ -170,9 +170,9 @@ export default Ember.Controller.extend({
           if (e.jqXHR) {
             popupAjaxError(e);
           } else if (e instanceof SyntaxError) {
-            bootbox.alert(I18n.t("js.explorer.import.unparseable_json"));
+            bootbox.alert(I18n.t("explorer.import.unparseable_json"));
           } else if (e instanceof TypeError) {
-            bootbox.alert(I18n.t("js.explorer.import.wrong_json"));
+            bootbox.alert(I18n.t("explorer.import.wrong_json"));
           } else {
             bootbox.alert(I18n.t("errors.desc.unknown"))
             // eslint-disable-next-line no-console

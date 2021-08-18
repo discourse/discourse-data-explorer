@@ -16,7 +16,7 @@ en:
         label: "Import"
         modal: "Import A Query"
         unparseable_json: "Unparseable json file."
-        wrong_json: "Wrong json file. The json file should contain an 'query' object, which should has at least 'sql' property."
+        wrong_json: "Wrong json file. A json file should contain an 'query' object, which should at least has a 'sql' property."
       help:
         label: "Help"
         modal_title: "Data Explorer Help"
