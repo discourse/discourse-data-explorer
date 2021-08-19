@@ -126,13 +126,13 @@ export default Ember.Controller.extend({
 
   async _importQuery(file) {
     const json = await this._readFileAsTextAsync(file);
-    const query = await this._parseQuery(json);
+    const query = this._parseQuery(json);
     const record = this.store.createRecord("query", query);
     const response = await record.save();
     return response.target;
   },
 
-  async _parseQuery(json) {
+  _parseQuery(json) {
     const parsed = JSON.parse(json);
     const query = parsed.query;
     if (!query || !query.sql) {
