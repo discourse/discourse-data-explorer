@@ -6,7 +6,12 @@
       <div class="query-list">
         {{text-field value=search placeholderKey="explorer.search_placeholder"}}
         {{d-button action=(action "showCreate") icon="plus" class="no-text btn-right"}}
-        {{d-button action=(action "importQuery") label="explorer.import.label" icon="upload"}}
+        {{pick-files-button
+          class="import-btn"
+          label="explorer.import.label"
+          icon="upload"
+          acceptedFileTypes=acceptedImportFileTypes
+          onFilesPicked=(action "import")}}
       </div>
 
       {{#if showCreate}}
