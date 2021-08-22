@@ -139,10 +139,7 @@ discourseModule(
           I18n.t("explorer.show_table"),
           "the chart button was changed to the table button"
         );
-        assert.ok(
-          exists("canvas.chartjs-render-monitor"),
-          "the chart was rendered"
-        );
+        assert.ok(exists("canvas"), "the chart was rendered");
 
         await click("div.result-info button:nth-child(3)");
         assert.equal(
