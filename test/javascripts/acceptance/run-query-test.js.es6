@@ -186,9 +186,6 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
 
     await click("div.result-info button:nth-child(3)");
 
-    assert.ok(
-      exists("canvas.chartjs-render-monitor"),
-      "the chart was rendered"
-    );
+    assert.ok(exists("canvas"), "the chart was rendered");
   });
 });

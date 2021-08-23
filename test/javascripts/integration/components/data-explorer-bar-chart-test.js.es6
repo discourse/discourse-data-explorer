@@ -20,10 +20,6 @@ discourseModule(
 
       async test(assert) {
         assert.ok(exists("canvas"), "it renders a canvas");
-        assert.ok(
-          exists("canvas.chartjs-render-monitor"),
-          "it initializes chart.js "
-        );
       },
     });
   }
