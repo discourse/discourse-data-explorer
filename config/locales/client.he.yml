@@ -21,6 +21,8 @@ he:
       import:
         label: "ייבוא"
         modal: "ייבוא שאילתה"
+        unparseable_json: "קובץ JSON שאינו ניתן לפענוח."
+        wrong_json: "קובץ JSON שגוי. קובץ JSON צריך להכיל רכיב ‚query’, שצריך לכלול לפחות מאפיין ‚sql’."
       help:
         label: "עזרה"
         modal_title: "עזרה עם דפדפן הנתונים"

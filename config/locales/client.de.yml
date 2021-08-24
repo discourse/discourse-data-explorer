@@ -11,6 +11,7 @@ de:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."
         dirty: "Du musst die Anfrage speicher, bevor du sie startest."
     explorer:
+      or: "oder"
       admins_only: "Der Daten-Explorer ist nur für Administratoren verfügbar."
       allow_groups: "Gruppen erlauben, auf diese Abfrage zuzugreifen"
       title: "Daten-Explorer"
@@ -20,6 +21,8 @@ de:
       import:
         label: "Importieren"
         modal: "Anfrage importieren"
+        unparseable_json: "Nicht parsbare JSON-Datei."
+        wrong_json: "Falsche JSON-Datei. Eine JSON-Datei sollte ein 'query'-Objekt enthalten, das mindestens eine 'sql'-Eigenschaft haben sollte."
       help:
         label: "Hilfe"
         modal_title: "Data Explorer Hilfe"
