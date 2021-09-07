@@ -6,4 +6,4 @@
 
 hu:
   site_settings:
-    data_explorer_enabled: "Data Explorer engedélyezése a /admin/plugins/explorer oldalon"
+    data_explorer_enabled: "Adatfelfedező engedélyezése az /admin/plugins/explorer oldalon"
