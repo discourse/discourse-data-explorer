@@ -192,12 +192,12 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
 
   test("it puts params for the query into the url", async function (assert) {
     await visit("admin/plugins/explorer?id=-6");
-    const monthsAgoValue = "2"
+    const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
 
-    let searchParams = new URLSearchParams(currentURL())
+    let searchParams = new URLSearchParams(currentURL());
     let paramsMonthsAgo = JSON.parse(searchParams.get("params")).months_ago;
     assert.equal(paramsMonthsAgo, monthsAgoValue);
-  })
+  });
 });

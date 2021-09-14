@@ -1,4 +1,3 @@
-import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "I18n";
 import { default as computed } from "discourse-common/utils/decorators";
 // import Category from 'discourse/models/category';
