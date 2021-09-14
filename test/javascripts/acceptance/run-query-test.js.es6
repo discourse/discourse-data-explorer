@@ -4,6 +4,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import I18n from "I18n";
 
@@ -187,5 +188,16 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     await click("div.result-info button:nth-child(3)");
 
     assert.ok(exists("canvas"), "the chart was rendered");
+  });
+
+  test("it puts params for the query into the url", async function (assert) {
+    await visit("admin/plugins/explorer?id=-6");
+    const monthsAgoValue = "2";
+    await fillIn(".query-params input", monthsAgoValue);
+    await click("form.query-run button");
+
+    let searchParams = new URLSearchParams(currentURL());
+    let paramsMonthsAgo = JSON.parse(searchParams.get("params")).months_ago;
+    assert.equal(paramsMonthsAgo, monthsAgoValue);
   });
 });

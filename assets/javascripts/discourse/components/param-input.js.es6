@@ -43,6 +43,15 @@ export default Ember.Component.extend({
     { name: I18n.t("explorer.types.bool.false"), id: "N" },
     { name: I18n.t("explorer.types.bool.null_"), id: "#null" },
   ],
+  initialValues: null,
+
+  init() {
+    this._super(...arguments);
+
+    if (this.initialValues && this.info.identifier in this.initialValues) {
+      this.set("value", this.initialValues[this.info.identifier]);
+    }
+  },
 
   value: Ember.computed("params", "info.identifier", {
     get() {
