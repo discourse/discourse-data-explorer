@@ -6,6 +6,8 @@ import {
   default as computed,
   observes,
 } from "discourse-common/utils/decorators";
+import I18n from "I18n";
+import { Promise } from "rsvp";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
@@ -33,6 +35,11 @@ export default Ember.Controller.extend({
   @computed("params")
   parsedParams(params) {
     return params ? JSON.parse(params) : null;
+  },
+
+  @computed
+  acceptedImportFileTypes() {
+    return ["application/json"];
   },
 
   @computed("search", "sortBy")
@@ -122,6 +129,36 @@ export default Ember.Controller.extend({
       .finally(() => this.set("loading", false));
   },
 
+  async _importQuery(file) {
+    const json = await this._readFileAsTextAsync(file);
+    const query = this._parseQuery(json);
+    const record = this.store.createRecord("query", query);
+    const response = await record.save();
+    return response.target;
+  },
+
+  _parseQuery(json) {
+    const parsed = JSON.parse(json);
+    const query = parsed.query;
+    if (!query || !query.sql) {
+      throw new TypeError();
+    }
+    query.id = 0; // 0 means no Id yet
+    return query;
+  },
+
+  _readFileAsTextAsync(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
+  },
+
   actions: {
     dummy() {},
 
@@ -129,9 +166,27 @@ export default Ember.Controller.extend({
       this.set("hideSchema", false);
     },
 
-    importQuery() {
-      showModal("import-query");
-      this.set("showCreate", false);
+    import(files) {
+      this.set("loading", true);
+      const file = files[0];
+      this._importQuery(file)
+        .then((record) => this.addCreatedRecord(record))
+        .catch((e) => {
+          if (e.jqXHR) {
+            popupAjaxError(e);
+          } else if (e instanceof SyntaxError) {
+            bootbox.alert(I18n.t("explorer.import.unparseable_json"));
+          } else if (e instanceof TypeError) {
+            bootbox.alert(I18n.t("explorer.import.wrong_json"));
+          } else {
+            bootbox.alert(I18n.t("errors.desc.unknown"));
+            // eslint-disable-next-line no-console
+            console.error(e);
+          }
+        })
+        .finally(() => {
+          this.set("loading", false);
+        });
     },
 
     showCreate() {
@@ -162,8 +217,7 @@ export default Ember.Controller.extend({
         params: null,
         sortBy: ["last_run_at:desc"],
       });
-      this.send("refreshModel");
-      this.transitionToRoute("adminPlugins.explorer", { queryParams: { id: null, params: null }});
+      this.transitionToRoute({ queryParams: { id: null, params: null }});
     },
 
     showHelpModal() {

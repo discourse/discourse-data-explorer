@@ -406,11 +406,11 @@ class Queries
     SQL
 
     queries["assigned-topics-report"]["sql"] = <<~SQL
-      SELECT value::int user_id, topic_id
-      FROM topic_custom_fields tf
-      JOIN topics t on t.id = topic_id
-      JOIN users u on u.id = value::int
-        WHERE tf.name = 'assigned_to_id'
+      SELECT a.assigned_to_id user_id, a.topic_id
+      FROM assignments a
+      JOIN topics t on t.id = a.topic_id
+      JOIN users u on u.id = a.assigned_to_id
+        WHERE a.assigned_to_type = 'User'
          AND t.deleted_at IS NULL
       ORDER BY username, topic_id
     SQL
@@ -459,14 +459,14 @@ class Queries
     SQL
 
     queries["total-assigned-topics-report"]["sql"] = <<~SQL
-      SELECT value::int user_id,
+      SELECT a.assigned_to_id AS user_id,
       count(*)::varchar || ',/u/' || username_lower || '/activity/assigned' assigned_url
-      FROM topic_custom_fields tf
-      JOIN topics t on t.id = topic_id
-      JOIN users u on u.id = value::int
-      WHERE tf.name = 'assigned_to_id'
+      FROM assignments a
+      JOIN topics t on t.id = a.topic_id
+      JOIN users u on u.id = a.assigned_to_id
+      WHERE a.assigned_to_type = 'User'
         AND t.deleted_at IS NULL
-      GROUP BY value::int, username_lower
+      GROUP BY a.assigned_to_id, username_lower
       ORDER BY count(*) DESC, username_lower
     SQL
 

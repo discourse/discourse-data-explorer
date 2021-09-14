@@ -6,7 +6,12 @@
       <div class="query-list">
         {{text-field value=search placeholderKey="explorer.search_placeholder"}}
         {{d-button action=(action "showCreate") icon="plus" class="no-text btn-right"}}
-        {{d-button action=(action "importQuery") label="explorer.import.label" icon="upload"}}
+        {{pick-files-button
+          class="import-btn"
+          label="explorer.import.label"
+          icon="upload"
+          acceptedFileTypes=acceptedImportFileTypes
+          onFilesPicked=(action "import")}}
       </div>
 
       {{#if showCreate}}
@@ -109,7 +114,7 @@
 
             <div class="clear"></div>
 
-            <div class="pull-left">
+            <div class="pull-left left-buttons">
               {{#if everEditing}}
                 {{d-button action=(action "save") label="explorer.save" disabled=saveDisable}}
               {{else}}
@@ -123,7 +128,7 @@
               {{/if}}
             </div>
 
-            <div class="pull-right">
+            <div class="pull-right right-buttons">
               {{#if selectedItem.destroyed}}
                 {{d-button action=(action "recover") class="" icon="undo" label="explorer.recover"}}
               {{else}}

@@ -77,13 +77,10 @@ table.group-reports {
       overflow-y: scroll;
       overflow-x: hidden;
       color: var(--primary-high);
-      font-size: $font-down-2;
+      font-size: var(--font-down-1);
 
-      input {
-        padding: 4px;
-        margin: 3px;
-        // 100% - padding + margin * 2 - border - button - buttonborder
-        width: calc(100% - 14px - 1px - 40px - 2px);
+      .schema-search {
+        margin: 0.5em;
       }
       .schema-table-name {
         font-weight: bold;
@@ -205,7 +202,6 @@ table.group-reports {
   .name input,
   .desc textarea {
     width: 100%;
-    box-sizing: border-box;
     margin: 0;
   }
   &:not(.editing) .desc {
@@ -304,7 +300,7 @@ table.group-reports {
 
 .query-list {
   display: flex;
-  max-height: 30px;
+  align-items: flex-start;
   .btn-left {
     margin-right: 0.5em;
   }
@@ -314,6 +310,9 @@ table.group-reports {
   }
   li.none {
     display: none;
+  }
+  .import-btn {
+    display: flex;
   }
 }
 
@@ -420,4 +419,18 @@ table.group-reports {
     padding: 12px;
     z-index: 1;
   }
+}
+
+.left-buttons,
+.right-buttons {
+  display: flex;
+  align-items: flex-start;
+}
+
+.left-buttons .btn {
+  margin-right: 0.5em;
+}
+
+.right-buttons .btn {
+  margin-left: 0.5em;
 }
