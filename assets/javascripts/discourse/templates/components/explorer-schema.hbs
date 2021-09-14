@@ -1,6 +1,8 @@
 <div class={{if hideSchema "hidden"}}>
-  {{text-field value=filter placeholderKey="explorer.schema.filter"}}
-  {{d-button action=(action "collapseSchema") icon="chevron-right" class="no-text"}}
+  <div class="schema-search inline-form full-width">
+    {{text-field value=filter placeholderKey="explorer.schema.filter"}}
+    {{d-button action=(action "collapseSchema") icon="chevron-right" class="no-text"}}
+  </div>
   {{conditional-loading-spinner condition=loading}}
   <div class="schema-container">
     <ul>
