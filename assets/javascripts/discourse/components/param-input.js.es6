@@ -50,7 +50,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     if (this.initialValues && this.info.identifier in this.initialValues) {
-      this.set("value", this.initialValues[this.info.identifier])
+      this.set("value", this.initialValues[this.info.identifier]);
     }
   },
 

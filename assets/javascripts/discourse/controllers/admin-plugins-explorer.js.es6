@@ -217,7 +217,7 @@ export default Ember.Controller.extend({
         params: null,
         sortBy: ["last_run_at:desc"],
       });
-      this.transitionToRoute({ queryParams: { id: null, params: null }});
+      this.transitionToRoute({ queryParams: { id: null, params: null } });
     },
 
     showHelpModal() {
@@ -310,10 +310,10 @@ export default Ember.Controller.extend({
         return;
       }
 
-      this.setProperties({ 
-        loading: true, 
+      this.setProperties({
+        loading: true,
         showResults: false,
-        params: JSON.stringify(this.selectedItem.params)
+        params: JSON.stringify(this.selectedItem.params),
       });
       ajax(
         "/admin/plugins/explorer/queries/" +
