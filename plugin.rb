@@ -370,7 +370,6 @@ SQL
         'application_requests.req_type': ApplicationRequest.req_types,
         'badges.badge_type_id': Enum.new(:gold, :silver, :bronze, start: 1),
         'bookmarks.auto_delete_preference': Bookmark.auto_delete_preferences,
-        'bookmarks.reminder_type': Bookmark.reminder_types,
         'category_groups.permission_type': CategoryGroup.permission_types,
         'category_users.notification_level': CategoryUser.notification_levels,
         'directory_items.period_type': DirectoryItem.period_types,
