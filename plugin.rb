@@ -34,12 +34,6 @@ module ::DataExplorer
 end
 
 after_initialize do
-  load File.expand_path('../app/models/data_explorer/query.rb', __FILE__)
-  load File.expand_path('../app/controllers/data_explorer/query_controller.rb', __FILE__)
-  load File.expand_path('../app/serializers/data_explorer/query_serializer.rb', __FILE__)
-  load File.expand_path('../app/serializers/data_explorer/small_badge_serializer.rb', __FILE__)
-  load File.expand_path('../app/serializers/data_explorer/small_post_with_excerpt_serializer.rb', __FILE__)
-
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
     return true if current_user.admin?
