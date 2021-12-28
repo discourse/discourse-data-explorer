@@ -6,4 +6,4 @@
 
 zh_CN:
   site_settings:
-    data_explorer_enabled: "请在/admin/plugins/explorer开启数据浏览器"
+    data_explorer_enabled: "请在 /admin/plugins/explorer 下启用数据浏览器"
