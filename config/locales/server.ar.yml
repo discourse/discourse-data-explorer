@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ar:
+  site_settings:
+    data_explorer_enabled: "تفعيل مستكشف البيانات في /admin/plugins/explorer"
