@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   controllerName: "group-reports-show",
@@ -28,10 +29,9 @@ export default DiscourseRoute.extend({
     controller.setProperties(model);
   },
 
-  actions: {
-    refreshModel() {
-      this.refresh();
-      return false;
-    },
+  @action
+  refreshModel() {
+    this.refresh();
+    return false;
   },
 });
