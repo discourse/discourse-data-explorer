@@ -15,7 +15,7 @@ fr:
       admins_only: "L'explorateur de données n'est disponible que pour les administrateurs."
       allow_groups: "Autoriser les groupes à accéder à cette requête"
       title: "Explorateur de données"
-      create: "Créer"
+      create: "Nouvelle requête"
       create_placeholder: "Nom de la requête…"
       description_placeholder: "Saisissez une description ici"
       import:

@@ -45,7 +45,7 @@ ja:
       run: "実行"
       undo: "変更を破棄"
       edit: "編集"
-      delete: "削除する"
+      delete: "削除"
       recover: "クエリの削除を取り消す"
       download_json: "JSON"
       download_csv: "CSV"
@@ -56,7 +56,7 @@ ja:
       result_count:
         other: "%{count} 件の結果。"
       max_result_count:
-        other: "最初の %{count} 件を表示。"
+        other: "上位 %{count} 件を表示中。"
       query_name: "クエリ"
       query_groups: "グループ"
       link: "リンク"
