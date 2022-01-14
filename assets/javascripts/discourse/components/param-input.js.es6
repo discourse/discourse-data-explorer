@@ -58,7 +58,7 @@ export default Ember.Component.extend({
       return this.params[this.get("info.identifier")];
     },
     set(key, value) {
-      this.params[this.get("info.identifier")] = value.toString();
+      this.params[this.get("info.identifier")] = value?.toString();
       return value;
     },
   }),

@@ -238,7 +238,8 @@ table.group-reports {
 
 .query-params {
   border: 1px solid var(--header_primary-medium);
-  .param > input {
+  .param > input,
+  .param > .select-kit {
     margin: 9px;
   }
   .invalid > input {
@@ -257,7 +258,8 @@ table.group-reports {
         width: 100px !important; // override an inline style
       }
     }
-    input {
+    input,
+    .select-kit {
       width: 190px;
     }
   }
