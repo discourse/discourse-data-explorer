@@ -97,8 +97,8 @@ describe DataExplorer::QueryController do
         post :run, params: { id: id, _params: MultiJson.dump(params) }, format: :json
       end
       it "can run queries" do
-        q = make_query('SELECT 23 as my_value')
-        run_query q.id
+        query = make_query('SELECT 23 as my_value')
+        run_query query.id
         expect(response.status).to eq(200)
         expect(response_json['success']).to eq(true)
         expect(response_json['errors']).to eq([])
@@ -107,20 +107,20 @@ describe DataExplorer::QueryController do
       end
 
       it "can process parameters" do
-        q = make_query <<~SQL
+        query = make_query <<~SQL
         -- [params]
         -- int :foo = 34
         SELECT :foo as my_value
         SQL
 
-        run_query q.id, foo: 23
+        run_query query.id, foo: 23
         expect(response.status).to eq(200)
         expect(response_json['errors']).to eq([])
         expect(response_json['success']).to eq(true)
         expect(response_json['columns']).to eq(['my_value'])
         expect(response_json['rows']).to eq([[23]])
 
-        run_query q.id
+        run_query query.id
         expect(response.status).to eq(200)
         expect(response_json['errors']).to eq([])
         expect(response_json['success']).to eq(true)
@@ -128,7 +128,7 @@ describe DataExplorer::QueryController do
         expect(response_json['rows']).to eq([[34]])
 
         # 2.3 is not an integer
-        run_query q.id, foo: '2.3'
+        run_query query.id, foo: '2.3'
         expect(response.status).to eq(422)
         expect(response_json['errors']).to_not eq([])
         expect(response_json['success']).to eq(false)
@@ -138,12 +138,12 @@ describe DataExplorer::QueryController do
       it "doesn't allow you to modify the database #1" do
         p = create_post
 
-        q = make_query <<~SQL
+        query = make_query <<~SQL
         UPDATE posts SET cooked = '<p>you may already be a winner!</p>' WHERE id = #{p.id}
         RETURNING id
         SQL
 
-        run_query q.id
+        run_query query.id
         p.reload
 
         # Manual Test - comment out the following lines:
@@ -160,7 +160,7 @@ describe DataExplorer::QueryController do
       it "doesn't allow you to modify the database #2" do
         p = create_post
 
-        q = make_query <<~SQL
+        query = make_query <<~SQL
           SELECT 1
         )
         SELECT * FROM query;
@@ -173,7 +173,7 @@ describe DataExplorer::QueryController do
           SELECT 1
         SQL
 
-        run_query q.id
+        run_query query.id
         p.reload
 
         # Manual Test - change out the following line:
@@ -195,11 +195,11 @@ describe DataExplorer::QueryController do
       end
 
       it "doesn't allow you to lock rows" do
-        q = make_query <<~SQL
+        query = make_query <<~SQL
         SELECT id FROM posts FOR UPDATE
         SQL
 
-        run_query q.id
+        run_query query.id
         expect(response.status).to eq(422)
         expect(response_json['errors']).to_not eq([])
         expect(response_json['success']).to eq(false)
@@ -207,11 +207,11 @@ describe DataExplorer::QueryController do
       end
 
       it "doesn't allow you to create a table" do
-        q = make_query <<~SQL
+        query = make_query <<~SQL
         CREATE TABLE mytable (id serial)
         SQL
 
-        run_query q.id
+        run_query query.id
         expect(response.status).to eq(422)
         expect(response_json['errors']).to_not eq([])
         expect(response_json['success']).to eq(false)
@@ -219,31 +219,31 @@ describe DataExplorer::QueryController do
       end
 
       it "doesn't allow you to break the transaction" do
-        q = make_query <<~SQL
+        query = make_query <<~SQL
         COMMIT
         SQL
 
-        run_query q.id
+        run_query query.id
         expect(response.status).to eq(422)
         expect(response_json['errors']).to_not eq([])
         expect(response_json['success']).to eq(false)
         expect(response_json['errors'].first).to match(/syntax error/)
 
-        q.sql = <<~SQL
+        query.sql = <<~SQL
         )
         SQL
 
-        run_query q.id
+        run_query query.id
         expect(response.status).to eq(422)
         expect(response_json['errors']).to_not eq([])
         expect(response_json['success']).to eq(false)
         expect(response_json['errors'].first).to match(/syntax error/)
 
-        q.sql = <<~SQL
+        query.sql = <<~SQL
         RELEASE SAVEPOINT active_record_1
         SQL
 
-        run_query q.id
+        run_query query.id
         expect(response.status).to eq(422)
         expect(response_json['errors']).to_not eq([])
         expect(response_json['success']).to eq(false)
@@ -251,8 +251,8 @@ describe DataExplorer::QueryController do
       end
 
       it "can export data in CSV format" do
-        q = make_query('SELECT 23 as my_value')
-        post :run, params: { id: q.id, download: 1 }, format: :csv
+        query = make_query('SELECT 23 as my_value')
+        post :run, params: { id: query.id, download: 1 }, format: :csv
         expect(response.status).to eq(200)
       end
 
@@ -264,27 +264,19 @@ describe DataExplorer::QueryController do
         end
 
         it "should limit the results in JSON response" do
-          begin
-            original_const = DataExplorer::QUERY_RESULT_DEFAULT_LIMIT
-            DataExplorer.send(:remove_const, "QUERY_RESULT_DEFAULT_LIMIT")
-            DataExplorer.const_set("QUERY_RESULT_DEFAULT_LIMIT", 2)
-
-            q = make_query <<~SQL
+          SiteSetting.data_explorer_query_result_limit = 2
+          query = make_query <<~SQL
             SELECT id FROM posts
-            SQL
+          SQL
 
-            run_query q.id
-            expect(response_json['rows'].count).to eq(2)
+          run_query query.id
+          expect(response_json['rows'].count).to eq(2)
 
-            post :run, params: { id: q.id, limit: 1 }, format: :json
-            expect(response_json['rows'].count).to eq(1)
+          post :run, params: { id: query.id, limit: 1 }, format: :json
+          expect(response_json['rows'].count).to eq(1)
 
-            post :run, params: { id: q.id, limit: "ALL" }, format: :json
-            expect(response_json['rows'].count).to eq(3)
-          ensure
-            DataExplorer.send(:remove_const, "QUERY_RESULT_DEFAULT_LIMIT")
-            DataExplorer.const_set("QUERY_RESULT_DEFAULT_LIMIT", original_const)
-          end
+          post :run, params: { id: query.id, limit: "ALL" }, format: :json
+          expect(response_json['rows'].count).to eq(3)
         end
 
         it "should limit the results in CSV download" do
@@ -295,18 +287,18 @@ describe DataExplorer::QueryController do
 
             ids = Post.order(:id).pluck(:id)
 
-            q = make_query <<~SQL
+            query = make_query <<~SQL
             SELECT id FROM posts
             SQL
 
-            post :run, params: { id: q.id, download: 1 }, format: :csv
+            post :run, params: { id: query.id, download: 1 }, format: :csv
             expect(response.body.split("\n").count).to eq(3)
 
-            post :run, params: { id: q.id, download: 1, limit: 1 }, format: :csv
+            post :run, params: { id: query.id, download: 1, limit: 1 }, format: :csv
             expect(response.body.split("\n").count).to eq(2)
 
             # The value `ALL` is not supported in csv exports.
-            post :run, params: { id: q.id, download: 1, limit: "ALL" }, format: :csv
+            post :run, params: { id: query.id, download: 1, limit: "ALL" }, format: :csv
             expect(response.body.split("\n").count).to eq(1)
           ensure
             DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
