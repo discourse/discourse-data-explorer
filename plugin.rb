@@ -25,7 +25,8 @@ end
 add_admin_route 'explorer.title', 'explorer'
 
 module ::DataExplorer
-  QUERY_RESULT_DEFAULT_LIMIT = 1000
+  # This should always match the max value for the data_explorer_query_result_limit
+  # site setting.
   QUERY_RESULT_MAX_LIMIT = 10000
 
   def self.plugin_name
@@ -117,7 +118,7 @@ after_initialize do
 WITH query AS (
 #{query.sql}
 ) SELECT * FROM query
-LIMIT #{opts[:limit] || DataExplorer::QUERY_RESULT_DEFAULT_LIMIT}
+LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
 SQL
 
           time_start = Time.now

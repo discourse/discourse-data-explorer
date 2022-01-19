@@ -181,7 +181,7 @@ class DataExplorer::QueryController < ::ApplicationController
             result_count: pg_result.values.length || 0,
             params: query_params,
             columns: cols,
-            default_limit: DataExplorer::QUERY_RESULT_DEFAULT_LIMIT
+            default_limit: SiteSetting.data_explorer_query_result_limit
           }
           json[:explain] = result[:explain] if opts[:explain]
 
