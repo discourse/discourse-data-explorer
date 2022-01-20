@@ -5,7 +5,14 @@ class DataExplorer::QueryController < ::ApplicationController
 
   before_action :set_group, only: %i(group_reports_index group_reports_show group_reports_run)
   before_action :set_query, only: %i(group_reports_show group_reports_run show update)
+  before_action :ensure_admin
+
   skip_before_action :check_xhr, only: %i(show group_reports_run run)
+  skip_before_action :ensure_admin, only: %i(
+    group_reports_index
+    group_reports_show
+    group_reports_run
+  )
 
   def index
     queries = DataExplorer::Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
