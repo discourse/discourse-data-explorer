@@ -20,37 +20,39 @@ describe DataExplorer::QueryController do
   end
 
   describe "Admin" do
-    routes { ::DataExplorer::Engine.routes }
+    fab!(:admin) { Fabricate(:admin) }
 
-    let!(:admin) { log_in_user(Fabricate(:admin)) }
+    before do
+      sign_in(admin)
+    end
 
     describe "when disabled" do
       before do
         SiteSetting.data_explorer_enabled = false
       end
+
       it 'denies every request' do
-        get :index
-        expect(response.body).to be_empty
-
-        get :index, format: :json
+        get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(404)
 
-        get :schema, format: :json
+        get "/admin/plugins/explorer/schema.json"
         expect(response.status).to eq(404)
 
-        get :show, params: { id: 3 }, format: :json
+        get "/admin/plugins/explorer/queries/3.json"
         expect(response.status).to eq(404)
 
-        post :create, params: { id: 3 }, format: :json
+        post "/admin/plugins/explorer/queries.json", params: {
+          id: 3
+        }
         expect(response.status).to eq(404)
 
-        post :run, params: { id: 3 }, format: :json
+        post "/admin/plugins/explorer/queries/3/run.json"
         expect(response.status).to eq(404)
 
-        put :update, params: { id: 3 }, format: :json
+        put "/admin/plugins/explorer/queries/3.json"
         expect(response.status).to eq(404)
 
-        delete :destroy, params: { id: 3 }, format: :json
+        delete "/admin/plugins/explorer/queries/3.json"
         expect(response.status).to eq(404)
       end
     end
@@ -62,7 +64,7 @@ describe DataExplorer::QueryController do
 
       it "behaves nicely with no user created queries" do
         DataExplorer::Query.destroy_all
-        get :index, format: :json
+        get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json['queries'].count).to eq(Queries.default.count)
       end
@@ -71,7 +73,7 @@ describe DataExplorer::QueryController do
         DataExplorer::Query.destroy_all
         make_query('SELECT 1 as value', name: 'B')
         make_query('SELECT 1 as value', name: 'A')
-        get :index, format: :json
+        get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json['queries'].length).to eq(Queries.default.count + 2)
         expect(response_json['queries'][0]['name']).to eq('A')
@@ -83,19 +85,18 @@ describe DataExplorer::QueryController do
         make_query('SELECT 1 as value', name: 'A', hidden: false)
         make_query('SELECT 1 as value', name: 'B', hidden: true)
         make_query('SELECT 1 as value', name: 'C', hidden: true)
-        get :index, format: :json
+        get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json['queries'].length).to eq(Queries.default.count + 1)
       end
     end
 
     describe "#run" do
-      let!(:admin) { log_in(:admin) }
-
       def run_query(id, params = {})
         params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post :run, params: { id: id, _params: MultiJson.dump(params) }, format: :json
+        post "/admin/plugins/explorer/queries/#{id}/run.json", params: { params: params.to_json }
       end
+
       it "can run queries" do
         query = make_query('SELECT 23 as my_value')
         run_query query.id
@@ -252,7 +253,7 @@ describe DataExplorer::QueryController do
 
       it "can export data in CSV format" do
         query = make_query('SELECT 23 as my_value')
-        post :run, params: { id: query.id, download: 1 }, format: :csv
+        post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { download: 1 }
         expect(response.status).to eq(200)
       end
 
@@ -272,10 +273,10 @@ describe DataExplorer::QueryController do
           run_query query.id
           expect(response_json['rows'].count).to eq(2)
 
-          post :run, params: { id: query.id, limit: 1 }, format: :json
+          post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: 1 }
           expect(response_json['rows'].count).to eq(1)
 
-          post :run, params: { id: query.id, limit: "ALL" }, format: :json
+          post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: "ALL" }
           expect(response_json['rows'].count).to eq(3)
         end
 
@@ -291,14 +292,14 @@ describe DataExplorer::QueryController do
             SELECT id FROM posts
             SQL
 
-            post :run, params: { id: query.id, download: 1 }, format: :csv
+            post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1 }
             expect(response.body.split("\n").count).to eq(3)
 
-            post :run, params: { id: query.id, download: 1, limit: 1 }, format: :csv
+            post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1, limit: 1 }
             expect(response.body.split("\n").count).to eq(2)
 
             # The value `ALL` is not supported in csv exports.
-            post :run, params: { id: query.id, download: 1, limit: "ALL" }, format: :csv
+            post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1, limit: "ALL" }
             expect(response.body.split("\n").count).to eq(1)
           ensure
             DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
@@ -310,13 +311,11 @@ describe DataExplorer::QueryController do
   end
 
   describe "Non-Admin" do
-    routes { Discourse::Application.routes }
-
-    let(:user) { Fabricate(:user) }
-    let(:group) { Fabricate(:group, users: [user]) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group, users: [user]) }
 
     before do
-      log_in_user(user)
+      sign_in(user)
     end
 
     describe "when disabled" do
@@ -325,24 +324,29 @@ describe DataExplorer::QueryController do
       end
 
       it 'denies every request' do
-        get :group_reports_index, params: { group_name: 1 }, format: :json
+        get "/g/1/reports.json"
         expect(response.status).to eq(404)
 
-        get :group_reports_show, params: { group_name: 1, id: 1 }, format: :json
+        get "/g/1/reports/1.json"
         expect(response.status).to eq(404)
 
-        post :group_reports_run, params: { group_name: 1, id: 1 }, format: :json
+        post "/g/1/reports/1/run.json"
         expect(response.status).to eq(404)
       end
     end
 
-    describe "#group_reports_index" do
+    it "cannot access admin endpoints" do
+      query = make_query('SELECT 1 as value')
+      post "/admin/plugins/explorer/queries/#{query.id}/run.json"
+      expect(response.status).to eq(403)
+    end
 
+    describe "#group_reports_index" do
       it "only returns queries that the group has access to" do
         group.add(user)
         make_query('SELECT 1 as value', { name: 'A' }, ["#{group.id}"])
 
-        get :group_reports_index, params: { group_name: group.name }, format: :json
+        get "/g/#{group.name}/reports.json"
         expect(response.status).to eq(200)
         expect(response_json['queries'].length).to eq(1)
         expect(response_json['queries'][0]['name']).to eq('A')
@@ -350,26 +354,25 @@ describe DataExplorer::QueryController do
 
       it "returns a 404 when the user should not have access to the query " do
         other_user = Fabricate(:user)
-        log_in_user(other_user)
+        sign_in(other_user)
 
-        get :group_reports_index, params: { group_name: group.name }, format: :json
+        get "/g/#{group.name}/reports.json"
         expect(response.status).to eq(404)
       end
 
       it "return a 200 when the user has access the the query" do
         group.add(user)
 
-        get :group_reports_index, params: { group_name: group.name }, format: :json
+        get "/g/#{group.name}/reports.json"
         expect(response.status).to eq(200)
       end
 
       it "does not return hidden queries" do
-
         group.add(user)
         make_query('SELECT 1 as value', { name: 'A', hidden: true }, ["#{group.id}"])
         make_query('SELECT 1 as value', { name: 'B' }, ["#{group.id}"])
 
-        get :group_reports_index, params: { group_name: group.name }, format: :json
+        get "/g/#{group.name}/reports.json"
         expect(response.status).to eq(200)
         expect(response_json['queries'].length).to eq(1)
         expect(response_json['queries'][0]['name']).to eq('B')
@@ -377,18 +380,21 @@ describe DataExplorer::QueryController do
     end
 
     describe "#group_reports_run" do
-      it "calls run on QueryController" do
-        query = make_query('SELECT 1 as value', { name: 'B' }, ["#{group.id}"])
-        controller.expects(:run).at_least_once
+      it "runs the query" do
+        query = make_query('SELECT 1828 as value', { name: 'B' }, ["#{group.id}"])
 
-        get :group_reports_run, params: { group_name: group.name, id: query.id }, format: :json
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["columns"]).to eq(["value"])
+        expect(response.parsed_body["rows"]).to eq([[1828]])
       end
 
       it "returns a 404 when the user should not have access to the query " do
         group.add(user)
         query = make_query('SELECT 1 as value', {}, [])
 
-        get :group_reports_run, params: { group_name: group.name, id: query.id }, format: :json
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
         expect(response.status).to eq(404)
       end
 
@@ -396,7 +402,7 @@ describe DataExplorer::QueryController do
         group.add(user)
         query = make_query('SELECT 1 as value', {}, [group.id.to_s])
 
-        get :group_reports_run, params: { group_name: group.name, id: query.id }, format: :json
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
         expect(response.status).to eq(200)
       end
 
@@ -404,41 +410,30 @@ describe DataExplorer::QueryController do
         group.add(user)
         query = make_query('SELECT 1 as value', { hidden: true }, [group.id.to_s])
 
-        get :group_reports_run, params: { group_name: group.name, id: query.id }, format: :json
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
         expect(response.status).to eq(404)
       end
     end
 
     describe "#group_reports_show" do
-      let(:group) { Fabricate(:group) }
-
       it "returns a 404 when the user should not have access to the query " do
-        user = Fabricate(:user)
-        log_in_user(user)
-        group.add(user)
         query = make_query('SELECT 1 as value', {}, [])
 
-        get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
+        get "/g/#{group.name}/reports/#{query.id}.json"
         expect(response.status).to eq(404)
       end
 
       it "return a 200 when the user has access the the query" do
-        user = Fabricate(:user)
-        log_in_user(user)
-        group.add(user)
         query = make_query('SELECT 1 as value', {}, [group.id.to_s])
 
-        get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
+        get "/g/#{group.name}/reports/#{query.id}.json"
         expect(response.status).to eq(200)
       end
 
       it "return a 404 when the query is hidden" do
-        user = Fabricate(:user)
-        log_in_user(user)
-        group.add(user)
         query = make_query('SELECT 1 as value', { hidden: true }, [group.id.to_s])
 
-        get :group_reports_show, params: { group_name: group.name, id: query.id }, format: :json
+        get "/g/#{group.name}/reports/#{query.id}.json"
         expect(response.status).to eq(404)
       end
     end

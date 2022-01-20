@@ -126,7 +126,6 @@ class DataExplorer::QueryController < ::ApplicationController
       response.sending_file = true
     end
 
-    params[:params] = params[:_params] if params[:_params] # testing workaround
     query_params = {}
     query_params = MultiJson.load(params[:params]) if params[:params]
 
