@@ -886,7 +886,7 @@ SQL
     get 'queries/:id' => "query#show"
     put 'queries/:id' => "query#update"
     delete 'queries/:id' => "query#destroy"
-    post 'queries/:id/run' => "query#run"
+    post 'queries/:id/run' => "query#run", constraints: { format: /(json|csv)/ }
   end
 
   Discourse::Application.routes.append do
@@ -894,6 +894,13 @@ SQL
     get '/g/:group_name/reports/:id' => 'data_explorer/query#group_reports_show'
     post '/g/:group_name/reports/:id/run' => 'data_explorer/query#group_reports_run'
 
-    mount ::DataExplorer::Engine, at: '/admin/plugins/explorer', constraints: AdminConstraint.new
+    mount ::DataExplorer::Engine, at: '/admin/plugins/explorer'
   end
+
+  add_api_key_scope(:data_explorer, {
+    run_queries: {
+      actions: %w[data_explorer/query#run],
+      params: %i[id]
+    }
+  })
 end

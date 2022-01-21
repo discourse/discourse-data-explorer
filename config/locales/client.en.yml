@@ -90,3 +90,9 @@ en:
       no_search_results: "Sorry, we couldn't find any results matching your text."
     group:
       reports: "Reports"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
