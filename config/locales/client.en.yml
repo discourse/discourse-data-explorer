@@ -73,7 +73,7 @@ en:
         one: "%{count} result."
         other: "%{count} results."
       max_result_count:
-        one: "Showing top %{count} results."
+        one: "Showing top %{count} result."
         other: "Showing top %{count} results."
       query_name: "Query"
       query_groups: "Groups"
