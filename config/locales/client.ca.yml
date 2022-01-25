@@ -43,9 +43,6 @@ ca:
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultats."
-      max_result_count:
-        one: "Mostrant el millor %{count} resultat."
-        other: "Es mostren els millors %{count} resultats."
       query_name: "Consulta"
       query_groups: "Grups"
       link: "Enllaç de"

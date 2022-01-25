@@ -57,7 +57,7 @@ sv:
         one: "%{count} resultat."
         other: "%{count} resultat."
       max_result_count:
-        one: "Visar resultat nr %{count}, det översta."
+        one: "Visar det %{count} översta resultatet."
         other: "Visar de %{count} översta resultaten."
       query_name: "Sökning"
       query_groups: "Grupper"
@@ -74,3 +74,9 @@ sv:
       no_search_results: "Tyvärr kunde vi inte hitta några resultat som stämmer överens med din text."
     group:
       reports: "Rapporter"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Kör frågor för datautforskaren. Begränsa API-nyckeln till en viss uppsättning frågor genom att specificera fråge-ID:n."

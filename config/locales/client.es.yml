@@ -56,9 +56,6 @@ es:
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
-      max_result_count:
-        one: "Mostrando el mejor resultado (%{count})."
-        other: "Mostrando los mejores %{count} resultados."
       query_name: "Consulta"
       query_groups: "Grupos"
       link: "Enlace para"

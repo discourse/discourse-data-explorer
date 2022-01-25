@@ -7,8 +7,11 @@
 fa_IR:
   js:
     explorer:
+      or: "یا"
       import:
         label: "ورود داده‌ها"
+      help:
+        label: "کمک"
       schema:
         filter: "جستجو..."
       types:
@@ -17,10 +20,21 @@ fa_IR:
           no: "خیر"
       export: "خروجی گرفتن"
       save: "ذخیره تغییرات"
+      run: "اجرا"
       edit: "ویرایش"
       delete: "حذف"
+      result_count:
+        one: "%{count} نتیجه."
+        other: "%{count} نتیجه."
+      max_result_count:
+        one: "نمایش %{count} نتیجه برتر."
+        other: "نمایش %{count} نتیجه برتر."
       query_groups: "گروه ها"
+      link: "پیوند برای"
+      report_name: "گزارش"
       query_description: "توضیح"
+      query_time: "آخرین اجرا"
+      query_user: "ایجاد شده توسط"
       reset_params: "بازنشانی"
       search_placeholder: "جستجو..."
     group:

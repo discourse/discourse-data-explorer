@@ -56,9 +56,6 @@ fi:
       result_count:
         one: "%{count} tulos."
         other: "%{count} tulosta."
-      max_result_count:
-        one: "Näytetään osuvin %{count} tulos."
-        other: "Näytetään osuvimmat %{count} tulosta."
       query_name: "Kysely"
       query_groups: "Ryhmät"
       link: "Linkki:"

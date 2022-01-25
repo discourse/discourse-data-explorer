@@ -58,11 +58,6 @@ he:
         two: "2 תוצאות."
         many: "%{count} תוצאות."
         other: "%{count} תוצאות."
-      max_result_count:
-        one: "התוצאה המובילה מופיעה."
-        two: "2 התוצאות המובילות מופיעות."
-        many: "%{count} התוצאות המובילות מופיעות."
-        other: "%{count} התוצאות המובילות מופיעות."
       query_name: "שאילתה"
       query_groups: "קבוצות"
       link: "קישור אל"
@@ -78,3 +73,9 @@ he:
       no_search_results: "לא הצלחנו למצוא תוצאות שעונות לטקסט שלך, עמך הסליחה."
     group:
       reports: "דוחות"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "הרצת שאילתות של סייר נתונים. ניתן להגביל את מפתח ה־API לסדרה של שאילתות על ידי ציון מזהה שאילתה."

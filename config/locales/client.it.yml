@@ -56,9 +56,6 @@ it:
       result_count:
         one: "%{count} risultato."
         other: "%{count} risultati."
-      max_result_count:
-        one: "Mostra i primi %{count} risultati."
-        other: "Mostra i primi %{count} risultati."
       query_name: "Query"
       query_groups: "Gruppi"
       link: "Collegamento per"
