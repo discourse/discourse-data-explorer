@@ -43,9 +43,6 @@ tr_TR:
       result_count:
         one: "%{count} sonucu."
         other: "%{count} sonuçları."
-      max_result_count:
-        one: "En iyi %{count} sonuç gösteriliyor."
-        other: "En iyi %{count} sonuç gösteriliyor."
       query_name: "Sorgu"
       query_groups: "Gruplar"
       link: "Şunun için bağlantı linki:"

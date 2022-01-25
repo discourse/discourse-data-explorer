@@ -55,8 +55,6 @@ zh_CN:
       run_time: "查询在 %{value} 毫秒内完成。"
       result_count:
         other: "%{count} 个结果。"
-      max_result_count:
-        other: "显示前 %{count} 个结果。"
       query_name: "查询"
       query_groups: "群组"
       link: "链接"

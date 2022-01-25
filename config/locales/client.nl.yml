@@ -44,9 +44,6 @@ nl:
       result_count:
         one: "%{count} resultaat."
         other: "%{count} resultaten."
-      max_result_count:
-        one: "Bovenste %{count} resultaten worden getoond."
-        other: "Bovenste %{count} resultaten worden getoond."
       query_name: "Query"
       query_groups: "Groepen"
       link: "Koppeling voor"

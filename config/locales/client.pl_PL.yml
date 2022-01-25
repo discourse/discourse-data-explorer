@@ -50,11 +50,6 @@ pl_PL:
         few: "%{count}wyniki."
         many: "%{count}wyników."
         other: "%{count}wyników."
-      max_result_count:
-        one: "Pokazywanie %{count} pierwszego wyniku."
-        few: "Pokazywanie %{count} pierwsze wyniki."
-        many: "Pokazywanie %{count} pierwszych wyników."
-        other: "Pokazywanie %{count} pierwszych wyników."
       query_name: "Zapytanie"
       query_groups: "Grupy"
       link: "Link do"

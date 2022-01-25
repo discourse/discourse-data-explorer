@@ -60,13 +60,6 @@ ar:
         few: "%{count} نتائج."
         many: "%{count} نتيجةً."
         other: "%{count} نتيجة."
-      max_result_count:
-        zero: "جارٍ عرض أبرز %{count} نتيجة."
-        one: "جارٍ عرض أبرز نتيجة (%{count})."
-        two: "جارٍ عرض أبرز نتيجتين (%{count})."
-        few: "جارٍ عرض أبرز %{count} نتائج."
-        many: "جارٍ عرض أبرز %{count} نتيجةً."
-        other: "جارٍ عرض أبرز %{count} نتيجة."
       query_name: "استعلام"
       query_groups: "المجموعات"
       link: "رابط لـ"

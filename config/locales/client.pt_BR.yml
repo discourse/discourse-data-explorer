@@ -56,9 +56,6 @@ pt_BR:
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
-      max_result_count:
-        one: "Mostrando os %{count} principais resultados."
-        other: "Mostrando os principais %{count} resultados."
       query_name: "Consulta"
       query_groups: "Grupos"
       link: "Link para"

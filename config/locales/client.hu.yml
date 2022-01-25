@@ -56,9 +56,6 @@ hu:
       result_count:
         one: "%{count} találat."
         other: "%{count} találat."
-      max_result_count:
-        one: "Az első %{count} találat megjelenítése."
-        other: "Az első %{count} találat megjelenítése."
       query_name: "Lekérdezés"
       query_groups: "Csoportok"
       link: "Hivatkozás ehhez:"

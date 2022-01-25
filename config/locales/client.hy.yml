@@ -42,9 +42,6 @@ hy:
       result_count:
         one: "%{count} արդյունք"
         other: "%{count} արդյունք"
-      max_result_count:
-        one: "Ցուցադրվում են թոփ %{count} արդյունքները:"
-        other: "Ցուցադրվում են թոփ %{count} արդյունքները"
       query_name: "Հարցում"
       query_groups: "Խմբեր"
       query_description: "Նկարագրություն"

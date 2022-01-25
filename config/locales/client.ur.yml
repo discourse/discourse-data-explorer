@@ -42,9 +42,6 @@ ur:
       result_count:
         one: "%{count} نتیجہ۔"
         other: "%{count} نتائج۔"
-      max_result_count:
-        one: "سب سے اوپر کے %{count} نتائج دکھائیں۔"
-        other: "سب سے اوپر کے %{count} نتائج دکھائیں۔"
       query_name: "ڈیٹا کمانڈ"
       query_groups: "گروپس"
       report_name: "رپورٹ"
