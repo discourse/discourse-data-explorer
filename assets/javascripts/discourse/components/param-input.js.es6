@@ -1,8 +1,6 @@
 import I18n from "I18n";
 import { default as computed } from "discourse-common/utils/decorators";
-// import Category from 'discourse/models/category';
-
-const Category = Discourse.Category;
+import Category from "discourse/models/category";
 
 const layoutMap = {
   int: "int",

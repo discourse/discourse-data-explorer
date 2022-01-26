@@ -1,4 +1,5 @@
 import { default as computed, on } from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 export default Ember.Component.extend({
   classNames: ["share-report"],
@@ -9,7 +10,7 @@ export default Ember.Component.extend({
 
   @computed("group", "query")
   link() {
-    return Discourse.BaseUrl + "/g/" + this.group + "/reports/" + this.query.id;
+    return getURL(`/g/${this.group}/reports/${this.query.id}`);
   },
 
   _mouseDownHandler(event) {

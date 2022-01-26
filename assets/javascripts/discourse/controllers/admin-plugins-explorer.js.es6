@@ -8,6 +8,7 @@ import {
 } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { Promise } from "rsvp";
+import bootbox from "bootbox";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 

@@ -2,6 +2,7 @@ import Handlebars from "handlebars";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
+import getURL from "discourse-common/lib/get-url";
 
 function icon_or_image_replacement(str, ctx) {
   str = Ember.get(ctx.contexts[0], str);
@@ -68,7 +69,7 @@ const QueryRowContentComponent = Ember.Component.extend({
       const ctx = {
         value,
         id,
-        baseuri: Discourse.BaseUri === "/" ? "" : Discourse.BaseUri,
+        baseuri: getURL(""),
       };
       const params = {};
 
