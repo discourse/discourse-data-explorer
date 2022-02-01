@@ -58,6 +58,11 @@ he:
         two: "2 תוצאות."
         many: "%{count} תוצאות."
         other: "%{count} תוצאות."
+      max_result_count:
+        one: "התוצאה המובילה מופיעה (%{count})."
+        two: "%{count} התוצאות המובילות מופיעות."
+        many: "%{count} התוצאות המובילות מופיעות."
+        other: "%{count} התוצאות המובילות מופיעות."
       query_name: "שאילתה"
       query_groups: "קבוצות"
       link: "קישור אל"
