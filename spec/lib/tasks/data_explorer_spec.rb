@@ -17,7 +17,7 @@ describe 'Data Explorer rake tasks' do
   end
 
   def hidden_queries
-    DataExplorer::Query.where(hidden: true)
+    DataExplorer::Query.where(hidden: true).order(:id)
   end
 
   describe 'data_explorer' do
