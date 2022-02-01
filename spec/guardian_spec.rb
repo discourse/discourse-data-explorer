@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 describe Guardian do
-
   before { SiteSetting.data_explorer_enabled = true }
 
   def make_query(group_ids = [])
@@ -18,10 +17,9 @@ describe Guardian do
 
   let(:user) { build(:user) }
   let(:admin) { build(:admin) }
+  fab!(:group) { Fabricate(:group) }
 
   describe "#user_is_a_member_of_group?" do
-    let(:group) { Fabricate(:group) }
-
     it "is true when the user is an admin" do
       expect(Guardian.new(admin).user_is_a_member_of_group?(group)).to eq(true)
     end
@@ -38,8 +36,6 @@ describe Guardian do
   end
 
   describe "#group_and_user_can_access_query?" do
-    let(:group) { Fabricate(:group) }
-
     it "is true if the user is an admin" do
       expect(Guardian.new(admin).group_and_user_can_access_query?(group, make_query)).to eq(true)
     end

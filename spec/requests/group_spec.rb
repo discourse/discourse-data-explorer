@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe "Data explorer group serializer additions" do
-  let(:group_user) { Fabricate(:user) }
-  let(:other_user) { Fabricate(:user) }
-  let(:group) { Fabricate(:group) }
+  fab!(:group_user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
   let!(:query) { DataExplorer::Query.create!(name: "My query", sql: "") }
 
   before do

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe DataExplorer::QueryController do
   def response_json
-    MultiJson.load(response.body)
+    response.parsed_body
   end
 
   before do
@@ -58,10 +58,6 @@ describe DataExplorer::QueryController do
     end
 
     describe "#index" do
-      before do
-        require_dependency File.expand_path('../../../lib/queries.rb', __FILE__)
-      end
-
       it "behaves nicely with no user created queries" do
         DataExplorer::Query.destroy_all
         get "/admin/plugins/explorer/queries.json"
