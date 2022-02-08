@@ -56,6 +56,9 @@ fr:
       result_count:
         one: "%{count} résultat."
         other: "%{count} résultats."
+      max_result_count:
+        one: "Affichage du premier (%{count}) résultat."
+        other: "Affichage des %{count} premiers résultats."
       query_name: "Requête"
       query_groups: "Groupes"
       link: "Lien pour"
@@ -71,3 +74,9 @@ fr:
       no_search_results: "Désolé, nous n'avons trouvé aucun résultat correspondant à votre texte."
     group:
       reports: "Rapports"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé API à un ensemble de requêtes en spécifiant des ID de requêtes."

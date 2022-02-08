@@ -60,6 +60,13 @@ ar:
         few: "%{count} نتائج."
         many: "%{count} نتيجةً."
         other: "%{count} نتيجة."
+      max_result_count:
+        zero: "جارٍ عرض أبرز %{count} نتيجة."
+        one: "جارٍ عرض أبرز نتيجة (%{count})."
+        two: "جارٍ عرض أبرز نتيجتين (%{count})."
+        few: "جارٍ عرض أبرز %{count} نتائج."
+        many: "جارٍ عرض أبرز %{count} نتيجةً."
+        other: "جارٍ عرض أبرز %{count} نتيجة."
       query_name: "استعلام"
       query_groups: "المجموعات"
       link: "رابط لـ"
@@ -75,3 +82,9 @@ ar:
       no_search_results: "عذرًا، لم نتمكن من العثور على أي نتائج مطابقة لنصك."
     group:
       reports: "التقارير"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "تشغيل استعلامات مستكشف البيانات. يمكنك تقييد مفتاح واجهة برمجة التطبيقات (API) إلى مجموعة من الاستعلامات عن طريق تحديد معرِّفات الاستعلامات."

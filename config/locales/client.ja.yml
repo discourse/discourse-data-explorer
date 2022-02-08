@@ -55,6 +55,8 @@ ja:
       run_time: "クエリは %{value} ミリ秒で完了しました。"
       result_count:
         other: "%{count} 件の結果。"
+      max_result_count:
+        other: "上位 %{count} 件を表示中。"
       query_name: "クエリ"
       query_groups: "グループ"
       link: "リンク"
@@ -70,3 +72,9 @@ ja:
       no_search_results: "残念ながら、テキストに一致する結果は見つかりませんでした。"
     group:
       reports: "レポート"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "データエクスプローラーのクエリを実行します。クエリ ID を指定して、API キーを一連のクエリに制限します。"
