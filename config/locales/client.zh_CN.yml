@@ -55,6 +55,8 @@ zh_CN:
       run_time: "查询在 %{value} 毫秒内完成。"
       result_count:
         other: "%{count} 个结果。"
+      max_result_count:
+        other: "显示前 %{count} 个结果。"
       query_name: "查询"
       query_groups: "群组"
       link: "链接"
@@ -70,3 +72,9 @@ zh_CN:
       no_search_results: "抱歉，我们找不到任何与您的文本匹配的结果。"
     group:
       reports: "报告"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "运行数据资源管理器查询。通过指定查询 ID 将 API 密钥限制为一组查询。"

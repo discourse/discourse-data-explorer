@@ -56,6 +56,9 @@ it:
       result_count:
         one: "%{count} risultato."
         other: "%{count} risultati."
+      max_result_count:
+        one: "Visualizzazione del primo (%{count}) risultato"
+        other: "Visualizzazione dei primi %{count} risultati."
       query_name: "Query"
       query_groups: "Gruppi"
       link: "Collegamento per"
@@ -71,3 +74,9 @@ it:
       no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."
     group:
       reports: "Rapporti"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Esegui le query di Data Explorer. Limita la chiave API a un insieme di query specificando i loro ID."

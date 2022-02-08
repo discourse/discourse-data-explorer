@@ -56,6 +56,9 @@ de:
       result_count:
         one: "%{count} Ergebnis."
         other: "%{count} Ergebnisse."
+      max_result_count:
+        one: "Zeige das Top-%{count} Ergebnis."
+        other: "Zeige die Top-%{count} Ergebnisse."
       query_name: "Anfrage"
       query_groups: "Gruppen"
       link: "Link für"
@@ -71,3 +74,9 @@ de:
       no_search_results: "Leider konnten wir keine Ergebnisse finden, die deinem Text entsprechen."
     group:
       reports: "Berichte"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
