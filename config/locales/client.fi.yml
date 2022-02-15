@@ -56,6 +56,9 @@ fi:
       result_count:
         one: "%{count} tulos."
         other: "%{count} tulosta."
+      max_result_count:
+        one: "Näytetään osuvin %{count} tulos."
+        other: "Näytetään osuvimmat %{count} tulosta."
       query_name: "Kysely"
       query_groups: "Ryhmät"
       link: "Linkki:"
@@ -71,3 +74,9 @@ fi:
       no_search_results: "Pahoittelut, emme löytäneet tekstiäsi vastaavia tuloksia."
     group:
       reports: "Raportit"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Suorita Dataselaimen kyselyitä. Rajoita API-avain tiettyihin kyselyihin määrittämällä kyselyiden tunnuksia."

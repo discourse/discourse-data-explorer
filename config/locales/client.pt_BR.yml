@@ -56,6 +56,9 @@ pt_BR:
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
+      max_result_count:
+        one: "Mostrando melhor %{count} resultado."
+        other: "Mostrando melhores %{count} resultados."
       query_name: "Consulta"
       query_groups: "Grupos"
       link: "Link para"
@@ -71,3 +74,9 @@ pt_BR:
       no_search_results: "Desculpe, não conseguimos encontrar nenhum resultado contendo o seu texto."
     group:
       reports: "Relatórios"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Execute consultas do Explorador de Dados. Restrinja a chave de API a um conjunto de consultas ao especificar suas IDs."
