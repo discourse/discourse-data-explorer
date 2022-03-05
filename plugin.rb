@@ -5,6 +5,7 @@
 # version: 0.3
 # authors: Riking
 # url: https://github.com/discourse/discourse-data-explorer
+# transpile_js: true
 
 enabled_site_setting :data_explorer_enabled
 
