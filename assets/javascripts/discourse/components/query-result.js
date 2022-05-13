@@ -4,6 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import Badge from "discourse/models/badge";
 import { default as computed } from "discourse-common/utils/decorators";
+import { capitalize } from "@ember/string";
 
 function randomIdShort() {
   return "xxxxxxxx".replace(/[xy]/g, () => {
@@ -157,7 +158,7 @@ const QueryResultComponent = Ember.Component.extend({
     const relationName = colRender[0];
 
     if (relationName) {
-      const lookupFunc = this[`lookup${relationName.capitalize()}`];
+      const lookupFunc = this[`lookup${capitalize(relationName)}`];
       const labelSelector = labelSelectors[relationName];
 
       if (lookupFunc && labelSelector) {

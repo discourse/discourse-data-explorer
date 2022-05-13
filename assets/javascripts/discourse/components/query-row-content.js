@@ -3,6 +3,7 @@ import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
+import { capitalize } from "@ember/string";
 
 function icon_or_image_replacement(str, ctx) {
   str = Ember.get(ctx.contexts[0], str);
@@ -79,7 +80,7 @@ const QueryRowContentComponent = Ember.Component.extend({
         return esc(row[idx]);
       }
 
-      const lookupFunc = parentView[`lookup${t.name.capitalize()}`];
+      const lookupFunc = parentView[`lookup${capitalize(t.name)}`];
       if (lookupFunc) {
         ctx[t.name] = lookupFunc.call(parentView, id);
       }
