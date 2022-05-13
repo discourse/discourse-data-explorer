@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import { default as computed } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import { dasherize } from "@ember/string";
 
 const layoutMap = {
   int: "int",
@@ -100,8 +101,8 @@ export default Ember.Component.extend({
       case "post_id":
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case "category_id":
-        if (!isPositiveInt && value !== value.dasherize()) {
-          this.set("value", value.dasherize());
+        if (!isPositiveInt && value !== dasherize(value)) {
+          this.set("value", dasherize(value));
         }
 
         if (isPositiveInt) {
@@ -112,12 +113,12 @@ export default Ember.Component.extend({
             return false;
           }
           const result = Category.findBySlug(
-            match[2].dasherize(),
-            match[1].dasherize()
+            dasherize(match[2]),
+            dasherize(match[1])
           );
           return !!result;
         } else {
-          return !!Category.findBySlug(value.dasherize());
+          return !!Category.findBySlug(dasherize(value));
         }
       case "group_id":
         const groups = this.site.get("groups");
