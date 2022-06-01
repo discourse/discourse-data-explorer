@@ -4,6 +4,7 @@ import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
 import { capitalize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
 
 function icon_or_image_replacement(str, ctx) {
   str = Ember.get(ctx.contexts[0], str);
@@ -103,7 +104,7 @@ const QueryRowContentComponent = Ember.Component.extend({
       }
     });
 
-    this.set("rowContents", `<td>${parts.join("</td><td>")}</td>`.htmlSafe());
+    this.set("rowContents", htmlSafe(`<td>${parts.join("</td><td>")}</td>`));
   },
 });
 
