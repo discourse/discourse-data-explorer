@@ -6,5 +6,7 @@ module DataExplorer
 
     belongs_to :query
     belongs_to :group
+
+    has_many :bookmarks, as: :bookmarkable
   end
 end

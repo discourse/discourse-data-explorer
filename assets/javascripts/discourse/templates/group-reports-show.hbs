@@ -10,6 +10,14 @@
       </div>
     {{/if}}
     {{d-button action=(action "run") icon="play" label="explorer.run" class="btn-primary" type="submit"}}
+
+    {{d-button
+      action=(action "toggleBookmark")
+      label=bookmarkLabel
+      icon=bookmarkIcon
+      class=bookmarkClassName
+    }}
+
   </form>
   {{conditional-loading-spinner condition=loading}}
   {{#if results}}

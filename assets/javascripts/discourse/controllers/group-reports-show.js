@@ -1,5 +1,11 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
+import Bookmark, {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
+import { openBookmarkModal } from "discourse/controllers/bookmark";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Ember.Controller.extend({
   showResults: false,
@@ -35,5 +41,55 @@ export default Ember.Controller.extend({
         })
         .finally(() => this.set("loading", false));
     },
+
+    toggleBookmark() {
+      return openBookmarkModal(
+        this.query_group.bookmark ||
+          Bookmark.create({
+            bookmarkable_type: "DataExplorer::QueryGroup",
+            bookmarkable_id: this.query_group.id,
+            user_id: this.currentUser.id,
+          }),
+        {
+          onAfterSave: (savedData) => {
+            const bookmark = Bookmark.create(savedData);
+            this.set("query_group.bookmark", bookmark);
+            this.appEvents.trigger(
+              "bookmarks:changed",
+              savedData,
+              bookmark.attachedTo()
+            );
+          },
+          onAfterDelete: () => {
+            this.set("query_group.bookmark", null);
+          },
+        }
+      );      
+    },
+    
+  }, // actions
+
+  @discourseComputed("query_group.bookmark")
+  bookmarkLabel(bookmark) {
+    return bookmark
+    ? "bookmarked.edit_bookmark"
+    : "bookmarked.title";
   },
+
+  @discourseComputed("query_group.bookmark")
+  bookmarkIcon(bookmark) {
+    if (bookmark && bookmark.reminder_at) {
+      return WITH_REMINDER_ICON;
+    }
+    return NO_REMINDER_ICON;
+
+  },
+
+  @discourseComputed("query_group.bookmark")
+  bookmarkClassName(bookmark) {
+    return bookmark
+      ? ["bookmark", "bookmarked"]
+      : ["bookmark"];
+  },
+
 });
