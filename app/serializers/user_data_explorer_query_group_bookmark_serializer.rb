@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class UserDataExplorerQueryGroupBookmarkSerializer < UserBookmarkBaseSerializer
-  attr_reader :data_explorer_query_group
-  attr_reader :data_explorer_query
-
   def title
     fancy_title
   end

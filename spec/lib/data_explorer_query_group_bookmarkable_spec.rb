@@ -20,6 +20,7 @@ describe DataExplorerQueryGroupBookmarkable do
                                     user: admin_user) }
 
   before do
+    SiteSetting.data_explorer_enabled = true
     Bookmark.register_bookmarkable(DataExplorerQueryGroupBookmarkable)
   end
 

@@ -20,7 +20,6 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
     .joins("INNER JOIN data_explorer_query_groups ON data_explorer_query_groups.id = bookmarks.bookmarkable_id
           AND bookmarks.bookmarkable_type = 'DataExplorer::QueryGroup'")
       .joins("LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id")
-      .joins("LEFT JOIN groups ON groups.id = data_explorer_query_groups.group_id")
       .where("data_explorer_query_groups.group_id IN (?)", group_ids)
   end
 
@@ -48,20 +47,7 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
 
   def self.can_see?(guardian, bookmark)
     return false if !bookmark.bookmarkable.group
-
-    # guardian.user_is_a_member_of_group?(bookmark.bookmarkable.group)
-
-    # TODO this is a workaround.
-    guardian_user_is_a_member_of_group?(guardian, bookmark.bookmarkable.group)
-    
-  end
-
-  # TODO Lifted almost verbatim from plugin.rb add_to_class(:guardian, :user_can_access_query?)
-  def self.guardian_user_is_a_member_of_group?(guardian, group)
-    return false if !guardian.user
-    return true if guardian.user.admin?
-  
-    return guardian.user.group_ids.include?(group.id)
+    guardian.user_is_a_member_of_group?(bookmark.bookmarkable.group)
   end
 
 end

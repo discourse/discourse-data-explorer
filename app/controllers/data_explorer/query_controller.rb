@@ -69,8 +69,8 @@ class DataExplorer::QueryController < ::ApplicationController
 
         # TODO this has a messy return, a query in a query, and a query_group in a query_group. Fix.
         render json: {
-          query: serialize_data(@query, DataExplorer::QuerySerializer),
-          query_group: serialize_data(query_group, DataExplorer::QueryGroupSerializer),
+          query: serialize_data(@query, DataExplorer::QuerySerializer, root: nil),
+          query_group: serialize_data(query_group, DataExplorer::QueryGroupSerializer, root: nil),
         }
 
       end
