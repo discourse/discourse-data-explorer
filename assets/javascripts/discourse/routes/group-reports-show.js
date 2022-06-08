@@ -11,8 +11,8 @@ export default DiscourseRoute.extend({
       .then((response) => {
         // TODO - Messy. Check why DataExplorer::QueryController.group_reports_show
         //        returns the objects this way.
-        let query = response.query.query; 
-        let query_group = response.query_group.query_group; 
+        let query = response.query.query;
+        let query_group = response.query_group.query_group;
 
         const queryParamInfo = query.param_info;
 

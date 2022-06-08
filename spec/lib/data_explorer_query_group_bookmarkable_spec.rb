@@ -3,34 +3,34 @@
 require 'rails_helper'
 
 describe DataExplorerQueryGroupBookmarkable do
-  fab!(:admin_user) { Fabricate(:user) }
+  fab!(:admin_user) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:guardian) { Guardian.new(user) }
-  fab!(:group0) { Fabricate(:group)}
-  fab!(:group1) { Fabricate(:group)}
-  fab!(:group2) { Fabricate(:group)}
-  fab!(:group3) { Fabricate(:group)}
-  fab!(:query1) { Fabricate(:query, name: "My First Query", 
+  fab!(:group0) { Fabricate(:group) }
+  fab!(:group1) { Fabricate(:group) }
+  fab!(:group2) { Fabricate(:group) }
+  fab!(:group3) { Fabricate(:group) }
+  fab!(:query1) { Fabricate(:query, name: "My First Query",
                                     description: "This is the description of my 1st query.",
                                     sql: "Not really important",
                                     user: admin_user) }
-  fab!(:query2) { Fabricate(:query, name: "My Second Query", 
+  fab!(:query2) { Fabricate(:query, name: "My Second Query",
                                     description: "This is my 2nd query's description.",
                                     sql: "Not really important",
                                     user: admin_user) }
-  
+
   before do
     Bookmark.register_bookmarkable(DataExplorerQueryGroupBookmarkable)
   end
 
-  # Groups 0 and 1 have access to the Query 1. 
+  # Groups 0 and 1 have access to the Query 1.
   let!(:query_group1) { Fabricate(:query_group, query: query1, group: group0) }
   let!(:query_group2) { Fabricate(:query_group, query: query1, group: group1) }
   # User is member of both groups.
   let!(:group_user1) { Fabricate(:group_user, user: user, group: group0) }
   let!(:group_user2) { Fabricate(:group_user, user: user, group: group1) }
 
-  # Group 1 also has access to query2. 
+  # Group 1 also has access to query2.
   let!(:query_group3) { Fabricate(:query_group, query: query2, group: group1) }
 
   # Group 2 has access to query 1. User is NOT a member of this group.
@@ -40,24 +40,24 @@ describe DataExplorerQueryGroupBookmarkable do
   let!(:group_user3) { Fabricate(:group_user, user: user, group: group3) }
 
   # User bookmarked the same Query 1 twice, from different Groups (0 and 1)
-  let!(:bookmark1) { Fabricate(:bookmark, user: user, 
-                                          bookmarkable: query_group1, 
+  let!(:bookmark1) { Fabricate(:bookmark, user: user,
+                                          bookmarkable: query_group1,
                                           name: "something i gotta do") }
-  let!(:bookmark2) { Fabricate(:bookmark, user: user, 
-                                          bookmarkable: query_group2, 
+  let!(:bookmark2) { Fabricate(:bookmark, user: user,
+                                          bookmarkable: query_group2,
                                           name: "something else i have to do") }
 
   # User also bookmarked Query 2 from Group 1.
-  let!(:bookmark3) { Fabricate(:bookmark, user: user, 
-                                          bookmarkable: query_group3, 
+  let!(:bookmark3) { Fabricate(:bookmark, user: user,
+                                          bookmarkable: query_group3,
                                           name: "this is the other query I needed.") }
-  
+
   # User previously bookmarked Query 1 from Group 2, of which she is no longer a member.
-  let!(:bookmark4) { Fabricate(:bookmark, user: user, 
-                                          bookmarkable: query_group4, 
+  let!(:bookmark4) { Fabricate(:bookmark, user: user,
+                                          bookmarkable: query_group4,
                                           name: "something i gotta do also") }
-  
-  
+
+
   subject { RegisteredBookmarkable.new(DataExplorerQueryGroupBookmarkable) }
 
   describe "#perform_list_query" do
@@ -131,7 +131,7 @@ describe DataExplorerQueryGroupBookmarkable do
       expect(subject.can_see?(guardian, bookmark2)).to eq(true) #Query 1, Group 1
       expect(subject.can_see?(guardian, bookmark3)).to eq(true) #Query 2, Group 1
       expect(subject.can_see?(guardian, bookmark4)).to eq(false) #Query 1, Group 2
-      
+
       # remove from Groups 0 and 1
       group_user1.delete # Group 0
       group_user2.delete # Group 1

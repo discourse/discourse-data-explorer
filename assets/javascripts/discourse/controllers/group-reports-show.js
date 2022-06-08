@@ -64,9 +64,9 @@ export default Ember.Controller.extend({
             this.set("query_group.bookmark", null);
           },
         }
-      );      
+      );
     },
-    
+
   }, // actions
 
   @discourseComputed("query_group.bookmark")
