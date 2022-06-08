@@ -19,14 +19,14 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
     user.bookmarks_of_type("DataExplorer::QueryGroup")
     .joins("INNER JOIN data_explorer_query_groups ON data_explorer_query_groups.id = bookmarks.bookmarkable_id
           AND bookmarks.bookmarkable_type = 'DataExplorer::QueryGroup'")
-      .joins("LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id")
-      .where("data_explorer_query_groups.group_id IN (?)", group_ids)
+    .joins("LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id")
+    .where("data_explorer_query_groups.group_id IN (?)", group_ids)
   end
 
   # Searchable only by data_explorer_queries name and description
   def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
     bookmarkable_search.call(bookmarks, 
-      "data_explorer_queries.name ILIKE :q OR data_explorer_queries.description ILIKE :q")
+      "data_explorer_queries.name ILIKE :q")
   end
 
   def self.reminder_handler(bookmark)

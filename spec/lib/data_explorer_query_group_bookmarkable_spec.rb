@@ -94,11 +94,6 @@ describe DataExplorerQueryGroupBookmarkable do
       expect(subject.perform_search_query(subject.perform_list_query(user, guardian), "%First%", ts_query).map(&:id)).to match_array([bookmark1.id, bookmark2.id])
     end
 
-    it "returns bookmarks that match by Query description" do
-      ts_query = Search.ts_query(term: "2nd query", ts_config: "simple")
-      expect(subject.perform_search_query(subject.perform_list_query(user, guardian), "%2nd query%", ts_query).map(&:id)).to match_array([bookmark3.id])
-    end
-
   end
 
   describe "#can_send_reminder?" do
