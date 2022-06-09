@@ -16,14 +16,14 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
   def self.list_query(user, guardian)
     group_ids = user.visible_groups.pluck(:id) 
     return if group_ids.empty?
-    user.bookmarks_of_type("DataExplorer::QueryGroup")
-    .joins("INNER JOIN data_explorer_query_groups ON data_explorer_query_groups.id = bookmarks.bookmarkable_id
-          AND bookmarks.bookmarkable_type = 'DataExplorer::QueryGroup'")
-    .joins("LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id")
-    .where("data_explorer_query_groups.group_id IN (?)", group_ids)
+    query = user.bookmarks_of_type("DataExplorer::QueryGroup")
+            .joins("INNER JOIN data_explorer_query_groups ON data_explorer_query_groups.id = bookmarks.bookmarkable_id")
+            .joins("LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id")
+    query = query.where("data_explorer_query_groups.group_id IN (?)", group_ids) if !user.admin?
+    query
   end
 
-  # Searchable only by data_explorer_queries name and description
+  # Searchable only by data_explorer_queries name
   def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
     bookmarkable_search.call(bookmarks, 
       "data_explorer_queries.name ILIKE :q")
