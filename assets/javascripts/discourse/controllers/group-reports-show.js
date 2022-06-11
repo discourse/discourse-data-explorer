@@ -44,16 +44,16 @@ export default Ember.Controller.extend({
 
     toggleBookmark() {
       return openBookmarkModal(
-        this.query_group.bookmark ||
+        this.queryGroup.bookmark ||
           Bookmark.create({
             bookmarkable_type: "DataExplorer::QueryGroup",
-            bookmarkable_id: this.query_group.id,
+            bookmarkable_id: this.queryGroup.id,
             user_id: this.currentUser.id,
           }),
         {
           onAfterSave: (savedData) => {
             const bookmark = Bookmark.create(savedData);
-            this.set("query_group.bookmark", bookmark);
+            this.set("queryGroup.bookmark", bookmark);
             this.appEvents.trigger(
               "bookmarks:changed",
               savedData,
@@ -61,7 +61,7 @@ export default Ember.Controller.extend({
             );
           },
           onAfterDelete: () => {
-            this.set("query_group.bookmark", null);
+            this.set("queryGroup.bookmark", null);
           },
         }
       );
@@ -69,14 +69,14 @@ export default Ember.Controller.extend({
 
   }, // actions
 
-  @discourseComputed("query_group.bookmark")
+  @discourseComputed("queryGroup.bookmark")
   bookmarkLabel(bookmark) {
     return bookmark
     ? "bookmarked.edit_bookmark"
     : "bookmarked.title";
   },
 
-  @discourseComputed("query_group.bookmark")
+  @discourseComputed("queryGroup.bookmark")
   bookmarkIcon(bookmark) {
     if (bookmark && bookmark.reminder_at) {
       return WITH_REMINDER_ICON;
@@ -85,7 +85,7 @@ export default Ember.Controller.extend({
 
   },
 
-  @discourseComputed("query_group.bookmark")
+  @discourseComputed("queryGroup.bookmark")
   bookmarkClassName(bookmark) {
     return bookmark
       ? ["bookmark", "bookmarked", "query-group-bookmark"].join(" ")

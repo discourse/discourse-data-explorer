@@ -10,7 +10,7 @@ export default DiscourseRoute.extend({
     return ajax(`/g/${group.name}/reports/${params.query_id}`)
       .then((response) => {
         let query = response.query;
-        let query_group = response.query_group;
+        let queryGroup = response.query_group;
 
         const queryParamInfo = query.param_info;
 
@@ -22,7 +22,7 @@ export default DiscourseRoute.extend({
         return {
           model: Object.assign({ params: queryParams }, query),
           group,
-          query_group
+          queryGroup
         };
       })
       .catch(() => {
