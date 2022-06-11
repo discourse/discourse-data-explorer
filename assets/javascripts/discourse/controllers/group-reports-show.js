@@ -89,7 +89,7 @@ export default Ember.Controller.extend({
   bookmarkClassName(bookmark) {
     return bookmark
       ? ["bookmark", "bookmarked", "query-group-bookmark"].join(" ")
-      : ["bookmark", "query-group-bookmark"];
+      : ["bookmark", "query-group-bookmark"].join(" ");
   },
 
 });
