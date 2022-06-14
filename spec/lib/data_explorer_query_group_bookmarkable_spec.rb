@@ -58,7 +58,6 @@ describe DataExplorerQueryGroupBookmarkable do
                                           bookmarkable: query_group4,
                                           name: "something i gotta do also") }
 
-
   subject { RegisteredBookmarkable.new(DataExplorerQueryGroupBookmarkable) }
 
   describe "#perform_list_query" do

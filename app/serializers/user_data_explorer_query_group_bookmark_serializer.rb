@@ -18,7 +18,7 @@ class UserDataExplorerQueryGroupBookmarkSerializer < UserBookmarkBaseSerializer
   end
 
   def bookmarkable_url
-    "/g/#{data_explorer_query_group.group.name}/reports/#{data_explorer_query_group.query_id}" 
+    "/g/#{data_explorer_query_group.group.name}/reports/#{data_explorer_query_group.query_id}"
   end
 
   def excerpt

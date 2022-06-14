@@ -22,7 +22,7 @@ export default DiscourseRoute.extend({
         return {
           model: Object.assign({ params: queryParams }, query),
           group,
-          queryGroup
+          queryGroup,
         };
       })
       .catch(() => {

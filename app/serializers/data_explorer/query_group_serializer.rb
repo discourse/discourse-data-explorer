@@ -6,7 +6,7 @@ class DataExplorer::QueryGroupSerializer < ActiveModel::Serializer
   def query_group_bookmark
     @query_group_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
   end
-          
+
   def include_bookmark?
     query_group_bookmark.present?
   end

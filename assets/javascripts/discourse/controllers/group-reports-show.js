@@ -66,14 +66,11 @@ export default Ember.Controller.extend({
         }
       );
     },
-
   }, // actions
 
   @discourseComputed("queryGroup.bookmark")
   bookmarkLabel(bookmark) {
-    return bookmark
-    ? "bookmarked.edit_bookmark"
-    : "bookmarked.title";
+    return bookmark ? "bookmarked.edit_bookmark" : "bookmarked.title";
   },
 
   @discourseComputed("queryGroup.bookmark")
@@ -82,7 +79,6 @@ export default Ember.Controller.extend({
       return WITH_REMINDER_ICON;
     }
     return NO_REMINDER_ICON;
-
   },
 
   @discourseComputed("queryGroup.bookmark")
@@ -91,5 +87,4 @@ export default Ember.Controller.extend({
       ? ["bookmark", "bookmarked", "query-group-bookmark"].join(" ")
       : ["bookmark", "query-group-bookmark"].join(" ");
   },
-
 });
