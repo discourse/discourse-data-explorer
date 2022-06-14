@@ -65,7 +65,13 @@ class DataExplorer::QueryController < ::ApplicationController
 
     respond_to do |format|
       format.json do
-        render_serialized @query, DataExplorer::QuerySerializer, root: 'query'
+        query_group = DataExplorer::QueryGroup.find_by(query_id: @query.id, group_id: @group.id)
+
+        render json: {
+          query: serialize_data(@query, DataExplorer::QuerySerializer, root: nil),
+          query_group: serialize_data(query_group, DataExplorer::QueryGroupSerializer, root: nil),
+        }
+
       end
     end
   end

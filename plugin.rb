@@ -875,6 +875,12 @@ SQL
     end
   end
 
+  load File.expand_path('../lib/data_explorer_query_group_bookmarkable.rb', __FILE__)
+  load File.expand_path('../app/serializers/user_data_explorer_query_group_bookmark_serializer.rb', __FILE__)
+
+  # Making DataExplorer::QueryGroup Bookmarkable.
+  Bookmark.register_bookmarkable(DataExplorerQueryGroupBookmarkable)
+
   require_dependency 'application_controller'
   require_dependency File.expand_path('../lib/queries.rb', __FILE__)
 
