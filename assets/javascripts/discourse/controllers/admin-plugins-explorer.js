@@ -9,6 +9,7 @@ import {
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import bootbox from "bootbox";
+import { not, reads, sort } from "@ember/object/computed";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
@@ -21,9 +22,9 @@ export default Ember.Controller.extend({
   loading: false,
   explain: false,
 
-  saveDisabled: Ember.computed.not("selectedItem.dirty"),
-  runDisabled: Ember.computed.reads("selectedItem.dirty"),
-  results: Ember.computed.reads("selectedItem.results"),
+  saveDisabled: not("selectedItem.dirty"),
+  runDisabled: reads("selectedItem.dirty"),
+  results: reads("selectedItem.results"),
 
   asc: null,
   order: null,
@@ -31,7 +32,7 @@ export default Ember.Controller.extend({
   everEditing: false,
   showRecentQueries: true,
   sortBy: ["last_run_at:desc"],
-  sortedQueries: Ember.computed.sort("model", "sortBy"),
+  sortedQueries: sort("model", "sortBy"),
 
   @computed("params")
   parsedParams(params) {
