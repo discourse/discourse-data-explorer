@@ -1,5 +1,4 @@
-import {
-  default as computed,
+import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -59,7 +58,7 @@ const Query = RestModel.extend({
     this.set("params", newParams);
   },
 
-  @computed("id")
+  @discourseComputed("id")
   downloadUrl(id) {
     // TODO - can we change this to use the store/adapter?
     return getURL(`/admin/plugins/explorer/queries/${id}.json?export=1`);

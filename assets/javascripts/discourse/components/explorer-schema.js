@@ -1,17 +1,16 @@
-import {
-  default as computed,
-  observes,
-} from "discourse-common/utils/decorators";
-import { debounce } from "@ember/runloop";
+import Component from "@ember/component";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { isBlank, isEmpty } from "@ember/utils";
 
-export default Ember.Component.extend({
+export default Component.extend({
   actions: {
     collapseSchema() {
       this.set("hideSchema", true);
     },
   },
 
-  @computed("schema")
+  @discourseComputed("schema")
   transformedSchema(schema) {
     for (let key in schema) {
       if (!schema.hasOwnProperty(key)) {
@@ -51,9 +50,9 @@ export default Ember.Component.extend({
     return schema;
   },
 
-  @computed("filter")
+  @discourseComputed("filter")
   rfilter(filter) {
-    if (!Ember.isBlank(filter)) {
+    if (!isBlank(filter)) {
       return new RegExp(filter);
     }
   },
@@ -100,7 +99,7 @@ export default Ember.Component.extend({
             filterCols.push(col);
           }
         });
-        if (!Ember.isEmpty(filterCols)) {
+        if (!isEmpty(filterCols)) {
           tables.push({
             name: key,
             columns: filterCols,
@@ -114,14 +113,7 @@ export default Ember.Component.extend({
 
   @observes("filter")
   triggerFilter() {
-    // TODO: Use discouseDebounce after the 2.7 release.
-    let debounceFunc = debounce;
-
-    try {
-      debounceFunc = require("discourse-common/lib/debounce").default;
-    } catch (_) {}
-
-    debounceFunc(
+    discourseDebounce(
       this,
       function () {
         this.set("filteredTables", this.filterTables(this.transformedSchema));

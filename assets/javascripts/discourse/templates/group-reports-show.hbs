@@ -1,6 +1,7 @@
 <section class="user-content">
   <h1>{{model.name}}</h1>
   <p>{{model.description}}</p>
+
   <form class="query-run" {{action "run" on="submit"}}>
     {{#if hasParams}}
       <div class="query-params">
@@ -9,7 +10,14 @@
         {{/each}}
       </div>
     {{/if}}
-    {{d-button action=(action "run") icon="play" label="explorer.run" class="btn-primary" type="submit"}}
+
+    {{d-button
+      action=(action "run")
+      icon="play"
+      label="explorer.run"
+      class="btn-primary"
+      type="submit"
+    }}
 
     {{d-button
       action=(action "toggleBookmark")
@@ -17,9 +25,10 @@
       icon=bookmarkIcon
       class=bookmarkClassName
     }}
-
   </form>
+
   {{conditional-loading-spinner condition=loading}}
+
   {{#if results}}
     <div class="query-results">
       {{#if showResults}}

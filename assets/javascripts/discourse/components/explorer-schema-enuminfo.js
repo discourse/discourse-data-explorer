@@ -1,9 +1,10 @@
-import { default as computed } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "ol",
 
-  @computed("col.enum")
+  @discourseComputed("col.enum")
   enuminfo(hash) {
     let result = [];
     for (let key in hash) {

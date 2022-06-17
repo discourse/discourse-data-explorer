@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { on } from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: [":schema-table", "open"],
   tagName: "li",
 

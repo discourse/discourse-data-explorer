@@ -1,6 +1,12 @@
 {{#if info.nullable}}
-  {{combo-box valueAttribute="id" value=value nameProperty="name" content=boolTypes}}
+  {{combo-box
+    valueAttribute="id"
+    value=value
+    nameProperty="name"
+    content=boolTypes
+  }}
 {{else}}
   {{input type="checkbox" checked=valueBool}}
 {{/if}}
+
 <span class="param-name">{{info.identifier}}</span>

@@ -1,7 +1,10 @@
+import Component from "@ember/component";
 import I18n from "I18n";
-import { default as computed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { dasherize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
+import { computed } from "@ember/object";
 
 const layoutMap = {
   int: "int",
@@ -34,7 +37,7 @@ function allowsInputTypeTime() {
   }
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["valid:valid:invalid", ":param"],
 
   boolTypes: [
@@ -52,7 +55,7 @@ export default Ember.Component.extend({
     }
   },
 
-  value: Ember.computed("params", "info.identifier", {
+  value: computed("params", "info.identifier", {
     get() {
       return this.params[this.get("info.identifier")];
     },
@@ -62,7 +65,7 @@ export default Ember.Component.extend({
     },
   }),
 
-  valueBool: Ember.computed("params", "info.identifier", {
+  valueBool: computed("params", "info.identifier", {
     get() {
       return this.params[this.get("info.identifier")] !== "false";
     },
@@ -73,9 +76,9 @@ export default Ember.Component.extend({
     },
   }),
 
-  @computed("value", "info.type", "info.nullable")
+  @discourseComputed("value", "info.type", "info.nullable")
   valid(value, type, nullable) {
-    if (Ember.isEmpty(value)) {
+    if (isEmpty(value)) {
       return nullable;
     }
 
@@ -131,7 +134,7 @@ export default Ember.Component.extend({
     return true;
   },
 
-  @computed("info.type")
+  @discourseComputed("info.type")
   layoutType(type) {
     if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
       return "string";
@@ -142,7 +145,7 @@ export default Ember.Component.extend({
     return "generic";
   },
 
-  @computed("layoutType")
+  @discourseComputed("layoutType")
   layoutName(layoutType) {
     return `admin/components/q-params/${layoutType}`;
   },

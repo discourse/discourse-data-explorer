@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import Badge from "discourse/models/badge";
-import { default as computed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { capitalize } from "@ember/string";
 import { alias, mapBy, notEmpty, reads } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
@@ -28,7 +29,7 @@ function transformedRelTable(table, modelClass) {
   return result;
 }
 
-const QueryResultComponent = Ember.Component.extend({
+const QueryResultComponent = Component.extend({
   layoutName: "explorer-query-result",
 
   rows: alias("content.rows"),
@@ -40,7 +41,7 @@ const QueryResultComponent = Ember.Component.extend({
   chartValues: mapBy("content.rows", "1"),
   showChart: false,
 
-  @computed("content.result_count")
+  @discourseComputed("content.result_count")
   resultCount(count) {
     if (count === this.get("content.default_limit")) {
       return I18n.t("explorer.max_result_count", { count });
@@ -51,14 +52,14 @@ const QueryResultComponent = Ember.Component.extend({
 
   colCount: reads("content.columns.length"),
 
-  @computed("content.duration")
+  @discourseComputed("content.duration")
   duration(contentDuration) {
     return I18n.t("explorer.run_time", {
       value: I18n.toNumber(contentDuration, { precision: 1 }),
     });
   },
 
-  @computed("params.[]")
+  @discourseComputed("params.[]")
   parameterAry(params) {
     let arr = [];
     for (let key in params) {
@@ -69,7 +70,7 @@ const QueryResultComponent = Ember.Component.extend({
     return arr;
   },
 
-  @computed("content", "columns.[]")
+  @discourseComputed("content", "columns.[]")
   columnDispNames(content, columns) {
     if (!columns) {
       return [];
@@ -86,12 +87,12 @@ const QueryResultComponent = Ember.Component.extend({
     });
   },
 
-  @computed
+  @discourseComputed
   fallbackTemplate() {
     return findRawTemplate("javascripts/explorer/text");
   },
 
-  @computed("content", "columns.[]")
+  @discourseComputed("content", "columns.[]")
   columnTemplates(content, columns) {
     if (!columns) {
       return [];
@@ -108,29 +109,29 @@ const QueryResultComponent = Ember.Component.extend({
     });
   },
 
-  @computed("content.relations.user")
+  @discourseComputed("content.relations.user")
   transformedUserTable(contentRelationsUser) {
     return transformedRelTable(contentRelationsUser);
   },
-  @computed("content.relations.badge")
+  @discourseComputed("content.relations.badge")
   transformedBadgeTable(contentRelationsBadge) {
     return transformedRelTable(contentRelationsBadge, Badge);
   },
-  @computed("content.relations.post")
+  @discourseComputed("content.relations.post")
   transformedPostTable(contentRelationsPost) {
     return transformedRelTable(contentRelationsPost);
   },
-  @computed("content.relations.topic")
+  @discourseComputed("content.relations.topic")
   transformedTopicTable(contentRelationsTopic) {
     return transformedRelTable(contentRelationsTopic);
   },
 
-  @computed("site.groups")
+  @discourseComputed("site.groups")
   transformedGroupTable(groups) {
     return transformedRelTable(groups);
   },
 
-  @computed(
+  @discourseComputed(
     "rows.[]",
     "content.colrender.[]",
     "content.result_count",
@@ -147,7 +148,7 @@ const QueryResultComponent = Ember.Component.extend({
     );
   },
 
-  @computed("content.rows.[]", "content.colrender.[]")
+  @discourseComputed("content.rows.[]", "content.colrender.[]")
   chartLabels(rows, colRender) {
     const labelSelectors = {
       user: (user) => user.username,

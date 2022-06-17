@@ -5,20 +5,33 @@
     {{#unless selectedQueryId}}
       <div class="query-list">
         {{text-field value=search placeholderKey="explorer.search_placeholder"}}
-        {{d-button action=(action "showCreate") icon="plus" class="no-text btn-right"}}
+        {{d-button
+          action=(action "showCreate")
+          icon="plus"
+          class="no-text btn-right"
+        }}
         {{pick-files-button
           class="import-btn"
           label="explorer.import.label"
           icon="upload"
           acceptedFormatsOverride=acceptedImportFileTypes
           showButton=true
-          onFilesPicked=(action "import")}}
+          onFilesPicked=(action "import")
+        }}
       </div>
 
       {{#if showCreate}}
         <div class="query-create">
-          {{text-field value=newQueryName placeholderKey="explorer.create_placeholder"}}
-          {{d-button action=(action "create") disabled=createDisabled label="explorer.create" icon="plus"}}
+          {{text-field
+            value=newQueryName
+            placeholderKey="explorer.create_placeholder"
+          }}
+          {{d-button
+            action=(action "create")
+            disabled=createDisabled
+            label="explorer.create"
+            icon="plus"
+          }}
         </div>
       {{/if}}
 
@@ -36,25 +49,40 @@
           {{#if selectedItem}}
             {{#if editing}}
               <div class="name">
-                {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
+                {{d-button
+                  action=(action "goHome")
+                  icon="chevron-left"
+                  class="previous"
+                }}
                 <div class="name-text-field">
                   {{text-field value=selectedItem.name}}
                 </div>
               </div>
-              <div class="desc">
-                {{textarea value=selectedItem.description placeholder=(i18n "explorer.description_placeholder")}}
-              </div>
 
+              <div class="desc">
+                {{textarea
+                  value=selectedItem.description
+                  placeholder=(i18n "explorer.description_placeholder")
+                }}
+              </div>
             {{else}}
               <div class="name">
-                {{d-button action=(action "goHome") icon="chevron-left" class="previous"}}
+                {{d-button
+                  action=(action "goHome")
+                  icon="chevron-left"
+                  class="previous"
+                }}
+
                 <h1>
                   {{selectedItem.name}}
                   {{#unless editDisabled}}
-                    <a href {{action "editName" class="edit-query-name"}}>{{d-icon "pencil-alt"}}</a>
+                    <a href {{action "editName" class="edit-query-name"}}>
+                      {{d-icon "pencil-alt"}}
+                    </a>
                   {{/unless}}
                 </h1>
               </div>
+
               <div class="desc">
                 {{selectedItem.description}}
               </div>
@@ -71,11 +99,20 @@
                     onSelect=(action (mut selectedItem.group_ids))
                   }}
                 </span>
+
                 {{#if runDisabled}}
                   {{#unless editing}}
                     <span class="setting-controls">
-                      {{d-button class="ok" action=(action "save") icon="check"}}
-                      {{d-button class="cancel" action=(action "discard") icon="times"}}
+                      {{d-button
+                        class="ok"
+                        action=(action "save")
+                        icon="check"
+                      }}
+                      {{d-button
+                        class="cancel"
+                        action=(action "discard")
+                        icon="times"
+                      }}
                     </span>
                   {{/unless}}
                 {{/if}}
@@ -91,10 +128,16 @@
                   <div class="editor-panel">
                     {{ace-editor content=selectedItem.sql mode="sql"}}
                   </div>
+
                   <div class="right-panel">
                     {{#if hideSchema}}
-                      {{d-button action=(action "expandSchema") icon="chevron-left" class="no-text unhide"}}
+                      {{d-button
+                        action=(action "expandSchema")
+                        icon="chevron-left"
+                        class="no-text unhide"
+                      }}
                     {{/if}}
+
                     <div class="schema">
                       {{explorer-schema schema=schema hideSchema=hideSchema}}
                     </div>
@@ -117,26 +160,61 @@
 
             <div class="pull-left left-buttons">
               {{#if everEditing}}
-                {{d-button action=(action "save") label="explorer.save" disabled=saveDisable}}
+                {{d-button
+                  action=(action "save")
+                  label="explorer.save"
+                  disabled=saveDisable
+                }}
               {{else}}
                 {{#unless editDisabled}}
-                  {{d-button action=(action "editName") label="explorer.edit" icon="pencil-alt"}}
+                  {{d-button
+                    action=(action "editName")
+                    label="explorer.edit"
+                    icon="pencil-alt"
+                  }}
                 {{/unless}}
               {{/if}}
-              {{d-button action=(action "download") label="explorer.export" disabled=runDisabled icon="download"}}
+
+              {{d-button
+                action=(action "download")
+                label="explorer.export"
+                disabled=runDisabled
+                icon="download"
+              }}
+
               {{#if everEditing}}
-                {{d-button action=(action "showHelpModal") label="explorer.help.label" icon="question-circle"}}
+                {{d-button
+                  action=(action "showHelpModal")
+                  label="explorer.help.label"
+                  icon="question-circle"
+                }}
               {{/if}}
             </div>
 
             <div class="pull-right right-buttons">
               {{#if selectedItem.destroyed}}
-                {{d-button action=(action "recover") class="" icon="undo" label="explorer.recover"}}
+                {{d-button
+                  action=(action "recover")
+                  class=""
+                  icon="undo"
+                  label="explorer.recover"
+                }}
               {{else}}
                 {{#if everEditing}}
-                  {{d-button action=(action "discard") icon="undo" label="explorer.undo" disabled=saveDisabled}}
+                  {{d-button
+                    action=(action "discard")
+                    icon="undo"
+                    label="explorer.undo"
+                    disabled=saveDisabled
+                  }}
                 {{/if}}
-                {{d-button action=(action "destroy") class="btn-danger" icon="trash-alt" label="explorer.delete"}}
+
+                {{d-button
+                  action=(action "destroy")
+                  class="btn-danger"
+                  icon="trash-alt"
+                  label="explorer.delete"
+                }}
               {{/if}}
             </div>
 
@@ -159,15 +237,34 @@
 
           {{#if runDisabled}}
             {{#if saveDisabled}}
-              {{d-button label="explorer.run" disabled="true" class="btn-primary"}}
+              {{d-button
+                label="explorer.run"
+                disabled="true"
+                class="btn-primary"
+              }}
             {{else}}
-              {{d-button action=(action "saverun") icon="play" label="explorer.saverun" class="btn-primary"}}
+              {{d-button
+                action=(action "saverun")
+                icon="play"
+                label="explorer.saverun"
+                class="btn-primary"
+              }}
             {{/if}}
           {{else}}
-            {{d-button action=(action "run") icon="play" label="explorer.run" disabled=runDisabled class="btn-primary" type="submit"}}
+            {{d-button
+              action=(action "run")
+              icon="play"
+              label="explorer.run"
+              disabled=runDisabled
+              class="btn-primary"
+              type="submit"
+            }}
           {{/if}}
 
-          <label class="query-plan">{{input type="checkbox" checked=explain name="explain"}} {{i18n "explorer.explain_label"}}</label>
+          <label class="query-plan">
+            {{input type="checkbox" checked=explain name="explain"}}
+            {{i18n "explorer.explain_label"}}
+          </label>
         </form>
 
         <hr>
@@ -194,13 +291,33 @@
           <table class="recent-queries">
             <thead class="heading-container">
               <th class="col heading name">
-                <div role="button" class="heading-toggle" {{action "sortByProperty" "name"}}>
-                  {{table-header-toggle field="name" labelKey="explorer.query_name" order=order asc=asc automatic=true}}
+                <div
+                  role="button"
+                  class="heading-toggle"
+                  {{action "sortByProperty" "name"}}
+                >
+                  {{table-header-toggle
+                    field="name"
+                    labelKey="explorer.query_name"
+                    order=order
+                    asc=asc
+                    automatic=true
+                  }}
                 </div>
               </th>
               <th class="col heading created-by">
-                <div role="button" class="heading-toggle" {{action "sortByProperty" "username"}}>
-                  {{table-header-toggle field="username" labelKey="explorer.query_user" order=order asc=asc automatic=true}}
+                <div
+                  role="button"
+                  class="heading-toggle"
+                  {{action "sortByProperty" "username"}}
+                >
+                  {{table-header-toggle
+                    field="username"
+                    labelKey="explorer.query_user"
+                    order=order
+                    asc=asc
+                    automatic=true
+                  }}
                 </div>
               </th>
               <th class="col heading group-names">
@@ -209,8 +326,18 @@
                 </div>
               </th>
               <th class="col heading created-at">
-                <div role="button" class="heading-toggle" {{action "sortByProperty" "last_run_at"}}>
-                  {{table-header-toggle field="last_run_at" labelKey="explorer.query_time" order=order asc=asc automatic=true}}
+                <div
+                  role="button"
+                  class="heading-toggle"
+                  {{action "sortByProperty" "last_run_at"}}
+                >
+                  {{table-header-toggle
+                    field="last_run_at"
+                    labelKey="explorer.query_time"
+                    order=order
+                    asc=asc
+                    automatic=true
+                  }}
                 </div>
               </th>
             </thead>
@@ -218,7 +345,10 @@
               {{#each filteredContent as |query|}}
                 <tr class="query-row">
                   <td>
-                    <a {{action "scrollTop"}} href="/admin/plugins/explorer/?id={{query.id}}">
+                    <a
+                      {{action "scrollTop"}}
+                      href="/admin/plugins/explorer/?id={{query.id}}"
+                    >
                       <b class="query-name">{{query.name}}</b>
                       <medium class="query-desc">{{query.description}}</medium>
                     </a>
@@ -249,7 +379,9 @@
                 </tr>
               {{else}}
                 <br>
-                <em class="no-search-results"> {{i18n "explorer.no_search_results"}}</em>
+                <em class="no-search-results">
+                  {{i18n "explorer.no_search_results"}}
+                </em>
               {{/each}}
             </tbody>
           </table>

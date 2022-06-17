@@ -1,8 +1,10 @@
 {{! source: badge-button component }}
-<a href="{{baseuri}}/badges/{{badge.id}}/{{badge.name}}"
+<a
+  href="{{baseuri}}/badges/{{badge.id}}/{{badge.name}}"
   class="user-badge {{badge.badgeTypeClassName}}"
   title={{badge.display_name}}
-  data-badge-name={{badge.name}}>
+  data-badge-name={{badge.name}}
+>
   {{icon-or-image badge.icon}}
   <span class="badge-display-name">{{badge.display_name}}</span>
 </a>

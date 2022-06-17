@@ -1,11 +1,10 @@
 {
   "name": "discourse-data-explorer",
   "version": "0.3.0",
-  "repository": "git@github.com:discourse/discourse-data-explorer.git",
-  "author": "Riking",
+  "repository": "https://github.com/discourse/discourse-data-explorer",
+  "author": "Discourse",
   "license": "MIT",
   "devDependencies": {
-    "@arkweid/lefthook": "^0.7.2",
-    "eslint-config-discourse": "^2.0.0"
+    "eslint-config-discourse": "^3.2.0"
   }
 }

@@ -1,5 +1,6 @@
+import Controller from "@ember/controller";
 import { alias } from "@ember/object/computed";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queries: alias("model.queries"),
 });
