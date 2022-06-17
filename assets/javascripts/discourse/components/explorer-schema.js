@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { debounce } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isBlank, isEmpty } from "@ember/utils";
 
 export default Component.extend({
@@ -113,14 +113,7 @@ export default Component.extend({
 
   @observes("filter")
   triggerFilter() {
-    // TODO: Use discouseDebounce after the 2.7 release.
-    let debounceFunc = debounce;
-
-    try {
-      debounceFunc = require("discourse-common/lib/debounce").default;
-    } catch (_) {}
-
-    debounceFunc(
+    discourseDebounce(
       this,
       function () {
         this.set("filteredTables", this.filterTables(this.transformedSchema));
