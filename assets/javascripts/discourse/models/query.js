@@ -5,6 +5,7 @@ import {
 } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import RestModel from "discourse/models/rest";
+import { reads } from "@ember/object/computed";
 
 const Query = RestModel.extend({
   dirty: false,
@@ -33,7 +34,7 @@ const Query = RestModel.extend({
     this.set("dirty", false);
   },
 
-  hasParams: Ember.computed.reads("param_info.length"),
+  hasParams: reads("param_info.length"),
 
   resetParams() {
     const newParams = {};

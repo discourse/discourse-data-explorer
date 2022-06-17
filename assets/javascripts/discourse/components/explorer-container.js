@@ -1,4 +1,5 @@
 import { observes } from "discourse-common/utils/decorators";
+import { schedule, throttle } from "@ember/runloop";
 
 export default Ember.Component.extend({
   @observes("hideSchema")
@@ -8,7 +9,7 @@ export default Ember.Component.extend({
 
   @observes("everEditing")
   _onInsertEditor() {
-    Ember.run.schedule("afterRender", this, () => this._bindControls());
+    schedule("afterRender", this, () => this._bindControls());
   },
 
   _bindControls() {
@@ -49,7 +50,7 @@ export default Ember.Component.extend({
 
     const throttledMousemove = ((event) => {
       event.preventDefault();
-      Ember.run.throttle(this, mousemove, event, 20);
+      throttle(this, mousemove, event, 20);
     }).bind(this);
 
     const mouseup = (() => {

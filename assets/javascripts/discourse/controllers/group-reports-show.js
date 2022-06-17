@@ -6,13 +6,14 @@ import Bookmark, {
 } from "discourse/models/bookmark";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
 import discourseComputed from "discourse-common/utils/decorators";
+import { alias, gt } from "@ember/object/computed";
 
 export default Ember.Controller.extend({
   showResults: false,
   explain: false,
   loading: false,
-  results: Ember.computed.alias("model.results"),
-  hasParams: Ember.computed.gt("model.param_info.length", 0),
+  results: alias("model.results"),
+  hasParams: gt("model.param_info.length", 0),
 
   actions: {
     run() {

@@ -1,10 +1,11 @@
 import { on } from "discourse-common/utils/decorators";
+import { reads } from "@ember/object/computed";
 
 export default Ember.Component.extend({
   classNameBindings: [":schema-table", "open"],
   tagName: "li",
 
-  open: Ember.computed.reads("table.open"),
+  open: reads("table.open"),
 
   @on("didInsertElement")
   _bindClicks() {

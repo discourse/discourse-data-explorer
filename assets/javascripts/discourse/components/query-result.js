@@ -5,6 +5,8 @@ import getURL from "discourse-common/lib/get-url";
 import Badge from "discourse/models/badge";
 import { default as computed } from "discourse-common/utils/decorators";
 import { capitalize } from "@ember/string";
+import { alias, mapBy, notEmpty, reads } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
 
 function randomIdShort() {
   return "xxxxxxxx".replace(/[xy]/g, () => {
@@ -29,13 +31,13 @@ function transformedRelTable(table, modelClass) {
 const QueryResultComponent = Ember.Component.extend({
   layoutName: "explorer-query-result",
 
-  rows: Ember.computed.alias("content.rows"),
-  columns: Ember.computed.alias("content.columns"),
-  params: Ember.computed.alias("content.params"),
-  explainText: Ember.computed.alias("content.explain"),
-  hasExplain: Ember.computed.notEmpty("content.explain"),
-  chartDatasetName: Ember.computed.reads("columnDispNames.1"),
-  chartValues: Ember.computed.mapBy("content.rows", "1"),
+  rows: alias("content.rows"),
+  columns: alias("content.columns"),
+  params: alias("content.params"),
+  explainText: alias("content.explain"),
+  hasExplain: notEmpty("content.explain"),
+  chartDatasetName: reads("columnDispNames.1"),
+  chartValues: mapBy("content.rows", "1"),
   showChart: false,
 
   @computed("content.result_count")
@@ -47,7 +49,7 @@ const QueryResultComponent = Ember.Component.extend({
     }
   },
 
-  colCount: Ember.computed.reads("content.columns.length"),
+  colCount: reads("content.columns.length"),
 
   @computed("content.duration")
   duration(contentDuration) {
@@ -241,7 +243,7 @@ const QueryResultComponent = Ember.Component.extend({
 
       document.body.appendChild(form);
       form.submit();
-      Ember.run.schedule("afterRender", () => document.body.removeChild(form));
+      schedule("afterRender", () => document.body.removeChild(form));
     });
   },
 

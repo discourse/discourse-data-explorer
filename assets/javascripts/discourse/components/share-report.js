@@ -1,5 +1,6 @@
 import { default as computed, on } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
+import { bind } from "@ember/runloop";
 
 export default Ember.Component.extend({
   classNames: ["share-report"],
@@ -38,8 +39,8 @@ export default Ember.Component.extend({
 
   @on("init")
   _setupHandlers() {
-    this._boundMouseDownHandler = Ember.run.bind(this, this._mouseDownHandler);
-    this._boundKeydownHandler = Ember.run.bind(this, this._keydownHandler);
+    this._boundMouseDownHandler = bind(this, this._mouseDownHandler);
+    this._boundKeydownHandler = bind(this, this._keydownHandler);
   },
 
   didInsertElement() {

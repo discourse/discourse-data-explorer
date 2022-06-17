@@ -1,3 +1,5 @@
+import { alias } from "@ember/object/computed";
+
 export default Ember.Controller.extend({
-  queries: Ember.computed.alias("model.queries"),
+  queries: alias("model.queries"),
 });
