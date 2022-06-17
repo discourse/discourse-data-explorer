@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import Handlebars from "handlebars";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
@@ -8,6 +7,7 @@ import { capitalize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { escapeExpression } from "discourse/lib/utilities";
 
 function icon_or_image_replacement(str, ctx) {
   str = get(ctx.contexts[0], str);
@@ -17,9 +17,9 @@ function icon_or_image_replacement(str, ctx) {
 
   if (str.indexOf("fa-") > -1) {
     const icon = iconHTML(convertIconClass(str));
-    return new Handlebars.SafeString(icon);
+    return htmlSafe(icon);
   } else {
-    return new Handlebars.SafeString("<img src='" + str + "'>");
+    return htmlSafe("<img src='" + str + "'>");
   }
 }
 
@@ -32,12 +32,8 @@ function category_badge_replacement(str, ctx) {
 
 function bound_date_replacement(str, ctx) {
   const value = get(ctx.contexts[0], str);
-  return new Handlebars.SafeString(
-    autoUpdatingRelativeAge(new Date(value), { title: true })
-  );
+  return htmlSafe(autoUpdatingRelativeAge(new Date(value), { title: true }));
 }
-
-const esc = Handlebars.Utils.escapeExpression;
 
 // consider moving this elsewhere
 function guessUrl(t) {
@@ -81,7 +77,7 @@ const QueryRowContentComponent = Component.extend({
       if (row[idx] === null) {
         return "NULL";
       } else if (t.name === "text") {
-        return esc(row[idx]);
+        return escapeExpression(row[idx]);
       }
 
       const lookupFunc = parentView[`lookup${capitalize(t.name)}`];
@@ -101,7 +97,7 @@ const QueryRowContentComponent = Component.extend({
       }
 
       try {
-        return new Handlebars.SafeString((t.template || fallback)(ctx, params));
+        return htmlSafe((t.template || fallback)(ctx, params));
       } catch (e) {
         return "error";
       }
