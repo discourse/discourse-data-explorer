@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
@@ -34,7 +35,7 @@ function allowsInputTypeTime() {
   }
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ["valid:valid:invalid", ":param"],
 
   boolTypes: [

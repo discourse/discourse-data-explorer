@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import Handlebars from "handlebars";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
@@ -50,7 +51,7 @@ function guessUrl(t) {
   return [dest, name];
 }
 
-const QueryRowContentComponent = Ember.Component.extend({
+const QueryRowContentComponent = Component.extend({
   tagName: "tr",
   rowContents: null,
 

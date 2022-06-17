@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
 import discourseComputed from "discourse-common/utils/decorators";
 import themeColor from "../lib/themeColor";
 
-export default Ember.Component.extend({
+export default Component.extend({
   barsColor: themeColor("--tertiary"),
   barsHoverColor: themeColor("--tertiary-high"),
   gridColor: themeColor("--primary-low"),

@@ -1,8 +1,9 @@
+import Component from "@ember/component";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "@ember/runloop";
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ["share-report"],
 
   group: null,

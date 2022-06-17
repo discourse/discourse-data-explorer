@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "ol",
 
   @discourseComputed("col.enum")

@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
 
-export default Ember.Component.extend({
+export default Component.extend({
   actions: {
     collapseSchema() {
       this.set("hideSchema", true);

@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
 import { schedule, throttle } from "@ember/runloop";
 
-export default Ember.Component.extend({
+export default Component.extend({
   @observes("hideSchema")
   _onHideSchema() {
     this.appEvents.trigger("ace:resize");

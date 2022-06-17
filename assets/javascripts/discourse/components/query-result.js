@@ -1,3 +1,4 @@
+import Component from "@ember/component";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
@@ -28,7 +29,7 @@ function transformedRelTable(table, modelClass) {
   return result;
 }
 
-const QueryResultComponent = Ember.Component.extend({
+const QueryResultComponent = Component.extend({
   layoutName: "explorer-query-result",
 
   rows: alias("content.rows"),
