@@ -1,4 +1,4 @@
-import { default as computed, on } from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "@ember/runloop";
 
@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   query: null,
   visible: false,
 
-  @computed("group", "query")
+  @discourseComputed("group", "query")
   link() {
     return getURL(`/g/${this.group}/reports/${this.query.id}`);
   },

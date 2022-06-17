@@ -1,7 +1,4 @@
-import {
-  default as computed,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
 
 export default Ember.Component.extend({
@@ -11,7 +8,7 @@ export default Ember.Component.extend({
     },
   },
 
-  @computed("schema")
+  @discourseComputed("schema")
   transformedSchema(schema) {
     for (let key in schema) {
       if (!schema.hasOwnProperty(key)) {
@@ -51,7 +48,7 @@ export default Ember.Component.extend({
     return schema;
   },
 
-  @computed("filter")
+  @discourseComputed("filter")
   rfilter(filter) {
     if (!Ember.isBlank(filter)) {
       return new RegExp(filter);

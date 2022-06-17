@@ -1,5 +1,5 @@
 import loadScript from "discourse/lib/load-script";
-import { default as computed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import themeColor from "../lib/themeColor";
 
 export default Ember.Component.extend({
@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   labelsColor: themeColor("--primary-medium"),
   chart: null,
 
-  @computed("data", "options")
+  @discourseComputed("data", "options")
   config(data, options) {
     return {
       type: "bar",
@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed("labels.[]", "values.[]", "datasetName")
+  @discourseComputed("labels.[]", "values.[]", "datasetName")
   data(labels, values, datasetName) {
     return {
       labels,
@@ -33,7 +33,7 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed
+  @discourseComputed
   options() {
     return {
       scales: {

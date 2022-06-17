@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { default as computed } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { dasherize } from "@ember/string";
 
@@ -73,7 +73,7 @@ export default Ember.Component.extend({
     },
   }),
 
-  @computed("value", "info.type", "info.nullable")
+  @discourseComputed("value", "info.type", "info.nullable")
   valid(value, type, nullable) {
     if (Ember.isEmpty(value)) {
       return nullable;
@@ -131,7 +131,7 @@ export default Ember.Component.extend({
     return true;
   },
 
-  @computed("info.type")
+  @discourseComputed("info.type")
   layoutType(type) {
     if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
       return "string";
@@ -142,7 +142,7 @@ export default Ember.Component.extend({
     return "generic";
   },
 
-  @computed("layoutType")
+  @discourseComputed("layoutType")
   layoutName(layoutType) {
     return `admin/components/q-params/${layoutType}`;
   },

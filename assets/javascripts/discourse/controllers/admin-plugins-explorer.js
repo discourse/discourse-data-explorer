@@ -2,10 +2,7 @@ import showModal from "discourse/lib/show-modal";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
-import {
-  default as computed,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import bootbox from "bootbox";
@@ -34,17 +31,17 @@ export default Ember.Controller.extend({
   sortBy: ["last_run_at:desc"],
   sortedQueries: sort("model", "sortBy"),
 
-  @computed("params")
+  @discourseComputed("params")
   parsedParams(params) {
     return params ? JSON.parse(params) : null;
   },
 
-  @computed
+  @discourseComputed
   acceptedImportFileTypes() {
     return ["application/json"];
   },
 
-  @computed("search", "sortBy")
+  @discourseComputed("search", "sortBy")
   filteredContent(search) {
     const regexp = new RegExp(search, "i");
     return this.sortedQueries.filter(
@@ -52,12 +49,12 @@ export default Ember.Controller.extend({
     );
   },
 
-  @computed("newQueryName")
+  @discourseComputed("newQueryName")
   createDisabled(newQueryName) {
     return (newQueryName || "").trim().length === 0;
   },
 
-  @computed("selectedQueryId")
+  @discourseComputed("selectedQueryId")
   selectedItem(selectedQueryId) {
     const id = parseInt(selectedQueryId, 10);
     const item = this.model.findBy("id", id);
@@ -73,7 +70,7 @@ export default Ember.Controller.extend({
     return item || NoQuery;
   },
 
-  @computed("selectedItem", "editing")
+  @discourseComputed("selectedItem", "editing")
   selectedGroupNames() {
     const groupIds = this.selectedItem.group_ids || [];
     const groupNames = groupIds.map((id) => {
@@ -83,7 +80,7 @@ export default Ember.Controller.extend({
     return groupNames.join(", ");
   },
 
-  @computed("groups")
+  @discourseComputed("groups")
   groupOptions(groups) {
     return groups
       .filter((g) => g.id !== 0)
@@ -92,7 +89,7 @@ export default Ember.Controller.extend({
       });
   },
 
-  @computed("selectedItem", "selectedItem.dirty")
+  @discourseComputed("selectedItem", "selectedItem.dirty")
   othersDirty(selectedItem) {
     return !!this.model.find((q) => q !== selectedItem && q.dirty);
   },
