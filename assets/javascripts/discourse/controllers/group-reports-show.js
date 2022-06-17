@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import Bookmark, {
@@ -8,7 +9,7 @@ import { openBookmarkModal } from "discourse/controllers/bookmark";
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, gt } from "@ember/object/computed";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   showResults: false,
   explain: false,
   loading: false,

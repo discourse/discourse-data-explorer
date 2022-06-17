@@ -6,10 +6,12 @@ import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
 import { capitalize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 
 function icon_or_image_replacement(str, ctx) {
-  str = Ember.get(ctx.contexts[0], str);
-  if (Ember.isEmpty(str)) {
+  str = get(ctx.contexts[0], str);
+  if (isEmpty(str)) {
     return "";
   }
 
@@ -22,14 +24,14 @@ function icon_or_image_replacement(str, ctx) {
 }
 
 function category_badge_replacement(str, ctx) {
-  const category = Ember.get(ctx.contexts[0], str);
+  const category = get(ctx.contexts[0], str);
   return categoryLinkHTML(category, {
     allowUncategorized: true,
   });
 }
 
 function bound_date_replacement(str, ctx) {
-  const value = Ember.get(ctx.contexts[0], str);
+  const value = get(ctx.contexts[0], str);
   return new Handlebars.SafeString(
     autoUpdatingRelativeAge(new Date(value), { title: true })
   );

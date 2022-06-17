@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -6,11 +7,12 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import bootbox from "bootbox";
+import { get } from "@ember/object";
 import { not, reads, sort } from "@ember/object/computed";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   queryParams: { selectedQueryId: "id", params: "params" },
   selectedQueryId: null,
   editDisabled: false,
@@ -103,7 +105,7 @@ export default Ember.Controller.extend({
 
   addCreatedRecord(record) {
     this.model.pushObject(record);
-    this.set("selectedQueryId", Ember.get(record, "id"));
+    this.set("selectedQueryId", get(record, "id"));
     this.selectedItem.set("dirty", false);
     this.setProperties({
       showResults: false,

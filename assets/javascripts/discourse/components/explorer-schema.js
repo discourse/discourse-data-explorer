@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
+import { isBlank, isEmpty } from "@ember/utils";
 
 export default Component.extend({
   actions: {
@@ -51,7 +52,7 @@ export default Component.extend({
 
   @discourseComputed("filter")
   rfilter(filter) {
-    if (!Ember.isBlank(filter)) {
+    if (!isBlank(filter)) {
       return new RegExp(filter);
     }
   },
@@ -98,7 +99,7 @@ export default Component.extend({
             filterCols.push(col);
           }
         });
-        if (!Ember.isEmpty(filterCols)) {
+        if (!isEmpty(filterCols)) {
           tables.push({
             name: key,
             columns: filterCols,

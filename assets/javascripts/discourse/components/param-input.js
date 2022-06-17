@@ -3,6 +3,8 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { dasherize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
+import { computed } from "@ember/object";
 
 const layoutMap = {
   int: "int",
@@ -53,7 +55,7 @@ export default Component.extend({
     }
   },
 
-  value: Ember.computed("params", "info.identifier", {
+  value: computed("params", "info.identifier", {
     get() {
       return this.params[this.get("info.identifier")];
     },
@@ -63,7 +65,7 @@ export default Component.extend({
     },
   }),
 
-  valueBool: Ember.computed("params", "info.identifier", {
+  valueBool: computed("params", "info.identifier", {
     get() {
       return this.params[this.get("info.identifier")] !== "false";
     },
@@ -76,7 +78,7 @@ export default Component.extend({
 
   @discourseComputed("value", "info.type", "info.nullable")
   valid(value, type, nullable) {
-    if (Ember.isEmpty(value)) {
+    if (isEmpty(value)) {
       return nullable;
     }
 
