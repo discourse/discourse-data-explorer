@@ -6,12 +6,16 @@
   {{/if}}
   {{table.name}}
 </div>
+
 <div class="schema-table-cols">
   {{#if open}}
     <dl>
       {{#each table.columns as |col|}}
         <div>
-          <dt class={{if col.sensitive "sensitive"}} title={{if col.sensitive (i18n "explorer.schema.sensitive")}}>
+          <dt
+            class={{if col.sensitive "sensitive"}}
+            title={{if col.sensitive (i18n "explorer.schema.sensitive")}}
+          >
             {{#if col.sensitive}}
               {{d-icon "exclamation-triangle"}}
             {{/if}}
