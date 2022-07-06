@@ -289,13 +289,22 @@ table.group-reports {
 .query-results {
   section {
     width: 100%;
-    overflow-x: auto;
+    overflow: auto;
+    height: 1000px;
   }
   table {
     width: 100%;
     margin-top: 10px;
     td {
       padding: 8px;
+    }
+  }
+  thead {
+    th {
+      position: sticky;
+      top: 0;
+      color: var(--primary);
+      background: var(--primary-low);
     }
   }
 }
