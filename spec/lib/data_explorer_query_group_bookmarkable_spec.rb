@@ -112,9 +112,10 @@ describe DataExplorerQueryGroupBookmarkable do
       expect(notif.data).to eq(
         {
           title: bookmark1.bookmarkable.query.name,
+          bookmarkable_url: "/g/#{bookmark1.bookmarkable.group.name}/reports/#{bookmark1.bookmarkable.query.id}",
           display_username: bookmark1.user.username,
           bookmark_name: bookmark1.name,
-          bookmarkable_url: "/g/#{bookmark1.bookmarkable.group.name}/reports/#{bookmark1.bookmarkable.query.id}"
+          bookmark_id: bookmark1.id
         }.to_json
       )
     end

@@ -34,14 +34,12 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
   end
 
   def self.reminder_handler(bookmark)
-    bookmark.user.notifications.create!(
-      notification_type: Notification.types[:bookmark_reminder],
+    send_reminder_notification(
+      bookmark,
       data: {
         title: bookmark.bookmarkable.query.name,
-        display_username: bookmark.user.username,
-        bookmark_name: bookmark.name,
         bookmarkable_url: "/g/#{bookmark.bookmarkable.group.name}/reports/#{bookmark.bookmarkable.query.id}"
-      }.to_json
+      }
     )
   end
 
