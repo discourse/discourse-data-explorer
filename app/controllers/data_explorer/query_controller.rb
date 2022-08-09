@@ -232,7 +232,7 @@ class DataExplorer::QueryController < ::ApplicationController
   end
 
   def set_query
-    @query = DataExplorer::Query.find_by(id: params[:id])
+    @query = DataExplorer::Query.find(params[:id])
     raise Discourse::NotFound unless @query
   end
 end
