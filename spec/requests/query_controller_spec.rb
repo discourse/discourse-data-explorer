@@ -93,19 +93,18 @@ describe DataExplorer::QueryController do
 
       it "allows group to access system query" do
         query = DataExplorer::Query.find(-4)
-        put "/admin/plugins/explorer/queries/#{query.id}.json", params:  {
-          "query"=>
-            {
-              "name"=>query.name, 
-              "description"=>query.description, 
-              "sql"=>query.sql, 
-              "user_id"=>query.user_id, 
-              "created_at"=>query.created_at, 
-              "group_ids"=>[group2.id], 
-              "last_run_at"=>query.last_run_at
-            }, 
-            "id"=>query.id}
-          
+        put "/admin/plugins/explorer/queries/#{query.id}.json", params: {
+          "query" => {
+            "name" => query.name,
+            "description" => query.description,
+            "sql" => query.sql,
+            "user_id" => query.user_id,
+            "created_at" => query.created_at,
+            "group_ids" => [group2.id],
+            "last_run_at" => query.last_run_at
+          },
+          "id" => query.id }
+
         expect(response.status).to eq(200)
       end
     end
