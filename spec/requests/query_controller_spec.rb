@@ -87,6 +87,29 @@ describe DataExplorer::QueryController do
       end
     end
 
+    describe "#update" do
+      fab!(:user2) { Fabricate(:user) }
+      fab!(:group2) { Fabricate(:group, users: [user2]) }
+
+      it "allows group to access system query" do
+        query = DataExplorer::Query.find(-4)
+        put "/admin/plugins/explorer/queries/#{query.id}.json", params:  {
+          "query"=>
+            {
+              "name"=>query.name, 
+              "description"=>query.description, 
+              "sql"=>query.sql, 
+              "user_id"=>query.user_id, 
+              "created_at"=>query.created_at, 
+              "group_ids"=>[group2.id], 
+              "last_run_at"=>query.last_run_at
+            }, 
+            "id"=>query.id}
+          
+        expect(response.status).to eq(200)
+      end
+    end
+
     describe "#run" do
       def run_query(id, params = {})
         params = Hash[params.map { |a| [a[0], a[1].to_s] }]
