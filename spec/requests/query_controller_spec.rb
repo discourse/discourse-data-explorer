@@ -107,6 +107,20 @@ describe DataExplorer::QueryController do
 
         expect(response.status).to eq(200)
       end
+
+      it "returns a proper json error for invalid updates" do
+
+        query = DataExplorer::Query.find(-4)
+        put "/admin/plugins/explorer/queries/#{query.id}", params: {
+          "query" => {
+            "name" => "",
+          },
+          "id" => query.id }
+
+        expect(response.status).to eq(422)
+        body = JSON.parse(response.body)
+        expect(body["errors"]).to eq(["Name can't be blank"])
+      end
     end
 
     describe "#run" do
@@ -304,7 +318,7 @@ describe DataExplorer::QueryController do
             DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
             DataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
 
-            ids = Post.order(:id).pluck(:id)
+            _ids = Post.order(:id).pluck(:id)
 
             query = make_query <<~SQL
             SELECT id FROM posts
