@@ -275,7 +275,7 @@ describe DataExplorer::QueryController do
         expect(response.status).to eq(200)
       end
 
-      context "`limit` parameter" do
+      context "with the `limit` parameter" do
         before do
           create_post
           create_post

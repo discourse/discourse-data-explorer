@@ -55,7 +55,7 @@ describe 'Data Explorer rake tasks' do
       expect(hidden_queries[2].id).to eq(4)
     end
 
-    context 'query does not exist in PluginStore' do
+    context 'when query does not exist in PluginStore' do
       it 'should not hide the query' do
         DataExplorer::Query.destroy_all
         make_query('SELECT 1 as value', id: 1, name: 'A')
@@ -104,7 +104,7 @@ describe 'Data Explorer rake tasks' do
       expect(hidden_queries[0].id).to eq(3)
     end
 
-    context 'query does not exist in PluginStore' do
+    context 'when query does not exist in PluginStore' do
       it 'should not unhide the query' do
         DataExplorer::Query.destroy_all
         make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
@@ -153,7 +153,7 @@ describe 'Data Explorer rake tasks' do
       expect(hidden_queries[0].id).to eq(3)
     end
 
-    context 'query does not exist in PluginStore' do
+    context 'when query does not exist in PluginStore' do
       it 'should not hard delete the query' do
         DataExplorer::Query.destroy_all
         make_query('SELECT 1 as value', id: 1, name: 'A', hidden: true)
@@ -168,7 +168,7 @@ describe 'Data Explorer rake tasks' do
       end
     end
 
-    context 'query is not hidden' do
+    context 'when query is not hidden' do
       it 'should not hard delete the query' do
         DataExplorer::Query.destroy_all
         make_query('SELECT 1 as value', id: 1, name: 'A')

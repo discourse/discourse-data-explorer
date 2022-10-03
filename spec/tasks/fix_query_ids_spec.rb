@@ -65,7 +65,7 @@ describe 'fix query ids rake task' do
     expect(find(query_name).id).to eq(additional_conflict.id)
   end
 
-  context 'query groups' do
+  describe 'query groups' do
     let(:group) { Fabricate(:group) }
 
     it "fixes the query group's query_id" do
