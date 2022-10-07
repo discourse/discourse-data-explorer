@@ -76,7 +76,7 @@ after_initialize do
     # Run a data explorer query on the currently connected database.
     #
     # @param [DataExplorer::Query] query the Query object to run
-    # @param [Hash] params the colon-style query parameters to pass to AR
+    # @param [Hash] params the colon-style query parameters for the query
     # @param [Hash] opts hash of options
     #   explain - include a query plan in the result
     # @return [Hash]
@@ -124,9 +124,9 @@ SQL
 
           time_start = Time.now
 
-          # we probably want to rewrite this ... but for now reuse the working
-          # code we have
-          sql = DB.param_encoder.encode(sql, query_args)
+          # Using MiniSql::InlineParamEncoder directly instead of DB.param_encoder because current implementation of
+          # DB.param_encoder is meant for SQL fragments and not an entire SQL string.
+          sql = MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection).encode(sql, query_args)
 
           result = ActiveRecord::Base.connection.raw_connection.async_exec(sql)
           result.check # make sure it's done
