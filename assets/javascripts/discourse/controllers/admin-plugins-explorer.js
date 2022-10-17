@@ -6,13 +6,14 @@ import { ajax } from "discourse/lib/ajax";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 import { get } from "@ember/object";
 import { not, reads, sort } from "@ember/object/computed";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
 export default Controller.extend({
+  dialog: service(),
   queryParams: { selectedQueryId: "id", params: "params" },
   selectedQueryId: null,
   editDisabled: false,
@@ -180,11 +181,11 @@ export default Controller.extend({
           if (e.jqXHR) {
             popupAjaxError(e);
           } else if (e instanceof SyntaxError) {
-            bootbox.alert(I18n.t("explorer.import.unparseable_json"));
+            this.dialog.alert(I18n.t("explorer.import.unparseable_json"));
           } else if (e instanceof TypeError) {
-            bootbox.alert(I18n.t("explorer.import.wrong_json"));
+            this.dialog.alert(I18n.t("explorer.import.wrong_json"));
           } else {
-            bootbox.alert(I18n.t("errors.desc.unknown"));
+            this.dialog.alert(I18n.t("errors.desc.unknown"));
             // eslint-disable-next-line no-console
             console.error(e);
           }
