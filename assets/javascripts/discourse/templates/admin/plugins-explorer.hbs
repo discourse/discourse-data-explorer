@@ -346,7 +346,7 @@
                 <tr class="query-row">
                   <td>
                     <a
-                      {{action "scrollTop"}}
+                      {{on "click" this.scrollTop}}
                       href="/admin/plugins/explorer/?id={{query.id}}"
                     >
                       <b class="query-name">{{query.name}}</b>
