@@ -3,7 +3,10 @@ import showModal from "discourse/lib/show-modal";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import { inject as service } from "@ember/service";
@@ -165,6 +168,12 @@ export default Controller.extend({
     });
   },
 
+  @bind
+  scrollTop() {
+    window.scrollTo(0, 0);
+    this.setProperties({ editing: false, everEditing: false });
+  },
+
   actions: {
     dummy() {},
 
@@ -205,11 +214,6 @@ export default Controller.extend({
 
     download() {
       window.open(this.get("selectedItem.downloadUrl"), "_blank");
-    },
-
-    scrollTop() {
-      window.scrollTo(0, 0);
-      this.setProperties({ editing: false, everEditing: false });
     },
 
     goHome() {
