@@ -6,6 +6,7 @@ module DataExplorer
     has_many :query_groups
     has_many :groups, through: :query_groups
     belongs_to :user
+    validates :name, presence: true
 
     scope :for_group, ->(group) do
       where(hidden: false)

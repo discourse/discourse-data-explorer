@@ -88,36 +88,21 @@
               </div>
             {{/if}}
 
-            <div class="pull-left">
-              <div class="groups">
-                <span class="label">{{i18n "explorer.allow_groups"}}</span>
-                <span>
-                  {{multi-select
-                    value=selectedItem.group_ids
-                    content=groupOptions
-                    allowAny=false
-                    onSelect=(action (mut selectedItem.group_ids))
-                  }}
-                </span>
-
-                {{#if runDisabled}}
-                  {{#unless editing}}
-                    <span class="setting-controls">
-                      {{d-button
-                        class="ok"
-                        action=(action "save")
-                        icon="check"
-                      }}
-                      {{d-button
-                        class="cancel"
-                        action=(action "discard")
-                        icon="times"
-                      }}
-                    </span>
-                  {{/unless}}
-                {{/if}}
+            {{#if (not selectedItem.destroyed)}}
+              <div class="pull-left">
+                <div class="groups">
+                  <span class="label">{{i18n "explorer.allow_groups"}}</span>
+                  <span>
+                    {{multi-select
+                      value=selectedItem.group_ids
+                      content=groupOptions
+                      allowAny=false
+                      onSelect=(action (mut selectedItem.group_ids))
+                    }}
+                  </span>
+                </div>
               </div>
-            </div>
+            {{/if}}
 
             <div class="clear"></div>
 
@@ -126,7 +111,7 @@
               <div class="query-editor {{if hideSchema "no-schema"}}">
                 <div class="panels-flex">
                   <div class="editor-panel">
-                    {{ace-editor content=selectedItem.sql mode="sql"}}
+                    {{ace-editor content=selectedItem.sql mode="sql" disabled=selectedItem.destroyed}}
                   </div>
 
                   <div class="right-panel">
