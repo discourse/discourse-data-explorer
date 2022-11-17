@@ -317,8 +317,6 @@ describe DataExplorer::QueryController do
             DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
             DataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
 
-            _ids = Post.order(:id).pluck(:id)
-
             query = make_query <<~SQL
             SELECT id FROM posts
             SQL
