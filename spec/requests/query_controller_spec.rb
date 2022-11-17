@@ -118,8 +118,7 @@ describe DataExplorer::QueryController do
           "id" => query.id }
 
         expect(response.status).to eq(422)
-        body = JSON.parse(response.body)
-        expect(body["errors"]).to eq(["Name can't be blank"])
+        expect(response.parsed_body["errors"]).to eq(["Name can't be blank"])
       end
     end
 
