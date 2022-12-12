@@ -39,7 +39,7 @@
       {{duration}}
     </div>
 
-    <br>
+    <br />
 
     {{~#if hasExplain}}
       <pre class="result-explain"><code>
@@ -47,7 +47,7 @@
         </code></pre>
     {{~/if}}
 
-    <br>
+    <br />
   </header>
 
   <section>
@@ -68,11 +68,22 @@
         </thead>
         <tbody>
           {{#each rows as |row|}}
-            {{query-row-content
-              row=row
-              fallbackTemplate=fallbackTemplate
-              columnTemplates=columnTemplates
-            }}
+            <QueryRowContent
+              @row={{row}}
+              @fallbackTemplate={{this.fallbackTemplate}}
+              @columnTemplates={{this.columnTemplates}}
+              @lookupUser={{this.lookupUser}}
+              @lookupBadge={{this.lookupBadge}}
+              @lookupPost={{this.lookupPost}}
+              @lookupTopic={{this.lookupTopic}}
+              @lookupGroup={{this.lookupGroup}}
+              @lookupCategory={{this.lookupCategory}}
+              @transformedPostTable={{this.transformedUserTable}}
+              @transformedBadgeTable={{this.transformedBadgeTable}}
+              @transformedUserTable={{this.transformedUserTable}}
+              @transformedGroupTable={{this.transformedGroupTable}}
+              @transformedTopicTable={{this.transformedTopicTable}}
+            />
           {{/each}}
         </tbody>
       </table>
