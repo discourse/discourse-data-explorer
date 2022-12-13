@@ -212,17 +212,12 @@
         </div>
 
         <form class="query-run" {{action "run" on="submit"}}>
-          {{#if selectedItem.hasParams}}
-            <div class="query-params">
-              {{#each selectedItem.param_info as |pinfo|}}
-                {{param-input
-                  params=selectedItem.params
-                  initialValues=parsedParams
-                  info=pinfo
-                }}
-              {{/each}}
-            </div>
-          {{/if}}
+          <ParamInputsWrapper
+            @hasParams={{selectedItem.hasParams}}
+            @params={{selectedItem.params}}
+            @initialValues={{parsedParams}}
+            @paramInfo={{selectedItem.param_info}}
+          />
 
           {{#if runDisabled}}
             {{#if saveDisabled}}

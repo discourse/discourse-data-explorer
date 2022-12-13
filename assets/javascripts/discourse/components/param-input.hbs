@@ -1,0 +1,46 @@
+<div class="param {{if this.valid 'valid' 'invalid'}}">
+  {{#if (eq this.type "boolean")}}
+    {{#if @info.nullable}}
+      <ComboBox
+        @valueAttribute="id"
+        @value={{this.value}}
+        @nameProperty="name"
+        @content={{this.boolTypes}}
+      />
+    {{else}}
+      <Input
+        @type="checkbox"
+        @checked={{this.valueBool}}
+        {{on "change" this.updateValueBool}}
+      />
+    {{/if}}
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "int")}}
+    <Input @type="number" @value={{this.value}} />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "string")}}
+    <TextField @value={{this.value}} @type="text" />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "user_id")}}
+    <EmailGroupUserChooser
+      @value={{this.value}}
+      @options={{(hash maximum=1)}}
+      {{on "change" this.updateValue}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "user_list")}}
+    <EmailGroupUserChooser
+      @value={{this.value}}
+      {{on "change" this.updateValue}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else}}
+    <TextField @value={{this.value}} />
+    <span class="param-name">{{@info.identifier}}</span>
+  {{/if}}
+</div>

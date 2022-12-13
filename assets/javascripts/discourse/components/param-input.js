@@ -1,10 +1,10 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import { computed } from "@ember/object";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 
 const layoutMap = {
   int: "int",
@@ -26,58 +26,32 @@ const layoutMap = {
   user_list: "user_list",
 };
 
-function allowsInputTypeTime() {
-  try {
-    const inp = document.createElement("input");
-    inp.attributes.type = "time";
-    inp.attributes.type = "date";
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+export default class ParamInput extends Component {
+  @tracked value = this.args.info.identifier;
+  @tracked valueBool = this.args.info.identifier !== "false";
 
-export default Component.extend({
-  classNameBindings: ["valid:valid:invalid", ":param"],
-
-  boolTypes: [
+  boolTypes = [
     { name: I18n.t("explorer.types.bool.true"), id: "Y" },
     { name: I18n.t("explorer.types.bool.false"), id: "N" },
     { name: I18n.t("explorer.types.bool.null_"), id: "#null" },
-  ],
-  initialValues: null,
+  ];
 
-  init() {
-    this._super(...arguments);
-
-    if (this.initialValues && this.info.identifier in this.initialValues) {
-      this.set("value", this.initialValues[this.info.identifier]);
+  get type() {
+    const type = this.args.info.type;
+    if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
+      return "string";
     }
-  },
+    if (layoutMap[type]) {
+      return layoutMap[type];
+    }
+    return "generic";
+  }
 
-  value: computed("params", "info.identifier", {
-    get() {
-      return this.params[this.get("info.identifier")];
-    },
-    set(key, value) {
-      this.params[this.get("info.identifier")] = value?.toString();
-      return value;
-    },
-  }),
+  get valid() {
+    const value = this.value;
+    const type = this.args.info.type;
+    const nullable = this.args.info.nullable;
 
-  valueBool: computed("params", "info.identifier", {
-    get() {
-      return this.params[this.get("info.identifier")] !== "false";
-    },
-    set(key, value) {
-      value = !!value;
-      this.params[this.get("info.identifier")] = value.toString();
-      return value;
-    },
-  }),
-
-  @discourseComputed("value", "info.type", "info.nullable")
-  valid(value, type, nullable) {
     if (isEmpty(value)) {
       return nullable;
     }
@@ -132,21 +106,37 @@ export default Component.extend({
         }
     }
     return true;
-  },
+  }
 
-  @discourseComputed("info.type")
-  layoutType(type) {
-    if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
-      return "string";
-    }
-    if (layoutMap[type]) {
-      return layoutMap[type];
-    }
-    return "generic";
-  },
+  constructor() {
+    super(...arguments);
 
-  @discourseComputed("layoutType")
-  layoutName(layoutType) {
-    return `admin/components/q-params/${layoutType}`;
-  },
-});
+    if (
+      this.args.initialValues &&
+      this.args.info.identifier in this.args.initialValues
+    ) {
+      this.value = this.args.initialValues[this.args.info.identifier];
+    }
+  }
+
+  @action
+  updateValue(event) {
+    this.value = event.target.value.toString();
+  }
+
+  @action
+  updateValueBool(event) {
+    this.value = !!event.target.value.toString();
+  }
+}
+
+function allowsInputTypeTime() {
+  try {
+    const inp = document.createElement("input");
+    inp.attributes.type = "time";
+    inp.attributes.type = "date";
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
