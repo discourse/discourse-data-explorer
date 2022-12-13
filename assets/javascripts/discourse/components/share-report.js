@@ -51,7 +51,8 @@ export default class ShareReport extends Component {
   }
 
   @action
-  open() {
+  open(e) {
+    e.preventDefault();
     this.visible = true;
   }
 
