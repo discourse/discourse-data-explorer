@@ -45,7 +45,7 @@
 
     {{#if model.length}}
       {{#unless selectedItem.fake}}
-        <div class="query-edit {{if editName "editing"}}">
+        <div class="query-edit {{if editName 'editing'}}">
           {{#if selectedItem}}
             {{#if editing}}
               <div class="name">
@@ -108,10 +108,14 @@
 
             {{! the SQL editor will show the first time you }}
             {{#if everEditing}}
-              <div class="query-editor {{if hideSchema "no-schema"}}">
+              <div class="query-editor {{if hideSchema 'no-schema'}}">
                 <div class="panels-flex">
                   <div class="editor-panel">
-                    {{ace-editor content=selectedItem.sql mode="sql" disabled=selectedItem.destroyed}}
+                    {{ace-editor
+                      content=selectedItem.sql
+                      mode="sql"
+                      disabled=selectedItem.destroyed
+                    }}
                   </div>
 
                   <div class="right-panel">
@@ -252,7 +256,7 @@
           </label>
         </form>
 
-        <hr>
+        <hr />
       {{/unless}}
 
       {{conditional-loading-spinner condition=loading}}
@@ -347,7 +351,7 @@
                   </td>
                   <td class="query-group-names">
                     {{#each query.group_names as |group|}}
-                      {{share-report group=group query=query}}
+                      <ShareReport @group={{group}} @query={{query}} />
                     {{/each}}
                   </td>
                   <td class="query-created-at">
@@ -363,7 +367,7 @@
                   </td>
                 </tr>
               {{else}}
-                <br>
+                <br />
                 <em class="no-search-results">
                   {{i18n "explorer.no_search_results"}}
                 </em>
