@@ -1,19 +1,25 @@
-<div role="button" onclick={{action "open"}}>
-  {{d-icon "link"}}
-  {{group}}
-</div>
-
-{{#if visible}}
-  <div class="popup">
-    <label>{{i18n "explorer.link"}} {{group}}</label>
-    <input type="text" value={{link}}>
-
-    {{d-button
-      action="close"
-      class="btn-flat close"
-      icon="times"
-      aria-label="share.close"
-      title="share.close"
-    }}
+<div class="share-report">
+  <div role="button" onClick={{this.open}} class="share-report-button">
+    {{d-icon "link"}}
+    {{@group}}
   </div>
-{{/if}}
+
+  {{#if this.visible}}
+    <div
+      class="popup"
+      {{did-insert this.registerListeners}}
+      {{will-destroy this.unregisterListeners}}
+    >
+      <label>{{i18n "explorer.link"}} {{@group}}</label>
+      <input type="text" value={{this.link}} {{did-insert this.focusInput}} />
+
+      <DButton
+        @action={{this.close}}
+        @class="btn-flat close"
+        @icon="times"
+        @aria-label="share.close"
+        @title="share.close"
+      />
+    </div>
+  {{/if}}
+</div>

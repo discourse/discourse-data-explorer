@@ -1,76 +1,62 @@
-import Component from "@ember/component";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import Component from "@glimmer/component";
 import getURL from "discourse-common/lib/get-url";
-import { bind } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 
-export default Component.extend({
-  classNames: ["share-report"],
+export default class ShareReport extends Component {
+  @tracked visible = false;
+  element;
 
-  group: null,
-  query: null,
-  visible: false,
+  get link() {
+    return getURL(`/g/${this.args.group}/reports/${this.args.query.id}`);
+  }
 
-  @discourseComputed("group", "query")
-  link() {
-    return getURL(`/g/${this.group}/reports/${this.query.id}`);
-  },
+  @bind
+  mouseDownHandler(e) {
+    if (!this.element.contains(e.target)) {
+      this.close();
+    }
+  }
 
-  _mouseDownHandler(event) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+  @bind
+  keyDownHandler(e) {
+    if (e.keyCode === 27) {
+      this.close();
+    }
+  }
+
+  @action
+  registerListeners(element) {
+    if (!element || this.isDestroying || this.isDestroyed) {
       return;
     }
-    if ($(this.element).has(event.target).length !== 0) {
-      return;
-    }
 
-    this.send("close");
+    this.element = element;
+    document.addEventListener("mousedown", this.mouseDownHandler);
+    element.addEventListener("keydown", this.keyDownHandler);
+  }
 
-    return true;
-  },
+  @action
+  unregisterListeners(element) {
+    this.element = element;
+    document.removeEventListener("mousedown", this.mouseDownHandler);
+    element.removeEventListener("keydown", this.keyDownHandler);
+  }
 
-  _keydownHandler(event) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
-      return;
-    }
+  @action
+  focusInput(e) {
+    e.select();
+    e.focus();
+  }
 
-    if (event.keyCode === 27) {
-      this.send("close");
-    }
-  },
+  @action
+  open() {
+    this.visible = true;
+  }
 
-  @on("init")
-  _setupHandlers() {
-    this._boundMouseDownHandler = bind(this, this._mouseDownHandler);
-    this._boundKeydownHandler = bind(this, this._keydownHandler);
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    $("html")
-      .on("mousedown.outside-share-link", this._boundMouseDownHandler)
-      .on("keydown.share-view", this._boundKeydownHandler);
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    $("html")
-      .off("mousedown.outside-share-link", this._boundMouseDownHandler)
-      .off("keydown.share-view", this._boundKeydownHandler);
-  },
-
-  actions: {
-    open() {
-      this.set("visible", true);
-      window.setTimeout(
-        () => $(this.element).find("input").select().focus(),
-        160
-      );
-    },
-
-    close() {
-      this.set("visible", false);
-    },
-  },
-});
+  @action
+  close() {
+    this.visible = false;
+  }
+}
