@@ -8,18 +8,12 @@ import { htmlSafe } from "@ember/template";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { escapeExpression } from "discourse/lib/utilities";
+import { cached } from "@glimmer/tracking";
 
 export default class QueryRowContent extends Component {
-  constructor() {
-    super(...arguments);
-
-    const helpers = {
-      "icon-or-image": icon_or_image_replacement,
-      "category-link": category_badge_replacement,
-      reltime: bound_date_replacement,
-    };
-
-    this.results = this.args.columnTemplates.map((t, idx) => {
+  @cached
+  get results() {
+    return this.args.columnTemplates.map((t, idx) => {
       const value = this.args.row[idx],
         id = parseInt(value, 10);
 
@@ -48,7 +42,7 @@ export default class QueryRowContent extends Component {
 
       if (t.name === "category" || t.name === "badge" || t.name === "reltime") {
         // only replace helpers if needed
-        params.helpers = helpers;
+        params.helpers = this.helpers;
       }
 
       try {
@@ -59,6 +53,16 @@ export default class QueryRowContent extends Component {
         return "error";
       }
     });
+  }
+
+  constructor() {
+    super(...arguments);
+
+    this.helpers = {
+      "icon-or-image": icon_or_image_replacement,
+      "category-link": category_badge_replacement,
+      reltime: bound_date_replacement,
+    };
   }
 }
 
