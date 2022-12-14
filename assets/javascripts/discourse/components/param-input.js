@@ -30,9 +30,9 @@ const layoutMap = {
 export default class ParamInput extends Component {
   @service site;
 
-  @tracked value = this.args.params[this.args.info.identifier];
-  @tracked valueBool = this.args.params[this.args.info.identifier] !== "false";
-  @tracked valueNullableBool = this.args.params[this.args.info.identifier];
+  @tracked value;
+  @tracked boolValue;
+  @tracked nullableBoolValue;
 
   boolTypes = [
     { name: I18n.t("explorer.types.bool.true"), id: "Y" },
@@ -59,7 +59,7 @@ export default class ParamInput extends Component {
     let value;
 
     if (type === "boolean") {
-      value = nullable ? this.valueNullableBool : this.valueBool;
+      value = nullable ? this.nullableBoolValue : this.boolValue;
     } else {
       value = this.value;
     }
@@ -90,10 +90,6 @@ export default class ParamInput extends Component {
       case "post_id":
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case "category_id":
-        if (!isPositiveInt && value !== dasherize(value)) {
-          this.updateValue(dasherize(value));
-        }
-
         if (isPositiveInt) {
           return !!this.site.categories.find((c) => c.id === intVal);
         } else if (/\//.test(value)) {
@@ -123,46 +119,73 @@ export default class ParamInput extends Component {
   constructor() {
     super(...arguments);
 
-    // access parsed params if present to update values to previously ran values
-    if (
-      this.args.initialValues &&
-      this.args.info.identifier in this.args.initialValues
-    ) {
-      const initialValue = this.args.initialValues[this.args.info.identifier];
+    const identifier = this.args.info.identifier;
+    const initialValues = this.args.initialValues;
 
+    // access parsed params if present to update values to previously ran values
+    if (initialValues && identifier in initialValues) {
+      const initialValue = initialValues[identifier];
       if (this.type === "boolean") {
         if (this.args.info.nullable) {
-          this.valueNullableBool = initialValue;
+          this.nullableBoolValue = initialValue;
         } else {
-          this.valueBool = initialValue !== "false";
+          this.boolValue = initialValue !== "false";
         }
       } else {
-        this.value = initialValue;
+        this.value =
+          this.args.info.type === "category_id"
+            ? this.dasherizeCategoryId(initialValue)
+            : initialValue;
       }
+    } else {
+      // if no parsed params then get and set default values
+      const params = this.args.params;
+      this.value =
+        this.args.info.type === "category_id"
+          ? this.dasherizeCategoryId(params[identifier])
+          : params[identifier];
+      this.boolValue = params[identifier] !== "false";
+      this.nullableBoolValue = params[identifier];
     }
+  }
+
+  dasherizeCategoryId(value) {
+    const isPositiveInt = /^\d+$/.test(value);
+    if (!isPositiveInt && value !== dasherize(value)) {
+      return dasherize(value);
+    }
+    return value;
   }
 
   @action
   updateValue(input) {
     // handle selectKit inputs as well as traditional inputs
     const value = input.target ? input.target.value : input;
-    this.value = value.length ? value.toString() : value;
+    if (value.length) {
+      this.value =
+        this.args.info.type === "category_id"
+          ? this.dasherizeCategoryId(value.toString())
+          : value.toString();
+    } else {
+      this.value = value;
+    }
+
     this.args.updateParams(this.args.info.identifier, this.value);
   }
 
   @action
-  updateValueBool(input) {
-    this.valueBool = input.target.checked;
+  updateBoolValue(input) {
+    this.boolValue = input.target.checked;
     this.args.updateParams(
       this.args.info.identifier,
-      this.valueBool.toString()
+      this.boolValue.toString()
     );
   }
 
   @action
-  updateValueNullableBool(input) {
-    this.valueNullableBool = input;
-    this.args.updateParams(this.args.info.identifier, this.valueNullableBool);
+  updateNullableBoolValue(input) {
+    this.nullableBoolValue = input;
+    this.args.updateParams(this.args.info.identifier, this.nullableBoolValue);
   }
 }
 

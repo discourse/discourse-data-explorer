@@ -3,16 +3,16 @@
     {{#if @info.nullable}}
       <ComboBox
         @valueAttribute="id"
-        @value={{this.valueNullableBool}}
+        @value={{this.nullableBoolValue}}
         @nameProperty="name"
         @content={{this.boolTypes}}
-        @onChange={{this.updateValueNullableBool}}
+        @onChange={{this.updateNullableBoolValue}}
       />
     {{else}}
       <Input
         @type="checkbox"
-        @checked={{this.valueBool}}
-        {{on "change" this.updateValueBool}}
+        @checked={{this.boolvalue}}
+        {{on "change" this.updateBoolValue}}
       />
     {{/if}}
     <span class="param-name">{{@info.identifier}}</span>
@@ -36,7 +36,7 @@
   {{else if (eq this.type "user_id")}}
     <EmailGroupUserChooser
       @value={{this.value}}
-      @options={{(hash maximum=2)}}
+      @options={{(hash maximum=1)}}
       @onChange={{this.updateValue}}
     />
     <span class="param-name">{{@info.identifier}}</span>
