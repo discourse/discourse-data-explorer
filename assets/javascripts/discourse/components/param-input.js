@@ -52,9 +52,17 @@ export default class ParamInput extends Component {
   }
 
   get valid() {
-    const value = this.value;
-    const type = this.args.info.type;
     const nullable = this.args.info.nullable;
+    // intentionally use 'this.args' here instead of 'this.type'
+    // to get the original key instead of the translated value from the layoutMap
+    const type = this.args.info.type;
+    let value;
+
+    if (type === "boolean") {
+      value = nullable ? this.valueNullableBool : this.valueBool;
+    } else {
+      value = this.value;
+    }
 
     if (isEmpty(value)) {
       return nullable;
@@ -83,7 +91,7 @@ export default class ParamInput extends Component {
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case "category_id":
         if (!isPositiveInt && value !== dasherize(value)) {
-          //this.value = dasherize(value);
+          this.updateValue(dasherize(value));
         }
 
         if (isPositiveInt) {
