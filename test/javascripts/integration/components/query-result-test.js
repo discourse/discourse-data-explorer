@@ -100,6 +100,45 @@ discourseModule(
         );
       },
     });
+
+    componentTest("it renders a post in query results", {
+      template: hbs`{{query-result content=content}}`,
+
+      beforeEach() {
+        const results = {
+          colrender: { 0: "post" },
+          relations: {
+            post: [
+              {
+                description: "description",
+                id: 1,
+                topic_id: 1,
+                post_number: 1,
+                excerpt: "foo",
+                username: "user1",
+                avatar_template: "",
+              },
+            ],
+          },
+          result_count: 1,
+          columns: [""],
+          rows: [[1]],
+        };
+        this.set("content", results);
+      },
+
+      test(assert) {
+        assert.ok(
+          query("table tbody tr:nth-child(1) td:nth-child(1) aside").dataset
+            .post === "1"
+        );
+
+        assert.ok(
+          query("table tbody tr:nth-child(1) td:nth-child(1) aside").dataset
+            .topic === "1"
+        );
+      },
+    });
   }
 );
 
