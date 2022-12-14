@@ -32,6 +32,7 @@ export default class ParamInput extends Component {
 
   @tracked value = this.args.params[this.args.info.identifier];
   @tracked valueBool = this.args.params[this.args.info.identifier] !== "false";
+  @tracked valueNullableBool = this.args.params[this.args.info.identifier];
 
   boolTypes = [
     { name: I18n.t("explorer.types.bool.true"), id: "Y" },
@@ -114,7 +115,7 @@ export default class ParamInput extends Component {
   constructor() {
     super(...arguments);
 
-    //setup default values
+    // access parsed params if present to update values to previously ran values
     if (
       this.args.initialValues &&
       this.args.info.identifier in this.args.initialValues
@@ -122,16 +123,15 @@ export default class ParamInput extends Component {
       const initialValue = this.args.initialValues[this.args.info.identifier];
 
       if (this.type === "boolean") {
-        this.valueBool = initialValue !== "false";
+        if (this.args.info.nullable) {
+          this.valueNullableBool = initialValue;
+        } else {
+          this.valueBool = initialValue !== "false";
+        }
+      } else {
+        this.value = initialValue;
       }
-      this.value = initialValue;
     }
-
-    // and update the parent to have any previously saved (new default) values picked up in url
-    this.args.updateParams(
-      this.args.info.identifier,
-      this.type === "boolean" ? this.valueBool.toString() : this.value
-    );
   }
 
   @action
@@ -149,6 +149,12 @@ export default class ParamInput extends Component {
       this.args.info.identifier,
       this.valueBool.toString()
     );
+  }
+
+  @action
+  updateValueNullableBool(input) {
+    this.valueNullableBool = input;
+    this.args.updateParams(this.args.info.identifier, this.valueNullableBool);
   }
 }
 

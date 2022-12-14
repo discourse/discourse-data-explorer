@@ -3,9 +3,10 @@
     {{#if @info.nullable}}
       <ComboBox
         @valueAttribute="id"
-        @value={{this.valueBool}}
+        @value={{this.valueNullableBool}}
         @nameProperty="name"
         @content={{this.boolTypes}}
+        @onChange={{this.updateValueNullableBool}}
       />
     {{else}}
       <Input
