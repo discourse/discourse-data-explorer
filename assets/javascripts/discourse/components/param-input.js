@@ -5,6 +5,7 @@ import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
 const layoutMap = {
   int: "int",
@@ -27,8 +28,10 @@ const layoutMap = {
 };
 
 export default class ParamInput extends Component {
-  @tracked value = this.args.info.identifier;
-  @tracked valueBool = this.args.info.identifier !== "false";
+  @service site;
+
+  @tracked value = this.args.params[this.args.info.identifier];
+  @tracked valueBool = this.args.params[this.args.info.identifier] !== "false";
 
   boolTypes = [
     { name: I18n.t("explorer.types.bool.true"), id: "Y" },
@@ -79,7 +82,7 @@ export default class ParamInput extends Component {
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case "category_id":
         if (!isPositiveInt && value !== dasherize(value)) {
-          this.set("value", dasherize(value));
+          //this.value = dasherize(value);
         }
 
         if (isPositiveInt) {
@@ -111,22 +114,41 @@ export default class ParamInput extends Component {
   constructor() {
     super(...arguments);
 
+    //setup default values
     if (
       this.args.initialValues &&
       this.args.info.identifier in this.args.initialValues
     ) {
-      this.value = this.args.initialValues[this.args.info.identifier];
+      const initialValue = this.args.initialValues[this.args.info.identifier];
+
+      if (this.type === "boolean") {
+        this.valueBool = initialValue !== "false";
+      }
+      this.value = initialValue;
     }
+
+    // and update the parent to have any previously saved (new default) values picked up in url
+    this.args.updateParams(
+      this.args.info.identifier,
+      this.type === "boolean" ? this.valueBool.toString() : this.value
+    );
   }
 
   @action
-  updateValue(event) {
-    this.value = event.target.value.toString();
+  updateValue(input) {
+    // handle selectKit inputs as well as traditional inputs
+    const value = input.target ? input.target.value : input;
+    this.value = value.length ? value.toString() : value;
+    this.args.updateParams(this.args.info.identifier, this.value);
   }
 
   @action
-  updateValueBool(event) {
-    this.value = !!event.target.value.toString();
+  updateValueBool(input) {
+    this.valueBool = input.target.checked;
+    this.args.updateParams(
+      this.args.info.identifier,
+      this.valueBool.toString()
+    );
   }
 }
 

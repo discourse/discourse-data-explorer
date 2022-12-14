@@ -3,7 +3,7 @@
     {{#if @info.nullable}}
       <ComboBox
         @valueAttribute="id"
-        @value={{this.value}}
+        @value={{this.valueBool}}
         @nameProperty="name"
         @content={{this.boolTypes}}
       />
@@ -17,30 +17,38 @@
     <span class="param-name">{{@info.identifier}}</span>
 
   {{else if (eq this.type "int")}}
-    <Input @type="number" @value={{this.value}} />
+    <Input
+      @type="number"
+      @value={{this.value}}
+      {{on "change" this.updateValue}}
+    />
     <span class="param-name">{{@info.identifier}}</span>
 
   {{else if (eq this.type "string")}}
-    <TextField @value={{this.value}} @type="text" />
+    <TextField
+      @value={{this.value}}
+      @type="text"
+      {{on "change" this.updateValue}}
+    />
     <span class="param-name">{{@info.identifier}}</span>
 
   {{else if (eq this.type "user_id")}}
     <EmailGroupUserChooser
       @value={{this.value}}
-      @options={{(hash maximum=1)}}
-      {{on "change" this.updateValue}}
+      @options={{(hash maximum=2)}}
+      @onChange={{this.updateValue}}
     />
     <span class="param-name">{{@info.identifier}}</span>
 
   {{else if (eq this.type "user_list")}}
     <EmailGroupUserChooser
       @value={{this.value}}
-      {{on "change" this.updateValue}}
+      @onChange={{this.updateValue}}
     />
     <span class="param-name">{{@info.identifier}}</span>
 
   {{else}}
-    <TextField @value={{this.value}} />
+    <TextField @value={{this.value}} {{on "change" this.updateValue}} />
     <span class="param-name">{{@info.identifier}}</span>
   {{/if}}
 </div>
