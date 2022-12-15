@@ -119,17 +119,11 @@
                   </div>
 
                   <div class="right-panel">
-                    {{#if hideSchema}}
-                      {{d-button
-                        action=(action "expandSchema")
-                        icon="chevron-left"
-                        class="no-text unhide"
-                      }}
-                    {{/if}}
-
-                    <div class="schema">
-                      {{explorer-schema schema=schema hideSchema=hideSchema}}
-                    </div>
+                    <ExplorerSchema
+                      @schema={{schema}}
+                      @hideSchema={{hideSchema}}
+                      @updateHideSchema={{action "updateHideSchema"}}
+                    />
                   </div>
                 </div>
 

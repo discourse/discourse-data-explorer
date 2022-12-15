@@ -175,10 +175,8 @@ export default Controller.extend({
   },
 
   actions: {
-    dummy() {},
-
-    expandSchema() {
-      this.set("hideSchema", false);
+    updateHideSchema(value) {
+      this.set("hideSchema", value);
     },
 
     import(files) {
