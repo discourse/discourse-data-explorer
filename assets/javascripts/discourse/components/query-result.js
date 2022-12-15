@@ -193,7 +193,7 @@ const QueryResultComponent = Component.extend({
   },
 
   lookupCategory(id) {
-    return this.site.get("categoriesById")[id];
+    return this.site.categoriesById[id];
   },
 
   download_url() {
