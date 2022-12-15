@@ -139,6 +139,41 @@ discourseModule(
         );
       },
     });
+
+    componentTest("it renders a category_id in query results", {
+      template: hbs`{{query-result content=content}}`,
+
+      beforeEach() {
+        const results = {
+          colrender: { 0: "category" },
+          relations: {
+            category: [
+              {
+                id: 1,
+                name: "foo",
+                slug: "foo",
+                topic_count: 0,
+                position: 1,
+                description: "a category",
+                can_edit: true,
+              },
+            ],
+          },
+          result_count: 1,
+          columns: [""],
+          rows: [[1]],
+        };
+        this.set("content", results);
+      },
+
+      test(assert) {
+        assert.ok(
+          exists(
+            "table tbody tr:nth-child(1) td:nth-child(1) span.category-name"
+          )
+        );
+      },
+    });
   }
 );
 
