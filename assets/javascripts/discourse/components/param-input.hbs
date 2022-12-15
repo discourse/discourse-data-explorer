@@ -29,7 +29,7 @@
     <TextField
       @value={{this.value}}
       @type="text"
-      {{on "change" this.updateValue}}
+      @onChange={{this.updateValue}}
     />
     <span class="param-name">{{@info.identifier}}</span>
 
@@ -49,7 +49,7 @@
     <span class="param-name">{{@info.identifier}}</span>
 
   {{else}}
-    <TextField @value={{this.value}} {{on "change" this.updateValue}} />
+    <TextField @value={{this.value}} @onChange={{this.updateValue}} />
     <span class="param-name">{{@info.identifier}}</span>
   {{/if}}
 </div>

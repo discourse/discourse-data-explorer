@@ -40,15 +40,45 @@ export default class ParamInput extends Component {
     { name: I18n.t("explorer.types.bool.null_"), id: "#null" },
   ];
 
+  constructor() {
+    super(...arguments);
+
+    const identifier = this.args.info.identifier;
+    const initialValues = this.args.initialValues;
+
+    // access parsed params if present to update values to previously ran values
+    if (initialValues && identifier in initialValues) {
+      const initialValue = initialValues[identifier];
+      if (this.type === "boolean") {
+        if (this.args.info.nullable) {
+          this.nullableBoolValue = initialValue;
+        } else {
+          this.boolValue = initialValue !== "false";
+        }
+      } else {
+        this.value =
+          this.args.info.type === "category_id"
+            ? this.dasherizeCategoryId(initialValue)
+            : initialValue;
+      }
+    } else {
+      // if no parsed params then get and set default values
+      const params = this.args.params;
+      this.value =
+        this.args.info.type === "category_id"
+          ? this.dasherizeCategoryId(params[identifier])
+          : params[identifier];
+      this.boolValue = params[identifier] !== "false";
+      this.nullableBoolValue = params[identifier];
+    }
+  }
+
   get type() {
     const type = this.args.info.type;
     if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
       return "string";
     }
-    if (layoutMap[type]) {
-      return layoutMap[type];
-    }
-    return "generic";
+    return layoutMap[type] || "generic";
   }
 
   get valid() {
@@ -116,39 +146,6 @@ export default class ParamInput extends Component {
     return true;
   }
 
-  constructor() {
-    super(...arguments);
-
-    const identifier = this.args.info.identifier;
-    const initialValues = this.args.initialValues;
-
-    // access parsed params if present to update values to previously ran values
-    if (initialValues && identifier in initialValues) {
-      const initialValue = initialValues[identifier];
-      if (this.type === "boolean") {
-        if (this.args.info.nullable) {
-          this.nullableBoolValue = initialValue;
-        } else {
-          this.boolValue = initialValue !== "false";
-        }
-      } else {
-        this.value =
-          this.args.info.type === "category_id"
-            ? this.dasherizeCategoryId(initialValue)
-            : initialValue;
-      }
-    } else {
-      // if no parsed params then get and set default values
-      const params = this.args.params;
-      this.value =
-        this.args.info.type === "category_id"
-          ? this.dasherizeCategoryId(params[identifier])
-          : params[identifier];
-      this.boolValue = params[identifier] !== "false";
-      this.nullableBoolValue = params[identifier];
-    }
-  }
-
   dasherizeCategoryId(value) {
     const isPositiveInt = /^\d+$/.test(value);
     if (!isPositiveInt && value !== dasherize(value)) {
@@ -191,9 +188,9 @@ export default class ParamInput extends Component {
 
 function allowsInputTypeTime() {
   try {
-    const inp = document.createElement("input");
-    inp.attributes.type = "time";
-    inp.attributes.type = "date";
+    const input = document.createElement("input");
+    input.attributes.type = "time";
+    input.attributes.type = "date";
     return true;
   } catch (e) {
     return false;
