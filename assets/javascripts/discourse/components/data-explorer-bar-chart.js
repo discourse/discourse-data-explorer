@@ -1,41 +1,42 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import loadScript from "discourse/lib/load-script";
-import discourseComputed from "discourse-common/utils/decorators";
 import themeColor from "../lib/themeColor";
+import { bind } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
-export default Component.extend({
-  barsColor: themeColor("--tertiary"),
-  barsHoverColor: themeColor("--tertiary-high"),
-  gridColor: themeColor("--primary-low"),
-  labelsColor: themeColor("--primary-medium"),
-  chart: null,
+export default class DataExplorerBarChart extends Component {
+  chart;
+  barsColor = themeColor("--tertiary");
+  barsHoverColor = themeColor("--tertiary-high");
+  gridColor = themeColor("--primary-low");
+  labelsColor = themeColor("--primary-medium");
 
-  @discourseComputed("data", "options")
-  config(data, options) {
+  get config() {
+    const data = this.data;
+    const options = this.options;
     return {
       type: "bar",
       data,
       options,
     };
-  },
+  }
 
-  @discourseComputed("labels.[]", "values.[]", "datasetName")
-  data(labels, values, datasetName) {
+  get data() {
+    const labels = this.args.labels;
     return {
       labels,
       datasets: [
         {
-          label: datasetName,
-          data: values,
+          label: this.args.datasetName,
+          data: this.args.values,
           backgroundColor: this.barsColor,
           hoverBackgroundColor: this.barsHoverColor,
         },
       ],
     };
-  },
+  }
 
-  @discourseComputed
-  options() {
+  get options() {
     return {
       scales: {
         legend: {
@@ -68,31 +69,24 @@ export default Component.extend({
         ],
       },
     };
-  },
+  }
 
-  didInsertElement() {
-    this._super(...arguments);
-    this._initChart();
-  },
+  @bind
+  initChart(canvas) {
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      const context = canvas.getContext("2d");
+      // eslint-disable-next-line
+      this.chart = new Chart(context, this.config);
+    });
+  }
 
-  didUpdate() {
-    this._super(...arguments);
+  @action
+  updateChartData() {
     this.chart.data = this.data;
     this.chart.update();
-  },
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
+  willDestroy() {
     this.chart.destroy();
-  },
-
-  _initChart() {
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      const canvas = this.element.querySelector("canvas");
-      const context = canvas.getContext("2d");
-      const config = this.config;
-      // eslint-disable-next-line
-      this.chart = new Chart(context, config);
-    });
-  },
-});
+  }
+}
