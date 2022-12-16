@@ -72,12 +72,11 @@ export default class DataExplorerBarChart extends Component {
   }
 
   @bind
-  initChart(canvas) {
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      const context = canvas.getContext("2d");
-      // eslint-disable-next-line
-      this.chart = new Chart(context, this.config);
-    });
+  async initChart(canvas) {
+    await loadScript("/javascripts/Chart.min.js");
+    const context = canvas.getContext("2d");
+    // eslint-disable-next-line
+    this.chart = new Chart(context, this.config);
   }
 
   @action
