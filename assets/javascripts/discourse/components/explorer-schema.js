@@ -53,7 +53,6 @@ export default class ExplorerSchema extends Component {
     let tables = [];
     let filter = this.filter;
 
-    const schema = this.transformedSchema;
     try {
       if (!isBlank(this.filter)) {
         filter = new RegExp(this.filter);
@@ -64,14 +63,14 @@ export default class ExplorerSchema extends Component {
 
     const haveFilter = !!filter;
 
-    for (const key in schema) {
-      if (!schema.hasOwnProperty(key)) {
+    for (const key in this.transformedSchema) {
+      if (!this.transformedSchema.hasOwnProperty(key)) {
         continue;
       }
       if (!haveFilter) {
         tables.push({
           name: key,
-          columns: schema[key],
+          columns: this.transformedSchema[key],
           open: false,
         });
         continue;
@@ -81,20 +80,20 @@ export default class ExplorerSchema extends Component {
       if (filter.source === key || filter.source + "s" === key) {
         tables.unshift({
           name: key,
-          columns: schema[key],
+          columns: this.transformedSchema[key],
           open: haveFilter,
         });
       } else if (filter.test(key)) {
         // whole table matches
         tables.push({
           name: key,
-          columns: schema[key],
+          columns: this.transformedSchema[key],
           open: haveFilter,
         });
       } else {
         // filter the columns
         let filterCols = [];
-        schema[key].forEach((col) => {
+        this.transformedSchema[key].forEach((col) => {
           if (filter.source === col.column_name) {
             filterCols.unshift(col);
           } else if (filter.test(col.column_name)) {
