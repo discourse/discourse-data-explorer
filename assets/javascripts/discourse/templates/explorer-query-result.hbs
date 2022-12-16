@@ -52,11 +52,11 @@
 
   <section>
     {{#if showChart}}
-      {{data-explorer-bar-chart
-        labels=chartLabels
-        values=chartValues
-        datasetName=chartDatasetName
-      }}
+      <DataExplorerBarChart
+        @labels={{chartLabels}}
+        @values={{chartValues}}
+        @datasetName={{chartDatasetName}}
+      />
     {{else}}
       <table>
         <thead>
