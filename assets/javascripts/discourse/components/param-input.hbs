@@ -1,0 +1,55 @@
+<div class="param {{if this.valid 'valid' 'invalid'}}">
+  {{#if (eq this.type "boolean")}}
+    {{#if @info.nullable}}
+      <ComboBox
+        @valueAttribute="id"
+        @value={{this.nullableBoolValue}}
+        @nameProperty="name"
+        @content={{this.boolTypes}}
+        @onChange={{this.updateNullableBoolValue}}
+      />
+    {{else}}
+      <Input
+        @type="checkbox"
+        @checked={{this.boolvalue}}
+        {{on "change" this.updateBoolValue}}
+      />
+    {{/if}}
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "int")}}
+    <Input
+      @type="number"
+      @value={{this.value}}
+      {{on "change" this.updateValue}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "string")}}
+    <TextField
+      @value={{this.value}}
+      @type="text"
+      @onChange={{this.updateValue}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "user_id")}}
+    <EmailGroupUserChooser
+      @value={{this.value}}
+      @options={{(hash maximum=1)}}
+      @onChange={{this.updateValue}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else if (eq this.type "user_list")}}
+    <EmailGroupUserChooser
+      @value={{this.value}}
+      @onChange={{this.updateValue}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
+  {{else}}
+    <TextField @value={{this.value}} @onChange={{this.updateValue}} />
+    <span class="param-name">{{@info.identifier}}</span>
+  {{/if}}
+</div>

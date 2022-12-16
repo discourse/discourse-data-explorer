@@ -1,0 +1,12 @@
+{{#if @hasParams}}
+  <div class="query-params">
+    {{#each @paramInfo as |pinfo|}}
+      <ParamInput
+        @params={{@params}}
+        @initialValues={{@initialValues}}
+        @info={{pinfo}}
+        @updateParams={{@updateParams}}
+      />
+    {{/each}}
+  </div>
+{{/if}}

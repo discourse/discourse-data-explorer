@@ -312,6 +312,12 @@ export default Controller.extend({
         });
     },
 
+    // This is necessary with glimmer's one way data stream to get the child's
+    // changes of 'params' to bubble up.
+    updateParams(identifier, value) {
+      this.selectedItem.set(`params.${identifier}`, value);
+    },
+
     run() {
       if (this.get("selectedItem.dirty")) {
         return;
@@ -325,6 +331,7 @@ export default Controller.extend({
         showResults: false,
         params: JSON.stringify(this.selectedItem.params),
       });
+
       ajax(
         "/admin/plugins/explorer/queries/" +
           this.get("selectedItem.id") +

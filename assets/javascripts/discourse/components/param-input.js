@@ -1,10 +1,11 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import { computed } from "@ember/object";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
 const layoutMap = {
   int: "int",
@@ -26,58 +27,73 @@ const layoutMap = {
   user_list: "user_list",
 };
 
-function allowsInputTypeTime() {
-  try {
-    const inp = document.createElement("input");
-    inp.attributes.type = "time";
-    inp.attributes.type = "date";
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+export default class ParamInput extends Component {
+  @service site;
 
-export default Component.extend({
-  classNameBindings: ["valid:valid:invalid", ":param"],
+  @tracked value;
+  @tracked boolValue;
+  @tracked nullableBoolValue;
 
-  boolTypes: [
+  boolTypes = [
     { name: I18n.t("explorer.types.bool.true"), id: "Y" },
     { name: I18n.t("explorer.types.bool.false"), id: "N" },
     { name: I18n.t("explorer.types.bool.null_"), id: "#null" },
-  ],
-  initialValues: null,
+  ];
 
-  init() {
-    this._super(...arguments);
+  constructor() {
+    super(...arguments);
 
-    if (this.initialValues && this.info.identifier in this.initialValues) {
-      this.set("value", this.initialValues[this.info.identifier]);
+    const identifier = this.args.info.identifier;
+    const initialValues = this.args.initialValues;
+
+    // access parsed params if present to update values to previously ran values
+    if (initialValues && identifier in initialValues) {
+      const initialValue = initialValues[identifier];
+      if (this.type === "boolean") {
+        if (this.args.info.nullable) {
+          this.nullableBoolValue = initialValue;
+        } else {
+          this.boolValue = initialValue !== "false";
+        }
+      } else {
+        this.value =
+          this.args.info.type === "category_id"
+            ? this.dasherizeCategoryId(initialValue)
+            : initialValue;
+      }
+    } else {
+      // if no parsed params then get and set default values
+      const params = this.args.params;
+      this.value =
+        this.args.info.type === "category_id"
+          ? this.dasherizeCategoryId(params[identifier])
+          : params[identifier];
+      this.boolValue = params[identifier] !== "false";
+      this.nullableBoolValue = params[identifier];
     }
-  },
+  }
 
-  value: computed("params", "info.identifier", {
-    get() {
-      return this.params[this.get("info.identifier")];
-    },
-    set(key, value) {
-      this.params[this.get("info.identifier")] = value?.toString();
-      return value;
-    },
-  }),
+  get type() {
+    const type = this.args.info.type;
+    if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
+      return "string";
+    }
+    return layoutMap[type] || "generic";
+  }
 
-  valueBool: computed("params", "info.identifier", {
-    get() {
-      return this.params[this.get("info.identifier")] !== "false";
-    },
-    set(key, value) {
-      value = !!value;
-      this.params[this.get("info.identifier")] = value.toString();
-      return value;
-    },
-  }),
+  get valid() {
+    const nullable = this.args.info.nullable;
+    // intentionally use 'this.args' here instead of 'this.type'
+    // to get the original key instead of the translated value from the layoutMap
+    const type = this.args.info.type;
+    let value;
 
-  @discourseComputed("value", "info.type", "info.nullable")
-  valid(value, type, nullable) {
+    if (type === "boolean") {
+      value = nullable ? this.nullableBoolValue : this.boolValue;
+    } else {
+      value = this.value;
+    }
+
     if (isEmpty(value)) {
       return nullable;
     }
@@ -104,10 +120,6 @@ export default Component.extend({
       case "post_id":
         return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
       case "category_id":
-        if (!isPositiveInt && value !== dasherize(value)) {
-          this.set("value", dasherize(value));
-        }
-
         if (isPositiveInt) {
           return !!this.site.categories.find((c) => c.id === intVal);
         } else if (/\//.test(value)) {
@@ -132,21 +144,55 @@ export default Component.extend({
         }
     }
     return true;
-  },
+  }
 
-  @discourseComputed("info.type")
-  layoutType(type) {
-    if ((type === "time" || type === "date") && !allowsInputTypeTime()) {
-      return "string";
+  dasherizeCategoryId(value) {
+    const isPositiveInt = /^\d+$/.test(value);
+    if (!isPositiveInt && value !== dasherize(value)) {
+      return dasherize(value);
     }
-    if (layoutMap[type]) {
-      return layoutMap[type];
-    }
-    return "generic";
-  },
+    return value;
+  }
 
-  @discourseComputed("layoutType")
-  layoutName(layoutType) {
-    return `admin/components/q-params/${layoutType}`;
-  },
-});
+  @action
+  updateValue(input) {
+    // handle selectKit inputs as well as traditional inputs
+    const value = input.target ? input.target.value : input;
+    if (value.length) {
+      this.value =
+        this.args.info.type === "category_id"
+          ? this.dasherizeCategoryId(value.toString())
+          : value.toString();
+    } else {
+      this.value = value;
+    }
+
+    this.args.updateParams(this.args.info.identifier, this.value);
+  }
+
+  @action
+  updateBoolValue(input) {
+    this.boolValue = input.target.checked;
+    this.args.updateParams(
+      this.args.info.identifier,
+      this.boolValue.toString()
+    );
+  }
+
+  @action
+  updateNullableBoolValue(input) {
+    this.nullableBoolValue = input;
+    this.args.updateParams(this.args.info.identifier, this.nullableBoolValue);
+  }
+}
+
+function allowsInputTypeTime() {
+  try {
+    const input = document.createElement("input");
+    input.attributes.type = "time";
+    input.attributes.type = "date";
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
