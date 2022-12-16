@@ -1,0 +1,34 @@
+{{#if this.hideSchema}}
+  <DButton
+    @action={{this.expandSchema}}
+    @icon="chevron-left"
+    @class="no-text unhide"
+  />
+{{/if}}
+
+<div class="schema">
+  <div class={{if this.hideSchema "hidden"}}>
+    <div class="schema-search inline-form full-width">
+      <TextField
+        @value={{this.filter}}
+        @onChange={{this.filterChanged}}
+        @placeholderKey="explorer.schema.filter"
+      />
+      <DButton
+        @action={{this.collapseSchema}}
+        @icon="chevron-right"
+        @class="no-text"
+      />
+    </div>
+
+    <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <div class="schema-container">
+        <ul>
+          {{#each this.filteredTables as |table|}}
+            {{explorer-schema-onetable table=table}}
+          {{/each}}
+        </ul>
+      </div>
+    </ConditionalLoadingSpinner>
+  </div>
+</div>

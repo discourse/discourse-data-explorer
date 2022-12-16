@@ -1,18 +1,17 @@
-import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
+import Component from "@glimmer/component";
+import { debounce } from "discourse-common/utils/decorators";
 import { isBlank, isEmpty } from "@ember/utils";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 
-export default Component.extend({
-  actions: {
-    collapseSchema() {
-      this.set("hideSchema", true);
-    },
-  },
+export default class ExplorerSchema extends Component {
+  @tracked filter;
+  @tracked loading;
+  @tracked hideSchema = this.args.hideSchema;
 
-  @discourseComputed("schema")
-  transformedSchema(schema) {
-    for (let key in schema) {
+  get transformedSchema() {
+    const schema = this.args.schema;
+    for (const key in schema) {
       if (!schema.hasOwnProperty(key)) {
         continue;
       }
@@ -48,28 +47,30 @@ export default Component.extend({
       });
     }
     return schema;
-  },
+  }
 
-  @discourseComputed("filter")
-  rfilter(filter) {
-    if (!isBlank(filter)) {
-      return new RegExp(filter);
-    }
-  },
-
-  filterTables(schema) {
+  get filteredTables() {
     let tables = [];
-    const filter = this.rfilter,
-      haveFilter = !!filter;
+    let filter = this.filter;
 
-    for (let key in schema) {
-      if (!schema.hasOwnProperty(key)) {
+    try {
+      if (!isBlank(this.filter)) {
+        filter = new RegExp(this.filter);
+      }
+    } catch {
+      filter = null;
+    }
+
+    const haveFilter = !!filter;
+
+    for (const key in this.transformedSchema) {
+      if (!this.transformedSchema.hasOwnProperty(key)) {
         continue;
       }
       if (!haveFilter) {
         tables.push({
           name: key,
-          columns: schema[key],
+          columns: this.transformedSchema[key],
           open: false,
         });
         continue;
@@ -79,20 +80,20 @@ export default Component.extend({
       if (filter.source === key || filter.source + "s" === key) {
         tables.unshift({
           name: key,
-          columns: schema[key],
+          columns: this.transformedSchema[key],
           open: haveFilter,
         });
       } else if (filter.test(key)) {
         // whole table matches
         tables.push({
           name: key,
-          columns: schema[key],
+          columns: this.transformedSchema[key],
           open: haveFilter,
         });
       } else {
         // filter the columns
         let filterCols = [];
-        schema[key].forEach((col) => {
+        this.transformedSchema[key].forEach((col) => {
           if (filter.source === col.column_name) {
             filterCols.unshift(col);
           } else if (filter.test(col.column_name)) {
@@ -109,29 +110,29 @@ export default Component.extend({
       }
     }
     return tables;
-  },
+  }
 
-  @observes("filter")
-  triggerFilter() {
-    discourseDebounce(
-      this,
-      function () {
-        this.set("filteredTables", this.filterTables(this.transformedSchema));
-        this.set("loading", false);
-      },
-      500
-    );
-  },
+  @debounce(500)
+  updateFilter(value) {
+    this.filter = value;
+    this.loading = false;
+  }
 
-  @observes("filter")
-  setLoading() {
-    this.set("loading", true);
-  },
+  @action
+  filterChanged(value) {
+    this.loading = true;
+    this.updateFilter(value);
+  }
 
-  init() {
-    this._super(...arguments);
+  @action
+  collapseSchema() {
+    this.hideSchema = true;
+    this.args.updateHideSchema(true);
+  }
 
-    this.set("loading", true);
-    this.triggerFilter();
-  },
-});
+  @action
+  expandSchema() {
+    this.hideSchema = false;
+    this.args.updateHideSchema(false);
+  }
+}
