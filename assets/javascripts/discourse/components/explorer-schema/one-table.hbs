@@ -1,0 +1,53 @@
+<li
+  class="schema-table {{this.styles}}"
+  {{on "click" (fn this.setTableOpen this.open)}}
+>
+  <div class="schema-table-name">
+    {{#if this.open}}
+      {{d-icon "caret-down"}}
+    {{else}}
+      {{d-icon "caret-right"}}
+    {{/if}}
+    {{@table.name}}
+  </div>
+
+  <div class="schema-table-cols">
+    {{#if this.open}}
+      <dl>
+        {{#each @table.columns as |col|}}
+          <div>
+            <dt
+              class={{if col.sensitive "sensitive"}}
+              title={{if col.sensitive (i18n "explorer.schema.sensitive")}}
+            >
+              {{#if col.sensitive}}
+                {{d-icon "exclamation-triangle"}}
+              {{/if}}
+              {{col.column_name}}
+            </dt>
+            <dd>
+              {{col.data_type}}
+              {{#if col.havetypeinfo}}
+                <br />
+                {{#if col.havepopup}}
+                  <div class="popup-info">
+                    {{d-icon "info"}}
+                    <div class="popup">
+                      {{col.column_desc}}
+                      {{#if col.enum}}
+                        <ExplorerSchema::EnumInfo @col={{col}} />
+                      {{/if}}
+                    </div>
+                  </div>
+                {{/if}}
+                <span class="schema-typenotes">
+                  {{col.notes}}
+                </span>
+              {{/if}}
+            </dd>
+          </div>
+        {{/each}}
+      </dl>
+    {{/if}}
+  </div>
+</li>
