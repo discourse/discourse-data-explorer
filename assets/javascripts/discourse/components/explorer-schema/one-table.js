@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 
-export default class ExplorerSchemaOneTable extends Component {
+export default class OneTable extends Component {
   @tracked open = this.args.table.open;
 
   get styles() {
@@ -10,8 +10,7 @@ export default class ExplorerSchemaOneTable extends Component {
   }
 
   @bind
-  setTableOpen(value) {
-    event.preventDefault();
-    this.open = !value;
+  toggleOpen() {
+    this.open = !this.open;
   }
 }

@@ -1,7 +1,4 @@
-<li
-  class="schema-table {{this.styles}}"
-  {{on "click" (fn this.setTableOpen this.open)}}
->
+<li class="schema-table {{this.styles}}" {{on "click" this.toggleOpen}}>
   <div class="schema-table-name">
     {{#if this.open}}
       {{d-icon "caret-down"}}

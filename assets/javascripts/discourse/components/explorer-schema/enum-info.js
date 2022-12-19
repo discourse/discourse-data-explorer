@@ -1,15 +1,10 @@
 import Component from "@glimmer/component";
 
-export default class ParamInput extends Component {
+export default class EnumInfo extends Component {
   get enuminfo() {
-    const hash = this.args.col.enum;
-    let result = [];
-    for (let key in hash) {
-      if (!hash.hasOwnProperty(key)) {
-        continue;
-      }
-      result.push({ value: key, name: hash[key] });
-    }
-    return result;
+    return Object.entries(this.args.col.enum).map(([value, name]) => ({
+      value,
+      name,
+    }));
   }
 }
