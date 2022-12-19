@@ -5,14 +5,12 @@
         @action={{this.downloadResultJson}}
         @icon="download"
         @label="explorer.download_json"
-        @group={{this.group}}
       />
 
       <DButton
         @action={{this.downloadResultCsv}}
         @icon="download"
         @label="explorer.download_csv"
-        @group={{this.group}}
       />
 
       {{#if this.canShowChart}}
@@ -21,14 +19,12 @@
             @action={{this.hideChart}}
             @icon="table"
             @label="explorer.show_table"
-            @group={{this.group}}
           />
         {{else}}
           <DButton
             @action={{this.showChart}}
             @icon="chart-bar"
             @label="explorer.show_graph"
-            @group={{this.group}}
           />
         {{/if}}
       {{/if}}

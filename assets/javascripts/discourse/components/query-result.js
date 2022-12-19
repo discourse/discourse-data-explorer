@@ -15,7 +15,7 @@ export default class QueryResult extends Component {
   @tracked chartDisplayed = false;
 
   get colRender() {
-    return this.args.content.colRender || {};
+    return this.args.content.colrender || {};
   }
 
   get rows() {

@@ -200,7 +200,6 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       "the table with query results was rendered"
     );
 
-    console.log(query("div.result-info"));
     assert.ok(
       query("div.result-info button:nth-child(3) span").innerText.trim() ===
         I18n.t("explorer.show_graph"),

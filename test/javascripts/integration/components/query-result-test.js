@@ -16,7 +16,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("it renders query results", {
-      template: hbs`{{query-result content=content}}`,
+      template: hbs`<QueryResult @content={{content}} />`,
 
       beforeEach() {
         const results = {
@@ -70,7 +70,7 @@ discourseModule(
     });
 
     componentTest("it renders badge names in query results", {
-      template: hbs`{{query-result content=content}}`,
+      template: hbs`<QueryResult @content={{content}} />`,
 
       beforeEach() {
         const results = {
@@ -102,7 +102,7 @@ discourseModule(
     });
 
     componentTest("it renders a post in query results", {
-      template: hbs`{{query-result content=content}}`,
+      template: hbs`<QueryResult @content={{content}} />`,
 
       beforeEach() {
         const results = {
@@ -141,7 +141,7 @@ discourseModule(
     });
 
     componentTest("it renders a category_id in query results", {
-      template: hbs`{{query-result content=content}}`,
+      template: hbs`<QueryResult @content={{content}} />`,
 
       beforeEach() {
         const results = {
@@ -183,7 +183,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("navigation between a table and a chart works", {
-      template: hbs`{{query-result content=content}}`,
+      template: hbs`<QueryResult @content={{content}} />`,
 
       beforeEach() {
         const results = {
@@ -228,7 +228,7 @@ discourseModule(
     componentTest(
       "it renders a chart button when data has two columns and numbers in the second column",
       {
-        template: hbs`{{query-result content=content}}`,
+        template: hbs`<QueryResult @content={{content}} />`,
 
         beforeEach() {
           const results = {
@@ -255,7 +255,7 @@ discourseModule(
     componentTest(
       "it doesn't render a chart button when data contains identifiers in the second column",
       {
-        template: hbs`{{query-result content=content}}`,
+        template: hbs`<QueryResult @content={{content}} />`,
 
         beforeEach() {
           const results = {
@@ -285,7 +285,7 @@ discourseModule(
     componentTest(
       "it doesn't render a chart button when data contains one column",
       {
-        template: hbs`{{query-result content=content}}`,
+        template: hbs`<QueryResult @content={{content}} />`,
 
         beforeEach() {
           const results = {
@@ -306,7 +306,7 @@ discourseModule(
     componentTest(
       "it doesn't render a chart button when data contains more than two columns",
       {
-        template: hbs`{{query-result content=content}}`,
+        template: hbs`<QueryResult @content={{content}} />`,
 
         beforeEach() {
           const results = {
