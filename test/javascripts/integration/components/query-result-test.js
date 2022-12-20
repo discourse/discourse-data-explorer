@@ -326,5 +326,23 @@ discourseModule(
         },
       }
     );
+
+    componentTest("it handles no results", {
+      template: hbs`<QueryResult @content={{content}} />`,
+
+      beforeEach() {
+        const results = {
+          colrender: [],
+          result_count: 0,
+          columns: ["user_name", "like_count", "post_count"],
+          rows: [],
+        };
+        this.set("content", results);
+      },
+
+      test(assert) {
+        assert.ok(!exists("table tbody tr"), "renders no results");
+      },
+    });
   }
 );

@@ -126,7 +126,7 @@ export default class QueryResult extends Component {
   get canShowChart() {
     const hasTwoColumns = this.colCount === 2;
     const secondColumnContainsNumber =
-      this.resultCount.length && typeof this.rows[0][1] === "number";
+      this.resultCount[0] > 0 && typeof this.rows[0][1] === "number";
     const secondColumnContainsId = this.colRender[1];
 
     return (
