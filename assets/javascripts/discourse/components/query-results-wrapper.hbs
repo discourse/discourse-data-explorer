@@ -1,0 +1,11 @@
+{{#if @results}}
+  <div class="query-results">
+    {{#if @showResults}}
+      <QueryResult @query={{@selectedItem}} @content={{@results}} />
+    {{else}}
+      {{#each @results.errors as |err|}}
+        <pre class="query-error"><code>{{~err}}</code></pre>
+      {{/each}}
+    {{/if}}
+  </div>
+{{/if}}

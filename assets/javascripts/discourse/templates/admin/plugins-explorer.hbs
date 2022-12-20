@@ -252,17 +252,12 @@
       {{conditional-loading-spinner condition=loading}}
 
       {{#unless selectedItem.fake}}
-        {{#if results}}
-          <div class="query-results">
-            {{#if showResults}}
-              {{query-result query=selectedItem content=results}}
-            {{else}}
-              {{#each results.errors as |err|}}
-                <pre class="query-error"><code>{{~err}}</code></pre>
-              {{/each}}
-            {{/if}}
-          </div>
-        {{/if}}
+        <QueryResultsWrapper
+          @results={{results}}
+          @showResults={{showResults}}
+          @query={{selectedItem}}
+          @content={{results}}
+        />
       {{/unless}}
 
       {{#if showRecentQueries}}

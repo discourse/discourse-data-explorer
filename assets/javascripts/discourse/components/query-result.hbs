@@ -1,76 +1,73 @@
 <article>
   <header class="result-header">
     <div class="result-info">
-      {{d-button
-        action=(action "downloadResultJson")
-        icon="download"
-        label="explorer.download_json"
-        group=group
-      }}
+      <DButton
+        @action={{this.downloadResultJson}}
+        @icon="download"
+        @label="explorer.download_json"
+      />
 
-      {{d-button
-        action=(action "downloadResultCsv")
-        icon="download"
-        label="explorer.download_csv"
-        group=group
-      }}
+      <DButton
+        @action={{this.downloadResultCsv}}
+        @icon="download"
+        @label="explorer.download_csv"
+      />
 
-      {{#if canShowChart}}
-        {{#if showChart}}
-          {{d-button
-            action=(action "showTable")
-            icon="table"
-            label="explorer.show_table"
-            group=group
-          }}
+      {{#if this.canShowChart}}
+        {{#if this.chartDisplayed}}
+          <DButton
+            @action={{this.hideChart}}
+            @icon="table"
+            @label="explorer.show_table"
+          />
         {{else}}
-          {{d-button
-            action=(action "showChart")
-            icon="chart-bar"
-            label="explorer.show_graph"
-            group=group
-          }}
+          <DButton
+            @action={{this.showChart}}
+            @icon="chart-bar"
+            @label="explorer.show_graph"
+          />
         {{/if}}
       {{/if}}
     </div>
 
     <div class="result-about">
-      {{resultCount}}
-      {{duration}}
+      {{this.resultCount}}
+      {{this.duration}}
     </div>
 
     <br />
 
-    {{~#if hasExplain}}
-      <pre class="result-explain"><code>
-          {{~content.explain}}
-        </code></pre>
+    {{~#if this.explainText}}
+      <pre class="result-explain">
+        <code>
+          {{~this.explainText}}
+        </code>
+      </pre>
     {{~/if}}
 
     <br />
   </header>
 
   <section>
-    {{#if showChart}}
+    {{#if this.chartDisplayed}}
       <DataExplorerBarChart
-        @labels={{chartLabels}}
-        @values={{chartValues}}
-        @datasetName={{chartDatasetName}}
+        @labels={{this.chartLabels}}
+        @values={{this.chartValues}}
+        @datasetName={{this.chartDatasetName}}
       />
     {{else}}
       <table>
         <thead>
           <tr class="headers">
-            {{#each columnDispNames as |col|}}
+            {{#each this.columnNames as |col|}}
               <th>{{col}}</th>
             {{/each}}
           </tr>
         </thead>
         <tbody>
-          {{#each rows as |row|}}
+          {{#each this.rows as |row|}}
             <QueryRowContent
               @row={{row}}
-              @fallbackTemplate={{this.fallbackTemplate}}
               @columnTemplates={{this.columnTemplates}}
               @lookupUser={{this.lookupUser}}
               @lookupBadge={{this.lookupBadge}}

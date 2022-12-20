@@ -199,6 +199,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       queryAll("div.query-results table tbody tr").length === 2,
       "the table with query results was rendered"
     );
+
     assert.ok(
       query("div.result-info button:nth-child(3) span").innerText.trim() ===
         I18n.t("explorer.show_graph"),

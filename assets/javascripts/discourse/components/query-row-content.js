@@ -9,8 +9,19 @@ import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { escapeExpression } from "discourse/lib/utilities";
 import { cached } from "@glimmer/tracking";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 
 export default class QueryRowContent extends Component {
+  constructor() {
+    super(...arguments);
+
+    this.helpers = {
+      "icon-or-image": icon_or_image_replacement,
+      "category-link": category_badge_replacement,
+      reltime: bound_date_replacement,
+    };
+  }
+
   @cached
   get results() {
     return this.args.columnTemplates.map((t, idx) => {
@@ -46,23 +57,15 @@ export default class QueryRowContent extends Component {
       }
 
       try {
-        return htmlSafe(
-          (t.template || this.args.fallbackTemplate)(ctx, params)
-        );
+        return htmlSafe((t.template || this.fallbackTemplate)(ctx, params));
       } catch (e) {
         return "error";
       }
     });
   }
 
-  constructor() {
-    super(...arguments);
-
-    this.helpers = {
-      "icon-or-image": icon_or_image_replacement,
-      "category-link": category_badge_replacement,
-      reltime: bound_date_replacement,
-    };
+  fallbackTemplate() {
+    return findRawTemplate("javascripts/explorer/text");
   }
 }
 
