@@ -52,14 +52,20 @@ export default class ParamInput extends Component {
       if (this.type === "boolean") {
         if (this.args.info.nullable) {
           this.nullableBoolValue = initialValue;
+          this.args.updateParams(
+            this.args.info.identifier,
+            this.nullableBoolValue
+          );
         } else {
           this.boolValue = initialValue !== "false";
+          this.args.updateParams(this.args.info.identifier, this.boolValue);
         }
       } else {
         this.value =
           this.args.info.type === "category_id"
             ? this.dasherizeCategoryId(initialValue)
             : initialValue;
+        this.args.updateParams(this.args.info.identifier, this.value);
       }
     } else {
       // if no parsed params then get and set default values
