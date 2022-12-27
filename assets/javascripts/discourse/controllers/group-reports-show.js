@@ -68,6 +68,12 @@ export default Controller.extend({
         }
       );
     },
+
+    // This is necessary with glimmer's one way data stream to get the child's
+    // changes of 'params' to bubble up.
+    updateParams(identifier, value) {
+      this.set(`model.params.${identifier}`, value);
+    },
   }, // actions
 
   @discourseComputed("queryGroup.bookmark")
