@@ -1,4 +1,8 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -44,6 +48,10 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
         {
           id: 14,
           name: "trust_level_4",
+        },
+        {
+          id: 41,
+          name: "discourse",
         },
       ]);
     });
@@ -201,6 +209,32 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
+    server.get("/g/discourse/reports/-8", () => {
+      return helper.response({
+        query: {
+          id: -8,
+          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS (\n    SELECT\n        date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,\n        date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end\n        )\n\n    SELECT\n        ua.user_id,\n        count(1) AS like_count\n    FROM user_actions ua\n    INNER JOIN query_period qp\n    ON ua.created_at >= qp.period_start\n    AND ua.created_at <= qp.period_end\n    WHERE ua.action_type = 1\n    GROUP BY ua.user_id\n    ORDER BY like_count DESC\n    LIMIT 100\n",
+          name: "Top 100 Likers Report",
+          description:
+            "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+          param_info: [
+            {
+              identifier: "months_ago",
+              type: "int",
+              default: "1",
+              nullable: false,
+            },
+          ],
+          created_at: "2021-02-02T12:21:11.449Z",
+          username: "system",
+          group_ids: [41],
+          last_run_at: "2021-02-11T08:29:59.337Z",
+          hidden: false,
+          user_id: -1,
+        },
+      });
+    });
+
     server.post("/admin/plugins/explorer/queries/-7/run", () => {
       return helper.response({
         success: true,
@@ -226,6 +260,42 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
         rows: [],
       });
     });
+
+    server.post("/g/discourse/reports/-8/run", () => {
+      return helper.response({
+        success: true,
+        errors: [],
+        duration: 27.5,
+        result_count: 2,
+        params: { months_ago: "1" },
+        columns: ["user_id", "like_count"],
+        default_limit: 1000,
+        relations: {
+          user: [
+            {
+              id: -2,
+              username: "discobot",
+              name: null,
+              avatar_template: "/user_avatar/localhost/discobot/{size}/2_2.png",
+            },
+            {
+              id: 2,
+              username: "andrey1",
+              name: null,
+              avatar_template:
+                "/letter_avatar_proxy/v4/letter/a/c0e974/{size}.png",
+            },
+          ],
+        },
+        colrender: {
+          0: "user",
+        },
+        rows: [
+          [-2, 2],
+          [2, 2],
+        ],
+      });
+    });
   });
 
   test("it puts params for the query into the url", async function (assert) {
@@ -243,5 +313,13 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit('admin/plugins/explorer?id=-7&params={"user":null}');
     assert.ok(exists(".query-params .user-chooser"));
     assert.ok(exists(".query-run .btn.btn-primary"));
+  });
+
+  test("it applies params when running a report", async function (assert) {
+    await visit("/g/discourse/reports/-8");
+    const monthsAgoValue = "2";
+    await fillIn(".query-params input", monthsAgoValue);
+    await click("form.query-run button");
+    assert.equal(query(".query-params input").value, monthsAgoValue);
   });
 });
