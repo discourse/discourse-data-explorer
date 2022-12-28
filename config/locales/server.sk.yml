@@ -6,4 +6,4 @@
 
 sk:
   site_settings:
-    data_explorer_enabled: "Povoľ \"Data explorer\" v /admin/plugins/explorer"
+    data_explorer_enabled: 'Povoľ "Data explorer" v /admin/plugins/explorer'

@@ -7,33 +7,15 @@ import RestModel from "discourse/models/rest";
 import { reads } from "@ember/object/computed";
 
 const Query = RestModel.extend({
-  dirty: false,
   params: {},
   results: null,
-
-  @on("init")
-  _init() {
-    this._super(...arguments);
-
-    this.set("dirty", false);
-  },
+  hasParams: reads("param_info.length"),
 
   @on("init")
   @observes("param_info")
   _initParams() {
     this.resetParams();
   },
-
-  @observes("name", "description", "sql", "group_ids")
-  markDirty() {
-    this.set("dirty", true);
-  },
-
-  markNotDirty() {
-    this.set("dirty", false);
-  },
-
-  hasParams: reads("param_info.length"),
 
   resetParams() {
     const newParams = {};

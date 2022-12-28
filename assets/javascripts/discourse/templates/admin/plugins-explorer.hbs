@@ -1,368 +1,381 @@
-{{#explorer-container hideSchema=hideSchema everEditing=everEditing}}
-  {{#if disallow}}
-    <h1>{{i18n "explorer.admins_only"}}</h1>
-  {{else}}
-    {{#unless selectedQueryId}}
-      <div class="query-list">
-        {{text-field value=search placeholderKey="explorer.search_placeholder"}}
-        {{d-button
-          action=(action "showCreate")
-          icon="plus"
-          class="no-text btn-right"
-        }}
-        {{pick-files-button
-          class="import-btn"
-          label="explorer.import.label"
-          icon="upload"
-          acceptedFormatsOverride=acceptedImportFileTypes
-          showButton=true
-          onFilesPicked=(action "import")
-        }}
+{{#if this.disallow}}
+  <h1>{{i18n "explorer.admins_only"}}</h1>
+{{else}}
+  {{#unless this.validQueryPresent}}
+    <div class="query-list">
+      <TextField
+        @value={{this.search}}
+        @placeholderKey="explorer.search_placeholder"
+        @onChange={{this.updateSearch}}
+      />
+      <DButton
+        @action={{this.displayCreate}}
+        @icon="plus"
+        @class="no-text btn-right"
+      />
+      <PickFilesButton
+        @class="import-btn"
+        @label="explorer.import.label"
+        @icon="upload"
+        @acceptedFormatsOverride={{this.acceptedImportFileTypes}}
+        @showButton="true"
+        @onFilesPicked={{this.import}}
+      />
+    </div>
+
+    {{#if this.showCreate}}
+      <div class="query-create">
+        <TextField
+          @value={{this.newQueryName}}
+          @placeholderKey="explorer.create_placeholder"
+          @onChange={{this.updateNewQueryName}}
+        />
+        <DButton
+          @action={{this.create}}
+          @disabled={{this.createDisabled}}
+          @label="explorer.create"
+          @icon="plus"
+        />
+      </div>
+    {{/if}}
+
+    {{#if this.othersDirty}}
+      <div class="warning">
+        {{d-icon "exclamation-triangle"}}
+        {{i18n "explorer.others_dirty"}}
+      </div>
+    {{/if}}
+  {{/unless}}
+
+  {{#if this.model.length}}
+    {{#unless this.selectedItem.fake}}
+      <div class="query-edit {{if this.editName 'editing'}}">
+        {{#if this.selectedItem}}
+          {{#if this.editingName}}
+            <div class="name">
+              <DButton
+                @action={{this.goHome}}
+                @icon="chevron-left"
+                @class="previous"
+              />
+              <div class="name-text-field">
+                <TextField
+                  @value={{this.selectedItem.name}}
+                  @onChange={{this.setDirty}}
+                />
+              </div>
+            </div>
+
+            <div class="desc">
+              <DTextarea
+                @value={{this.selectedItem.description}}
+                @placeholder={{(i18n "explorer.description_placeholder")}}
+                @input={{this.setDirty}}
+              />
+            </div>
+          {{else}}
+            <div class="name">
+              <DButton
+                @action={{this.goHome}}
+                @icon="chevron-left"
+                @class="previous"
+              />
+
+              <h1>
+                {{this.selectedItem.name}}
+                {{#unless this.editDisabled}}
+                  <a href {{action "editName"}} class="edit-query-name">
+                    {{d-icon "pencil-alt"}}
+                  </a>
+                {{/unless}}
+              </h1>
+            </div>
+
+            <div class="desc">
+              {{this.selectedItem.description}}
+            </div>
+          {{/if}}
+
+          {{#unless this.selectedItem.destroyed}}
+            <div class="pull-left">
+              <div class="groups">
+                <span class="label">{{i18n "explorer.allow_groups"}}</span>
+                <span>
+                  <MultiSelect
+                    @value={{this.selectedItem.group_ids}}
+                    @content={{this.groupOptions}}
+                    @options={{hash allowAny=false}}
+                    @onChange={{this.updateGroupIds}}
+                  />
+                </span>
+              </div>
+            </div>
+          {{/unless}}
+
+          <div class="clear"></div>
+
+          {{#if this.editingQuery}}
+            <div class="query-editor {{if this.hideSchema 'no-schema'}}">
+              <div class="panels-flex">
+                <div class="editor-panel">
+                  <AceEditor
+                    @content={{this.selectedItem.sql}}
+                    @mode="sql"
+                    @disabled={{this.selectedItem.destroyed}}
+                    {{on "click" this.setDirty}}
+                  />
+                </div>
+
+                <div class="right-panel">
+                  <ExplorerSchema
+                    @schema={{this.schema}}
+                    @hideSchema={{this.hideSchema}}
+                    @updateHideSchema={{this.updateHideSchema}}
+                  />
+                </div>
+              </div>
+
+              <div
+                class="grippie"
+                {{did-insert this.registerResizing}}
+                {{will-destroy this.unregisterResizing}}
+              >
+                {{d-icon "discourse-expand"}}
+              </div>
+
+              <div class="clear"></div>
+            </div>
+          {{else}}
+            <div class="sql">
+              <CodeView
+                @value={{selectedItem.sql}}
+                @codeClass="sql"
+                @setDirty={{this.setDirty}}
+              />
+            </div>
+          {{/if}}
+
+          <div class="clear"></div>
+
+          <div class="pull-left left-buttons">
+            {{#if this.editingQuery}}
+              <DButton
+                @action={{this.save}}
+                @label="explorer.save"
+                @disabled={{this.saveDisabled}}
+              />
+            {{else}}
+              {{#unless this.editDisabled}}
+                <DButton
+                  @action={{this.editQuery}}
+                  @label="explorer.edit"
+                  @icon="pencil-alt"
+                />
+              {{/unless}}
+            {{/if}}
+
+            <DButton
+              @action={{this.download}}
+              @label="explorer.export"
+              @disabled={{this.runDisabled}}
+              @icon="download"
+            />
+
+            {{#if this.editingQuery}}
+              <DButton
+                @action={{this.showHelpModal}}
+                @label="explorer.help.label"
+                @icon="question-circle"
+              />
+            {{/if}}
+          </div>
+
+          <div class="pull-right right-buttons">
+            {{#if this.selectedItem.destroyed}}
+              <DButton
+                @action={{this.recover}}
+                @icon="undo"
+                @label="explorer.recover"
+              />
+            {{else}}
+              {{#if this.editingQuery}}
+                <DButton
+                  @action={{this.discard}}
+                  @icon="undo"
+                  @label="explorer.undo"
+                  @disabled={{this.saveDisabled}}
+                />
+              {{/if}}
+
+              <DButton
+                @action={{this.destroyQuery}}
+                @class="btn-danger"
+                @icon="trash-alt"
+                @label="explorer.delete"
+              />
+            {{/if}}
+          </div>
+
+          <div class="clear"></div>
+        {{/if}}
       </div>
 
-      {{#if showCreate}}
-        <div class="query-create">
-          {{text-field
-            value=newQueryName
-            placeholderKey="explorer.create_placeholder"
-          }}
-          {{d-button
-            action=(action "create")
-            disabled=createDisabled
-            label="explorer.create"
-            icon="plus"
-          }}
-        </div>
-      {{/if}}
+      <form class="query-run" {{on "submit" this.run}}>
+        <ParamInputsWrapper
+          @hasParams={{this.selectedItem.hasParams}}
+          @params={{this.selectedItem.params}}
+          @initialValues={{this.parsedParams}}
+          @paramInfo={{this.selectedItem.param_info}}
+          @updateParams={{this.updateParams}}
+        />
 
-      {{#if othersDirty}}
-        <div class="warning">
-          {{d-icon "exclamation-triangle"}}
-          {{i18n "explorer.others_dirty"}}
-        </div>
-      {{/if}}
+        {{#if this.runDisabled}}
+          {{#if this.saveDisabled}}
+            <DButton
+              @label="explorer.run"
+              @disabled="true"
+              @class="btn-primary"
+            />
+          {{else}}
+            <DButton
+              @action={{this.saveAndRun}}
+              @icon="play"
+              @label="explorer.saverun"
+              @class="btn-primary"
+            />
+          {{/if}}
+        {{else}}
+          <DButton
+            @action={{this.run}}
+            @icon="play"
+            @label="explorer.run"
+            @disabled={{this.runDisabled}}
+            @class="btn-primary"
+            @type="submit"
+          />
+        {{/if}}
+
+        <label class="query-plan">
+          <Input @type="checkbox" @checked={{this.explain}} name="explain" />
+          {{i18n "explorer.explain_label"}}
+        </label>
+      </form>
+      <hr />
     {{/unless}}
 
-    {{#if model.length}}
-      {{#unless selectedItem.fake}}
-        <div class="query-edit {{if editName 'editing'}}">
-          {{#if selectedItem}}
-            {{#if editing}}
-              <div class="name">
-                {{d-button
-                  action=(action "goHome")
-                  icon="chevron-left"
-                  class="previous"
-                }}
-                <div class="name-text-field">
-                  {{text-field value=selectedItem.name}}
-                </div>
-              </div>
+    <ConditionalLoadingSpinner @condition={{this.loading}} />
 
-              <div class="desc">
-                {{textarea
-                  value=selectedItem.description
-                  placeholder=(i18n "explorer.description_placeholder")
-                }}
-              </div>
-            {{else}}
-              <div class="name">
-                {{d-button
-                  action=(action "goHome")
-                  icon="chevron-left"
-                  class="previous"
-                }}
+    {{#unless this.selectedItem.fake}}
+      <QueryResultsWrapper
+        @results={{results}}
+        @showResults={{showResults}}
+        @query={{selectedItem}}
+        @content={{results}}
+      />
+    {{/unless}}
 
-                <h1>
-                  {{selectedItem.name}}
-                  {{#unless editDisabled}}
-                    <a href {{action "editName" class="edit-query-name"}}>
-                      {{d-icon "pencil-alt"}}
+    {{#unless this.validQueryPresent}}
+      <div class="container">
+        <table class="recent-queries">
+          <thead class="heading-container">
+            <th class="col heading name">
+              <div
+                role="button"
+                class="heading-toggle"
+                {{on "click" (fn this.updateSortProperty "name")}}
+              >
+                <TableHeaderToggle
+                  @field="name"
+                  @labelKey="explorer.query_user"
+                  @order={{this.order}}
+                  @asc={{(not this.sortDescending)}}
+                  @automatic="true"
+                />
+              </div>
+            </th>
+            <th class="col heading created-by">
+              <div
+                role="button"
+                class="heading-toggle"
+                {{on "click" (fn this.updateSortProperty "username")}}
+              >
+                <TableHeaderToggle
+                  @field="username"
+                  @labelKey="explorer.query_user"
+                  @order={{this.order}}
+                  @asc={{(not this.sortDescending)}}
+                  @automatic="true"
+                />
+              </div>
+            </th>
+            <th class="col heading group-names">
+              <div class="group-names-header">
+                {{i18n "explorer.query_groups"}}
+              </div>
+            </th>
+            <th class="col heading created-at">
+              <div
+                role="button"
+                class="heading-toggle"
+                {{on "click" (fn this.updateSortProperty "last_run_at")}}
+              >
+                <TableHeaderToggle
+                  @field="last_run_at"
+                  @labelKey="explorer.query_time"
+                  @order={{this.order}}
+                  @asc={{(not this.sortDescending)}}
+                  @automatic="true"
+                />
+              </div>
+            </th>
+          </thead>
+          <tbody>
+            {{#each this.filteredContent as |query|}}
+              <tr class="query-row">
+                <td>
+                  <a
+                    {{on "click" this.scrollTop}}
+                    href="/admin/plugins/explorer/?id={{query.id}}"
+                  >
+                    <b class="query-name">{{query.name}}</b>
+                    <medium class="query-desc">{{query.description}}</medium>
+                  </a>
+                </td>
+                <td class="query-created-by">
+                  {{#if query.username}}
+                    <a href="/u/{{query.username}}/activity">
+                      <medium>{{query.username}}</medium>
                     </a>
-                  {{/unless}}
-                </h1>
-              </div>
-
-              <div class="desc">
-                {{selectedItem.description}}
-              </div>
-            {{/if}}
-
-            {{#unless selectedItem.destroyed}}
-              <div class="pull-left">
-                <div class="groups">
-                  <span class="label">{{i18n "explorer.allow_groups"}}</span>
-                  <span>
-                    {{multi-select
-                      value=selectedItem.group_ids
-                      content=groupOptions
-                      allowAny=false
-                      onSelect=(action (mut selectedItem.group_ids))
-                    }}
-                  </span>
-                </div>
-              </div>
-            {{/unless}}
-
-            <div class="clear"></div>
-
-            {{! the SQL editor will show the first time you }}
-            {{#if everEditing}}
-              <div class="query-editor {{if hideSchema 'no-schema'}}">
-                <div class="panels-flex">
-                  <div class="editor-panel">
-                    {{ace-editor
-                      content=selectedItem.sql
-                      mode="sql"
-                      disabled=selectedItem.destroyed
-                    }}
-                  </div>
-
-                  <div class="right-panel">
-                    <ExplorerSchema
-                      @schema={{schema}}
-                      @hideSchema={{hideSchema}}
-                      @updateHideSchema={{action "updateHideSchema"}}
-                    />
-                  </div>
-                </div>
-
-                <div class="grippie">
-                  {{d-icon "discourse-expand"}}
-                </div>
-
-                <div class="clear"></div>
-              </div>
+                  {{/if}}
+                </td>
+                <td class="query-group-names">
+                  {{#each query.group_names as |group|}}
+                    <ShareReport @group={{group}} @query={{query}} />
+                  {{/each}}
+                </td>
+                <td class="query-created-at">
+                  {{#if query.last_run_at}}
+                    <medium>
+                      {{bound-date query.last_run_at}}
+                    </medium>
+                  {{else if query.created_at}}
+                    <medium>
+                      {{bound-date query.created_at}}
+                    </medium>
+                  {{/if}}
+                </td>
+              </tr>
             {{else}}
-              <div class="sql">
-                {{hljs-code-view value=selectedItem.sql codeClass="sql"}}
-              </div>
-            {{/if}}
+              <br />
+              <em class="no-search-results">
+                {{i18n "explorer.no_search_results"}}
+              </em>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{/unless}}
 
-            <div class="clear"></div>
-
-            <div class="pull-left left-buttons">
-              {{#if everEditing}}
-                {{d-button
-                  action=(action "save")
-                  label="explorer.save"
-                  disabled=saveDisable
-                }}
-              {{else}}
-                {{#unless editDisabled}}
-                  {{d-button
-                    action=(action "editName")
-                    label="explorer.edit"
-                    icon="pencil-alt"
-                  }}
-                {{/unless}}
-              {{/if}}
-
-              {{d-button
-                action=(action "download")
-                label="explorer.export"
-                disabled=runDisabled
-                icon="download"
-              }}
-
-              {{#if everEditing}}
-                {{d-button
-                  action=(action "showHelpModal")
-                  label="explorer.help.label"
-                  icon="question-circle"
-                }}
-              {{/if}}
-            </div>
-
-            <div class="pull-right right-buttons">
-              {{#if selectedItem.destroyed}}
-                {{d-button
-                  action=(action "recover")
-                  class=""
-                  icon="undo"
-                  label="explorer.recover"
-                }}
-              {{else}}
-                {{#if everEditing}}
-                  {{d-button
-                    action=(action "discard")
-                    icon="undo"
-                    label="explorer.undo"
-                    disabled=saveDisabled
-                  }}
-                {{/if}}
-
-                {{d-button
-                  action=(action "destroy")
-                  class="btn-danger"
-                  icon="trash-alt"
-                  label="explorer.delete"
-                }}
-              {{/if}}
-            </div>
-
-            <div class="clear"></div>
-          {{/if}}
-        </div>
-
-        <form class="query-run" {{action "run" on="submit"}}>
-          <ParamInputsWrapper
-            @hasParams={{selectedItem.hasParams}}
-            @params={{selectedItem.params}}
-            @initialValues={{parsedParams}}
-            @paramInfo={{selectedItem.param_info}}
-            @updateParams={{action "updateParams"}}
-          />
-
-          {{#if runDisabled}}
-            {{#if saveDisabled}}
-              {{d-button
-                label="explorer.run"
-                disabled="true"
-                class="btn-primary"
-              }}
-            {{else}}
-              {{d-button
-                action=(action "saverun")
-                icon="play"
-                label="explorer.saverun"
-                class="btn-primary"
-              }}
-            {{/if}}
-          {{else}}
-            {{d-button
-              action=(action "run")
-              icon="play"
-              label="explorer.run"
-              disabled=runDisabled
-              class="btn-primary"
-              type="submit"
-            }}
-          {{/if}}
-
-          <label class="query-plan">
-            {{input type="checkbox" checked=explain name="explain"}}
-            {{i18n "explorer.explain_label"}}
-          </label>
-        </form>
-
-        <hr />
-      {{/unless}}
-
-      {{conditional-loading-spinner condition=loading}}
-
-      {{#unless selectedItem.fake}}
-        <QueryResultsWrapper
-          @results={{results}}
-          @showResults={{showResults}}
-          @query={{selectedItem}}
-          @content={{results}}
-        />
-      {{/unless}}
-
-      {{#if showRecentQueries}}
-        <div class="container">
-          <table class="recent-queries">
-            <thead class="heading-container">
-              <th class="col heading name">
-                <div
-                  role="button"
-                  class="heading-toggle"
-                  {{action "sortByProperty" "name"}}
-                >
-                  {{table-header-toggle
-                    field="name"
-                    labelKey="explorer.query_name"
-                    order=order
-                    asc=asc
-                    automatic=true
-                  }}
-                </div>
-              </th>
-              <th class="col heading created-by">
-                <div
-                  role="button"
-                  class="heading-toggle"
-                  {{action "sortByProperty" "username"}}
-                >
-                  {{table-header-toggle
-                    field="username"
-                    labelKey="explorer.query_user"
-                    order=order
-                    asc=asc
-                    automatic=true
-                  }}
-                </div>
-              </th>
-              <th class="col heading group-names">
-                <div class="group-names-header">
-                  {{i18n "explorer.query_groups"}}
-                </div>
-              </th>
-              <th class="col heading created-at">
-                <div
-                  role="button"
-                  class="heading-toggle"
-                  {{action "sortByProperty" "last_run_at"}}
-                >
-                  {{table-header-toggle
-                    field="last_run_at"
-                    labelKey="explorer.query_time"
-                    order=order
-                    asc=asc
-                    automatic=true
-                  }}
-                </div>
-              </th>
-            </thead>
-            <tbody>
-              {{#each filteredContent as |query|}}
-                <tr class="query-row">
-                  <td>
-                    <a
-                      {{on "click" this.scrollTop}}
-                      href="/admin/plugins/explorer/?id={{query.id}}"
-                    >
-                      <b class="query-name">{{query.name}}</b>
-                      <medium class="query-desc">{{query.description}}</medium>
-                    </a>
-                  </td>
-                  <td class="query-created-by">
-                    {{#if query.username}}
-                      <a href="/u/{{query.username}}/activity">
-                        <medium>{{query.username}}</medium>
-                      </a>
-                    {{/if}}
-                  </td>
-                  <td class="query-group-names">
-                    {{#each query.group_names as |group|}}
-                      <ShareReport @group={{group}} @query={{query}} />
-                    {{/each}}
-                  </td>
-                  <td class="query-created-at">
-                    {{#if query.last_run_at}}
-                      <medium>
-                        {{bound-date query.last_run_at}}
-                      </medium>
-                    {{else if query.created_at}}
-                      <medium>
-                        {{bound-date query.created_at}}
-                      </medium>
-                    {{/if}}
-                  </td>
-                </tr>
-              {{else}}
-                <br />
-                <em class="no-search-results">
-                  {{i18n "explorer.no_search_results"}}
-                </em>
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
-      {{/if}}
-
-      <div class="explorer-pad-bottom"></div>
-    {{/if}}
+    <div class="explorer-pad-bottom"></div>
   {{/if}}
-{{/explorer-container}}
+{{/if}}
