@@ -231,7 +231,7 @@ export default class QueryResult extends Component {
       "action",
       getURL(
         this._download_url() +
-          this.get("query.id") +
+          this.args.query.id +
           "/run." +
           format +
           "?download=1"
