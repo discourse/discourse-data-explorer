@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Guardian do
   before { SiteSetting.data_explorer_enabled = true }
 
   def make_query(group_ids = [])
-    query = DataExplorer::Query.create!(name: "Query number #{Fabrication::Sequencer.sequence("query-id", 1)}", sql: "SELECT 1")
+    query =
+      DataExplorer::Query.create!(
+        name: "Query number #{Fabrication::Sequencer.sequence("query-id", 1)}",
+        sql: "SELECT 1",
+      )
 
-    group_ids.each do |group_id|
-      query.query_groups.create!(group_id: group_id)
-    end
+    group_ids.each { |group_id| query.query_groups.create!(group_id: group_id) }
 
     query
   end

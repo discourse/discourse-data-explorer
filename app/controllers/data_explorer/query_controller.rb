@@ -3,19 +3,17 @@
 class DataExplorer::QueryController < ::ApplicationController
   requires_plugin DataExplorer.plugin_name
 
-  before_action :set_group, only: %i(group_reports_index group_reports_show group_reports_run)
-  before_action :set_query, only: %i(group_reports_show group_reports_run show update)
+  before_action :set_group, only: %i[group_reports_index group_reports_show group_reports_run]
+  before_action :set_query, only: %i[group_reports_show group_reports_run show update]
   before_action :ensure_admin
 
-  skip_before_action :check_xhr, only: %i(show group_reports_run run)
-  skip_before_action :ensure_admin, only: %i(
-    group_reports_index
-    group_reports_show
-    group_reports_run
-  )
+  skip_before_action :check_xhr, only: %i[show group_reports_run run]
+  skip_before_action :ensure_admin,
+                     only: %i[group_reports_index group_reports_show group_reports_run]
 
   def index
-    queries = DataExplorer::Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
+    queries =
+      DataExplorer::Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
 
     database_queries_ids = DataExplorer::Query.pluck(:id)
     Queries.default.each do |params|
@@ -30,19 +28,19 @@ class DataExplorer::QueryController < ::ApplicationController
       queries << query
     end
 
-    render_serialized queries, DataExplorer::QuerySerializer, root: 'queries'
+    render_serialized queries, DataExplorer::QuerySerializer, root: "queries"
   end
 
   def show
     check_xhr unless params[:export]
 
     if params[:export]
-      response.headers['Content-Disposition'] = "attachment; filename=#{@query.slug}.dcquery.json"
+      response.headers["Content-Disposition"] = "attachment; filename=#{@query.slug}.dcquery.json"
       response.sending_file = true
     end
 
     return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
-    render_serialized @query, DataExplorer::QuerySerializer, root: 'query'
+    render_serialized @query, DataExplorer::QuerySerializer, root: "query"
   end
 
   def groups
@@ -55,40 +53,48 @@ class DataExplorer::QueryController < ::ApplicationController
     respond_to do |format|
       format.json do
         queries = DataExplorer::Query.for_group(@group)
-        render_serialized(queries, DataExplorer::QuerySerializer, root: 'queries')
+        render_serialized(queries, DataExplorer::QuerySerializer, root: "queries")
       end
     end
   end
 
   def group_reports_show
-    return raise Discourse::NotFound if !guardian.group_and_user_can_access_query?(@group, @query) || @query.hidden
+    if !guardian.group_and_user_can_access_query?(@group, @query) || @query.hidden
+      return raise Discourse::NotFound
+    end
 
     respond_to do |format|
       format.json do
         query_group = DataExplorer::QueryGroup.find_by(query_id: @query.id, group_id: @group.id)
 
         render json: {
-          query: serialize_data(@query, DataExplorer::QuerySerializer, root: nil),
-          query_group: serialize_data(query_group, DataExplorer::QueryGroupSerializer, root: nil),
-        }
-
+                 query: serialize_data(@query, DataExplorer::QuerySerializer, root: nil),
+                 query_group:
+                   serialize_data(query_group, DataExplorer::QueryGroupSerializer, root: nil),
+               }
       end
     end
   end
 
   def group_reports_run
-    return raise Discourse::NotFound if !guardian.group_and_user_can_access_query?(@group, @query) || @query.hidden
+    if !guardian.group_and_user_can_access_query?(@group, @query) || @query.hidden
+      return raise Discourse::NotFound
+    end
 
     run
   end
 
   def create
-    query = DataExplorer::Query.create!(params.require(:query).permit(:name, :description, :sql).merge(user_id: current_user.id, last_run_at: Time.now))
+    query =
+      DataExplorer::Query.create!(
+        params
+          .require(:query)
+          .permit(:name, :description, :sql)
+          .merge(user_id: current_user.id, last_run_at: Time.now),
+      )
     group_ids = params.require(:query)[:group_ids]
-    group_ids&.each do |group_id|
-      query.query_groups.find_or_create_by!(group_id: group_id)
-    end
-    render_serialized query, DataExplorer::QuerySerializer, root: 'query'
+    group_ids&.each { |group_id| query.query_groups.find_or_create_by!(group_id: group_id) }
+    render_serialized query, DataExplorer::QuerySerializer, root: "query"
   end
 
   def update
@@ -97,12 +103,10 @@ class DataExplorer::QueryController < ::ApplicationController
 
       group_ids = params.require(:query)[:group_ids]
       DataExplorer::QueryGroup.where.not(group_id: group_ids).where(query_id: @query.id).delete_all
-      group_ids&.each do |group_id|
-        @query.query_groups.find_or_create_by!(group_id: group_id)
-      end
+      group_ids&.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
     end
 
-    render_serialized @query, DataExplorer::QuerySerializer, root: 'query'
+    render_serialized @query, DataExplorer::QuerySerializer, root: "query"
   rescue DataExplorer::ValidationError => e
     render_json_error e.message
   end
@@ -116,9 +120,7 @@ class DataExplorer::QueryController < ::ApplicationController
 
   def schema
     schema_version = DB.query_single("SELECT max(version) AS tag FROM schema_migrations").first
-    if stale?(public: true, etag: schema_version, template: false)
-      render json: DataExplorer.schema
-    end
+    render json: DataExplorer.schema if stale?(public: true, etag: schema_version, template: false)
   end
 
   # Return value:
@@ -135,9 +137,7 @@ class DataExplorer::QueryController < ::ApplicationController
     query = DataExplorer::Query.find(params[:id].to_i)
     query.update!(last_run_at: Time.now)
 
-    if params[:download]
-      response.sending_file = true
-    end
+    response.sending_file = true if params[:download]
 
     query_params = {}
     query_params = MultiJson.load(params[:params]) if params[:params]
@@ -145,18 +145,17 @@ class DataExplorer::QueryController < ::ApplicationController
     opts = { current_user: current_user.username }
     opts[:explain] = true if params[:explain] == "true"
 
-    opts[:limit] =
-      if params[:format] == "csv"
-        if params[:limit].present?
-          limit = params[:limit].to_i
-          limit = DataExplorer::QUERY_RESULT_MAX_LIMIT if limit > DataExplorer::QUERY_RESULT_MAX_LIMIT
-          limit
-        else
-          DataExplorer::QUERY_RESULT_MAX_LIMIT
-        end
-      elsif params[:limit].present?
-        params[:limit] == "ALL" ? "ALL" : params[:limit].to_i
+    opts[:limit] = if params[:format] == "csv"
+      if params[:limit].present?
+        limit = params[:limit].to_i
+        limit = DataExplorer::QUERY_RESULT_MAX_LIMIT if limit > DataExplorer::QUERY_RESULT_MAX_LIMIT
+        limit
+      else
+        DataExplorer::QUERY_RESULT_MAX_LIMIT
       end
+    elsif params[:limit].present?
+      params[:limit] == "ALL" ? "ALL" : params[:limit].to_i
+    end
 
     result = DataExplorer.run_query(query, query_params, opts)
 
@@ -168,23 +167,21 @@ class DataExplorer::QueryController < ::ApplicationController
       err_msg = err.message
       if err.is_a? ActiveRecord::StatementInvalid
         err_class = err.original_exception.class
-        err_msg.gsub!("#{err_class}:", '')
+        err_msg.gsub!("#{err_class}:", "")
       else
         err_msg = "#{err_class}: #{err_msg}"
       end
 
-      render json: {
-        success: false,
-        errors: [err_msg]
-      }, status: 422
+      render json: { success: false, errors: [err_msg] }, status: 422
     else
       pg_result = result[:pg_result]
       cols = pg_result.fields
       respond_to do |format|
         format.json do
           if params[:download]
-            response.headers['Content-Disposition'] =
-              "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, 'discourse')}-#{Date.today}.dcqresult.json"
+            response.headers[
+              "Content-Disposition"
+            ] = "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.json"
           end
           json = {
             success: true,
@@ -193,7 +190,7 @@ class DataExplorer::QueryController < ::ApplicationController
             result_count: pg_result.values.length || 0,
             params: query_params,
             columns: cols,
-            default_limit: SiteSetting.data_explorer_query_result_limit
+            default_limit: SiteSetting.data_explorer_query_result_limit,
           }
           json[:explain] = result[:explain] if opts[:explain]
 
@@ -208,16 +205,16 @@ class DataExplorer::QueryController < ::ApplicationController
           render json: json
         end
         format.csv do
-          response.headers['Content-Disposition'] =
-            "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, 'discourse')}-#{Date.today}.dcqresult.csv"
+          response.headers[
+            "Content-Disposition"
+          ] = "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
 
-          require 'csv'
-          text = CSV.generate do |csv|
-            csv << cols
-            pg_result.values.each do |row|
-              csv << row
+          require "csv"
+          text =
+            CSV.generate do |csv|
+              csv << cols
+              pg_result.values.each { |row| csv << row }
             end
-          end
 
           render plain: text
         end

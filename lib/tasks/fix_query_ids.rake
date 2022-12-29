@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-desc 'Fix query IDs to match the old ones used in the plugin store (q:id)'
+desc "Fix query IDs to match the old ones used in the plugin store (q:id)"
 
-task('data_explorer:fix_query_ids').clear
-task 'data_explorer:fix_query_ids' => :environment do
+task("data_explorer:fix_query_ids").clear
+task "data_explorer:fix_query_ids" => :environment do
   ActiveRecord::Base.transaction do
     # Only queries with unique title can be fixed
     movements = DB.query <<~SQL
@@ -20,7 +20,8 @@ task 'data_explorer:fix_query_ids' => :environment do
     if movements.present?
       # If there are new queries, they still may have conflict
       # We just want to move their ids to safe space and we will not move them back
-      additional_conflicts = DB.query(<<~SQL, from: movements.map { |m| m.from }, to: movements.map { |m| m.to })
+      additional_conflicts =
+        DB.query(<<~SQL, from: movements.map { |m| m.from }, to: movements.map { |m| m.to })
         SELECT id FROM data_explorer_queries
         WHERE id IN (:to)
         AND id NOT IN (:from)
@@ -84,7 +85,8 @@ task 'data_explorer:fix_query_ids' => :environment do
       SQL
 
       # insert additional_conflicts to temporary tables
-      new_id = DB.query("select greatest(max(id), 1) from tmp_data_explorer_queries").first.greatest + 1
+      new_id =
+        DB.query("select greatest(max(id), 1) from tmp_data_explorer_queries").first.greatest + 1
       additional_conflicts.each do |conflict_id|
         DB.exec <<-SQL
           INSERT INTO tmp_data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)

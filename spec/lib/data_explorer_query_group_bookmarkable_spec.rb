@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe DataExplorerQueryGroupBookmarkable do
   fab!(:admin_user) { Fabricate(:admin) }
@@ -10,14 +10,24 @@ describe DataExplorerQueryGroupBookmarkable do
   fab!(:group1) { Fabricate(:group) }
   fab!(:group2) { Fabricate(:group) }
   fab!(:group3) { Fabricate(:group) }
-  fab!(:query1) { Fabricate(:query, name: "My First Query",
-                                    description: "This is the description of my 1st query.",
-                                    sql: "Not really important",
-                                    user: admin_user) }
-  fab!(:query2) { Fabricate(:query, name: "My Second Query",
-                                    description: "This is my 2nd query's description.",
-                                    sql: "Not really important",
-                                    user: admin_user) }
+  fab!(:query1) do
+    Fabricate(
+      :query,
+      name: "My First Query",
+      description: "This is the description of my 1st query.",
+      sql: "Not really important",
+      user: admin_user,
+    )
+  end
+  fab!(:query2) do
+    Fabricate(
+      :query,
+      name: "My Second Query",
+      description: "This is my 2nd query's description.",
+      sql: "Not really important",
+      user: admin_user,
+    )
+  end
 
   before do
     SiteSetting.data_explorer_enabled = true
@@ -41,28 +51,40 @@ describe DataExplorerQueryGroupBookmarkable do
   let!(:group_user3) { Fabricate(:group_user, user: user, group: group3) }
 
   # User bookmarked the same Query 1 twice, from different Groups (0 and 1)
-  let!(:bookmark1) { Fabricate(:bookmark, user: user,
-                                          bookmarkable: query_group1,
-                                          name: "something i gotta do") }
-  let!(:bookmark2) { Fabricate(:bookmark, user: user,
-                                          bookmarkable: query_group2,
-                                          name: "something else i have to do") }
+  let!(:bookmark1) do
+    Fabricate(:bookmark, user: user, bookmarkable: query_group1, name: "something i gotta do")
+  end
+  let!(:bookmark2) do
+    Fabricate(
+      :bookmark,
+      user: user,
+      bookmarkable: query_group2,
+      name: "something else i have to do",
+    )
+  end
 
   # User also bookmarked Query 2 from Group 1.
-  let!(:bookmark3) { Fabricate(:bookmark, user: user,
-                                          bookmarkable: query_group3,
-                                          name: "this is the other query I needed.") }
+  let!(:bookmark3) do
+    Fabricate(
+      :bookmark,
+      user: user,
+      bookmarkable: query_group3,
+      name: "this is the other query I needed.",
+    )
+  end
 
   # User previously bookmarked Query 1 from Group 2, of which she is no longer a member.
-  let!(:bookmark4) { Fabricate(:bookmark, user: user,
-                                          bookmarkable: query_group4,
-                                          name: "something i gotta do also") }
+  let!(:bookmark4) do
+    Fabricate(:bookmark, user: user, bookmarkable: query_group4, name: "something i gotta do also")
+  end
 
   subject { RegisteredBookmarkable.new(DataExplorerQueryGroupBookmarkable) }
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do
-      expect(subject.perform_list_query(user, guardian).map(&:id)).to match_array([bookmark1.id, bookmark2.id, bookmark3.id])
+      expect(subject.perform_list_query(user, guardian).map(&:id)).to match_array(
+        [bookmark1.id, bookmark2.id, bookmark3.id],
+      )
     end
 
     it "does not return bookmarks made from groups that the user is no longer a member of" do
@@ -75,24 +97,32 @@ describe DataExplorerQueryGroupBookmarkable do
       # bookmarks is now empty, because user is not a member of any Groups with permission to see the query
       expect(subject.perform_list_query(user, guardian)).to be_empty
     end
-
   end
 
   describe "#perform_search_query" do
-    before do
-      SearchIndexer.enable
-    end
+    before { SearchIndexer.enable }
 
     it "returns bookmarks that match by name" do
       ts_query = Search.ts_query(term: "gotta", ts_config: "simple")
-      expect(subject.perform_search_query(subject.perform_list_query(user, guardian), "%gotta%", ts_query).map(&:id)).to match_array([bookmark1.id])
+      expect(
+        subject.perform_search_query(
+          subject.perform_list_query(user, guardian),
+          "%gotta%",
+          ts_query,
+        ).map(&:id),
+      ).to match_array([bookmark1.id])
     end
 
     it "returns bookmarks that match by Query name" do
       ts_query = Search.ts_query(term: "First", ts_config: "simple")
-      expect(subject.perform_search_query(subject.perform_list_query(user, guardian), "%First%", ts_query).map(&:id)).to match_array([bookmark1.id, bookmark2.id])
+      expect(
+        subject.perform_search_query(
+          subject.perform_list_query(user, guardian),
+          "%First%",
+          ts_query,
+        ).map(&:id),
+      ).to match_array([bookmark1.id, bookmark2.id])
     end
-
   end
 
   describe "#can_send_reminder?" do
@@ -106,17 +136,20 @@ describe DataExplorerQueryGroupBookmarkable do
 
   describe "#reminder_handler" do
     it "creates a notification for the user with the correct details" do
-      expect { subject.send_reminder_notification(bookmark1) }.to change { Notification.count }.by(1)
+      expect { subject.send_reminder_notification(bookmark1) }.to change { Notification.count }.by(
+        1,
+      )
       notif = user.notifications.last
       expect(notif.notification_type).to eq(Notification.types[:bookmark_reminder])
       expect(notif.data).to eq(
         {
           title: bookmark1.bookmarkable.query.name,
-          bookmarkable_url: "/g/#{bookmark1.bookmarkable.group.name}/reports/#{bookmark1.bookmarkable.query.id}",
+          bookmarkable_url:
+            "/g/#{bookmark1.bookmarkable.group.name}/reports/#{bookmark1.bookmarkable.query.id}",
           display_username: bookmark1.user.username,
           bookmark_name: bookmark1.name,
-          bookmark_id: bookmark1.id
-        }.to_json
+          bookmark_id: bookmark1.id,
+        }.to_json,
       )
     end
   end
@@ -144,6 +177,5 @@ describe DataExplorerQueryGroupBookmarkable do
 
       expect(subject.can_see?(guardian, bookmark4)).to eq(true)
     end
-
   end
 end

@@ -7,9 +7,13 @@ module Jobs
     def execute(args)
       return unless SiteSetting.data_explorer_enabled
 
-      DataExplorer::Query.where("id > 0")
+      DataExplorer::Query
+        .where("id > 0")
         .where(hidden: true)
-        .where("(last_run_at IS NULL OR last_run_at < :days_ago) AND updated_at < :days_ago", days_ago: 7.days.ago)
+        .where(
+          "(last_run_at IS NULL OR last_run_at < :days_ago) AND updated_at < :days_ago",
+          days_ago: 7.days.ago,
+        )
         .delete_all
     end
   end

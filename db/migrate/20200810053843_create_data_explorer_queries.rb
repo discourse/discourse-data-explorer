@@ -18,7 +18,7 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
       t.index :query_id
       t.index :group_id
     end
-    add_index(:data_explorer_query_groups, [:query_id, :group_id], unique: true)
+    add_index(:data_explorer_query_groups, %i[query_id group_id], unique: true)
 
     DB.exec <<~SQL, now: Time.zone.now
       INSERT INTO data_explorer_queries(id, name, description, sql, user_id, last_run_at, hidden, created_at, updated_at)
@@ -56,20 +56,32 @@ class CreateDataExplorerQueries < ActiveRecord::Migration[6.0]
       WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON'
     SQL
 
-    DB.query("SELECT * FROM plugin_store_rows WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON'").each do |row|
-      json = JSON.parse(row.value)
-      next if json['group_ids'].blank?
-      query_id = DB.query("SELECT id FROM data_explorer_queries WHERE
-                          name = ? AND sql = ?", json['name'], json['sql']).first.id
+    DB
+      .query(
+        "SELECT * FROM plugin_store_rows WHERE plugin_name = 'discourse-data-explorer' AND type_name = 'JSON'",
+      )
+      .each do |row|
+        json = JSON.parse(row.value)
+        next if json["group_ids"].blank?
+        query_id =
+          DB
+            .query(
+              "SELECT id FROM data_explorer_queries WHERE
+                          name = ? AND sql = ?",
+              json["name"],
+              json["sql"],
+            )
+            .first
+            .id
 
-      json['group_ids'].each do |group_id|
-        next if group_id.blank? || query_id.blank?
-        DB.exec <<~SQL
+        json["group_ids"].each do |group_id|
+          next if group_id.blank? || query_id.blank?
+          DB.exec <<~SQL
           INSERT INTO data_explorer_query_groups(query_id, group_id)
           VALUES(#{query_id}, #{group_id})
         SQL
+        end
       end
-    end
 
     DB.exec <<~SQL
       SELECT
