@@ -2,18 +2,20 @@
 
 module DataExplorer
   class Query < ActiveRecord::Base
-    self.table_name = 'data_explorer_queries'
+    self.table_name = "data_explorer_queries"
     has_many :query_groups
     has_many :groups, through: :query_groups
     belongs_to :user
     validates :name, presence: true
 
-    scope :for_group, ->(group) do
-      where(hidden: false)
-        .joins("INNER JOIN data_explorer_query_groups
+    scope :for_group,
+          ->(group) {
+            where(hidden: false).joins(
+              "INNER JOIN data_explorer_query_groups
               ON data_explorer_query_groups.query_id = data_explorer_queries.id
-              AND data_explorer_query_groups.group_id = #{group.id}")
-    end
+              AND data_explorer_query_groups.group_id = #{group.id}",
+            )
+          }
 
     def params
       @params ||= DataExplorer::Parameter.create_from_sql(sql)

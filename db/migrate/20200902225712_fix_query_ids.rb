@@ -2,7 +2,7 @@
 
 class FixQueryIds < ActiveRecord::Migration[6.0]
   def up
-    Rake::Task['data_explorer:fix_query_ids'].invoke
+    Rake::Task["data_explorer:fix_query_ids"].invoke
   end
 
   def down

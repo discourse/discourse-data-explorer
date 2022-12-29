@@ -11,96 +11,104 @@ class Queries
     #     you must run the query with id=-1 on the site again to update these changes in the site db
 
     queries = {
-        "most-common-likers": {
-            "id": -1,
-            "name": "Most Common Likers",
-            "description": "Which users like particular other users the most?"
-        },
-        "most-messages": {
-            "id": -2,
-            "name": "Who has been sending the most messages in the last week?",
-            "description": "tracking down suspicious PM activity"
-        },
-        "edited-post-spam": {
-            "id": -3,
-            "name": "Last 500 posts that were edited by TL0/TL1 users",
-            "description": "fighting human-driven copy-paste spam"
-        },
-        "new-topics": {
-            "id": -4,
-            "name": "New Topics by Category",
-            "description": "Lists all new topics ordered by category and creation_date. The query accepts a ‘months_ago’ parameter. It defaults to 0 to give you the stats for the current month."
-        },
-        "active-topics": {
-            "id": -5,
-            "name": "Top 100 Active Topics",
-            "description": "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month."
-        },
-        "top-likers": {
-            "id": -6,
-            "name": "Top 100 Likers",
-            "description": "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month."
-        },
-        "quality-users": {
-            "id": -7,
-            "name": "Top 50 Quality Users",
-            "description": "based on post score calculated using reply count, likes, incoming links, bookmarks, time spent and read count."
-        },
-        "user-participation": {
-            "id": -8,
-            "name": "User Participation Statistics",
-            "description": "Detailed statistics for the most active users."
-        },
-        "largest-uploads": {
-            "id": -9,
-            "name": "Top 50 Largest Uploads",
-            "description": "sorted by file size."
-        },
-        "inactive-users": {
-            "id": -10,
-            "name": "Inactive Users with no posts",
-            "description": "analyze pre-Discourse signups."
-        },
-        "active-lurkers": {
-            "id": -11,
-            "name": "Most Active Lurkers",
-            "description": "active users without posts and excessive read times, it accepts a post_read_count parameter that sets the threshold for posts read."
-        },
-        "topic-user-notification-level": {
-            "id": -12,
-            "name": "List of topics a user is watching/tracking/muted",
-            "description": "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics."
-        },
-        "assigned-topics-report": {
-            "id": -13,
-            "name": "List of assigned topics by user",
-            "description": "This report requires the assign plugin, it will find all assigned topics"
-        },
-        "group-members-reply-count": {
-            "id": -14,
-            "name": "Group Members Reply Count",
-            "description": "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter."
-        },
-        "total-assigned-topics-report": {
-            "id": -15,
-            "name": "Total topics assigned per user",
-            "description": "Count of assigned topis per user linking to assign list"
-        },
-        "poll-results": {
-            "id": -16,
-            "name": "Poll results report",
-            "description": "Details of a poll result, including details about each vote and voter, useful for analyzing results in external software."
-        },
-        "top-tags-per-year": {
-            "id": -17,
-            "name": "Top tags per year",
-            "description": "List the top tags per year."
-        },
-        "number_of_replies_by_category": {
-            "id": -18,
-            "name": "Number of replies by category",
-            "description": "List the number of replies by category."
-        }
+      "most-common-likers": {
+        id: -1,
+        name: "Most Common Likers",
+        description: "Which users like particular other users the most?",
+      },
+      "most-messages": {
+        id: -2,
+        name: "Who has been sending the most messages in the last week?",
+        description: "tracking down suspicious PM activity",
+      },
+      "edited-post-spam": {
+        id: -3,
+        name: "Last 500 posts that were edited by TL0/TL1 users",
+        description: "fighting human-driven copy-paste spam",
+      },
+      "new-topics": {
+        id: -4,
+        name: "New Topics by Category",
+        description:
+          "Lists all new topics ordered by category and creation_date. The query accepts a ‘months_ago’ parameter. It defaults to 0 to give you the stats for the current month.",
+      },
+      "active-topics": {
+        id: -5,
+        name: "Top 100 Active Topics",
+        description:
+          "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+      },
+      "top-likers": {
+        id: -6,
+        name: "Top 100 Likers",
+        description:
+          "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+      },
+      "quality-users": {
+        id: -7,
+        name: "Top 50 Quality Users",
+        description:
+          "based on post score calculated using reply count, likes, incoming links, bookmarks, time spent and read count.",
+      },
+      "user-participation": {
+        id: -8,
+        name: "User Participation Statistics",
+        description: "Detailed statistics for the most active users.",
+      },
+      "largest-uploads": {
+        id: -9,
+        name: "Top 50 Largest Uploads",
+        description: "sorted by file size.",
+      },
+      "inactive-users": {
+        id: -10,
+        name: "Inactive Users with no posts",
+        description: "analyze pre-Discourse signups.",
+      },
+      "active-lurkers": {
+        id: -11,
+        name: "Most Active Lurkers",
+        description:
+          "active users without posts and excessive read times, it accepts a post_read_count parameter that sets the threshold for posts read.",
+      },
+      "topic-user-notification-level": {
+        id: -12,
+        name: "List of topics a user is watching/tracking/muted",
+        description:
+          "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics.",
+      },
+      "assigned-topics-report": {
+        id: -13,
+        name: "List of assigned topics by user",
+        description: "This report requires the assign plugin, it will find all assigned topics",
+      },
+      "group-members-reply-count": {
+        id: -14,
+        name: "Group Members Reply Count",
+        description:
+          "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter.",
+      },
+      "total-assigned-topics-report": {
+        id: -15,
+        name: "Total topics assigned per user",
+        description: "Count of assigned topis per user linking to assign list",
+      },
+      "poll-results": {
+        id: -16,
+        name: "Poll results report",
+        description:
+          "Details of a poll result, including details about each vote and voter, useful for analyzing results in external software.",
+      },
+      "top-tags-per-year": {
+        id: -17,
+        name: "Top tags per year",
+        description: "List the top tags per year.",
+      },
+      number_of_replies_by_category: {
+        id: -18,
+        name: "Number of replies by category",
+        description: "List the number of replies by category.",
+      },
     }.with_indifferent_access
 
     queries["most-common-likers"]["sql"] = <<~SQL
@@ -546,8 +554,8 @@ class Queries
   ORDER BY p.year DESC, qt DESC
     SQL
 
-  # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
-  queries.transform_keys!.with_index { |key, idx| "-#{idx + 1}" }
-  queries
+    # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
+    queries.transform_keys!.with_index { |key, idx| "-#{idx + 1}" }
+    queries
   end
 end

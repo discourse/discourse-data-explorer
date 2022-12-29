@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe "Data explorer group serializer additions" do
   fab!(:group_user) { Fabricate(:user) }

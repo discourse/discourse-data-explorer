@@ -1,37 +1,35 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe DataExplorer::QueryController do
   def response_json
     response.parsed_body
   end
 
-  before do
-    SiteSetting.data_explorer_enabled = true
-  end
+  before { SiteSetting.data_explorer_enabled = true }
 
   def make_query(sql, opts = {}, group_ids = [])
-    query = DataExplorer::Query.create!(name: opts[:name] || "Query number", description: "A description for query number", sql: sql, hidden: opts[:hidden] || false)
-    group_ids.each do |group_id|
-      query.query_groups.create!(group_id: group_id)
-    end
+    query =
+      DataExplorer::Query.create!(
+        name: opts[:name] || "Query number",
+        description: "A description for query number",
+        sql: sql,
+        hidden: opts[:hidden] || false,
+      )
+    group_ids.each { |group_id| query.query_groups.create!(group_id: group_id) }
     query
   end
 
   describe "Admin" do
     fab!(:admin) { Fabricate(:admin) }
 
-    before do
-      sign_in(admin)
-    end
+    before { sign_in(admin) }
 
     describe "when disabled" do
-      before do
-        SiteSetting.data_explorer_enabled = false
-      end
+      before { SiteSetting.data_explorer_enabled = false }
 
-      it 'denies every request' do
+      it "denies every request" do
         get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(404)
 
@@ -41,9 +39,7 @@ describe DataExplorer::QueryController do
         get "/admin/plugins/explorer/queries/3.json"
         expect(response.status).to eq(404)
 
-        post "/admin/plugins/explorer/queries.json", params: {
-          id: 3
-        }
+        post "/admin/plugins/explorer/queries.json", params: { id: 3 }
         expect(response.status).to eq(404)
 
         post "/admin/plugins/explorer/queries/3/run.json"
@@ -62,28 +58,28 @@ describe DataExplorer::QueryController do
         DataExplorer::Query.destroy_all
         get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json['queries'].count).to eq(Queries.default.count)
+        expect(response_json["queries"].count).to eq(Queries.default.count)
       end
 
       it "shows all available queries in alphabetical order" do
         DataExplorer::Query.destroy_all
-        make_query('SELECT 1 as value', name: 'B')
-        make_query('SELECT 1 as value', name: 'A')
+        make_query("SELECT 1 as value", name: "B")
+        make_query("SELECT 1 as value", name: "A")
         get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json['queries'].length).to eq(Queries.default.count + 2)
-        expect(response_json['queries'][0]['name']).to eq('A')
-        expect(response_json['queries'][1]['name']).to eq('B')
+        expect(response_json["queries"].length).to eq(Queries.default.count + 2)
+        expect(response_json["queries"][0]["name"]).to eq("A")
+        expect(response_json["queries"][1]["name"]).to eq("B")
       end
 
       it "doesn't show hidden/deleted queries" do
         DataExplorer::Query.destroy_all
-        make_query('SELECT 1 as value', name: 'A', hidden: false)
-        make_query('SELECT 1 as value', name: 'B', hidden: true)
-        make_query('SELECT 1 as value', name: 'C', hidden: true)
+        make_query("SELECT 1 as value", name: "A", hidden: false)
+        make_query("SELECT 1 as value", name: "B", hidden: true)
+        make_query("SELECT 1 as value", name: "C", hidden: true)
         get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json['queries'].length).to eq(Queries.default.count + 1)
+        expect(response_json["queries"].length).to eq(Queries.default.count + 1)
       end
     end
 
@@ -93,29 +89,32 @@ describe DataExplorer::QueryController do
 
       it "allows group to access system query" do
         query = DataExplorer::Query.find(-4)
-        put "/admin/plugins/explorer/queries/#{query.id}.json", params: {
-          "query" => {
-            "name" => query.name,
-            "description" => query.description,
-            "sql" => query.sql,
-            "user_id" => query.user_id,
-            "created_at" => query.created_at,
-            "group_ids" => [group2.id],
-            "last_run_at" => query.last_run_at
-          },
-          "id" => query.id }
+        put "/admin/plugins/explorer/queries/#{query.id}.json",
+            params: {
+              "query" => {
+                "name" => query.name,
+                "description" => query.description,
+                "sql" => query.sql,
+                "user_id" => query.user_id,
+                "created_at" => query.created_at,
+                "group_ids" => [group2.id],
+                "last_run_at" => query.last_run_at,
+              },
+              "id" => query.id,
+            }
 
         expect(response.status).to eq(200)
       end
 
       it "returns a proper json error for invalid updates" do
-
         query = DataExplorer::Query.find(-4)
-        put "/admin/plugins/explorer/queries/#{query.id}", params: {
-          "query" => {
-            "name" => "",
-          },
-          "id" => query.id }
+        put "/admin/plugins/explorer/queries/#{query.id}",
+            params: {
+              "query" => {
+                "name" => "",
+              },
+              "id" => query.id,
+            }
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to eq(["Name can't be blank"])
@@ -129,13 +128,13 @@ describe DataExplorer::QueryController do
       end
 
       it "can run queries" do
-        query = make_query('SELECT 23 as my_value')
+        query = make_query("SELECT 23 as my_value")
         run_query query.id
         expect(response.status).to eq(200)
-        expect(response_json['success']).to eq(true)
-        expect(response_json['errors']).to eq([])
-        expect(response_json['columns']).to eq(['my_value'])
-        expect(response_json['rows']).to eq([[23]])
+        expect(response_json["success"]).to eq(true)
+        expect(response_json["errors"]).to eq([])
+        expect(response_json["columns"]).to eq(["my_value"])
+        expect(response_json["rows"]).to eq([[23]])
       end
 
       it "can process parameters" do
@@ -147,24 +146,24 @@ describe DataExplorer::QueryController do
 
         run_query query.id, foo: 23
         expect(response.status).to eq(200)
-        expect(response_json['errors']).to eq([])
-        expect(response_json['success']).to eq(true)
-        expect(response_json['columns']).to eq(['my_value'])
-        expect(response_json['rows']).to eq([[23]])
+        expect(response_json["errors"]).to eq([])
+        expect(response_json["success"]).to eq(true)
+        expect(response_json["columns"]).to eq(["my_value"])
+        expect(response_json["rows"]).to eq([[23]])
 
         run_query query.id
         expect(response.status).to eq(200)
-        expect(response_json['errors']).to eq([])
-        expect(response_json['success']).to eq(true)
-        expect(response_json['columns']).to eq(['my_value'])
-        expect(response_json['rows']).to eq([[34]])
+        expect(response_json["errors"]).to eq([])
+        expect(response_json["success"]).to eq(true)
+        expect(response_json["columns"]).to eq(["my_value"])
+        expect(response_json["rows"]).to eq([[34]])
 
         # 2.3 is not an integer
-        run_query query.id, foo: '2.3'
+        run_query query.id, foo: "2.3"
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/ValidationError/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/ValidationError/)
       end
 
       it "doesn't allow you to modify the database #1" do
@@ -184,9 +183,9 @@ describe DataExplorer::QueryController do
         # This test should fail on the below check.
         expect(p.cooked).to_not match(/winner/)
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/read-only transaction/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/read-only transaction/)
       end
 
       it "doesn't allow you to modify the database #2" do
@@ -221,9 +220,9 @@ describe DataExplorer::QueryController do
         # Afterwards, this test should fail on the below check.
         expect(p.cooked).to_not match(/winner/)
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/semicolon/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/semicolon/)
       end
 
       it "doesn't allow you to lock rows" do
@@ -233,9 +232,9 @@ describe DataExplorer::QueryController do
 
         run_query query.id
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/read-only transaction/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/read-only transaction/)
       end
 
       it "doesn't allow you to create a table" do
@@ -245,9 +244,9 @@ describe DataExplorer::QueryController do
 
         run_query query.id
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/read-only transaction|syntax error/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/read-only transaction|syntax error/)
       end
 
       it "doesn't allow you to break the transaction" do
@@ -257,9 +256,9 @@ describe DataExplorer::QueryController do
 
         run_query query.id
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/syntax error/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/syntax error/)
 
         query.sql = <<~SQL
         )
@@ -267,9 +266,9 @@ describe DataExplorer::QueryController do
 
         run_query query.id
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/syntax error/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/syntax error/)
 
         query.sql = <<~SQL
         RELEASE SAVEPOINT active_record_1
@@ -277,13 +276,13 @@ describe DataExplorer::QueryController do
 
         run_query query.id
         expect(response.status).to eq(422)
-        expect(response_json['errors']).to_not eq([])
-        expect(response_json['success']).to eq(false)
-        expect(response_json['errors'].first).to match(/syntax error/)
+        expect(response_json["errors"]).to_not eq([])
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"].first).to match(/syntax error/)
       end
 
       it "can export data in CSV format" do
-        query = make_query('SELECT 23 as my_value')
+        query = make_query("SELECT 23 as my_value")
         post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { download: 1 }
         expect(response.status).to eq(200)
       end
@@ -302,13 +301,13 @@ describe DataExplorer::QueryController do
           SQL
 
           run_query query.id
-          expect(response_json['rows'].count).to eq(2)
+          expect(response_json["rows"].count).to eq(2)
 
           post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: 1 }
-          expect(response_json['rows'].count).to eq(1)
+          expect(response_json["rows"].count).to eq(1)
 
           post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: "ALL" }
-          expect(response_json['rows'].count).to eq(3)
+          expect(response_json["rows"].count).to eq(3)
         end
 
         it "should limit the results in CSV download" do
@@ -324,11 +323,19 @@ describe DataExplorer::QueryController do
             post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1 }
             expect(response.body.split("\n").count).to eq(3)
 
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1, limit: 1 }
+            post "/admin/plugins/explorer/queries/#{query.id}/run.csv",
+                 params: {
+                   download: 1,
+                   limit: 1,
+                 }
             expect(response.body.split("\n").count).to eq(2)
 
             # The value `ALL` is not supported in csv exports.
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1, limit: "ALL" }
+            post "/admin/plugins/explorer/queries/#{query.id}/run.csv",
+                 params: {
+                   download: 1,
+                   limit: "ALL",
+                 }
             expect(response.body.split("\n").count).to eq(1)
           ensure
             DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
@@ -343,16 +350,12 @@ describe DataExplorer::QueryController do
     fab!(:user) { Fabricate(:user) }
     fab!(:group) { Fabricate(:group, users: [user]) }
 
-    before do
-      sign_in(user)
-    end
+    before { sign_in(user) }
 
     describe "when disabled" do
-      before do
-        SiteSetting.data_explorer_enabled = false
-      end
+      before { SiteSetting.data_explorer_enabled = false }
 
-      it 'denies every request' do
+      it "denies every request" do
         get "/g/1/reports.json"
         expect(response.status).to eq(404)
 
@@ -365,7 +368,7 @@ describe DataExplorer::QueryController do
     end
 
     it "cannot access admin endpoints" do
-      query = make_query('SELECT 1 as value')
+      query = make_query("SELECT 1 as value")
       post "/admin/plugins/explorer/queries/#{query.id}/run.json"
       expect(response.status).to eq(403)
     end
@@ -373,12 +376,12 @@ describe DataExplorer::QueryController do
     describe "#group_reports_index" do
       it "only returns queries that the group has access to" do
         group.add(user)
-        make_query('SELECT 1 as value', { name: 'A' }, ["#{group.id}"])
+        make_query("SELECT 1 as value", { name: "A" }, ["#{group.id}"])
 
         get "/g/#{group.name}/reports.json"
         expect(response.status).to eq(200)
-        expect(response_json['queries'].length).to eq(1)
-        expect(response_json['queries'][0]['name']).to eq('A')
+        expect(response_json["queries"].length).to eq(1)
+        expect(response_json["queries"][0]["name"]).to eq("A")
       end
 
       it "returns a 404 when the user should not have access to the query " do
@@ -398,19 +401,19 @@ describe DataExplorer::QueryController do
 
       it "does not return hidden queries" do
         group.add(user)
-        make_query('SELECT 1 as value', { name: 'A', hidden: true }, ["#{group.id}"])
-        make_query('SELECT 1 as value', { name: 'B' }, ["#{group.id}"])
+        make_query("SELECT 1 as value", { name: "A", hidden: true }, ["#{group.id}"])
+        make_query("SELECT 1 as value", { name: "B" }, ["#{group.id}"])
 
         get "/g/#{group.name}/reports.json"
         expect(response.status).to eq(200)
-        expect(response_json['queries'].length).to eq(1)
-        expect(response_json['queries'][0]['name']).to eq('B')
+        expect(response_json["queries"].length).to eq(1)
+        expect(response_json["queries"][0]["name"]).to eq("B")
       end
     end
 
     describe "#group_reports_run" do
       it "runs the query" do
-        query = make_query('SELECT 1828 as value', { name: 'B' }, ["#{group.id}"])
+        query = make_query("SELECT 1828 as value", { name: "B" }, ["#{group.id}"])
 
         post "/g/#{group.name}/reports/#{query.id}/run.json"
         expect(response.status).to eq(200)
@@ -421,7 +424,7 @@ describe DataExplorer::QueryController do
 
       it "returns a 404 when the user should not have access to the query " do
         group.add(user)
-        query = make_query('SELECT 1 as value', {}, [])
+        query = make_query("SELECT 1 as value", {}, [])
 
         post "/g/#{group.name}/reports/#{query.id}/run.json"
         expect(response.status).to eq(404)
@@ -429,7 +432,7 @@ describe DataExplorer::QueryController do
 
       it "return a 200 when the user has access the the query" do
         group.add(user)
-        query = make_query('SELECT 1 as value', {}, [group.id.to_s])
+        query = make_query("SELECT 1 as value", {}, [group.id.to_s])
 
         post "/g/#{group.name}/reports/#{query.id}/run.json"
         expect(response.status).to eq(200)
@@ -437,7 +440,7 @@ describe DataExplorer::QueryController do
 
       it "return a 404 when the query is hidden" do
         group.add(user)
-        query = make_query('SELECT 1 as value', { hidden: true }, [group.id.to_s])
+        query = make_query("SELECT 1 as value", { hidden: true }, [group.id.to_s])
 
         post "/g/#{group.name}/reports/#{query.id}/run.json"
         expect(response.status).to eq(404)
@@ -446,21 +449,21 @@ describe DataExplorer::QueryController do
 
     describe "#group_reports_show" do
       it "returns a 404 when the user should not have access to the query " do
-        query = make_query('SELECT 1 as value', {}, [])
+        query = make_query("SELECT 1 as value", {}, [])
 
         get "/g/#{group.name}/reports/#{query.id}.json"
         expect(response.status).to eq(404)
       end
 
       it "return a 200 when the user has access the the query" do
-        query = make_query('SELECT 1 as value', {}, [group.id.to_s])
+        query = make_query("SELECT 1 as value", {}, [group.id.to_s])
 
         get "/g/#{group.name}/reports/#{query.id}.json"
         expect(response.status).to eq(200)
       end
 
       it "return a 404 when the query is hidden" do
-        query = make_query('SELECT 1 as value', { hidden: true }, [group.id.to_s])
+        query = make_query("SELECT 1 as value", { hidden: true }, [group.id.to_s])
 
         get "/g/#{group.name}/reports/#{query.id}.json"
         expect(response.status).to eq(404)

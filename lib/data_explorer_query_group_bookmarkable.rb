@@ -10,7 +10,7 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [:data_explorer_queries, :groups]
+    %i[data_explorer_queries groups]
   end
 
   def self.list_query(user, guardian)
@@ -20,17 +20,22 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
       return if group_ids.empty?
     end
 
-    query = user.bookmarks_of_type("DataExplorer::QueryGroup")
-      .joins("INNER JOIN data_explorer_query_groups ON data_explorer_query_groups.id = bookmarks.bookmarkable_id")
-      .joins("LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id")
+    query =
+      user
+        .bookmarks_of_type("DataExplorer::QueryGroup")
+        .joins(
+          "INNER JOIN data_explorer_query_groups ON data_explorer_query_groups.id = bookmarks.bookmarkable_id",
+        )
+        .joins(
+          "LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id",
+        )
     query = query.where("data_explorer_query_groups.group_id IN (?)", group_ids) if !user.admin?
     query
   end
 
   # Searchable only by data_explorer_queries name
   def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
-    bookmarkable_search.call(bookmarks,
-      "data_explorer_queries.name ILIKE :q")
+    bookmarkable_search.call(bookmarks, "data_explorer_queries.name ILIKE :q")
   end
 
   def self.reminder_handler(bookmark)
@@ -38,8 +43,9 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
       bookmark,
       data: {
         title: bookmark.bookmarkable.query.name,
-        bookmarkable_url: "/g/#{bookmark.bookmarkable.group.name}/reports/#{bookmark.bookmarkable.query.id}"
-      }
+        bookmarkable_url:
+          "/g/#{bookmark.bookmarkable.group.name}/reports/#{bookmark.bookmarkable.query.id}",
+      },
     )
   end
 
@@ -51,5 +57,4 @@ class DataExplorerQueryGroupBookmarkable < BaseBookmarkable
     return false if !bookmark.bookmarkable.group
     guardian.user_is_a_member_of_group?(bookmark.bookmarkable.group)
   end
-
 end
