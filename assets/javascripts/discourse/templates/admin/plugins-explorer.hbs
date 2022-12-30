@@ -58,6 +58,11 @@
                 @icon="chevron-left"
                 @class="previous"
               />
+              <DButton
+                @action={{this.exitEdit}}
+                @icon="times"
+                @class="previous"
+              />
               <div class="name-text-field">
                 <TextField
                   @value={{this.selectedItem.name}}
@@ -137,8 +142,11 @@
 
               <div
                 class="grippie"
-                {{did-insert this.registerResizing}}
-                {{will-destroy this.unregisterResizing}}
+                {{draggable
+                  didStartDrag=this.didStartDrag
+                  didEndDrag=this.didEndDrag
+                  dragMove=this.dragMove
+                }}
               >
                 {{d-icon "discourse-expand"}}
               </div>

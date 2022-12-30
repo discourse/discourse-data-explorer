@@ -155,6 +155,44 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @bind
+  dragMove(e) {
+    if (!e.movementY && !e.movementX) {
+      return;
+    }
+
+    const editPane = document.querySelector(".query-editor");
+    const target = editPane.querySelector(".panels-flex");
+    const grippie = editPane.querySelector(".grippie");
+
+    // we need to get the initial height / width of edit pane
+    // before we manipulate the size
+    if (!this.initialPaneWidth && !this.originalPaneHeight) {
+      this.originalPaneWidth = target.clientWidth;
+      this.originalPaneHeight = target.clientHeight;
+    }
+
+    const newHeight = Math.max(
+      this.originalPaneHeight,
+      target.clientHeight + e.movementY
+    );
+    const newWidth = Math.max(
+      this.originalPaneWidth,
+      target.clientWidth + e.movementX
+    );
+
+    target.style.height = newHeight + "px";
+    target.style.width = newWidth + "px";
+    grippie.style.width = newWidth + "px";
+    this.appEvents.trigger("ace:resize");
+  }
+
+  @bind
+  didStartDrag() {}
+
+  @bind
+  didEndDrag() {}
+
+  @bind
   scrollTop() {
     window.scrollTo(0, 0);
     this.editingName = false;
@@ -165,82 +203,6 @@ export default class PluginsExplorerController extends Controller {
   updateGroupIds(value) {
     this.dirty = true;
     this.selectedItem.set("group_ids", value);
-  }
-
-  @action
-  registerResizing() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    const $editPane = $(".query-editor");
-    if (!$editPane.length) {
-      return;
-    }
-
-    const oldGrippie = this.grippie;
-    if (oldGrippie) {
-      oldGrippie.off("mousedown mousemove mouseup");
-    }
-
-    const $grippie = $editPane.find(".grippie");
-    const $target = $editPane.find(".panels-flex");
-    const $document = $(document);
-
-    const minWidth = $target.width();
-    const minHeight = $target.height();
-
-    this.set("grippie", $grippie);
-
-    const mousemove = (e) => {
-      const diffY = this.startY - e.screenY;
-      const diffX = this.startX - e.screenX;
-
-      const newHeight = Math.max(minHeight, this.startHeight - diffY);
-      const newWidth = Math.max(minWidth, this.startWidth - diffX);
-
-      $target.height(newHeight);
-      $target.width(newWidth);
-      $grippie.width(newWidth);
-      this.appEvents.trigger("ace:resize");
-    };
-
-    const throttledMousemove = ((event) => {
-      event.preventDefault();
-      throttle(this, mousemove, event, 20);
-    }).bind(this);
-
-    const mouseup = (() => {
-      $document.off("mousemove", throttledMousemove);
-      $document.off("mouseup", mouseup);
-      this.setProperties({
-        startY: null,
-        startX: null,
-        startHeight: null,
-        startWidth: null,
-      });
-    }).bind(this);
-
-    $grippie.on("mousedown", (e) => {
-      this.setProperties({
-        startY: e.screenY,
-        startX: e.screenX,
-        startHeight: $target.height(),
-        startWidth: $target.width(),
-      });
-
-      $document.on("mousemove", throttledMousemove);
-      $document.on("mouseup", mouseup);
-      e.preventDefault();
-    });
-  }
-
-  @action
-  unregisterResizing() {
-    if (this.everEditing) {
-      this.grippie && this.grippie.off("mousedown");
-      this.set("grippie", null);
-    }
   }
 
   @action
@@ -267,7 +229,10 @@ export default class PluginsExplorerController extends Controller {
           console.error(e);
         }
       })
-      .finally(() => (this.loading = false));
+      .finally(() => {
+        this.loading = false;
+        this.dirty = true;
+      });
   }
 
   @action
@@ -377,10 +342,7 @@ export default class PluginsExplorerController extends Controller {
       .destroyRecord("query", this.selectedItem)
       .then(() => this.selectedItem.set("destroyed", true))
       .catch(popupAjaxError)
-      .finally(() => {
-        this.loading = false;
-        this.canRecover = true;
-      });
+      .finally(() => (this.loading = false));
   }
 
   @action
@@ -412,6 +374,11 @@ export default class PluginsExplorerController extends Controller {
   @action
   setDirty() {
     this.dirty = true;
+  }
+
+  @action
+  exitEdit() {
+    this.editingName = false;
   }
 
   @action
