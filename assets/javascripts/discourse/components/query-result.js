@@ -210,8 +210,8 @@ export default class QueryResult extends Component {
   }
 
   _download_url() {
-    return this.group
-      ? `/g/${this.group.name}/reports/`
+    return this.args.group
+      ? `/g/${this.args.group.name}/reports/`
       : "/admin/plugins/explorer/queries/";
   }
 
