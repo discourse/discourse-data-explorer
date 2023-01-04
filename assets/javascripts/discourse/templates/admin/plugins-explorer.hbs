@@ -88,7 +88,7 @@
               </div>
             {{/if}}
 
-            {{#if (not selectedItem.destroyed)}}
+            {{#unless selectedItem.destroyed}}
               <div class="pull-left">
                 <div class="groups">
                   <span class="label">{{i18n "explorer.allow_groups"}}</span>
@@ -102,7 +102,7 @@
                   </span>
                 </div>
               </div>
-            {{/if}}
+            {{/unless}}
 
             <div class="clear"></div>
 
