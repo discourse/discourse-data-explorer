@@ -3,140 +3,126 @@ import showModal from "discourse/lib/show-modal";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import { inject as service } from "@ember/service";
-import { get } from "@ember/object";
-import { not, reads, sort } from "@ember/object/computed";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
-export default Controller.extend({
-  dialog: service(),
-  queryParams: { selectedQueryId: "id", params: "params" },
-  selectedQueryId: null,
-  editDisabled: false,
-  showResults: false,
-  hideSchema: false,
-  loading: false,
-  explain: false,
+export default class PluginsExplorerController extends Controller {
+  @service dialog;
+  @service appEvents;
 
-  saveDisabled: not("selectedItem.dirty"),
-  runDisabled: reads("selectedItem.dirty"),
-  results: reads("selectedItem.results"),
+  @tracked sortByProperty = "last_run_at";
+  @tracked sortDescending = true;
+  @tracked params;
+  @tracked search;
+  @tracked newQueryName;
+  @tracked showCreate;
+  @tracked editingName = false;
+  @tracked editingQuery = false;
+  @tracked selectedQueryId;
+  @tracked loading = false;
+  @tracked showResults = false;
+  @tracked hideSchema = false;
+  @tracked results = this.selectedItem.results;
+  @tracked dirty = false;
 
-  asc: null,
-  order: null,
-  editing: false,
-  everEditing: false,
-  showRecentQueries: true,
-  sortBy: ["last_run_at:desc"],
-  sortedQueries: sort("model", "sortBy"),
+  queryParams = ["params", { selectedQueryId: "id" }];
+  explain = false;
+  acceptedImportFileTypes = ["application/json"];
+  order = null;
 
-  @discourseComputed("params")
-  parsedParams(params) {
-    return params ? JSON.parse(params) : null;
-  },
+  get validQueryPresent() {
+    return !!this.selectedItem.id;
+  }
 
-  @discourseComputed
-  acceptedImportFileTypes() {
-    return ["application/json"];
-  },
+  get saveDisabled() {
+    return !this.dirty;
+  }
 
-  @discourseComputed("search", "sortBy")
-  filteredContent(search) {
-    const regexp = new RegExp(search, "i");
+  get runDisabled() {
+    return this.dirty;
+  }
+
+  get sortedQueries() {
+    const sortedQueries = this.model.sortBy(this.sortByProperty);
+    return this.sortDescending ? sortedQueries.reverse() : sortedQueries;
+  }
+
+  get parsedParams() {
+    return this.params ? JSON.parse(this.params) : null;
+  }
+
+  get filteredContent() {
+    const regexp = new RegExp(this.search, "i");
     return this.sortedQueries.filter(
       (result) => regexp.test(result.name) || regexp.test(result.description)
     );
-  },
+  }
 
-  @discourseComputed("newQueryName")
-  createDisabled(newQueryName) {
-    return (newQueryName || "").trim().length === 0;
-  },
+  get createDisabled() {
+    return (this.newQueryName || "").trim().length === 0;
+  }
 
-  @discourseComputed("selectedQueryId")
-  selectedItem(selectedQueryId) {
-    const id = parseInt(selectedQueryId, 10);
-    const item = this.model.findBy("id", id);
+  get selectedItem() {
+    const query = this.model.findBy("id", parseInt(this.selectedQueryId, 10));
+    return query || NoQuery;
+  }
 
-    !isNaN(id)
-      ? this.set("showRecentQueries", false)
-      : this.set("showRecentQueries", true);
+  get editDisabled() {
+    return parseInt(this.selectedQueryId, 10) < 0 ? true : false;
+  }
 
-    if (id < 0) {
-      this.set("editDisabled", true);
-    }
-
-    return item || NoQuery;
-  },
-
-  @discourseComputed("selectedItem", "editing")
-  selectedGroupNames() {
-    const groupIds = this.selectedItem.group_ids || [];
-    const groupNames = groupIds.map((id) => {
-      return this.groupOptions.find((groupOption) => groupOption.id === id)
-        .name;
-    });
-    return groupNames.join(", ");
-  },
-
-  @discourseComputed("groups")
-  groupOptions(groups) {
-    return groups
+  get groupOptions() {
+    return this.groups
       .filter((g) => g.id !== 0)
       .map((g) => {
         return { id: g.id, name: g.name };
       });
-  },
+  }
 
-  @discourseComputed("selectedItem", "selectedItem.dirty")
-  othersDirty(selectedItem) {
-    return !!this.model.find((q) => q !== selectedItem && q.dirty);
-  },
-
-  @observes("editing")
-  setEverEditing() {
-    if (this.editing && !this.everEditing) {
-      this.set("everEditing", true);
-    }
-  },
+  get othersDirty() {
+    return !!this.model.find((q) => q !== this.selectedItem && this.dirty);
+  }
 
   addCreatedRecord(record) {
     this.model.pushObject(record);
-    this.set("selectedQueryId", get(record, "id"));
-    this.selectedItem.set("dirty", false);
+    this.selectedQueryId = record.id;
+    this.dirty = false;
     this.setProperties({
       showResults: false,
       results: null,
-      editing: true,
+      editingName: true,
+      editingQuery: true,
     });
-  },
+  }
 
+  @action
   save() {
-    this.set("loading", true);
-    if (this.get("selectedItem.description") === "") {
-      this.set("selectedItem.description", "");
-    }
+    this.loading = true;
 
     return this.selectedItem
       .save()
       .then(() => {
-        const query = this.selectedItem;
-        query.markNotDirty();
-        this.set("editing", false);
+        this.dirty = false;
+        this.editingName = false;
+        this.editingQuery = false;
       })
       .catch((x) => {
         popupAjaxError(x);
         throw x;
       })
-      .finally(() => this.set("loading", false));
-  },
+      .finally(() => (this.loading = false));
+  }
+
+  @action
+  saveAndRun() {
+    this.save().then(() => this.run());
+  }
 
   async _importQuery(file) {
     const json = await this._readFileAsTextAsync(file);
@@ -144,7 +130,7 @@ export default Controller.extend({
     const record = this.store.createRecord("query", query);
     const response = await record.save();
     return response.target;
-  },
+  }
 
   _parseQuery(json) {
     const parsed = JSON.parse(json);
@@ -154,7 +140,7 @@ export default Controller.extend({
     }
     query.id = 0; // 0 means no Id yet
     return query;
-  },
+  }
 
   _readFileAsTextAsync(file) {
     return new Promise((resolve, reject) => {
@@ -166,200 +152,270 @@ export default Controller.extend({
 
       reader.readAsText(file);
     });
-  },
+  }
+
+  @bind
+  dragMove(e) {
+    if (!e.movementY && !e.movementX) {
+      return;
+    }
+
+    const editPane = document.querySelector(".query-editor");
+    const target = editPane.querySelector(".panels-flex");
+    const grippie = editPane.querySelector(".grippie");
+
+    // we need to get the initial height / width of edit pane
+    // before we manipulate the size
+    if (!this.initialPaneWidth && !this.originalPaneHeight) {
+      this.originalPaneWidth = target.clientWidth;
+      this.originalPaneHeight = target.clientHeight;
+    }
+
+    const newHeight = Math.max(
+      this.originalPaneHeight,
+      target.clientHeight + e.movementY
+    );
+    const newWidth = Math.max(
+      this.originalPaneWidth,
+      target.clientWidth + e.movementX
+    );
+
+    target.style.height = newHeight + "px";
+    target.style.width = newWidth + "px";
+    grippie.style.width = newWidth + "px";
+    this.appEvents.trigger("ace:resize");
+  }
+
+  @bind
+  didStartDrag() {}
+
+  @bind
+  didEndDrag() {}
 
   @bind
   scrollTop() {
     window.scrollTo(0, 0);
-    this.setProperties({ editing: false, everEditing: false });
-  },
+    this.editingName = false;
+    this.editingQuery = false;
+  }
 
-  actions: {
-    updateHideSchema(value) {
-      this.set("hideSchema", value);
-    },
+  @action
+  updateGroupIds(value) {
+    this.dirty = true;
+    this.selectedItem.set("group_ids", value);
+  }
 
-    import(files) {
-      this.set("loading", true);
-      const file = files[0];
-      this._importQuery(file)
-        .then((record) => this.addCreatedRecord(record))
-        .catch((e) => {
-          if (e.jqXHR) {
-            popupAjaxError(e);
-          } else if (e instanceof SyntaxError) {
-            this.dialog.alert(I18n.t("explorer.import.unparseable_json"));
-          } else if (e instanceof TypeError) {
-            this.dialog.alert(I18n.t("explorer.import.wrong_json"));
-          } else {
-            this.dialog.alert(I18n.t("errors.desc.unknown"));
-            // eslint-disable-next-line no-console
-            console.error(e);
-          }
-        })
-        .finally(() => {
-          this.set("loading", false);
-        });
-    },
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+  }
 
-    showCreate() {
-      this.set("showCreate", true);
-    },
-
-    editName() {
-      this.set("editing", true);
-    },
-
-    download() {
-      window.open(this.get("selectedItem.downloadUrl"), "_blank");
-    },
-
-    goHome() {
-      this.setProperties({
-        asc: null,
-        order: null,
-        showResults: false,
-        editDisabled: false,
-        showRecentQueries: true,
-        selectedQueryId: null,
-        params: null,
-        sortBy: ["last_run_at:desc"],
-      });
-      this.transitionToRoute({ queryParams: { id: null, params: null } });
-    },
-
-    showHelpModal() {
-      showModal("query-help");
-    },
-
-    resetParams() {
-      this.selectedItem.resetParams();
-    },
-
-    saveDefaults() {
-      this.selectedItem.saveDefaults();
-    },
-
-    save() {
-      this.save();
-    },
-
-    saverun() {
-      this.save().then(() => this.send("run"));
-    },
-
-    sortByProperty(property) {
-      if (this.sortBy[0] === `${property}:desc`) {
-        this.set("sortBy", [`${property}:asc`]);
-      } else {
-        this.set("sortBy", [`${property}:desc`]);
-      }
-    },
-
-    create() {
-      const name = this.newQueryName.trim();
-      this.setProperties({
-        loading: true,
-        showCreate: false,
-        showRecentQueries: false,
-      });
-      this.store
-        .createRecord("query", { name })
-        .save()
-        .then((result) => this.addCreatedRecord(result.target))
-        .catch(popupAjaxError)
-        .finally(() => this.set("loading", false));
-    },
-
-    discard() {
-      this.set("loading", true);
-      this.store
-        .find("query", this.get("selectedItem.id"))
-        .then((result) => {
-          const query = this.get("selectedItem");
-          query.setProperties(result.getProperties(Query.updatePropertyNames));
-          if (!query.group_ids || !Array.isArray(query.group_ids)) {
-            query.set("group_ids", []);
-          }
-          query.markNotDirty();
-          this.set("editing", false);
-        })
-        .catch(popupAjaxError)
-        .finally(() => this.set("loading", false));
-    },
-
-    destroy() {
-      const query = this.selectedItem;
-      this.setProperties({ loading: true, showResults: false });
-      this.store
-        .destroyRecord("query", query)
-        .then(() => query.set("destroyed", true))
-        .catch(popupAjaxError)
-        .finally(() => this.set("loading", false));
-    },
-
-    recover() {
-      const query = this.selectedItem;
-      this.setProperties({ loading: true, showResults: true });
-      query
-        .save()
-        .then(() => query.set("destroyed", false))
-        .catch(popupAjaxError)
-        .finally(() => {
-          this.set("loading", false);
-        });
-    },
-
-    // This is necessary with glimmer's one way data stream to get the child's
-    // changes of 'params' to bubble up.
-    updateParams(identifier, value) {
-      this.selectedItem.set(`params.${identifier}`, value);
-    },
-
-    run() {
-      if (this.get("selectedItem.dirty")) {
-        return;
-      }
-      if (this.runDisabled) {
-        return;
-      }
-
-      this.setProperties({
-        loading: true,
-        showResults: false,
-        params: JSON.stringify(this.selectedItem.params),
-      });
-
-      ajax(
-        "/admin/plugins/explorer/queries/" +
-          this.get("selectedItem.id") +
-          "/run",
-        {
-          type: "POST",
-          data: {
-            params: JSON.stringify(this.get("selectedItem.params")),
-            explain: this.explain,
-          },
+  @action
+  import(files) {
+    this.loading = true;
+    const file = files[0];
+    this._importQuery(file)
+      .then((record) => this.addCreatedRecord(record))
+      .catch((e) => {
+        if (e.jqXHR) {
+          popupAjaxError(e);
+        } else if (e instanceof SyntaxError) {
+          this.dialog.alert(I18n.t("explorer.import.unparseable_json"));
+        } else if (e instanceof TypeError) {
+          this.dialog.alert(I18n.t("explorer.import.wrong_json"));
+        } else {
+          this.dialog.alert(I18n.t("errors.desc.unknown"));
+          // eslint-disable-next-line no-console
+          console.error(e);
         }
-      )
-        .then((result) => {
-          this.set("results", result);
-          if (!result.success) {
-            this.set("showResults", false);
-            return;
-          }
+      })
+      .finally(() => {
+        this.loading = false;
+        this.dirty = true;
+      });
+  }
 
-          this.set("showResults", true);
-        })
-        .catch((err) => {
-          this.set("showResults", false);
-          if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
-            this.set("results", err.jqXHR.responseJSON);
-          } else {
-            popupAjaxError(err);
-          }
-        })
-        .finally(() => this.set("loading", false));
-    },
-  },
-});
+  @action
+  displayCreate() {
+    this.showCreate = true;
+  }
+
+  @action
+  editName() {
+    this.editingName = true;
+  }
+
+  @action
+  editQuery() {
+    this.editingQuery = true;
+  }
+
+  @action
+  download() {
+    window.open(this.selectedItem.downloadUrl, "_blank");
+  }
+
+  @action
+  goHome() {
+    this.setProperties({
+      order: null,
+      showResults: false,
+      selectedQueryId: null,
+      params: null,
+      sortByProperty: "last_run_at",
+      sortDescending: true,
+    });
+    this.transitionToRoute({ queryParams: { id: null, params: null } });
+  }
+
+  @action
+  showHelpModal() {
+    showModal("query-help");
+  }
+
+  @action
+  resetParams() {
+    this.selectedItem.resetParams();
+  }
+
+  @action
+  saveDefaults() {
+    this.selectedItem.saveDefaults();
+  }
+
+  @action
+  updateSortProperty(property) {
+    if (this.sortByProperty === property) {
+      this.sortDescending = !this.sortDescending;
+    } else {
+      this.sortByProperty = property;
+      this.sortDescending = true;
+    }
+  }
+
+  @action
+  create() {
+    const name = this.newQueryName.trim();
+    this.setProperties({
+      loading: true,
+      showCreate: false,
+    });
+    this.store
+      .createRecord("query", { name })
+      .save()
+      .then((result) => this.addCreatedRecord(result.target))
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.loading = false;
+        this.dirty = true;
+      });
+  }
+
+  @action
+  discard() {
+    this.loading = true;
+    this.store
+      .find("query", this.selectedItem.id)
+      .then((result) => {
+        this.selectedItem.setProperties(
+          result.getProperties(Query.updatePropertyNames)
+        );
+        if (
+          !this.selectedItem.group_ids ||
+          !Array.isArray(this.selectedItem.group_ids)
+        ) {
+          this.selectedItem.set("group_ids", []);
+        }
+        this.dirty = false;
+        this.editingName = false;
+        this.editingQuery = false;
+      })
+      .catch(popupAjaxError)
+      .finally(() => (this.loading = false));
+  }
+
+  @action
+  destroyQuery() {
+    this.loading = true;
+    this.showResults = false;
+    this.store
+      .destroyRecord("query", this.selectedItem)
+      .then(() => this.selectedItem.set("destroyed", true))
+      .catch(popupAjaxError)
+      .finally(() => (this.loading = false));
+  }
+
+  @action
+  recover() {
+    this.loading = true;
+    this.showResults = true;
+    this.selectedItem
+      .save()
+      .then(() => this.selectedItem.set("destroyed", false))
+      .catch(popupAjaxError)
+      .finally(() => (this.loading = false));
+  }
+
+  @action
+  updateParams(identifier, value) {
+    this.selectedItem.set(`params.${identifier}`, value);
+  }
+
+  @action
+  updateSearch(value) {
+    this.search = value;
+  }
+
+  @action
+  updateNewQueryName(value) {
+    this.newQueryName = value;
+  }
+
+  @action
+  setDirty() {
+    this.dirty = true;
+  }
+
+  @action
+  exitEdit() {
+    this.editingName = false;
+  }
+
+  @action
+  run() {
+    if (this.dirty || this.runDisabled) {
+      return;
+    }
+
+    this.setProperties({
+      loading: true,
+      showResults: false,
+      params: JSON.stringify(this.selectedItem.params),
+    });
+
+    ajax("/admin/plugins/explorer/queries/" + this.selectedItem.id + "/run", {
+      type: "POST",
+      data: {
+        params: JSON.stringify(this.selectedItem.params),
+        explain: this.explain,
+      },
+    })
+      .then((result) => {
+        this.results = result;
+        if (!result.success) {
+          this.showResults = false;
+          return;
+        }
+        this.showResults = true;
+      })
+      .catch((err) => {
+        this.showResults = false;
+        if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
+          this.results = err.jqXHR.responseJSON;
+        } else {
+          popupAjaxError(err);
+        }
+      })
+      .finally(() => (this.loading = false));
+  }
+}

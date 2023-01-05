@@ -22,7 +22,7 @@ it:
         label: "Importa"
         modal: "Importa una query"
         unparseable_json: "File JSON non analizzabile."
-        wrong_json: "File JSON errato. Un file JSON dovrebbe contenere un oggetto \"query\" contenente almeno una proprietà \"sql\"."
+        wrong_json: 'File JSON errato. Un file JSON dovrebbe contenere un oggetto "query" contenente almeno una proprietà "sql".'
       help:
         label: "Guida"
         modal_title: "Guida di Data Explorer"

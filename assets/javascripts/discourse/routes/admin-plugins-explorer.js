@@ -25,7 +25,6 @@ export default DiscourseRoute.extend({
       return schemaPromise.then((schema) => {
         return queryPromise.then((model) => {
           model.forEach((query) => {
-            query.markNotDirty();
             query.set(
               "group_names",
               (query.group_ids || []).map((id) => groupNames[id])

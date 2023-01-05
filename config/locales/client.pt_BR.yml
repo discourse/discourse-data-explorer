@@ -22,7 +22,7 @@ pt_BR:
         label: "Importar"
         modal: "Importar Uma Consulta"
         unparseable_json: "Arquivo JSON não analisável"
-        wrong_json: "Arquivo JSON incorreto. Um arquivo JSON deve conter um objeto \"consulta\", que deve ter pelo menos a propriedade \"sql\""
+        wrong_json: 'Arquivo JSON incorreto. Um arquivo JSON deve conter um objeto "consulta", que deve ter pelo menos a propriedade "sql"'
       help:
         label: "Ajuda"
         modal_title: "Ajuda do Explorador de Dados"
