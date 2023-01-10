@@ -11,6 +11,7 @@ tr_TR:
         no_semicolons: "Noktalı virgülleri sorudan kaldırın."
         dirty: "Çalıştırmadan önce soruyu kaydetmeniz gerekir."
     explorer:
+      or: "veya"
       admins_only: "Veri gezgini yalnızca yöneticiler tarafından kullanılabilir."
       allow_groups: "Grupların bu sorguya erişmesine izin ver"
       title: "Veri Gezgini"
@@ -20,6 +21,15 @@ tr_TR:
       import:
         label: "İçeri Aktar"
         modal: "Sorguyu İçe Aktar"
+        unparseable_json: "Ayrıştırılamayan JSON dosyası."
+        wrong_json: "Yanlış JSON dosyası. Bir JSON dosyası, en azından bir \"sql\" özelliğine sahip olması gereken bir \"query\" nesnesi içermelidir."
+      help:
+        label: "Yardım"
+        modal_title: "Veri Gezgini Yardımı"
+        auto_resolution: "<h2>Otomatik Varlık Çözünürlüğü</h2> <p>Sorgunuz bir varlık kimliği döndürdüğünde, Veri Gezgini bunu otomatik olarak varlık adı ve sorgu sonuçlarındaki diğer yararlı bilgilerle değiştirebilir. Otomatik çözümleme <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> ve <i><b>badge_id</b></i> için kullanılabilir. Bunu denemek için şu sorguyu çalıştırın:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Özel Parametreler Oluşturma</h2> <p>Sorgularınıza özel parametreler oluşturmak için şunu sorgunuzun en üstüne koyun ve formatı izleyin:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Not: [params] ile başlayan ilk satır, önündeki iki tire ve bildirmek istediğiniz her özel parametre ile birlikte gereklidir.</i></p>"
+        default_values: "<h3>Varsayılan Değerler</h3> <p>Parametreleri varsayılan değerlerle ya da varsayılan değerler olmadan bildirebilirsiniz. Varsayılan değerler, sorgu düzenleyicisinin altında, ihtiyaçlarınıza göre düzenleyebileceğiniz bir metin alanında görünür. Varsayılan değerler olmadan bildirilen parametreler yine bir metin alanı oluşturur, ancak boş olacak ve kırmızı renkle vurgulanır.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Veri Türleri</h3> <p>İşte kullanabileceğiniz yaygın veri türleri:</p> <ul> <li><b>integer</b> - signed four-byte Integer</li> <li><b>text</b> - variable-length character string</li> <li><b>boolean</b> - true/false</li> <li><b>date</b> - calendar date (year, month, day)</li> </ul> <p>Veri türleri hakkında daha fazla bilgi için <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>bu web sitesini</a> ziyaret edin.</p>"
       schema:
         title: "Veritabanı Şeması"
         filter: "Ara..."
@@ -39,10 +49,16 @@ tr_TR:
       recover: "Sorguyu Geri Al"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "Tablo"
+      show_graph: "Grafik"
       others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
+      run_time: "Sorgu %{value} ms'de tamamlandı."
       result_count:
         one: "%{count} sonucu."
         other: "%{count} sonuçları."
+      max_result_count:
+        one: "En iyi %{count} sonuç gösteriliyor."
+        other: "En iyi %{count} sonuç gösteriliyor."
       query_name: "Sorgu"
       query_groups: "Gruplar"
       link: "Şunun için bağlantı linki:"
@@ -50,6 +66,7 @@ tr_TR:
       query_description: "Açıklama"
       query_time: "Son çalıştırma"
       query_user: "Tarafından yaratıldı"
+      column: "%{number}. sütun"
       explain_label: "Sorgu planı eklensin mi?"
       save_params: "Varsayılan belirle"
       reset_params: "Sıfırla"
@@ -57,3 +74,9 @@ tr_TR:
       no_search_results: "Üzgünüz, metninizle eşleşen bir sonuç bulamadık."
     group:
       reports: "Raporlar"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Veri Gezgini sorgularını çalıştırın. Sorgu kimliklerini belirterek API anahtarını bir dizi sorguyla kısıtlayın."

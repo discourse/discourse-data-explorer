@@ -6,4 +6,4 @@
 
 hr:
   site_settings:
-    data_explorer_enabled: 'Uključi "Data Explorer" na /admin/plugins/explorer'
+    data_explorer_enabled: "Uključi \"Data Explorer\" na /admin/plugins/explorer"
