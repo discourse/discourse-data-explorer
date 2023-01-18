@@ -6,4 +6,4 @@
 
 tr_TR:
   site_settings:
-    data_explorer_enabled: "Veri gezginini buradan etkinleştir /admin/plugins/explorer"
+    data_explorer_enabled: "Veri gezginini şuradan etkinleştirin: /admin/plugins/explorer"
