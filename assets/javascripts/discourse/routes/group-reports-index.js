@@ -2,9 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { action } from "@ember/object";
 
-export default DiscourseRoute.extend({
-  controllerName: "group-reports-index",
-
+export default class GroupReportsIndexRoute extends DiscourseRoute {
   model() {
     const group = this.modelFor("group");
     return ajax(`/g/${group.name}/reports`)
@@ -15,7 +13,7 @@ export default DiscourseRoute.extend({
         };
       })
       .catch(() => this.transitionTo("group.members", group));
-  },
+  }
 
   afterModel(model) {
     if (
@@ -24,15 +22,15 @@ export default DiscourseRoute.extend({
     ) {
       this.transitionTo("group.members", model.group);
     }
-  },
+  }
 
   setupController(controller, model) {
     controller.setProperties(model);
-  },
+  }
 
   @action
   refreshModel() {
     this.refresh();
     return false;
-  },
-});
+  }
+}

@@ -1,39 +1,43 @@
 <section class="user-content">
-  <h1>{{model.name}}</h1>
-  <p>{{model.description}}</p>
+  <h1>{{this.model.name}}</h1>
+  <p>{{this.model.description}}</p>
 
-  <form class="query-run" {{action "run" on="submit"}}>
+  <form class="query-run" {{on "submit" this.run}}>
     <ParamInputsWrapper
-      @hasParams={{hasParams}}
-      @params={{model.params}}
-      @paramInfo={{model.param_info}}
-      @updateParams={{action "updateParams"}}
+      @hasParams={{this.hasParams}}
+      @params={{this.model.params}}
+      @paramInfo={{this.model.param_info}}
+      @updateParams={{this.updateParams}}
     />
 
-    {{d-button
-      action=(action "run")
-      icon="play"
-      label="explorer.run"
-      class="btn-primary"
-      type="submit"
-    }}
+    <DButton
+      @action={{this.run}}
+      @icon="play"
+      @label="explorer.run"
+      @class="btn-primary"
+      @type="submit"
+    />
 
-    {{d-button
-      action=(action "toggleBookmark")
-      label=bookmarkLabel
-      icon=bookmarkIcon
-      class=bookmarkClassName
-    }}
+    <DButton
+      @action={{this.toggleBookmark}}
+      @label={{this.bookmarkLabel}}
+      @icon={{this.bookmarkIcon}}
+      @class={{this.bookmarkClassName}}
+    />
   </form>
 
-  {{conditional-loading-spinner condition=loading}}
+  <ConditionalLoadingSpinner @condition={{this.loading}} />
 
-  {{#if results}}
+  {{#if this.results}}
     <div class="query-results">
-      {{#if showResults}}
-        <QueryResult @query={{model}} @content={{results}} @group={{group}} />
+      {{#if this.showResults}}
+        <QueryResult
+          @query={{this.model}}
+          @content={{this.results}}
+          @group={{this.group}}
+        />
       {{else}}
-        {{#each results.errors as |err|}}
+        {{#each this.results.errors as |err|}}
           <pre class="query-error"><code>{{~err}}</code></pre>
         {{/each}}
       {{/if}}

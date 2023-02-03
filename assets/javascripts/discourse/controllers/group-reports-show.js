@@ -6,93 +6,103 @@ import Bookmark, {
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias, gt } from "@ember/object/computed";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
-export default Controller.extend({
-  showResults: false,
-  explain: false,
-  loading: false,
-  results: alias("model.results"),
-  hasParams: gt("model.param_info.length", 0),
+export default class GroupReportsShowController extends Controller {
+  @service currentUser;
 
-  actions: {
-    run() {
-      this.setProperties({ loading: true, showResults: false });
-      ajax(`/g/${this.get("group.name")}/reports/${this.model.id}/run`, {
-        type: "POST",
-        data: {
-          params: JSON.stringify(this.model.params),
-          explain: this.explain,
-        },
-      })
-        .then((result) => {
-          this.set("results", result);
-          if (!result.success) {
-            return;
-          }
+  @tracked showResults = false;
+  @tracked loading = false;
+  @tracked results = this.model.results;
+  @tracked queryGroupBookmark = this.queryGroup?.bookmark;
 
-          this.set("showResults", true);
-        })
-        .catch((err) => {
-          if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
-            this.set("results", err.jqXHR.responseJSON);
-          } else {
-            popupAjaxError(err);
-          }
-        })
-        .finally(() => this.set("loading", false));
-    },
+  explain = false;
 
-    toggleBookmark() {
-      return openBookmarkModal(
-        this.queryGroup.bookmark ||
-          Bookmark.create({
-            bookmarkable_type: "DataExplorer::QueryGroup",
-            bookmarkable_id: this.queryGroup.id,
-            user_id: this.currentUser.id,
-          }),
-        {
-          onAfterSave: (savedData) => {
-            const bookmark = Bookmark.create(savedData);
-            this.set("queryGroup.bookmark", bookmark);
-            this.appEvents.trigger(
-              "bookmarks:changed",
-              savedData,
-              bookmark.attachedTo()
-            );
-          },
-          onAfterDelete: () => {
-            this.set("queryGroup.bookmark", null);
-          },
-        }
-      );
-    },
+  get hasParams() {
+    return this.model.param_info.length > 0;
+  }
 
-    // This is necessary with glimmer's one way data stream to get the child's
-    // changes of 'params' to bubble up.
-    updateParams(identifier, value) {
-      this.set(`model.params.${identifier}`, value);
-    },
-  }, // actions
+  get bookmarkLabel() {
+    return this.queryGroupBookmark
+      ? "bookmarked.edit_bookmark"
+      : "bookmarked.title";
+  }
 
-  @discourseComputed("queryGroup.bookmark")
-  bookmarkLabel(bookmark) {
-    return bookmark ? "bookmarked.edit_bookmark" : "bookmarked.title";
-  },
-
-  @discourseComputed("queryGroup.bookmark")
-  bookmarkIcon(bookmark) {
-    if (bookmark && bookmark.reminder_at) {
+  get bookmarkIcon() {
+    if (this.queryGroupBookmark && this.queryGroupBookmark.reminder_at) {
       return WITH_REMINDER_ICON;
     }
     return NO_REMINDER_ICON;
-  },
+  }
 
-  @discourseComputed("queryGroup.bookmark")
-  bookmarkClassName(bookmark) {
-    return bookmark
+  get bookmarkClassName() {
+    return this.queryGroupBookmark
       ? ["query-group-bookmark", "bookmarked"].join(" ")
       : "query-group-bookmark";
-  },
-});
+  }
+
+  @action
+  run() {
+    this.loading = true;
+    this.showResults = false;
+
+    ajax(`/g/${this.get("group.name")}/reports/${this.model.id}/run`, {
+      type: "POST",
+      data: {
+        params: JSON.stringify(this.model.params),
+        explain: this.explain,
+      },
+    })
+      .then((result) => {
+        this.results = result;
+        if (!result.success) {
+          return;
+        }
+
+        this.showResults = true;
+      })
+      .catch((err) => {
+        if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
+          this.results = err.jqXHR.responseJSON;
+        } else {
+          popupAjaxError(err);
+        }
+      })
+      .finally(() => (this.loading = false));
+  }
+
+  @action
+  toggleBookmark() {
+    return openBookmarkModal(
+      this.queryGroupBookmark ||
+        Bookmark.create({
+          bookmarkable_type: "DataExplorer::QueryGroup",
+          bookmarkable_id: this.queryGroup.id,
+          user_id: this.currentUser.id,
+        }),
+      {
+        onAfterSave: (savedData) => {
+          const bookmark = Bookmark.create(savedData);
+          this.queryGroupBookmark = bookmark;
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+        },
+        onAfterDelete: () => {
+          this.queryGroupBookmark = null;
+        },
+      }
+    );
+  }
+
+  // This is necessary with glimmer's one way data stream to get the child's
+  // changes of 'params' to bubble up.
+  @action
+  updateParams(identifier, value) {
+    this.set(`model.params.${identifier}`, value);
+  }
+}

@@ -12,12 +12,15 @@
       </th>
     </thead>
     <tbody>
-      {{#each queries as |query|}}
+      {{#each this.model.queries as |query|}}
         <tr>
           <td>
-            {{#link-to "group.reports.show" group.name query.id}}
+            <LinkTo
+              @route={{"group.reports.show"}}
+              @models={{array group.name query.id}}
+            >
               {{query.name}}
-            {{/link-to}}
+            </LinkTo>
           </td>
           <td>{{query.description}}</td>
           <td>
