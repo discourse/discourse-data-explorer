@@ -7,6 +7,7 @@ import Bookmark, {
 } from "discourse/models/bookmark";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { action } from "@ember/object";
+import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
@@ -43,34 +44,41 @@ export default class GroupReportsShowController extends Controller {
       : "query-group-bookmark";
   }
 
-  @action
-  run() {
+  @bind
+  async run() {
     this.loading = true;
     this.showResults = false;
 
-    ajax(`/g/${this.get("group.name")}/reports/${this.model.id}/run`, {
-      type: "POST",
-      data: {
-        params: JSON.stringify(this.model.params),
-        explain: this.explain,
-      },
-    })
-      .then((result) => {
-        this.results = result;
-        if (!result.success) {
-          return;
+    try {
+      const response = await ajax(
+        `/g/${this.get("group.name")}/reports/${this.model.id}/run`,
+        {
+          type: "POST",
+          data: {
+            params: JSON.stringify(this.model.params),
+            explain: this.explain,
+          },
         }
+      );
 
-        this.showResults = true;
-      })
-      .catch((err) => {
-        if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
-          this.results = err.jqXHR.responseJSON;
-        } else {
-          popupAjaxError(err);
-        }
-      })
-      .finally(() => (this.loading = false));
+      this.results = response;
+      if (!response.success) {
+        return;
+      }
+      this.showResults = true;
+    } catch (error) {
+      if (
+        error.jqXHR &&
+        error.jqXHR.status === 422 &&
+        error.jqXHR.responseJSON
+      ) {
+        this.results = error.jqXHR.responseJSON;
+      } else {
+        popupAjaxError(error);
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 
   @action
@@ -84,7 +92,7 @@ export default class GroupReportsShowController extends Controller {
         }),
       {
         onAfterSave: (savedData) => {
-          const bookmark = Bookmark.create(savedData);
+          const bookmark = this.store.createRecord("bookmark", savedData);
           this.queryGroupBookmark = bookmark;
           this.appEvents.trigger(
             "bookmarks:changed",
