@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
-import Bookmark, {
+import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
@@ -67,11 +67,7 @@ export default class GroupReportsShowController extends Controller {
       }
       this.showResults = true;
     } catch (error) {
-      if (
-        error.jqXHR &&
-        error.jqXHR.status === 422 &&
-        error.jqXHR.responseJSON
-      ) {
+      if (error.jqXHR?.status === 422 && error.jqXHR.responseJSON) {
         this.results = error.jqXHR.responseJSON;
       } else {
         popupAjaxError(error);
@@ -85,7 +81,7 @@ export default class GroupReportsShowController extends Controller {
   toggleBookmark() {
     return openBookmarkModal(
       this.queryGroupBookmark ||
-        Bookmark.create({
+        this.store.createRecord("bookmark", {
           bookmarkable_type: "DataExplorer::QueryGroup",
           bookmarkable_id: this.queryGroup.id,
           user_id: this.currentUser.id,
