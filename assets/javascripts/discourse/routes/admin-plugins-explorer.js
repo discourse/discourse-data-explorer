@@ -1,12 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
-import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  controllerName: "admin-plugins-explorer",
-
+export default class AdminPluginsExplorer extends DiscourseRoute {
   model() {
-    if (!User.currentProp("admin")) {
+    if (!this.currentUser.admin) {
       // display "Only available to admins" message
       return { model: null, schema: null, disallow: true, groups: null };
     }
@@ -34,9 +31,9 @@ export default DiscourseRoute.extend({
         });
       });
     });
-  },
+  }
 
   setupController(controller, model) {
     controller.setProperties(model);
-  },
-});
+  }
+}
