@@ -290,7 +290,7 @@ table.group-reports {
   section {
     width: 100%;
     overflow: auto;
-    height: 1000px;
+    max-height: 1000px;
   }
   table {
     width: 100%;
