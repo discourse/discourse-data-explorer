@@ -1,27 +1,26 @@
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import RestModel from "discourse/models/rest";
-import { reads } from "@ember/object/computed";
 
-const Query = RestModel.extend({
-  params: {},
-  results: null,
-  hasParams: reads("param_info.length"),
+export default class Query extends RestModel {
+  params = {};
 
-  @on("init")
-  @observes("param_info")
-  _initParams() {
-    this.resetParams();
-  },
+  constructor() {
+    super(...arguments);
+    this.param_info?.resetParams();
+  }
+
+  get downloadUrl() {
+    return getURL(`/admin/plugins/explorer/queries/${this.id}.json?export=1`);
+  }
+
+  get hasParams() {
+    return this.param_info.length;
+  }
 
   resetParams() {
     const newParams = {};
     const oldParams = this.params;
-    const paramInfo = this.param_info || [];
-    paramInfo.forEach((pinfo) => {
+    this.param_info.forEach((pinfo) => {
       const name = pinfo.identifier;
       if (oldParams[pinfo.identifier]) {
         newParams[name] = oldParams[name];
@@ -37,22 +36,8 @@ const Query = RestModel.extend({
         newParams[name] = "";
       }
     });
-    this.set("params", newParams);
-  },
-
-  @discourseComputed("id")
-  downloadUrl(id) {
-    // TODO - can we change this to use the store/adapter?
-    return getURL(`/admin/plugins/explorer/queries/${id}.json?export=1`);
-  },
-
-  createProperties() {
-    if (this.sql) {
-      // Importing
-      return this.updateProperties();
-    }
-    return this.getProperties("name");
-  },
+    this.params = newParams;
+  }
 
   updateProperties() {
     const props = this.getProperties(Query.updatePropertyNames);
@@ -60,8 +45,8 @@ const Query = RestModel.extend({
       props.id = this.id;
     }
     return props;
-  },
-});
+  }
+}
 
 Query.reopenClass({
   updatePropertyNames: [
@@ -74,5 +59,3 @@ Query.reopenClass({
     "last_run_at",
   ],
 });
-
-export default Query;
