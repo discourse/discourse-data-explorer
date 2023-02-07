@@ -2,6 +2,16 @@ import getURL from "discourse-common/lib/get-url";
 import RestModel from "discourse/models/rest";
 
 export default class Query extends RestModel {
+  static updatePropertyNames = [
+    "name",
+    "description",
+    "sql",
+    "user_id",
+    "created_at",
+    "group_ids",
+    "last_run_at",
+  ];
+
   params = {};
 
   constructor() {
@@ -47,15 +57,3 @@ export default class Query extends RestModel {
     return props;
   }
 }
-
-Query.reopenClass({
-  updatePropertyNames: [
-    "name",
-    "description",
-    "sql",
-    "user_id",
-    "created_at",
-    "group_ids",
-    "last_run_at",
-  ],
-});
