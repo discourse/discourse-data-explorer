@@ -275,10 +275,10 @@
 
     {{#unless this.selectedItem.fake}}
       <QueryResultsWrapper
-        @results={{results}}
-        @showResults={{showResults}}
-        @query={{selectedItem}}
-        @content={{results}}
+        @results={{this.results}}
+        @showResults={{this.showResults}}
+        @query={{this.selectedItem}}
+        @content={{this.results}}
       />
     {{/unless}}
 
