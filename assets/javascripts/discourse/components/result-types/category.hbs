@@ -1,0 +1,5 @@
+{{#if @ctx.category}}
+  {{category-link @ctx.category}}
+{{else}}
+  <a href="{{@ctx.baseuri}}/t/{{@ctx.id}}">{{@ctx.id}}</a>
+{{/if}}

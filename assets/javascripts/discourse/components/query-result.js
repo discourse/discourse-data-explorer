@@ -8,7 +8,29 @@ import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import TopicViewComponent from "./result-types/topic";
+import TextViewComponent from "./result-types/text";
+import PostViewComponent from "./result-types/post";
+import ReltimeViewComponent from "./result-types/reltime";
+import BadgeViewComponent from "./result-types/badge";
+import UrlViewComponent from "./result-types/url";
+import UserViewComponent from "./result-types/user";
+import GroupViewComponent from "./result-types/group";
+import HtmlViewComponent from "./result-types/html";
+import CategoryViewComponent from "./result-types/category";
+
+const VIEW_COMPONENTS = {
+  topic: TopicViewComponent,
+  text: TextViewComponent,
+  post: PostViewComponent,
+  reltime: ReltimeViewComponent,
+  badge: BadgeViewComponent,
+  url: UrlViewComponent,
+  user: UserViewComponent,
+  group: GroupViewComponent,
+  html: HtmlViewComponent,
+  category: CategoryViewComponent,
+};
 
 export default class QueryResult extends Component {
   @service site;
@@ -54,18 +76,16 @@ export default class QueryResult extends Component {
     });
   }
 
-  get columnTemplates() {
+  get columnComponents() {
     if (!this.columns) {
       return [];
     }
     return this.columns.map((_, idx) => {
-      let viewName = "text";
+      let type = "text";
       if (this.colRender[idx]) {
-        viewName = this.colRender[idx];
+        type = this.colRender[idx];
       }
-
-      const template = findRawTemplate(`javascripts/explorer/${viewName}`);
-      return { name: viewName, template };
+      return { name: type, component: VIEW_COMPONENTS[type] };
     });
   }
 

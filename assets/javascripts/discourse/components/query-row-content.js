@@ -9,7 +9,7 @@ import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { escapeExpression } from "discourse/lib/utilities";
 import { cached } from "@glimmer/tracking";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import TextViewComponent from "./result-types/text";
 
 export default class QueryRowContent extends Component {
   constructor() {
@@ -24,7 +24,8 @@ export default class QueryRowContent extends Component {
 
   @cached
   get results() {
-    return this.args.columnTemplates.map((t, idx) => {
+    return this.args.columnComponents.map((t, idx) => {
+      const params = {};
       const value = this.args.row[idx],
         id = parseInt(value, 10);
 
@@ -33,13 +34,19 @@ export default class QueryRowContent extends Component {
         id,
         baseuri: getURL(""),
       };
-      const params = {};
 
       if (this.args.row[idx] === null) {
-        return "NULL";
+        return {
+          component: TextViewComponent,
+          textValue: "NULL",
+        };
       } else if (t.name === "text") {
-        return escapeExpression(this.args.row[idx]);
+        return {
+          component: TextViewComponent,
+          textValue: escapeExpression(this.args.row[idx]),
+        };
       }
+
       const lookupFunc = this.args[`lookup${capitalize(t.name)}`];
       if (lookupFunc) {
         ctx[t.name] = lookupFunc.call(this.args, id);
@@ -57,15 +64,15 @@ export default class QueryRowContent extends Component {
       }
 
       try {
-        return htmlSafe((t.template || this.fallbackTemplate)(ctx, params));
+        return {
+          component: t.component || TextViewComponent,
+          ctx,
+          params,
+        };
       } catch (e) {
         return "error";
       }
     });
-  }
-
-  fallbackTemplate() {
-    return findRawTemplate("javascripts/explorer/text");
   }
 }
 
