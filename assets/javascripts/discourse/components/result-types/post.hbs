@@ -1,14 +1,14 @@
-{{#if post}}
+{{#if @ctx.post}}
   <aside
     class="quote"
-    data-post={{post.post_number}}
-    data-topic={{post.topic_id}}
+    data-post={{@ctx.post.post_number}}
+    data-topic={{@ctx.post.topic_id}}
   >
     <div class="title">
       <div class="quote-controls">
         {{! template-lint-disable no-invalid-link-text }}
         <a
-          href="/t/via-quote/{{post.topic_id}}/{{post.post_number}}"
+          href="/t/via-quote/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
           title="go to the quoted post"
           class="quote-other-topic"
         >
@@ -17,18 +17,18 @@
 
       <a
         class="result-post-link"
-        href="/t/{{post.topic_id}}/{{post.post_number}}"
+        href="/t/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
       >
-        {{avatar post imageSize="tiny"}}{{post.username}}:
+        {{avatar @ctx.post imageSize="tiny"}}{{@ctx.post.username}}:
       </a>
     </div>
 
     <blockquote>
       <p>
-        {{html-safe post.excerpt}}
+        {{html-safe @ctx.post.excerpt}}
       </p>
     </blockquote>
   </aside>
 {{else}}
-  {{id}}
+  {{@ctx.id}}
 {{/if}}
