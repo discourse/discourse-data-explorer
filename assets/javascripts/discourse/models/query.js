@@ -56,4 +56,12 @@ export default class Query extends RestModel {
     }
     return props;
   }
+
+  createProperties() {
+    if (this.sql) {
+      // Importing
+      return this.updateProperties();
+    }
+    return this.getProperties("name");
+  }
 }
