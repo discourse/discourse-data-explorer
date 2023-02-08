@@ -110,7 +110,6 @@ export default class PluginsExplorerController extends Controller {
       .then(() => {
         this.dirty = false;
         this.editingName = false;
-        this.editingQuery = false;
       })
       .catch((x) => {
         popupAjaxError(x);
@@ -327,8 +326,6 @@ export default class PluginsExplorerController extends Controller {
           this.selectedItem.set("group_ids", []);
         }
         this.dirty = false;
-        this.editingName = false;
-        this.editingQuery = false;
       })
       .catch(popupAjaxError)
       .finally(() => (this.loading = false));
@@ -383,10 +380,6 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   run() {
-    if (this.dirty || this.runDisabled) {
-      return;
-    }
-
     this.setProperties({
       loading: true,
       showResults: false,
