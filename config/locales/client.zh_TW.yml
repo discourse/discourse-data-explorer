@@ -7,8 +7,11 @@
 zh_TW:
   js:
     explorer:
+      or: "或"
       import:
         label: "匯入"
+      help:
+        label: "幫助"
       schema:
         filter: "搜尋..."
       types:

@@ -7,6 +7,9 @@
 te:
   js:
     explorer:
+      or: "లేదా"
+      help:
+        label: "సహాయం"
       types:
         bool:
           yes: "అవును"

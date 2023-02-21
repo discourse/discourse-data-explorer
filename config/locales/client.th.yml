@@ -7,6 +7,9 @@
 th:
   js:
     explorer:
+      or: "หรือ"
+      help:
+        label: "ช่วยเหลือ"
       schema:
         filter: "ค้นหา..."
       types:
@@ -19,4 +22,5 @@ th:
       delete: "ลบ"
       query_groups: "กลุ่ม"
       query_description: "รายละเอียด"
+      query_user: "สร้างโดย"
       search_placeholder: "ค้นหา..."

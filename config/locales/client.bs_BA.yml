@@ -7,6 +7,9 @@
 bs_BA:
   js:
     explorer:
+      or: "ili"
+      help:
+        label: "Pomoć"
       schema:
         filter: "Pretraga..."
       types:

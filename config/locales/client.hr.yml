@@ -7,6 +7,11 @@
 hr:
   js:
     explorer:
+      or: "ili"
+      help:
+        label: "Pomoć"
+      schema:
+        filter: "Pretraži..."
       types:
         bool:
           yes: "Da"
@@ -15,5 +20,14 @@ hr:
       save: "Zabilježi promjene"
       edit: "Izmijeni"
       delete: "Pobriši"
+      result_count:
+        one: "%{count} rezultat."
+        few: "%{count} rezultata."
+        other: "%{count} rezultata."
       query_groups: "Grupe"
       query_description: "Opis"
+      query_user: "Napravio"
+      reset_params: "Resetirati"
+      search_placeholder: "Pretraži..."
+    group:
+      reports: "Izvještaji"

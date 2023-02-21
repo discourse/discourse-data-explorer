@@ -7,8 +7,11 @@
 lt:
   js:
     explorer:
+      or: "arba"
       import:
         label: "Importuoti"
+      help:
+        label: "Pagalba"
       schema:
         filter: "Paieška..."
       types:
@@ -19,6 +22,15 @@ lt:
       save: "Išsaugoti pakeitimus"
       edit: "Redaguoti"
       delete: "Pašalinti"
+      result_count:
+        one: "%{count} rezultatas."
+        few: "%{count} rezultatai."
+        many: "%{count} rezultatai."
+        other: "%{count} rezultatai."
       query_groups: "Grupės"
       query_description: "Aprašymas"
+      query_user: "Sukurta"
+      reset_params: "Atstatyti"
       search_placeholder: "Paieška..."
+    group:
+      reports: "Pranešimai"

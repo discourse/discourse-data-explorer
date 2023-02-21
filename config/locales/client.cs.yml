@@ -7,9 +7,12 @@
 cs:
   js:
     explorer:
+      or: "nebo"
       create: "Vytvořit nový"
       import:
         label: "Import"
+      help:
+        label: "Nápověda"
       schema:
         filter: "Hledat..."
       types:
