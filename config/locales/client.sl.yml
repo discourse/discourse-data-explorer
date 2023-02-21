@@ -11,6 +11,7 @@ sl:
         no_semicolons: "Odstranite podpičja iz poizvedbe."
         dirty: "Pred zagonom morate poizvedbo shraniti."
     explorer:
+      or: "ali"
       admins_only: "Raziskovalec podatkov je na voljo samo skrbnikom."
       allow_groups: "Dovoli skupinam dostop do te poizvedbe"
       title: "Raziskovalec podatkov"
@@ -20,6 +21,8 @@ sl:
       import:
         label: "Uvozi"
         modal: "Uvozi poizvedbo"
+      help:
+        label: "Pomoč"
       schema:
         title: "Shema zbirke podatkov"
         filter: "Išči..."

@@ -11,6 +11,7 @@ uk:
         no_semicolons: "Вилучіть крапки з комою з запиту."
         dirty: "Ви повинні зберегти запит перед запуском."
     explorer:
+      or: "або"
       admins_only: "Data explorer доступний лише адміністраторам."
       title: "Data Explorer"
       create: "Створити новий"
@@ -19,6 +20,8 @@ uk:
       import:
         label: "Імпорт"
         modal: "Імпорт запиту"
+      help:
+        label: "Довідка"
       schema:
         title: "Схема бази даних"
         filter: "Пошук..."

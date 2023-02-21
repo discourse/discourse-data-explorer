@@ -7,8 +7,11 @@
 ro:
   js:
     explorer:
+      or: "sau"
       import:
         label: "Importă"
+      help:
+        label: "Ajutor"
       schema:
         filter: "Caută..."
       types:

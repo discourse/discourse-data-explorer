@@ -7,11 +7,14 @@
 sk:
   js:
     explorer:
+      or: "alebo"
       admins_only: "Prieskumník údajov je dostupný iba administrátorom."
       title: "Prieskumník údajov"
       create: "Vztvoriť novú"
       import:
         label: "Import"
+      help:
+        label: "Pomoc"
       schema:
         filter: "Hľadať"
       types:

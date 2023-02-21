@@ -11,6 +11,7 @@ sw:
         no_semicolons: "Ondoa alama ya mkato kwenye swali."
         dirty: "Lazima uhifadhi taarifa kabla ya kutekeleza."
     explorer:
+      or: "au"
       admins_only: "Uwezo wa kupitia taarifa zote unapatikana kwa viongozi tu."
       title: "Utafiti wa Taarifa"
       create: "Tengeneza Mpya"
@@ -19,6 +20,8 @@ sw:
       import:
         label: "Imeingizwa kutoka sehemu nyingine"
         modal: "Ingiza Ulizo"
+      help:
+        label: "Msaada"
       schema:
         title: "Mpango wa kuhifadhidata"
         filter: "Tafuta..."

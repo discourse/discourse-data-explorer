@@ -11,6 +11,7 @@ ca:
         no_semicolons: "Elimina els punts i coma de la consulta."
         dirty: "Cal desar la consulta abans d'executar-la"
     explorer:
+      or: "o"
       admins_only: "L'explorador de dades sols és disponible per a administradors."
       title: "Explorador de dades"
       create: "Crea'n un de nou"
@@ -19,6 +20,8 @@ ca:
       import:
         label: "Importa"
         modal: "Importa una consulta"
+      help:
+        label: "Ajuda"
       schema:
         title: "Esquema de base de dades"
         filter: "Cerca..."

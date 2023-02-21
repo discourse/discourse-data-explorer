@@ -7,8 +7,11 @@
 el:
   js:
     explorer:
+      or: "ή"
       import:
         label: "Εισαγωγή"
+      help:
+        label: "Βοήθεια"
       schema:
         filter: "Αναζήτηση..."
       types:
@@ -21,5 +24,8 @@ el:
       delete: "Σβήσιμο"
       query_groups: "Ομάδες"
       query_description: "Περιγραφή"
+      query_user: "Δημιουργήθηκε από"
       reset_params: "Επαναφορά"
       search_placeholder: "Αναζήτηση..."
+    group:
+      reports: "Αναφορές"

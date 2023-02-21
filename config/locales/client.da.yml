@@ -47,6 +47,7 @@ da:
       query_name: "Forespørgsel"
       query_groups: "grupper"
       query_description: "Beskrivelse"
+      query_user: "Oprettet af"
       reset_params: "Nulstil"
       search_placeholder: "Søg..."
     group:

@@ -11,6 +11,7 @@ pl_PL:
         no_semicolons: "Usuń średniki z zapytania."
         dirty: "Musisz zapisać zapytanie zanim je wykonasz."
     explorer:
+      or: "lub"
       admins_only: "Eksplorator danych jest dostępny wyłącznie dla administratorów."
       allow_groups: "Zezwól grupom na dostęp do tego zapytania"
       title: "Eksplorator danych"

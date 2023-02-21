@@ -7,8 +7,11 @@
 gl:
   js:
     explorer:
+      or: "ou"
       import:
         label: "Importar"
+      help:
+        label: "Axuda"
       schema:
         filter: "Buscar..."
       types:
@@ -21,6 +24,8 @@ gl:
       delete: "Eliminar"
       query_groups: "Grupos"
       query_description: "Descrición"
+      query_user: "Creado por"
+      reset_params: "Restabelecer"
       search_placeholder: "Buscar..."
     group:
       reports: "Informes"

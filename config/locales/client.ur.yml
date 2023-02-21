@@ -11,6 +11,7 @@ ur:
         no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"
         dirty: "چلانے سے پہلے آپ کا کمانڈ کو محفوظ کرنا لازمی ہے۔"
     explorer:
+      or: "یا"
       admins_only: "ڈیٹا ایکسپلورر صرف ایڈمنوں کو دستیاب ہے۔"
       title: "ڈیٹا ایکسپلورر"
       create: "نیا بنائیں"
@@ -19,6 +20,8 @@ ur:
       import:
         label: "درآمد"
         modal: "ڈیٹا کمانڈ درآمد کریں"
+      help:
+        label: "مدد"
       schema:
         title: "ڈیٹا بیس سکیمہ"
         filter: "تلاش کریں..."

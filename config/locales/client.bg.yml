@@ -7,8 +7,11 @@
 bg:
   js:
     explorer:
+      or: "или"
       import:
         label: "Импорт"
+      help:
+        label: "Помощ"
       schema:
         filter: "Търсене ... "
       types:
@@ -19,6 +22,10 @@ bg:
       save: "Запази промените"
       edit: "Редактирай"
       delete: "Изтрий"
+      result_count:
+        one: "%{count} резултат."
+        other: "%{count} резултата."
       query_groups: "Групи"
       query_description: "Описание"
+      reset_params: "Нулиране"
       search_placeholder: "Търсене ... "

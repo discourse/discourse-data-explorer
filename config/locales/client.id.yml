@@ -7,14 +7,19 @@
 id:
   js:
     explorer:
+      or: "atau"
+      help:
+        label: "Bantuan"
       schema:
         filter: "Cari..."
       types:
         bool:
           yes: "Ya"
           no: "Tidak"
+      export: "Ekspor"
       save: "Simpan perubahan"
       edit: "Ubah"
       delete: "Hapus"
       query_groups: "Grup"
+      reset_params: "Reset"
       search_placeholder: "Cari..."
