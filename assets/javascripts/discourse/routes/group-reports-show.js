@@ -31,6 +31,10 @@ export default class GroupReportsShowRoute extends DiscourseRoute {
     controller.setProperties(model);
   }
 
+  deactivate() {
+    this.controller.showResults = false;
+  }
+
   @action
   refreshModel() {
     this.refresh();
