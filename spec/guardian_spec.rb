@@ -7,7 +7,7 @@ describe Guardian do
 
   def make_query(group_ids = [])
     query =
-      DataExplorer::Query.create!(
+      DiscourseDataExplorer::Query.create!(
         name: "Query number #{Fabrication::Sequencer.sequence("query-id", 1)}",
         sql: "SELECT 1",
       )

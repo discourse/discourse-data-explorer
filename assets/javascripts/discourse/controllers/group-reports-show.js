@@ -82,7 +82,7 @@ export default class GroupReportsShowController extends Controller {
     return openBookmarkModal(
       this.queryGroupBookmark ||
         this.store.createRecord("bookmark", {
-          bookmarkable_type: "DataExplorer::QueryGroup",
+          bookmarkable_type: "DiscourseDataExplorer::QueryGroup",
           bookmarkable_id: this.queryGroup.id,
           user_id: this.currentUser.id,
         }),

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DataExplorer
+module ::DiscourseDataExplorer
   class QueryGroup < ActiveRecord::Base
     self.table_name = "data_explorer_query_groups"
 

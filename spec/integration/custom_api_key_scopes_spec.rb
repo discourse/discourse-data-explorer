@@ -5,20 +5,28 @@ require "rails_helper"
 describe "API keys scoped to query#run" do
   before { SiteSetting.data_explorer_enabled = true }
 
-  fab!(:query1) { DataExplorer::Query.create!(name: "Query 1", sql: "SELECT 1 AS query1_res") }
-  fab!(:query2) { DataExplorer::Query.create!(name: "Query 2", sql: "SELECT 1 AS query2_res") }
+  fab!(:query1) do
+    DiscourseDataExplorer::Query.create!(name: "Query 1", sql: "SELECT 1 AS query1_res")
+  end
+  fab!(:query2) do
+    DiscourseDataExplorer::Query.create!(name: "Query 2", sql: "SELECT 1 AS query2_res")
+  end
   fab!(:admin) { Fabricate(:admin) }
 
   let(:all_queries_api_key) do
     key = ApiKey.create!
-    ApiKeyScope.create!(resource: "data_explorer", action: "run_queries", api_key_id: key.id)
+    ApiKeyScope.create!(
+      resource: "discourse_data_explorer",
+      action: "run_queries",
+      api_key_id: key.id,
+    )
     key
   end
 
   let(:single_query_api_key) do
     key = ApiKey.create!
     ApiKeyScope.create!(
-      resource: "data_explorer",
+      resource: "discourse_data_explorer",
       action: "run_queries",
       api_key_id: key.id,
       allowed_parameters: {

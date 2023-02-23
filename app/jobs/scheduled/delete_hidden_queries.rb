@@ -7,7 +7,7 @@ module Jobs
     def execute(args)
       return unless SiteSetting.data_explorer_enabled
 
-      DataExplorer::Query
+      DiscourseDataExplorer::Query
         .where("id > 0")
         .where(hidden: true)
         .where(

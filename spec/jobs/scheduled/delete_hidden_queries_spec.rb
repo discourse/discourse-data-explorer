@@ -9,7 +9,7 @@ describe Jobs::DeleteHiddenQueries do
   end
 
   it "will correctly destroy old hidden queries" do
-    DataExplorer::Query.create!(
+    DiscourseDataExplorer::Query.create!(
       id: 1,
       name: "A",
       description: "A description for A",
@@ -18,7 +18,7 @@ describe Jobs::DeleteHiddenQueries do
       last_run_at: 2.days.ago,
       updated_at: 2.days.ago,
     )
-    DataExplorer::Query.create!(
+    DiscourseDataExplorer::Query.create!(
       id: 2,
       name: "B",
       description: "A description for B",
@@ -27,7 +27,7 @@ describe Jobs::DeleteHiddenQueries do
       last_run_at: 8.days.ago,
       updated_at: 8.days.ago,
     )
-    DataExplorer::Query.create!(
+    DiscourseDataExplorer::Query.create!(
       id: 3,
       name: "C",
       description: "A description for C",
@@ -36,7 +36,7 @@ describe Jobs::DeleteHiddenQueries do
       last_run_at: 4.days.ago,
       updated_at: 4.days.ago,
     )
-    DataExplorer::Query.create!(
+    DiscourseDataExplorer::Query.create!(
       id: 4,
       name: "D",
       description: "A description for D",
@@ -45,7 +45,7 @@ describe Jobs::DeleteHiddenQueries do
       last_run_at: nil,
       updated_at: 10.days.ago,
     )
-    DataExplorer::Query.create!(
+    DiscourseDataExplorer::Query.create!(
       id: 5,
       name: "E",
       description: "A description for E",
@@ -54,7 +54,7 @@ describe Jobs::DeleteHiddenQueries do
       last_run_at: 5.days.ago,
       updated_at: 10.days.ago,
     )
-    DataExplorer::Query.create!(
+    DiscourseDataExplorer::Query.create!(
       id: 6,
       name: "F",
       description: "A description for F",
@@ -65,6 +65,6 @@ describe Jobs::DeleteHiddenQueries do
     )
 
     subject.execute(nil)
-    expect(DataExplorer::Query.all.length).to eq(4)
+    expect(DiscourseDataExplorer::Query.all.length).to eq(4)
   end
 end
