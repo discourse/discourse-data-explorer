@@ -4,8 +4,8 @@ require "rails_helper"
 
 describe "fix query ids rake task" do
   before do
+    Rake::Task.clear
     Discourse::Application.load_tasks
-    Rake::Task.tasks.map(&:reenable)
   end
 
   let(:query_name) { "Awesome query" }
@@ -117,7 +117,7 @@ describe "fix query ids rake task" do
     key = "q:#{id}"
 
     PluginStore.set(
-      DataExplorer::PLUGIN_NAME,
+      DataExplorer.plugin_name,
       key,
       attributes(name).merge(group_ids: group_ids, id: id),
     )
