@@ -4,8 +4,8 @@ require "rails_helper"
 
 describe "Data Explorer rake tasks" do
   before do
+    Rake::Task.clear
     Discourse::Application.load_tasks
-    Rake::Task.tasks.map(&:reenable)
   end
 
   def make_query(sql, opts = {}, group_ids = [])
