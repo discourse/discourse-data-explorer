@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DataExplorer::QueryController < ::ApplicationController
-  requires_plugin DataExplorer.plugin_name
+  requires_plugin DataExplorer::PLUGIN_NAME
 
   before_action :set_group, only: %i[group_reports_index group_reports_show group_reports_run]
   before_action :set_query, only: %i[group_reports_show group_reports_run show update]
