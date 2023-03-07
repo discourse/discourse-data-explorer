@@ -899,7 +899,7 @@ SQL
        )
 
   # Making DataExplorer::QueryGroup Bookmarkable.
-  Bookmark.register_bookmarkable(DataExplorerQueryGroupBookmarkable)
+  register_bookmarkable(DataExplorerQueryGroupBookmarkable)
 
   require_dependency "application_controller"
   require_dependency File.expand_path("../lib/queries.rb", __FILE__)
