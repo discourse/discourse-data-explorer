@@ -34,7 +34,7 @@ describe DataExplorerQueryGroupBookmarkable do
     register_test_bookmarkable(DataExplorerQueryGroupBookmarkable)
   end
 
-  after { DiscoursePluginRegistry.reset! }
+  after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
   # Groups 0 and 1 have access to the Query 1.
   let!(:query_group1) { Fabricate(:query_group, query: query1, group: group0) }
