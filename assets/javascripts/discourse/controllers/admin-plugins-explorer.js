@@ -278,11 +278,6 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  saveDefaults() {
-    this.selectedItem.saveDefaults();
-  }
-
-  @action
   updateSortProperty(property) {
     if (this.sortByProperty === property) {
       this.sortDescending = !this.sortDescending;
