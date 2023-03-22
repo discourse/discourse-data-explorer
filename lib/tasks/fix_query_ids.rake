@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 desc "Fix query IDs to match the old ones used in the plugin store (q:id)"
-
-task("data_explorer:fix_query_ids").clear
 task "data_explorer:fix_query_ids" => :environment do
   ActiveRecord::Base.transaction do
     # Only queries with unique title can be fixed

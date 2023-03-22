@@ -94,7 +94,7 @@ describe "fix query ids rake task" do
     end
 
     def find_query_group(id)
-      DataExplorer::QueryGroup.find_by(query_id: id)
+      DiscourseDataExplorer::QueryGroup.find_by(query_id: id)
     end
   end
 
@@ -117,21 +117,22 @@ describe "fix query ids rake task" do
     key = "q:#{id}"
 
     PluginStore.set(
-      DataExplorer.plugin_name,
+      DiscourseDataExplorer::PLUGIN_NAME,
       key,
       attributes(name).merge(group_ids: group_ids, id: id),
     )
   end
 
   def create_query(name, group_ids = [])
-    DataExplorer::Query
+    DiscourseDataExplorer::Query
       .create!(attributes(name))
       .tap { |query| group_ids.each { |group_id| query.query_groups.create!(group_id: group_id) } }
   end
 
   def attributes(name)
     {
-      id: DataExplorer::Query.count == 0 ? 5 : DataExplorer::Query.maximum(:id) + 1,
+      id:
+        DiscourseDataExplorer::Query.count == 0 ? 5 : DiscourseDataExplorer::Query.maximum(:id) + 1,
       name: name,
       description: "A Query",
       sql: "SELECT 1",
@@ -142,6 +143,6 @@ describe "fix query ids rake task" do
   end
 
   def find(name)
-    DataExplorer::Query.find_by(name: name)
+    DiscourseDataExplorer::Query.find_by(name: name)
   end
 end

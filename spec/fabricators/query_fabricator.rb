@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-Fabricator(:query, from: "DataExplorer::Query") do
+Fabricator(:query, from: "DiscourseDataExplorer::Query") do
   name
   description
   sql
   user
 end
 
-Fabricator(:query_group, from: "DataExplorer::QueryGroup") do
+Fabricator(:query_group, from: "DiscourseDataExplorer::QueryGroup") do
   query
   group
 end

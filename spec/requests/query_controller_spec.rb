@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe DataExplorer::QueryController do
+describe DiscourseDataExplorer::QueryController do
   def response_json
     response.parsed_body
   end
@@ -11,7 +11,7 @@ describe DataExplorer::QueryController do
 
   def make_query(sql, opts = {}, group_ids = [])
     query =
-      DataExplorer::Query.create!(
+      DiscourseDataExplorer::Query.create!(
         name: opts[:name] || "Query number",
         description: "A description for query number",
         sql: sql,
@@ -55,31 +55,35 @@ describe DataExplorer::QueryController do
 
     describe "#index" do
       it "behaves nicely with no user created queries" do
-        DataExplorer::Query.destroy_all
+        DiscourseDataExplorer::Query.destroy_all
         get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json["queries"].count).to eq(Queries.default.count)
+        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
 
       it "shows all available queries in alphabetical order" do
-        DataExplorer::Query.destroy_all
+        DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "B")
         make_query("SELECT 1 as value", name: "A")
         get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json["queries"].length).to eq(Queries.default.count + 2)
+        expect(response_json["queries"].length).to eq(
+          DiscourseDataExplorer::Queries.default.count + 2,
+        )
         expect(response_json["queries"][0]["name"]).to eq("A")
         expect(response_json["queries"][1]["name"]).to eq("B")
       end
 
       it "doesn't show hidden/deleted queries" do
-        DataExplorer::Query.destroy_all
+        DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "A", hidden: false)
         make_query("SELECT 1 as value", name: "B", hidden: true)
         make_query("SELECT 1 as value", name: "C", hidden: true)
         get "/admin/plugins/explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json["queries"].length).to eq(Queries.default.count + 1)
+        expect(response_json["queries"].length).to eq(
+          DiscourseDataExplorer::Queries.default.count + 1,
+        )
       end
     end
 
@@ -88,7 +92,7 @@ describe DataExplorer::QueryController do
       fab!(:group2) { Fabricate(:group, users: [user2]) }
 
       it "allows group to access system query" do
-        query = DataExplorer::Query.find(-4)
+        query = DiscourseDataExplorer::Query.find(-4)
         put "/admin/plugins/explorer/queries/#{query.id}.json",
             params: {
               "query" => {
@@ -107,7 +111,7 @@ describe DataExplorer::QueryController do
       end
 
       it "returns a proper json error for invalid updates" do
-        query = DataExplorer::Query.find(-4)
+        query = DiscourseDataExplorer::Query.find(-4)
         put "/admin/plugins/explorer/queries/#{query.id}",
             params: {
               "query" => {
@@ -209,7 +213,7 @@ describe DataExplorer::QueryController do
 
         # Manual Test - change out the following line:
         #
-        #  module ::DataExplorer
+        #  module ::DiscourseDataExplorer
         #   def self.run_query(...)
         #     if query.sql =~ /;/
         #
@@ -312,9 +316,9 @@ describe DataExplorer::QueryController do
 
         it "should limit the results in CSV download" do
           begin
-            original_const = DataExplorer::QUERY_RESULT_MAX_LIMIT
-            DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
+            original_const = DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT
+            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
+            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
 
             query = make_query <<~SQL
             SELECT id FROM posts
@@ -338,8 +342,8 @@ describe DataExplorer::QueryController do
                  }
             expect(response.body.split("\n").count).to eq(1)
           ensure
-            DataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", original_const)
+            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
+            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", original_const)
           end
         end
       end
