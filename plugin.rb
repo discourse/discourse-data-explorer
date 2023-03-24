@@ -934,10 +934,9 @@ SQL
   require_relative "lib/data_explorer_report_generator"
   require_relative "lib/result_to_markdown"
   reloadable_patch do
-    DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM =
-      "recurring_data_explorer_result_pm"
-
     if defined?(DiscourseAutomation)
+      DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM =
+        "recurring_data_explorer_result_pm"
       add_automation_scriptable(
         DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM,
       ) do

@@ -3,6 +3,16 @@
 require "rails_helper"
 
 describe "RecurringDataExplorerResultPm" do
+  fab!(:admin) { Fabricate(:admin) }
+
+  fab!(:user) { Fabricate(:user) }
+  fab!(:another_user) { Fabricate(:user) }
+  fab!(:group_user) { Fabricate(:user) }
+  fab!(:not_allowed_user) { Fabricate(:user) }
+
+  fab!(:group) { Fabricate(:group, users: [user, another_user]) }
+  fab!(:another_group) { Fabricate(:group, users: [group_user]) }
+
   fab!(:automation) do
     Fabricate(
       :automation,
@@ -10,14 +20,10 @@ describe "RecurringDataExplorerResultPm" do
       trigger: "recurring",
     )
   end
+  fab!(:query) { Fabricate(:query) }
+  fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
+  fab!(:query_group) { Fabricate(:query_group, query: query, group: another_group) }
 
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:another_user) { Fabricate(:user) }
-  fab!(:group_user) { Fabricate(:user) }
-  fab!(:not_allowed_user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group, users: [user, another_user]) }
-  fab!(:another_group) { Fabricate(:group, users: [group_user]) }
   let!(:recipients) do
     [user.username, not_allowed_user.username, another_user.username, another_group.name]
   end
@@ -26,11 +32,7 @@ describe "RecurringDataExplorerResultPm" do
     SiteSetting.data_explorer_enabled = true
     SiteSetting.discourse_automation_enabled = true
 
-    @query = DataExplorer::Query.find_or_create_by!(Queries.default["-8"].to_h)
-    @query.query_groups.find_or_create_by!(group_id: group.id)
-    @query.query_groups.find_or_create_by!(group_id: another_group.id)
-
-    automation.upsert_field!("query_id", "choices", { value: @query.id })
+    automation.upsert_field!("query_id", "choices", { value: query.id })
     automation.upsert_field!("recipients", "email_group_user", { value: recipients })
     automation.upsert_field!(
       "query_params",
@@ -51,7 +53,7 @@ describe "RecurringDataExplorerResultPm" do
       freeze_time 1.day.from_now do
         expect { Jobs::DiscourseAutomationTracker.new.execute }.to change { Topic.count }.by(3)
 
-        title = "Scheduled Report for #{@query.name}"
+        title = "Scheduled Report for #{query.name}"
         expect(Topic.last(3).pluck(:title)).to eq([title, title, title])
       end
     end
@@ -80,7 +82,7 @@ describe "RecurringDataExplorerResultPm" do
       automation.trigger!
 
       expect(Post.last.raw).to include(
-        "Hi #{group_user.username}, your data explorer report is ready.\n\nQuery Name:\nUser Participation Statistics",
+        "Hi #{group_user.username}, your data explorer report is ready.\n\nQuery Name:\n#{query.name}",
       )
     end
   end
