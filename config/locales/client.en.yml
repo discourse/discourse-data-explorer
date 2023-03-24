@@ -96,3 +96,14 @@ en:
           descriptions:
             data_explorer:
               run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Send to User, Group or Email
+            query_id:
+              label: Data Explorer Query
+            query_params:
+              label: Data Explorer Query parameters
+
