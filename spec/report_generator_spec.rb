@@ -17,8 +17,7 @@ describe DiscourseDataExplorer::ReportGenerator do
 
   describe ".generate" do
     it "returns [] if the creator cannot send PMs" do
-      result =
-        described_class.new(user.id).generate(query.id, query_params, [user.username])
+      result = described_class.new(user.id).generate(query.id, query_params, [user.username])
 
       expect(result).to eq []
     end
@@ -39,8 +38,7 @@ describe DiscourseDataExplorer::ReportGenerator do
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time
 
-      result =
-        described_class.new(user.id).generate(query.id, query_params, [user.username])
+      result = described_class.new(user.id).generate(query.id, query_params, [user.username])
 
       expect(result).to eq(
         [

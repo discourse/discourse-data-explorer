@@ -81,7 +81,9 @@ after_initialize do
         DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM,
       ) do
         queries =
-          DiscourseDataExplorer::Query.where(hidden: false).map { |q| { id: q.id, translated_name: q.name } }
+          DiscourseDataExplorer::Query
+            .where(hidden: false)
+            .map { |q| { id: q.id, translated_name: q.name } }
         field :recipients, component: :email_group_user, required: true
         field :query_id, component: :choices, required: true, extra: { content: queries }
         field :query_params, component: :"key-value", accepts_placeholders: true
@@ -104,7 +106,8 @@ after_initialize do
             next
           end
 
-          data_explorer_report = DiscourseDataExplorer::ReportGenerator.new(automation.last_updated_by_id)
+          data_explorer_report =
+            DiscourseDataExplorer::ReportGenerator.new(automation.last_updated_by_id)
           report_pms = data_explorer_report.generate(query_id, query_params, recipients)
 
           report_pms.each { |pm| utils.send_pm(pm, automation_id: automation.id) }
