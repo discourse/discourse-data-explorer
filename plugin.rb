@@ -71,7 +71,7 @@ after_initialize do
     { run_queries: { actions: %w[discourse_data_explorer/query#run], params: %i[id] } },
   )
 
-  require_relative "lib/data_explorer_report_generator"
+  require_relative "lib/report_generator"
   require_relative "lib/result_to_markdown"
   reloadable_patch do
     if defined?(DiscourseAutomation)
@@ -81,7 +81,7 @@ after_initialize do
         DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM,
       ) do
         queries =
-          DataExplorer::Query.where(hidden: false).map { |q| { id: q.id, translated_name: q.name } }
+          DiscourseDataExplorer::Query.where(hidden: false).map { |q| { id: q.id, translated_name: q.name } }
         field :recipients, component: :email_group_user, required: true
         field :query_id, component: :choices, required: true, extra: { content: queries }
         field :query_params, component: :"key-value", accepts_placeholders: true
@@ -95,16 +95,16 @@ after_initialize do
           query_params = fields.dig("query_params", "value")
 
           unless SiteSetting.data_explorer_enabled
-            Rails.logger.warn "#{DataExplorer.plugin_name} - plugin must be enabled to run automation #{automation.id}"
+            Rails.logger.warn "#{DiscourseDataExplorer.plugin_name} - plugin must be enabled to run automation #{automation.id}"
             next
           end
 
           unless recipients.present?
-            Rails.logger.warn "#{DataExplorer.plugin_name} - couldn't find any recipients for automation #{automation.id}"
+            Rails.logger.warn "#{DiscourseDataExplorer.plugin_name} - couldn't find any recipients for automation #{automation.id}"
             next
           end
 
-          data_explorer_report = DataExplorerReportGenerator.new(automation.last_updated_by_id)
+          data_explorer_report = DiscourseDataExplorer::ReportGenerator.new(automation.last_updated_by_id)
           report_pms = data_explorer_report.generate(query_id, query_params, recipients)
 
           report_pms.each { |pm| utils.send_pm(pm, automation_id: automation.id) }

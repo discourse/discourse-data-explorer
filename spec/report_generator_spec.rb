@@ -2,13 +2,13 @@
 
 require "rails_helper"
 
-describe DataExplorerReportGenerator do
+describe DiscourseDataExplorer::ReportGenerator do
   fab!(:user) { Fabricate(:user) }
   fab!(:unauthorised_user) { Fabricate(:user) }
   fab!(:unauthorised_group) { Fabricate(:group) }
   fab!(:group) { Fabricate(:group, users: [user]) }
 
-  fab!(:query) { DataExplorer::Query.find(-1) }
+  fab!(:query) { DiscourseDataExplorer::Query.find(-1) }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
 
   let(:query_params) { [%w[from_days_ago 0], %w[duration_days 15]] }
@@ -18,14 +18,14 @@ describe DataExplorerReportGenerator do
   describe ".generate" do
     it "returns [] if the creator cannot send PMs" do
       result =
-        DataExplorerReportGenerator.new(user.id).generate(query.id, query_params, [user.username])
+        described_class.new(user.id).generate(query.id, query_params, [user.username])
 
       expect(result).to eq []
     end
 
     it "returns [] if the recipient is not in query group" do
       result =
-        DataExplorerReportGenerator.new(user.id).generate(
+        described_class.new(user.id).generate(
           query.id,
           query_params,
           [unauthorised_user.username, unauthorised_group.name],
@@ -36,11 +36,11 @@ describe DataExplorerReportGenerator do
 
     it "returns a list of pms for authorised users" do
       SiteSetting.personal_message_enabled_groups = group.id
-      ResultToMarkdown.expects(:convert).returns("le table")
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time
 
       result =
-        DataExplorerReportGenerator.new(user.id).generate(query.id, query_params, [user.username])
+        described_class.new(user.id).generate(query.id, query_params, [user.username])
 
       expect(result).to eq(
         [
