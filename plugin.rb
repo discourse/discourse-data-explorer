@@ -934,11 +934,15 @@ SQL
   require_relative "lib/data_explorer_report_generator"
   require_relative "lib/result_to_markdown"
   reloadable_patch do
-    DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM = "recurring_data_explorer_result_pm"
+    DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM =
+      "recurring_data_explorer_result_pm"
 
     if defined?(DiscourseAutomation)
-      add_automation_scriptable(DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM) do
-        queries = DataExplorer::Query.where(hidden: false).map { |q| { id: q.id, translated_name: q.name } }
+      add_automation_scriptable(
+        DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM,
+      ) do
+        queries =
+          DataExplorer::Query.where(hidden: false).map { |q| { id: q.id, translated_name: q.name } }
         field :recipients, component: :email_group_user, required: true
         field :query_id, component: :choices, required: true, extra: { content: queries }
         field :query_params, component: :"key-value", accepts_placeholders: true
