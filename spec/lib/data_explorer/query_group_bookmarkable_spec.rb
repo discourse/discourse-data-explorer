@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe DataExplorerQueryGroupBookmarkable do
+describe DiscourseDataExplorer::QueryGroupBookmarkable do
   fab!(:admin_user) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:guardian) { Guardian.new(user) }
@@ -31,7 +31,7 @@ describe DataExplorerQueryGroupBookmarkable do
 
   before do
     SiteSetting.data_explorer_enabled = true
-    register_test_bookmarkable(DataExplorerQueryGroupBookmarkable)
+    register_test_bookmarkable(DiscourseDataExplorer::QueryGroupBookmarkable)
   end
 
   after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
@@ -80,7 +80,7 @@ describe DataExplorerQueryGroupBookmarkable do
     Fabricate(:bookmark, user: user, bookmarkable: query_group4, name: "something i gotta do also")
   end
 
-  subject { RegisteredBookmarkable.new(DataExplorerQueryGroupBookmarkable) }
+  subject { RegisteredBookmarkable.new(DiscourseDataExplorer::QueryGroupBookmarkable) }
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do

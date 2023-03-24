@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-module DataExplorer
+module ::DiscourseDataExplorer
   class Query < ActiveRecord::Base
     self.table_name = "data_explorer_queries"
+
     has_many :query_groups
     has_many :groups, through: :query_groups
     belongs_to :user
@@ -18,7 +19,7 @@ module DataExplorer
           }
 
     def params
-      @params ||= DataExplorer::Parameter.create_from_sql(sql)
+      @params ||= Parameter.create_from_sql(sql)
     end
 
     def cast_params(input_params)

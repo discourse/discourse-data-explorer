@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DataExplorer do
+describe DiscourseDataExplorer::DataExplorer do
   describe ".run_query" do
     fab!(:topic) { Fabricate(:topic) }
 
@@ -11,7 +11,7 @@ describe DataExplorer do
       ) SELECT * FROM query
       SQL
 
-      query = DataExplorer::Query.create!(name: "some query", sql: sql)
+      query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
 
       result = described_class.run_query(query)
 
@@ -26,7 +26,7 @@ describe DataExplorer do
       ) SELECT * FROM query
       SQL
 
-      query = DataExplorer::Query.create!(name: "some query", sql: sql)
+      query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
 
       result = described_class.run_query(query)
 
@@ -49,7 +49,7 @@ describe DataExplorer do
       ) SELECT * FROM query
       SQL
 
-      query = DataExplorer::Query.create!(name: "some query", sql: sql)
+      query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
 
       result = described_class.run_query(query, { "topic_id" => topic2.id.to_s })
 

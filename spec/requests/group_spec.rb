@@ -6,12 +6,12 @@ describe "Data explorer group serializer additions" do
   fab!(:group_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
-  let!(:query) { DataExplorer::Query.create!(name: "My query", sql: "") }
+  let!(:query) { DiscourseDataExplorer::Query.create!(name: "My query", sql: "") }
 
   before do
     SiteSetting.data_explorer_enabled = true
     group.add(group_user)
-    DataExplorer::QueryGroup.create!(group: group, query: query)
+    DiscourseDataExplorer::QueryGroup.create!(group: group, query: query)
   end
 
   it "query boolean is true for group user" do
