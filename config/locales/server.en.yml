@@ -1,3 +1,8 @@
 en:
   site_settings:
     data_explorer_enabled: "Enable the Data Explorer at /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Schedule a PM with Data Explorer results
+        description: Get scheduled reports sent to your messages each month
