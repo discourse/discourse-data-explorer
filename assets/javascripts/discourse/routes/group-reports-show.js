@@ -20,6 +20,8 @@ export default class GroupReportsShowRoute extends DiscourseRoute {
           model: Object.assign({ params: queryParams }, query),
           group,
           queryGroup,
+          results: null,
+          showResults: false,
         };
       })
       .catch(() => {
