@@ -58,7 +58,7 @@ describe "RecurringDataExplorerResultPm" do
       end
     end
 
-    skip "ensures only allowed users in recipients field receive reports via pm" do
+    it "ensures only allowed users in recipients field receive reports via pm" do
       expect do
         automation.update(last_updated_by_id: admin.id)
         automation.trigger!
@@ -68,7 +68,7 @@ describe "RecurringDataExplorerResultPm" do
       expect(created_topics.pluck(:archetype)).to eq(
         [Archetype.private_message, Archetype.private_message, Archetype.private_message],
       )
-      expect(created_topics.map { |t| t.allowed_users.pluck(:username) }).to match_array(
+      expect(created_topics.map { |t| t.allowed_users.pluck(:username).sort }).to match_array(
         [
           [user.username, Discourse.system_user.username],
           [another_user.username, Discourse.system_user.username],
