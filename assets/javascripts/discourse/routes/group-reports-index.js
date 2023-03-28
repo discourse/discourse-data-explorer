@@ -1,6 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import { action } from "@ember/object";
 
 export default class GroupReportsIndexRoute extends DiscourseRoute {
   model() {
@@ -26,11 +25,5 @@ export default class GroupReportsIndexRoute extends DiscourseRoute {
 
   setupController(controller, model) {
     controller.setProperties(model);
-  }
-
-  @action
-  refreshModel() {
-    this.refresh();
-    return false;
   }
 }
