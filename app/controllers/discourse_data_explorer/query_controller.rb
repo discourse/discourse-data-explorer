@@ -135,6 +135,8 @@ module ::DiscourseDataExplorer
     # explain - string. (Optional - pass explain=true in the request) Postgres query plan, UNIX newlines.
     # rows - array of array of strings. Results of the query. In the same order as 'columns'.
     def run
+      rate_limit_query_runs!
+
       check_xhr unless params[:download]
 
       query = Query.find(params[:id].to_i)
@@ -226,6 +228,22 @@ module ::DiscourseDataExplorer
     end
 
     private
+
+    def rate_limit_query_runs!
+      return if !is_api? && !is_user_api?
+
+      RateLimiter.new(
+        nil,
+        "api-query-run-10-sec",
+        GlobalSetting.max_data_explorer_api_reqs_per_10_seconds,
+        10.seconds,
+      ).performed!
+    rescue RateLimiter::LimitExceeded => e
+      if GlobalSetting.max_data_explorer_api_req_mode.include?("warn")
+        Discourse.warn("Query run 10 second rate limit exceeded", query_id: params[:id])
+      end
+      raise e if GlobalSetting.max_data_explorer_api_req_mode.include?("block")
+    end
 
     def set_group
       @group = Group.find_by(name: params["group_name"])
