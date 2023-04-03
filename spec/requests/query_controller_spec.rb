@@ -170,6 +170,97 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["errors"].first).to match(/ValidationError/)
       end
 
+      context "when rate limited" do
+        def unlimited_request(query_id, headers = {})
+          post "/admin/plugins/explorer/queries/#{query_id}/run.json",
+               params: {
+                 params: {}.to_json,
+               },
+               headers: headers
+
+          expect(response.status).to eq(200)
+        end
+
+        def limited_request(query_id, headers = {})
+          post "/admin/plugins/explorer/queries/#{query_id}/run.json",
+               params: {
+                 params: {}.to_json,
+               },
+               headers: headers
+
+          expect(response.status).to eq(429)
+          expect(response.parsed_body["extras"]).to eq(
+            { "wait_seconds" => 9, "time_left" => "9 seconds" },
+          )
+        end
+
+        it "limits query runs from API when using block mode" do
+          global_setting :max_data_explorer_api_reqs_per_10_seconds, 1
+          global_setting :max_data_explorer_api_req_mode, "block"
+
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          admin = Fabricate(:admin)
+          api_key = Fabricate(:api_key, user: admin)
+
+          query = make_query("SELECT 23 as my_value")
+
+          headers = { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: admin.username }
+
+          now = Time.now
+          freeze_time(now)
+
+          unlimited_request(query.id, headers)
+
+          freeze_time(now + 1.second)
+
+          limited_request(query.id, headers)
+
+          freeze_time(now + 10.seconds)
+
+          unlimited_request(query.id, headers)
+        end
+
+        it "does not limit query runs from API when using warn mode" do
+          global_setting :max_data_explorer_api_reqs_per_10_seconds, 1
+          global_setting :max_data_explorer_api_req_mode, "warn"
+
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          admin = Fabricate(:admin)
+          api_key = Fabricate(:api_key, user: admin)
+
+          query = make_query("SELECT 23 as my_value")
+
+          headers = { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: admin.username }
+
+          freeze_time
+
+          unlimited_request(query.id, headers)
+
+          Discourse.expects(:warn).once
+
+          unlimited_request(query.id, headers)
+        end
+
+        it "does not limit query runs from UI" do
+          global_setting :max_data_explorer_api_reqs_per_10_seconds, 1
+          global_setting :max_data_explorer_api_req_mode, "block"
+
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          query = make_query("SELECT 23 as my_value")
+
+          freeze_time
+
+          unlimited_request(query.id)
+          unlimited_request(query.id)
+        end
+      end
+
       it "doesn't allow you to modify the database #1" do
         p = create_post
 

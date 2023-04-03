@@ -38,6 +38,14 @@ after_initialize do
   require_relative "lib/discourse_data_explorer/queries"
   require_relative "lib/discourse_data_explorer/query_group_bookmarkable"
 
+  GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
+
+  # Available options:
+  #   - warn
+  #   - warn+block
+  #   - block
+  GlobalSetting.add_default(:max_data_explorer_api_req_mode, "warn")
+
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
     return true if current_user.admin?
