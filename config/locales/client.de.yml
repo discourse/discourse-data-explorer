@@ -78,5 +78,15 @@ de:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: An Benutzer, Gruppe oder E-Mail senden
+            query_id:
+              label: Daten-Explorer-Abfrage
+            query_params:
+              label: Daten-Explorer-Abfrageparameter

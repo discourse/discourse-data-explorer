@@ -78,5 +78,5 @@ it:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Esegui le query di Data Explorer. Limita la chiave API a un insieme di query specificando i loro ID."

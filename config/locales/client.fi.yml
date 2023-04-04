@@ -78,5 +78,5 @@ fi:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Suorita Dataselaimen kyselyitä. Rajoita API-avain tiettyihin kyselyihin määrittämällä kyselyiden tunnuksia."

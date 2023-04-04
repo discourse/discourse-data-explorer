@@ -78,5 +78,5 @@ nl:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Voer Gegevensverkenner-query's uit. Beperk de API-sleutel tot een reeks query's door query-ID's op te geven."

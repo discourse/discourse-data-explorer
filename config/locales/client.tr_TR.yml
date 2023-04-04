@@ -78,5 +78,5 @@ tr_TR:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Veri Gezgini sorgularını çalıştırın. Sorgu kimliklerini belirterek API anahtarını bir dizi sorguyla kısıtlayın."

@@ -78,5 +78,5 @@ sv:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Kör frågor för datautforskaren. Begränsa API-nyckeln till en viss uppsättning frågor genom att specificera fråge-ID:n."
