@@ -203,7 +203,7 @@ module ::DiscourseDataExplorer
         value = string.split(",").map { |s| s.downcase == "#null" ? nil : s }
         invalid_format string, "can't be empty" if value.length == 0
       when :user_list
-        value = string.split(",").map { |s| User.find_by_username_or_email(s) }
+        value = string.split(",").map { |s| User.find_by_username_or_email(s).id }
         invalid_format string, "can't be empty" if value.length == 0
       else
         raise TypeError.new("unknown parameter type??? should not get here")
