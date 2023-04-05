@@ -78,5 +78,5 @@ pt_BR:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Execute consultas do Explorador de Dados. Restrinja a chave de API a um conjunto de consultas ao especificar suas IDs."

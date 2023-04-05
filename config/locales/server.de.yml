@@ -7,3 +7,8 @@
 de:
   site_settings:
     data_explorer_enabled: "Aktiviere den Daten-Explorer unter /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Plane eine PM mit den Ergebnissen des Daten-Explorer
+        description: Lass dir jeden Monat Berichte an deine Nachrichten schicken

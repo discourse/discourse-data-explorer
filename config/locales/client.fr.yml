@@ -78,5 +78,5 @@ fr:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé API à un ensemble de requêtes en spécifiant des ID de requêtes."

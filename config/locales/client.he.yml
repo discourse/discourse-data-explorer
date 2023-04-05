@@ -82,5 +82,15 @@ he:
       api:
         scopes:
           descriptions:
-            data_explorer:
+            discourse_data_explorer:
               run_queries: "הרצת שאילתות של סייר נתונים. ניתן להגביל את מפתח ה־API לסדרה של שאילתות על ידי ציון מזהה שאילתה."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: שליחה למשתמש, לקבוצה או לדוא״ל
+            query_id:
+              label: שאילתת דפדפן נתונים
+            query_params:
+              label: משתני שאילתת דפדפן נתונים
