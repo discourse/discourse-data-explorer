@@ -69,13 +69,13 @@ export default class ParamInput extends Component {
       }
     } else {
       // if no parsed params then get and set default values
-      const params = this.args.params;
+      const defaultValue = this.args.info.default;
       this.value =
         this.args.info.type === "category_id"
-          ? this.dasherizeCategoryId(params[identifier])
-          : params[identifier];
-      this.boolValue = params[identifier] !== "false";
-      this.nullableBoolValue = params[identifier];
+          ? this.dasherizeCategoryId(defaultValue)
+          : defaultValue;
+      this.boolValue = defaultValue !== "false";
+      this.nullableBoolValue = defaultValue;
     }
   }
 
