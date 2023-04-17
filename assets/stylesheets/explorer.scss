@@ -46,9 +46,6 @@ table.group-reports {
         margin-left: -53px;
         z-index: 1;
       }
-      .schema {
-        display: none;
-      }
     }
   }
 
@@ -78,10 +75,16 @@ table.group-reports {
       overflow-x: hidden;
       color: var(--primary-high);
       font-size: var(--font-down-1);
+      position: relative;
 
       .schema-search {
-        margin: 0.5em;
+        padding: 0.5em;
+        position: sticky;
+        background-color: var(--secondary);
+        top: 0px;
+        z-index: 1;
       }
+
       .schema-table-name {
         font-weight: bold;
         border-bottom: 1px solid var(--primary-low);
