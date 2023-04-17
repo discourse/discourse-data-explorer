@@ -7,12 +7,14 @@
         @nameProperty="name"
         @content={{this.boolTypes}}
         @onChange={{this.updateNullableBoolValue}}
+        name={{@info.identifier}}
       />
     {{else}}
       <Input
         @type="checkbox"
         @checked={{this.boolvalue}}
         {{on "change" this.updateBoolValue}}
+        name={{@info.identifier}}
       />
     {{/if}}
     <span class="param-name">{{@info.identifier}}</span>
@@ -22,6 +24,7 @@
       @type="number"
       @value={{this.value}}
       {{on "change" this.updateValue}}
+      name={{@info.identifier}}
     />
     <span class="param-name">{{@info.identifier}}</span>
 
@@ -30,6 +33,7 @@
       @value={{this.value}}
       @type="text"
       @onChange={{this.updateValue}}
+      name={{@info.identifier}}
     />
     <span class="param-name">{{@info.identifier}}</span>
 
@@ -38,6 +42,7 @@
       @value={{this.value}}
       @options={{(hash maximum=1)}}
       @onChange={{this.updateValue}}
+      name={{@info.identifier}}
     />
     <span class="param-name">{{@info.identifier}}</span>
 
@@ -45,11 +50,16 @@
     <EmailGroupUserChooser
       @value={{this.value}}
       @onChange={{this.updateValue}}
+      name={{@info.identifier}}
     />
     <span class="param-name">{{@info.identifier}}</span>
 
   {{else}}
-    <TextField @value={{this.value}} @onChange={{this.updateValue}} />
+    <TextField
+      @value={{this.value}}
+      @onChange={{this.updateValue}}
+      name={{@info.identifier}}
+    />
     <span class="param-name">{{@info.identifier}}</span>
   {{/if}}
 </div>
