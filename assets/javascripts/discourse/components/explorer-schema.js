@@ -5,11 +5,11 @@ import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
 export default class ExplorerSchema extends Component {
-  filterInput = "";
-
   @tracked filter;
   @tracked loading;
   @tracked hideSchema = this.args.hideSchema;
+
+  filterInput = "";
 
   get transformedSchema() {
     const schema = this.args.schema;
