@@ -9,8 +9,6 @@ export default class ExplorerSchema extends Component {
   @tracked loading;
   @tracked hideSchema = this.args.hideSchema;
 
-  filterInput = "";
-
   get transformedSchema() {
     const schema = this.args.schema;
     for (const key in schema) {

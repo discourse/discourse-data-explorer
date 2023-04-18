@@ -7,11 +7,7 @@
 {{else}}
   <div class="schema">
     <div class="schema-search inline-form full-width">
-      <TextField
-        @value={{this.filterInput}}
-        @onChange={{this.filterChanged}}
-        @placeholderKey="explorer.schema.filter"
-      />
+      <Input {{on "input" (action "filterChanged" value="target.value")}} />
       <DButton
         @action={{this.collapseSchema}}
         @icon="chevron-right"
