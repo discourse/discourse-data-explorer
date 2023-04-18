@@ -4,15 +4,12 @@
     @icon="chevron-left"
     @class="no-text unhide"
   />
-{{/if}}
-
-<div class="schema">
-  <div class={{if this.hideSchema "hidden"}}>
+{{else}}
+  <div class="schema">
     <div class="schema-search inline-form full-width">
-      <TextField
-        @value={{this.filter}}
-        @onChange={{this.filterChanged}}
-        @placeholderKey="explorer.schema.filter"
+      <input
+        type="text"
+        {{on "input" (action "filterChanged" value="target.value")}}
       />
       <DButton
         @action={{this.collapseSchema}}
@@ -21,14 +18,14 @@
       />
     </div>
 
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
-      <div class="schema-container">
+    <div class="schema-container">
+      <ConditionalLoadingSpinner @condition={{this.loading}}>
         <ul>
           {{#each this.filteredTables as |table|}}
             <ExplorerSchema::OneTable @table={{table}} />
           {{/each}}
         </ul>
-      </div>
-    </ConditionalLoadingSpinner>
+      </ConditionalLoadingSpinner>
+    </div>
   </div>
-</div>
+{{/if}}
