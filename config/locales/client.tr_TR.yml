@@ -79,4 +79,14 @@ tr_TR:
         scopes:
           descriptions:
             discourse_data_explorer:
-              run_queries: "Veri Gezgini sorgularını çalıştırın. Sorgu kimliklerini belirterek API anahtarını bir dizi sorguyla kısıtlayın."
+              run_queries: "Veri Gezgini sorgularını çalıştırın. Sorgu kimliklerini belirterek API anahtarını bir sorgu kümesiyle sınırlandırın."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Kullanıcıya, Gruba veya E-postaya Gönder
+            query_id:
+              label: Veri Gezgini Sorgusu
+            query_params:
+              label: Veri Gezgini Sorgu parametreleri
