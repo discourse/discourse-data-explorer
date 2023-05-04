@@ -116,6 +116,19 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
             hidden: false,
             user_id: -1,
           },
+          {
+            id: 2,
+            sql: 'SELECT 0 zero, null "null", false "false"',
+            name: "What about 0?",
+            description: "",
+            param_info: [],
+            created_at: "2023-05-04T22:16:06.007Z",
+            username: "system",
+            group_ids: [],
+            last_run_at: "2023-05-04T22:16:23.858Z",
+            hidden: false,
+            user_id: 1,
+          },
         ],
       });
     });
@@ -155,6 +168,21 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         ],
       });
     });
+
+    server.post("/admin/plugins/explorer/queries/2/run", () => {
+      return helper.response({
+        success: true,
+        errors: [],
+        duration: 1.0,
+        result_count: 1,
+        params: {},
+        columns: ["zero", "null", "false"],
+        default_limit: 1000,
+        relations: {},
+        colrender: {},
+        rows: [[0, null, false]],
+      });
+    });
   });
 
   test("it runs query and renders data and a chart", async function (assert) {
@@ -189,5 +217,39 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     await click("div.result-info button:nth-child(3)");
 
     assert.ok(exists("canvas"), "the chart was rendered");
+  });
+
+  test("it runs query and renders 0, false, and NULL values correctly", async function (assert) {
+    await visit("admin/plugins/explorer?id=2");
+
+    assert.ok(
+      query("div.name h1").innerText.trim() === "What about 0?",
+      "the query name was rendered"
+    );
+
+    assert.ok(
+      query("form.query-run button span").innerText.trim() ===
+        I18n.t("explorer.run"),
+      "the run button was rendered"
+    );
+
+    await click("form.query-run button");
+
+    assert.ok(
+      query("div.query-results tbody td:nth-child(1)").innerText.trim() === "0",
+      "renders '0' values"
+    );
+
+    assert.ok(
+      query("div.query-results tbody td:nth-child(2)").innerText.trim() ===
+        "NULL",
+      "renders 'NULL' values"
+    );
+
+    assert.ok(
+      query("div.query-results tbody td:nth-child(3)").innerText.trim() ===
+        "false",
+      "renders 'false' values"
+    );
   });
 });
