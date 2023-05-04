@@ -26,7 +26,7 @@ export default class QueryRowContent extends Component {
       } else if (t.name === "text") {
         return {
           component: TextViewComponent,
-          textValue: escapeExpression(this.args.row[idx]),
+          textValue: escapeExpression(this.args.row[idx].toString()),
         };
       }
 
