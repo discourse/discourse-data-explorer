@@ -241,6 +241,9 @@ table.group-reports {
 
 .query-params {
   border: 1px solid var(--header_primary-medium);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   .param > input,
   .param > .select-kit {
     margin: 9px;
@@ -252,9 +255,9 @@ table.group-reports {
     background-color: var(--danger-low);
   }
   .param {
-    width: 300px;
-    display: inline-block;
-    overflow-x: visible;
+    display: flex;
+    align-items: center;
+    flex: 0;
     .ac-wrap {
       display: inline-block;
       input {
@@ -263,12 +266,12 @@ table.group-reports {
     }
     input,
     .select-kit {
-      width: 190px;
+      width: auto;
+      max-width: 250px;
     }
   }
   .param-name {
-    display: inline-block;
-    width: 70px;
+    margin-right: 1em;
   }
 }
 
