@@ -194,12 +194,13 @@ describe DiscourseDataExplorer::QueryController do
           )
         end
 
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
         it "limits query runs from API when using block mode" do
           global_setting :max_data_explorer_api_reqs_per_10_seconds, 1
           global_setting :max_data_explorer_api_req_mode, "block"
-
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           admin = Fabricate(:admin)
           api_key = Fabricate(:api_key, user: admin)
@@ -226,9 +227,6 @@ describe DiscourseDataExplorer::QueryController do
           global_setting :max_data_explorer_api_reqs_per_10_seconds, 1
           global_setting :max_data_explorer_api_req_mode, "warn"
 
-          RateLimiter.enable
-          RateLimiter.clear_all!
-
           admin = Fabricate(:admin)
           api_key = Fabricate(:api_key, user: admin)
 
@@ -248,9 +246,6 @@ describe DiscourseDataExplorer::QueryController do
         it "does not limit query runs from UI" do
           global_setting :max_data_explorer_api_reqs_per_10_seconds, 1
           global_setting :max_data_explorer_api_req_mode, "block"
-
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           query = make_query("SELECT 23 as my_value")
 
