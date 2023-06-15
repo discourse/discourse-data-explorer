@@ -432,7 +432,7 @@ table.group-reports {
   .popup {
     background-color: var(--secondary);
     position: absolute;
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     padding: 12px;
     z-index: 1;
   }
