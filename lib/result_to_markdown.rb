@@ -30,7 +30,7 @@ module ::DiscourseDataExplorer
             if column.nil?
               row_data[col_index] = col
             else
-              row_data[col_index] = related_row[column]
+              row_data[col_index] = "#{related_row[column]} (#{col})"
             end
           else
             row_data[col_index] = col
@@ -41,7 +41,7 @@ module ::DiscourseDataExplorer
       end
 
       table_headers = pg_result.fields.map { |c| " #{c.gsub("_id", "")} |" }.join
-      table_body = pg_result.fields.size.times.map { " :-----: |" }.join
+      table_body = pg_result.fields.size.times.map { " :----- |" }.join
 
       "|#{table_headers}\n|#{table_body}\n#{result_data.join}"
     end
