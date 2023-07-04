@@ -4,7 +4,7 @@ describe DiscourseDataExplorer::ResultToMarkdown do
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }
   fab!(:query) { DiscourseDataExplorer::Query.find(-1) }
-  
+
   let(:query_params) { [{ from_days_ago: 0 }, { duration_days: 15 }] }
   let(:query_result) { DiscourseDataExplorer::DataExplorer.run_query(query, query_params) }
 
@@ -26,7 +26,9 @@ describe DiscourseDataExplorer::ResultToMarkdown do
       PostActionCreator.new(user, post, PostActionType.types[:like]).perform
       result = described_class.convert(query_result[:pg_result])
 
-      expect(result).to include("| #{user.username} (#{user.id}) | #{post.user.username} (#{post.user.id}) | 1 |\n")
+      expect(result).to include(
+        "| #{user.username} (#{user.id}) | #{post.user.username} (#{post.user.id}) | 1 |\n",
+      )
     end
   end
 end
