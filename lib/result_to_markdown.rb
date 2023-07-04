@@ -17,7 +17,7 @@ module ::DiscourseDataExplorer
 
         row.each_with_index do |col, col_index|
           col_name = pg_result.fields[col_index]
-          related = relations.dig(colrender[col_index].to_sym) if col_index < colrender.size
+          related = relations.dig(colrender[col_index].to_sym) unless colrender[col_index].nil?
 
           if related.is_a?(ActiveModel::ArraySerializer)
             related_row = related.object.find_by(id: col)
@@ -30,7 +30,7 @@ module ::DiscourseDataExplorer
             if column.nil?
               row_data[col_index] = col
             else
-              row_data[col_index] = related_row[column]
+              row_data[col_index] = "#{related_row[column]} (#{col})"
             end
           else
             row_data[col_index] = col
@@ -41,7 +41,7 @@ module ::DiscourseDataExplorer
       end
 
       table_headers = pg_result.fields.map { |c| " #{c.gsub("_id", "")} |" }.join
-      table_body = pg_result.fields.size.times.map { " :-----: |" }.join
+      table_body = pg_result.fields.size.times.map { " :----- |" }.join
 
       "|#{table_headers}\n|#{table_body}\n#{result_data.join}"
     end
