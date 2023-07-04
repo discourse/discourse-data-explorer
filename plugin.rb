@@ -100,7 +100,7 @@ after_initialize do
         script do |_, fields, automation|
           recipients = Array(fields.dig("recipients", "value"))
           query_id = fields.dig("query_id", "value")
-          query_params = fields.dig("query_params", "value")
+          query_params = fields.dig("query_params", "value") || {}
 
           unless SiteSetting.data_explorer_enabled
             Rails.logger.warn "#{DiscourseDataExplorer.plugin_name} - plugin must be enabled to run automation #{automation.id}"

@@ -17,7 +17,7 @@ module ::DiscourseDataExplorer
 
         row.each_with_index do |col, col_index|
           col_name = pg_result.fields[col_index]
-          related = relations.dig(colrender[col_index].to_sym) if col_index < colrender.size
+          related = relations.dig(colrender[col_index].to_sym) unless colrender[col_index].nil?
 
           if related.is_a?(ActiveModel::ArraySerializer)
             related_row = related.object.find_by(id: col)
