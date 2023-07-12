@@ -311,6 +311,7 @@ table.group-reports {
       top: 0;
       color: var(--primary);
       background: var(--primary-low);
+      z-index: z("base");
     }
   }
 }
