@@ -1,11 +1,12 @@
 import Controller from "@ember/controller";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
@@ -13,6 +14,7 @@ import { inject as service } from "@ember/service";
 
 export default class GroupReportsShowController extends Controller {
   @service currentUser;
+  @service modal;
 
   @tracked showResults = false;
   @tracked loading = false;
@@ -79,15 +81,17 @@ export default class GroupReportsShowController extends Controller {
 
   @action
   toggleBookmark() {
-    return openBookmarkModal(
+    const modalBookmark =
       this.queryGroupBookmark ||
-        this.store.createRecord("bookmark", {
-          bookmarkable_type: "DiscourseDataExplorer::QueryGroup",
-          bookmarkable_id: this.queryGroup.id,
-          user_id: this.currentUser.id,
-        }),
-      {
-        onAfterSave: (savedData) => {
+      this.store.createRecord("bookmark", {
+        bookmarkable_type: "DiscourseDataExplorer::QueryGroup",
+        bookmarkable_id: this.queryGroup.id,
+        user_id: this.currentUser.id,
+      });
+    return this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(modalBookmark),
+        afterSave: (savedData) => {
           const bookmark = this.store.createRecord("bookmark", savedData);
           this.queryGroupBookmark = bookmark;
           this.appEvents.trigger(
@@ -96,11 +100,11 @@ export default class GroupReportsShowController extends Controller {
             bookmark.attachedTo()
           );
         },
-        onAfterDelete: () => {
+        afterDelete: () => {
           this.queryGroupBookmark = null;
         },
-      }
-    );
+      },
+    });
   }
 
   // This is necessary with glimmer's one way data stream to get the child's
