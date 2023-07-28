@@ -66,7 +66,7 @@ module ::DiscourseDataExplorer
         pm["target_usernames"] = Array(username)
         pm["raw"] = "Hi #{username}, your data explorer report is ready.\n\n" +
           "Query Name:\n#{query.name}\n\nHere are the results:\n#{table}\n\n" +
-          "<a href='/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
+          "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
           "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})"
         pms << pm
       end
