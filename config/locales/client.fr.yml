@@ -80,3 +80,13 @@ fr:
           descriptions:
             discourse_data_explorer:
               run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé API à un ensemble de requêtes en spécifiant des ID de requêtes."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Envoyer à l'utilisateur, au groupe ou à l'adresse e-mail
+            query_id:
+              label: Requête de l'explorateur de données
+            query_params:
+              label: Paramètres de requête de l'explorateur de données

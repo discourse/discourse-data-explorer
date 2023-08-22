@@ -7,3 +7,8 @@
 it:
   site_settings:
     data_explorer_enabled: "Abilitare il plugin Data Explorer su /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Pianifica un MP con i risultati di Data Explorer
+        description: Ricevi report pianificati inviati ai tuoi messaggi ogni mese

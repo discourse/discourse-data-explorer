@@ -7,3 +7,8 @@
 ar:
   site_settings:
     data_explorer_enabled: "تفعيل مستكشف البيانات في /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: جدولة رسالة خاصة بنتائج مستكشف البيانات
+        description: الحصول على تقارير مجدولة يتم إرسالها إلى رسائلك كل شهر

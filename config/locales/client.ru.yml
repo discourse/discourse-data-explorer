@@ -84,3 +84,13 @@ ru:
           descriptions:
             discourse_data_explorer:
               run_queries: "Выполнение запросов проводника данных. Ограничьте ключ API набором запросов, указав идентификаторы запросов."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Отправить пользователю, в группу или на адрес электронной почты
+            query_id:
+              label: Запрос проводника данных
+            query_params:
+              label: Параметры запроса проводника данных

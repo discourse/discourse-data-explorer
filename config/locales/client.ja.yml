@@ -83,8 +83,8 @@ ja:
         recurring_data_explorer_result_pm:
           fields:
             recipients:
-              label: ユーザー、グループ、または電子メールに送る
+              label: ユーザー、グループ、またはメールに送る
             query_id:
-              label: データエクスプローラ クエリ
+              label: データエクスプローラーのクエリ
             query_params:
-              label: データ エクスプローラーのクエリ パラメーター
+              label: データエクスプローラーのクエリパラメーター

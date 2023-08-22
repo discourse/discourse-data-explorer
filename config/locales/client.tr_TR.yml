@@ -85,7 +85,7 @@ tr_TR:
         recurring_data_explorer_result_pm:
           fields:
             recipients:
-              label: Kullanıcıya, Gruba veya E-postaya Gönder
+              label: Kullanıcıya, Gruba veya E-postaya gönder
             query_id:
               label: Veri Gezgini Sorgusu
             query_params:
