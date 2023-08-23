@@ -7,3 +7,8 @@
 es:
   site_settings:
     data_explorer_enabled: "Habilita el explorador de datos en /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Programar un MP con los resultados del explorador de datos
+        description: Recibir informes programados enviados a tus mensajes cada mes

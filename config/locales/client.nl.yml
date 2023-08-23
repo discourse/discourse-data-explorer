@@ -80,3 +80,13 @@ nl:
           descriptions:
             discourse_data_explorer:
               run_queries: "Voer Gegevensverkenner-query's uit. Beperk de API-sleutel tot een reeks query's door query-ID's op te geven."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Verzenden naar gebruiker, groep of e-mailadres
+            query_id:
+              label: Gegevensverkenner-query
+            query_params:
+              label: Gegevensverkenner-queryparameters

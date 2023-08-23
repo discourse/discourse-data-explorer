@@ -80,3 +80,13 @@ es:
           descriptions:
             discourse_data_explorer:
               run_queries: "Ejecuta consultas del Explorador de Datos. Restringe la clave API a un conjunto de consultas especificando los ID de las mismas."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Enviar a usuario, grupo o correo electrónico
+            query_id:
+              label: Consulta del explorador de datos
+            query_params:
+              label: Parámetros de consulta del explorador de datos

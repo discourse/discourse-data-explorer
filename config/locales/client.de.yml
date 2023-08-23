@@ -87,6 +87,6 @@ de:
             recipients:
               label: An Benutzer, Gruppe oder E-Mail senden
             query_id:
-              label: Daten-Explorer-Abfrage
+              label: Daten-Explorer-Anfrage
             query_params:
-              label: Daten-Explorer-Abfrageparameter
+              label: Daten-Explorer-Anfrageparameter

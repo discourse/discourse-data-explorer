@@ -88,3 +88,13 @@ ar:
           descriptions:
             discourse_data_explorer:
               run_queries: "تشغيل استعلامات مستكشف البيانات. يمكنك تقييد مفتاح واجهة برمجة التطبيقات (API) إلى مجموعة من الاستعلامات عن طريق تحديد معرِّفات الاستعلامات."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: الإرسال إلى مستخدم أو مجموعة أو بريد إلكتروني
+            query_id:
+              label: استعلام مستكشف البيانات
+            query_params:
+              label: معلمات استعلام مستكشف البيانات

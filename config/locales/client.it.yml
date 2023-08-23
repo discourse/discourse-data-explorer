@@ -80,3 +80,13 @@ it:
           descriptions:
             discourse_data_explorer:
               run_queries: "Esegui le query di Data Explorer. Limita la chiave API a un insieme di query specificando i loro ID."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Invia a utente, gruppo o e-mail
+            query_id:
+              label: Query di Data Explorer
+            query_params:
+              label: Parametri della query di Data Explorer
