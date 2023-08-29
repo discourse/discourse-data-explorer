@@ -80,3 +80,13 @@ fi:
           descriptions:
             discourse_data_explorer:
               run_queries: "Suorita Dataselaimen kyselyitä. Rajoita API-avain tiettyihin kyselyihin määrittämällä kyselyiden tunnuksia."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Lähetä käyttäjälle, ryhmälle tai sähköpostiosoitteeseen
+            query_id:
+              label: Dataselaimen kysely
+            query_params:
+              label: Dataselaimen kyselyparametrit
