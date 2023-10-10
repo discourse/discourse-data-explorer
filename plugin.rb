@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # name: discourse-data-explorer
-# about: Interface for running analysis SQL queries on the live database
+# about: Allows you to make SQL queries against your live database, allowing for up-to-the-minute stats reporting.
+# meta_topic_id: 32566
 # version: 0.3
 # authors: Riking
 # url: https://github.com/discourse/discourse-data-explorer
