@@ -57,5 +57,36 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result].to_a.size).to eq(1)
       expect(result[:pg_result][0]["id"]).to eq(topic2.id)
     end
+
+    describe ".add_extra_data" do
+      it "treats any column with payload in the name as 'json'" do
+        Fabricate(:reviewable_queued_post)
+        sql = <<~SQL
+          SELECT id, payload FROM reviewables LIMIT 10
+        SQL
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
+        result = described_class.run_query(query)
+        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        expect(colrender).to eq({ 1 => "json" })
+      end
+
+      it "treats columns with the actual json data type as 'json'" do
+        ApiKeyScope.create(
+          resource: "topics",
+          action: "update",
+          api_key_id: Fabricate(:api_key).id,
+          allowed_parameters: {
+            "category_id" => ["#{topic.category_id}"],
+          },
+        )
+        sql = <<~SQL
+          SELECT id, allowed_parameters FROM api_key_scopes LIMIT 10
+        SQL
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
+        result = described_class.run_query(query)
+        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        expect(colrender).to eq({ 1 => "json" })
+      end
+    end
   end
 end

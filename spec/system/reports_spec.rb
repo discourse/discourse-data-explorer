@@ -42,4 +42,18 @@ RSpec.describe "Reports", type: :system, js: true do
     find(".query-run .btn-primary").click
     expect(page).to have_css(".query-results .result-header")
   end
+
+  it "allows user to run a report with a JSON column and open a fullscreen code viewer" do
+    Fabricate(:reviewable_queued_post)
+    sql = <<~SQL
+      SELECT id, payload FROM reviewables LIMIT 10
+    SQL
+    json_query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
+    sign_in(user)
+    visit("/g/group/reports/#{json_query.id}")
+    find(".query-run .btn-primary").click
+    expect(page).to have_css(".query-results .result-json")
+    first(".query-results .result-json .btn.result-json-button").click
+    expect(page).to have_css(".fullscreen-code-modal")
+  end
 end
