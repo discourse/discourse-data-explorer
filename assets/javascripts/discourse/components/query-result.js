@@ -17,6 +17,7 @@ import UrlViewComponent from "./result-types/url";
 import UserViewComponent from "./result-types/user";
 import GroupViewComponent from "./result-types/group";
 import HtmlViewComponent from "./result-types/html";
+import JsonViewComponent from "./result-types/json";
 import CategoryViewComponent from "./result-types/category";
 
 const VIEW_COMPONENTS = {
@@ -29,6 +30,7 @@ const VIEW_COMPONENTS = {
   user: UserViewComponent,
   group: GroupViewComponent,
   html: HtmlViewComponent,
+  json: JsonViewComponent,
   category: CategoryViewComponent,
 };
 

@@ -416,6 +416,18 @@ table.group-reports {
   display: block;
   color: inherit !important;
 }
+.result-json {
+  display: flex;
+}
+
+.result-json-value {
+  flex: 1;
+  margin-right: 0.5em;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
 .explorer-pad-bottom {
   margin-bottom: 200px;

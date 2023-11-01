@@ -5,6 +5,10 @@ module ::DiscourseDataExplorer
   end
 
   module DataExplorer
+    # Used for ftype calls, see https://www.rubydoc.info/gems/pg/0.17.1/PG%2FResult:ftype
+    # and /usr/include/postgresql/server/catalog/pg_type_d.h
+    PG_TYPE_OID_JSON = 114
+
     # Run a data explorer query on the currently connected database.
     #
     # @param [Query] query the Query object to run
@@ -131,6 +135,9 @@ module ::DiscourseDataExplorer
         html: {
           ignore: true,
         },
+        json: {
+          ignore: true,
+        },
       }
     end
 
@@ -145,7 +152,6 @@ module ::DiscourseDataExplorer
       needed_classes = {}
       ret = {}
       col_map = {}
-
       pg_result.fields.each_with_index do |col, idx|
         rgx = column_regexes.find { |r| r.match col }
         if rgx
@@ -158,6 +164,8 @@ module ::DiscourseDataExplorer
           needed_classes[cls] << idx
         elsif col =~ /^\w+_url$/
           col_map[idx] = "url"
+        elsif col =~ /^\w+_payload$/ || col == "payload" || pg_result.ftype(idx) == PG_TYPE_OID_JSON
+          col_map[idx] = "json"
         end
       end
 
