@@ -40,6 +40,7 @@ he:
           no: "לא"
           null_: "ריק"
       export: "ייצוא"
+      view_json: "הצגת JSON"
       save: "שמירת שינויים"
       saverun: "שמירת השינויים והרצה"
       run: "הרצה"
