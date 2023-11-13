@@ -357,9 +357,9 @@ module ::DiscourseDataExplorer
           uploads.extension,
           uploads.created_at,
           uploads.url
-      FROM post_uploads
-      JOIN uploads ON uploads.id = post_uploads.upload_id
-      JOIN posts ON posts.id = post_uploads.post_id
+      FROM upload_references
+      JOIN uploads ON uploads.id = upload_references.upload_id
+      JOIN posts ON posts.id = upload_references.target_id AND upload_references.target_type = 'Post'
       ORDER BY uploads.filesize DESC
       LIMIT 50
       SQL
