@@ -169,7 +169,7 @@ discourseModule(
       test(assert) {
         assert.ok(
           exists(
-            "table tbody tr:nth-child(1) td:nth-child(1) span.category-name"
+            "table tbody tr:nth-child(1) td:nth-child(1) .badge-category__name"
           )
         );
       },
