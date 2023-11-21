@@ -53,7 +53,7 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
   });
 
   test("creates a new query", async function (assert) {
-    await visit("admin/plugins/explorer");
+    await visit("/admin/plugins/explorer");
 
     // select new query button
     await click(".query-list button");

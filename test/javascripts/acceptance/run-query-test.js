@@ -186,7 +186,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("it runs query and renders data and a chart", async function (assert) {
-    await visit("admin/plugins/explorer?id=-6");
+    await visit("/admin/plugins/explorer?id=-6");
 
     assert.ok(
       query("div.name h1").innerText.trim() === "Top 100 Likers",
@@ -220,7 +220,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("it runs query and renders 0, false, and NULL values correctly", async function (assert) {
-    await visit("admin/plugins/explorer?id=2");
+    await visit("/admin/plugins/explorer?id=2");
 
     assert.ok(
       query("div.name h1").innerText.trim() === "What about 0?",

@@ -299,7 +299,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("it puts params for the query into the url", async function (assert) {
-    await visit("admin/plugins/explorer?id=-6");
+    await visit("/admin/plugins/explorer?id=-6");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
