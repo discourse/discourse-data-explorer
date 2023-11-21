@@ -143,7 +143,7 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
   });
 
   test("it renders the page with the list of queries", async function (assert) {
-    await visit("admin/plugins/explorer");
+    await visit("/admin/plugins/explorer");
 
     assert.ok(
       query("div.query-list input.ember-text-field").placeholder ===
