@@ -310,7 +310,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("it loads the page if one of the parameter is null", async function (assert) {
-    await visit('admin/plugins/explorer?id=-7&params={"user":null}');
+    await visit('/admin/plugins/explorer?id=-7&params={"user":null}');
     assert.ok(exists(".query-params .user-chooser"));
     assert.ok(exists(".query-run .btn.btn-primary"));
   });
