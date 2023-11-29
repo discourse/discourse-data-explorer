@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { debounce } from "discourse-common/utils/decorators";
-import { isBlank, isEmpty } from "@ember/utils";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { isBlank, isEmpty } from "@ember/utils";
+import { debounce } from "discourse-common/utils/decorators";
 
 export default class ExplorerSchema extends Component {
   @tracked filter;

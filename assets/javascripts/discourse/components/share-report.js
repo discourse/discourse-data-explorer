@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
 
 export default class ShareReport extends Component {
   @tracked visible = false;

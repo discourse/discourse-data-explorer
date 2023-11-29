@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class OneTable extends Component {
   @tracked open = this.args.table.open;

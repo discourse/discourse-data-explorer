@@ -3,6 +3,10 @@
 require "rails_helper"
 
 describe DiscourseDataExplorer::QueryGroupBookmarkable do
+  subject(:registered_bookmarkable) do
+    RegisteredBookmarkable.new(DiscourseDataExplorer::QueryGroupBookmarkable)
+  end
+
   fab!(:admin_user) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:guardian) { Guardian.new(user) }
@@ -80,24 +84,24 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
     Fabricate(:bookmark, user: user, bookmarkable: query_group4, name: "something i gotta do also")
   end
 
-  subject { RegisteredBookmarkable.new(DiscourseDataExplorer::QueryGroupBookmarkable) }
-
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do
-      expect(subject.perform_list_query(user, guardian).map(&:id)).to match_array(
+      expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(
         [bookmark1.id, bookmark2.id, bookmark3.id],
       )
     end
 
     it "does not return bookmarks made from groups that the user is no longer a member of" do
-      expect(subject.perform_list_query(user, guardian).map(&:id)).not_to include(bookmark4.id)
+      expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).not_to include(
+        bookmark4.id,
+      )
 
       # remove user from the other groups from which they bookmarked a query
       group_user1.delete
       group_user2.delete
 
       # bookmarks is now empty, because user is not a member of any Groups with permission to see the query
-      expect(subject.perform_list_query(user, guardian)).to be_empty
+      expect(registered_bookmarkable.perform_list_query(user, guardian)).to be_empty
     end
   end
 
@@ -107,8 +111,8 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
     it "returns bookmarks that match by name" do
       ts_query = Search.ts_query(term: "gotta", ts_config: "simple")
       expect(
-        subject.perform_search_query(
-          subject.perform_list_query(user, guardian),
+        registered_bookmarkable.perform_search_query(
+          registered_bookmarkable.perform_list_query(user, guardian),
           "%gotta%",
           ts_query,
         ).map(&:id),
@@ -118,8 +122,8 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
     it "returns bookmarks that match by Query name" do
       ts_query = Search.ts_query(term: "First", ts_config: "simple")
       expect(
-        subject.perform_search_query(
-          subject.perform_list_query(user, guardian),
+        registered_bookmarkable.perform_search_query(
+          registered_bookmarkable.perform_list_query(user, guardian),
           "%First%",
           ts_query,
         ).map(&:id),
@@ -129,21 +133,21 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
 
   describe "#can_send_reminder?" do
     it "cannot send the reminder if the group is revoked access to the query" do
-      expect(subject.can_send_reminder?(bookmark1)).to eq(true)
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
       bookmark1.bookmarkable.delete
       bookmark1.reload
-      expect(subject.can_send_reminder?(bookmark1)).to eq(false)
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
     end
   end
 
   describe "#reminder_handler" do
     it "creates a notification for the user with the correct details" do
-      expect { subject.send_reminder_notification(bookmark1) }.to change { Notification.count }.by(
-        1,
-      )
-      notif = user.notifications.last
-      expect(notif.notification_type).to eq(Notification.types[:bookmark_reminder])
-      expect(notif.data).to eq(
+      expect { registered_bookmarkable.send_reminder_notification(bookmark1) }.to change {
+        Notification.count
+      }.by(1)
+      notification = user.notifications.last
+      expect(notification.notification_type).to eq(Notification.types[:bookmark_reminder])
+      expect(notification.data).to eq(
         {
           title: bookmark1.bookmarkable.query.name,
           bookmarkable_url:
@@ -158,26 +162,26 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
 
   describe "#can_see?" do
     it "returns false if the user is not a member of the group from which they created the bookmark" do
-      expect(subject.can_see?(guardian, bookmark1)).to eq(true) #Query 1, Group 0
-      expect(subject.can_see?(guardian, bookmark2)).to eq(true) #Query 1, Group 1
-      expect(subject.can_see?(guardian, bookmark3)).to eq(true) #Query 2, Group 1
-      expect(subject.can_see?(guardian, bookmark4)).to eq(false) #Query 1, Group 2
+      expect(registered_bookmarkable.can_see?(guardian, bookmark1)).to eq(true) # Query 1, Group 0
+      expect(registered_bookmarkable.can_see?(guardian, bookmark2)).to eq(true) # Query 1, Group 1
+      expect(registered_bookmarkable.can_see?(guardian, bookmark3)).to eq(true) # Query 2, Group 1
+      expect(registered_bookmarkable.can_see?(guardian, bookmark4)).to eq(false) # Query 1, Group 2
 
       # remove from Groups 0 and 1
       group_user1.delete # Group 0
       group_user2.delete # Group 1
       guardian.user.reload
 
-      expect(subject.can_see?(guardian, bookmark1)).to eq(false)
-      expect(subject.can_see?(guardian, bookmark2)).to eq(false)
-      expect(subject.can_see?(guardian, bookmark3)).to eq(false)
-      expect(subject.can_see?(guardian, bookmark4)).to eq(false)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark1)).to eq(false)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark2)).to eq(false)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark3)).to eq(false)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark4)).to eq(false)
 
       # And adding the user back to the group, just to be sure.
       Fabricate(:group_user, user: user, group: group2)
       guardian.user.reload
 
-      expect(subject.can_see?(guardian, bookmark4)).to eq(true)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark4)).to eq(true)
     end
   end
 end

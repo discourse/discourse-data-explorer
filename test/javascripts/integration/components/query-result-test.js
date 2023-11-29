@@ -1,3 +1,5 @@
+import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -6,8 +8,6 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import I18n from "I18n";
 
 discourseModule(

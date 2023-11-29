@@ -1,16 +1,16 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import BookmarkModal from "discourse/components/modal/bookmark";
-import { BookmarkFormData } from "discourse/lib/bookmark";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { BookmarkFormData } from "discourse/lib/bookmark";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
-import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 
 export default class GroupReportsShowController extends Controller {
   @service currentUser;
