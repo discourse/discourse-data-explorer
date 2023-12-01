@@ -74,7 +74,7 @@
             <div class="desc">
               <DTextarea
                 @value={{this.selectedItem.description}}
-                @placeholder={{(i18n "explorer.description_placeholder")}}
+                @placeholder={{i18n "explorer.description_placeholder"}}
                 @input={{this.setDirty}}
               />
             </div>
@@ -296,7 +296,7 @@
                   @field="name"
                   @labelKey="explorer.query_user"
                   @order={{this.order}}
-                  @asc={{(not this.sortDescending)}}
+                  @asc={{not this.sortDescending}}
                   @automatic="true"
                 />
               </div>
@@ -311,7 +311,7 @@
                   @field="username"
                   @labelKey="explorer.query_user"
                   @order={{this.order}}
-                  @asc={{(not this.sortDescending)}}
+                  @asc={{not this.sortDescending}}
                   @automatic="true"
                 />
               </div>
@@ -331,7 +331,7 @@
                   @field="last_run_at"
                   @labelKey="explorer.query_time"
                   @order={{this.order}}
-                  @asc={{(not this.sortDescending)}}
+                  @asc={{not this.sortDescending}}
                   @automatic="true"
                 />
               </div>

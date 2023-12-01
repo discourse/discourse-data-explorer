@@ -40,7 +40,7 @@
   {{else if (eq this.type "user_id")}}
     <EmailGroupUserChooser
       @value={{this.value}}
-      @options={{(hash maximum=1)}}
+      @options={{hash maximum=1}}
       @onChange={{this.updateValue}}
       name={{@info.identifier}}
     />

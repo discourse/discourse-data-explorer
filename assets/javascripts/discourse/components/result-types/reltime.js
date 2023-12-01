@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { htmlSafe } from "@ember/template";
+import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
 export default class Reltime extends Component {
   get boundDateReplacement() {

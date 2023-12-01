@@ -1,13 +1,13 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import I18n from "I18n";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 
 acceptance("Data Explorer Plugin | List Queries", function (needs) {
   needs.user();

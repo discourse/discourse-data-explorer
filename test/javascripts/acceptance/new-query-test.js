@@ -1,7 +1,7 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { test } from "qunit";
+import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Data Explorer Plugin | New Query", function (needs) {
   needs.user();

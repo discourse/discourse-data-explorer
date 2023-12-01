@@ -1,24 +1,24 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import getURL from "discourse-common/lib/get-url";
-import Badge from "discourse/models/badge";
-import { capitalize } from "@ember/string";
-import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import TopicViewComponent from "./result-types/topic";
-import TextViewComponent from "./result-types/text";
-import PostViewComponent from "./result-types/post";
-import ReltimeViewComponent from "./result-types/reltime";
+import { capitalize } from "@ember/string";
+import { ajax } from "discourse/lib/ajax";
+import Badge from "discourse/models/badge";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 import BadgeViewComponent from "./result-types/badge";
-import UrlViewComponent from "./result-types/url";
-import UserViewComponent from "./result-types/user";
+import CategoryViewComponent from "./result-types/category";
 import GroupViewComponent from "./result-types/group";
 import HtmlViewComponent from "./result-types/html";
 import JsonViewComponent from "./result-types/json";
-import CategoryViewComponent from "./result-types/category";
+import PostViewComponent from "./result-types/post";
+import ReltimeViewComponent from "./result-types/reltime";
+import TextViewComponent from "./result-types/text";
+import TopicViewComponent from "./result-types/topic";
+import UrlViewComponent from "./result-types/url";
+import UserViewComponent from "./result-types/user";
 
 const VIEW_COMPONENTS = {
   topic: TopicViewComponent,

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import loadScript from "discourse/lib/load-script";
-import themeColor from "../lib/themeColor";
-import { bind } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import loadScript from "discourse/lib/load-script";
+import { bind } from "discourse-common/utils/decorators";
+import themeColor from "../lib/themeColor";
 
 export default class DataExplorerBarChart extends Component {
   chart;
@@ -86,6 +86,7 @@ export default class DataExplorerBarChart extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.chart.destroy();
   }
 }

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
 import { cached } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 
 export default class Json extends Component {
   @service dialog;

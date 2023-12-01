@@ -64,7 +64,7 @@ describe Jobs::DeleteHiddenQueries do
       updated_at: 5.days.ago,
     )
 
-    subject.execute(nil)
+    described_class.new.execute(nil)
     expect(DiscourseDataExplorer::Query.all.length).to eq(4)
   end
 end
