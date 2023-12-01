@@ -1,7 +1,10 @@
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 
 export default class GroupReportsIndexRoute extends DiscourseRoute {
+  @service router;
+
   model() {
     const group = this.modelFor("group");
     return ajax(`/g/${group.name}/reports`)
@@ -11,7 +14,7 @@ export default class GroupReportsIndexRoute extends DiscourseRoute {
           group,
         };
       })
-      .catch(() => this.transitionTo("group.members", group));
+      .catch(() => this.router.transitionTo("group.members", group));
   }
 
   afterModel(model) {
@@ -19,7 +22,7 @@ export default class GroupReportsIndexRoute extends DiscourseRoute {
       !model.group.get("is_group_user") &&
       !(this.currentUser && this.currentUser.admin)
     ) {
-      this.transitionTo("group.members", model.group);
+      this.router.transitionTo("group.members", model.group);
     }
   }
 

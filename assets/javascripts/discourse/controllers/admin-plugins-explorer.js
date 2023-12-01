@@ -15,6 +15,7 @@ const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 export default class PluginsExplorerController extends Controller {
   @service dialog;
   @service appEvents;
+  @service router;
 
   @tracked sortByProperty = "last_run_at";
   @tracked sortDescending = true;
@@ -264,7 +265,7 @@ export default class PluginsExplorerController extends Controller {
       sortByProperty: "last_run_at",
       sortDescending: true,
     });
-    this.transitionToRoute({ queryParams: { id: null, params: null } });
+    this.router.transitionTo({ queryParams: { id: null, params: null } });
   }
 
   @action
