@@ -16,6 +16,7 @@ export default class PluginsExplorerController extends Controller {
   @service("router") router;
   @service dialog;
   @service appEvents;
+  @service router;
 
   @tracked sortByProperty = "last_run_at";
   @tracked sortDescending = true;
