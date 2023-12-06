@@ -7,8 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
+import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
