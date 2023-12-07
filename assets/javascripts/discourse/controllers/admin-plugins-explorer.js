@@ -13,7 +13,6 @@ import Query from "discourse/plugins/discourse-data-explorer/discourse/models/qu
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
 export default class PluginsExplorerController extends Controller {
-  @service("router") router;
   @service dialog;
   @service appEvents;
   @service router;

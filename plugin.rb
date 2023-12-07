@@ -103,12 +103,12 @@ after_initialize do
           query_params = fields.dig("query_params", "value") || {}
 
           unless SiteSetting.data_explorer_enabled
-            Rails.logger.warn "#{DiscourseDataExplorer.plugin_name} - plugin must be enabled to run automation #{automation.id}"
+            Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - plugin must be enabled to run automation #{automation.id}"
             next
           end
 
           unless recipients.present?
-            Rails.logger.warn "#{DiscourseDataExplorer.plugin_name} - couldn't find any recipients for automation #{automation.id}"
+            Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't find any recipients for automation #{automation.id}"
             next
           end
 
