@@ -2,7 +2,7 @@ import DModal from "discourse/components/d-modal";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 
-<template>
+const QueryHelp = <template>
   <DModal
     @title={{i18n "explorer.help.modal_title"}}
     @closeModal={{@closeModal}}
@@ -14,4 +14,6 @@ import i18n from "discourse-common/helpers/i18n";
       {{htmlSafe (i18n "explorer.help.data_types")}}
     </:body>
   </DModal>
-</template>
+</template>;
+
+export default QueryHelp;
