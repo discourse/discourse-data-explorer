@@ -5,14 +5,15 @@ import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
+import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
 
 export default class PluginsExplorerController extends Controller {
+  @service modal;
   @service dialog;
   @service appEvents;
   @service router;
@@ -270,7 +271,7 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   showHelpModal() {
-    showModal("query-help");
+    this.modal.show(QueryHelp);
   }
 
   @action
