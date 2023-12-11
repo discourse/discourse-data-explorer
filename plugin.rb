@@ -116,7 +116,13 @@ after_initialize do
             DiscourseDataExplorer::ReportGenerator.new(automation.last_updated_by_id)
           report_pms = data_explorer_report.generate(query_id, query_params, recipients)
 
-          report_pms.each { |pm| utils.send_pm(pm, automation_id: automation.id) }
+          report_pms.each do |pm|
+            begin
+              utils.send_pm(pm, automation_id: automation.id)
+            rescue ActiveRecord::RecordNotSaved => e
+              Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
+            end
+          end
         end
       end
     end
