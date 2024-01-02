@@ -104,20 +104,19 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  save() {
-    this.loading = true;
+  async save() {
+    try {
+      this.loading = true;
+      await this.selectedItem.save();
 
-    return this.selectedItem
-      .save()
-      .then(() => {
-        this.dirty = false;
-        this.editingName = false;
-      })
-      .catch((x) => {
-        popupAjaxError(x);
-        throw x;
-      })
-      .finally(() => (this.loading = false));
+      this.dirty = false;
+      this.editingName = false;
+    } catch (error) {
+      popupAjaxError(error);
+      throw error;
+    } finally {
+      this.loading = false;
+    }
   }
 
   @action
@@ -212,28 +211,28 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  import(files) {
-    this.loading = true;
-    const file = files[0];
-    this._importQuery(file)
-      .then((record) => this.addCreatedRecord(record))
-      .catch((e) => {
-        if (e.jqXHR) {
-          popupAjaxError(e);
-        } else if (e instanceof SyntaxError) {
-          this.dialog.alert(I18n.t("explorer.import.unparseable_json"));
-        } else if (e instanceof TypeError) {
-          this.dialog.alert(I18n.t("explorer.import.wrong_json"));
-        } else {
-          this.dialog.alert(I18n.t("errors.desc.unknown"));
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
-      })
-      .finally(() => {
-        this.loading = false;
-        this.dirty = true;
-      });
+  async import(files) {
+    try {
+      this.loading = true;
+      const file = files[0];
+      const record = await this._importQuery(file);
+      this.addCreatedRecord(record);
+    } catch (e) {
+      if (e.jqXHR) {
+        popupAjaxError(e);
+      } else if (e instanceof SyntaxError) {
+        this.dialog.alert(I18n.t("explorer.import.unparseable_json"));
+      } else if (e instanceof TypeError) {
+        this.dialog.alert(I18n.t("explorer.import.wrong_json"));
+      } else {
+        this.dialog.alert(I18n.t("errors.desc.unknown"));
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    } finally {
+      this.loading = false;
+      this.dirty = true;
+    }
   }
 
   @action
@@ -258,14 +257,12 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   goHome() {
-    this.setProperties({
-      order: null,
-      showResults: false,
-      selectedQueryId: null,
-      params: null,
-      sortByProperty: "last_run_at",
-      sortDescending: true,
-    });
+    this.order = null;
+    this.showResults = false;
+    this.selectedQueryId = null;
+    this.params = null;
+    this.sortByProperty = "last_run_at";
+    this.sortDescending = true;
     this.router.transitionTo({ queryParams: { id: null, params: null } });
   }
 
@@ -290,64 +287,69 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  create() {
-    const name = this.newQueryName.trim();
-    this.setProperties({
-      loading: true,
-      showCreate: false,
-    });
-    this.store
-      .createRecord("query", { name })
-      .save()
-      .then((result) => this.addCreatedRecord(result.target))
-      .catch(popupAjaxError)
-      .finally(() => {
-        this.loading = false;
-        this.dirty = true;
-      });
+  async create() {
+    try {
+      const name = this.newQueryName.trim();
+      this.loading = true;
+      this.showCreate = false;
+      const result = await this.store.createRecord("query", { name }).save();
+      this.addCreatedRecord(result.target);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+      this.dirty = true;
+    }
   }
 
   @action
-  discard() {
-    this.loading = true;
-    this.store
-      .find("query", this.selectedItem.id)
-      .then((result) => {
-        this.selectedItem.setProperties(
-          result.getProperties(Query.updatePropertyNames)
-        );
-        if (
-          !this.selectedItem.group_ids ||
-          !Array.isArray(this.selectedItem.group_ids)
-        ) {
-          this.selectedItem.set("group_ids", []);
-        }
-        this.dirty = false;
-      })
-      .catch(popupAjaxError)
-      .finally(() => (this.loading = false));
+  async discard() {
+    try {
+      this.loading = true;
+      const result = await this.store.find("query", this.selectedItem.id);
+      this.selectedItem.setProperties(
+        result.getProperties(Query.updatePropertyNames)
+      );
+      if (
+        !this.selectedItem.group_ids ||
+        !Array.isArray(this.selectedItem.group_ids)
+      ) {
+        this.selectedItem.set("group_ids", []);
+      }
+      this.dirty = false;
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   @action
-  destroyQuery() {
-    this.loading = true;
-    this.showResults = false;
-    this.store
-      .destroyRecord("query", this.selectedItem)
-      .then(() => this.selectedItem.set("destroyed", true))
-      .catch(popupAjaxError)
-      .finally(() => (this.loading = false));
+  async destroyQuery() {
+    try {
+      this.loading = true;
+      this.showResults = false;
+      await this.store.destroyRecord("query", this.selectedItem);
+      this.selectedItem.set("destroyed", true);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   @action
-  recover() {
-    this.loading = true;
-    this.showResults = true;
-    this.selectedItem
-      .save()
-      .then(() => this.selectedItem.set("destroyed", false))
-      .catch(popupAjaxError)
-      .finally(() => (this.loading = false));
+  async recover() {
+    try {
+      this.loading = true;
+      this.showResults = true;
+      await this.selectedItem.save();
+      this.selectedItem.set("destroyed", false);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   @action
