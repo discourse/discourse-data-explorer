@@ -10,8 +10,12 @@ module ::DiscourseDataExplorer
       query = DiscourseDataExplorer::Query.find(query_id)
       return [] unless query
 
+      creator = User.find(@creator_user_id)
+      return [] unless Guardian.new(creator).can_send_private_messages?
+
+      return [] if recipients.empty?
+
       usernames = filter_recipients_by_query_access(recipients, query)
-      return [] if usernames.empty?
       params = params_to_hash(query_params)
 
       result = DataExplorer.run_query(query, params)
@@ -23,17 +27,15 @@ module ::DiscourseDataExplorer
     end
 
     def filter_recipients_by_query_access(recipients, query)
-      return [] if recipients.empty?
-      creator = User.find(@creator_user_id)
-      return [] unless Guardian.new(creator).can_send_private_messages?
-
       recipients.reduce([]) do |names, recipient|
         if (group = Group.find_by(name: recipient))
-          next names unless query.query_groups.exists?(group_id: group.id)
-          next names.concat group.users.pluck(:username)
+          names unless query.query_groups.exists?(group_id: group.id)
+          names.concat group.users.pluck(:username)
         elsif (user = User.find_by(username: recipient))
-          next names unless Guardian.new(user).user_can_access_query?(query)
-          next names << recipient
+          names unless Guardian.new(user).user_can_access_query?(query)
+          names << recipient
+        else
+          names
         end
       end
     end

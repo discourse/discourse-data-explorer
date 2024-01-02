@@ -9,7 +9,6 @@ describe DiscourseDataExplorer::ReportGenerator do
   fab!(:group) { Fabricate(:group, users: [user]) }
 
   fab!(:query) { DiscourseDataExplorer::Query.find(-1) }
-  fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
 
   let(:query_params) { [%w[from_days_ago 0], %w[duration_days 15]] }
 
@@ -23,6 +22,7 @@ describe DiscourseDataExplorer::ReportGenerator do
     end
 
     it "returns [] if the recipient is not in query group" do
+      Fabricate(:query_group, query: query, group: group)
       result =
         described_class.new(user.id).generate(
           query.id,
@@ -47,6 +47,30 @@ describe DiscourseDataExplorer::ReportGenerator do
             "target_usernames" => [user.username],
             "raw" =>
               "Hi #{user.username}, your data explorer report is ready.\n\n" +
+                "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
+                "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
+                "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+          },
+        ],
+      )
+    end
+
+    it "still returns a list of pms if a group or user does not exist" do
+      admin = Fabricate(:admin)
+      SiteSetting.personal_message_enabled_groups = group.id
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
+
+      result =
+        described_class.new(user.id).generate(query.id, query_params, %w[admins non-existent-group])
+
+      expect(result).to eq(
+        [
+          {
+            "title" => "Scheduled Report for #{query.name}",
+            "target_usernames" => [admin.username],
+            "raw" =>
+              "Hi #{admin.username}, your data explorer report is ready.\n\n" +
                 "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
                 "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
                 "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
