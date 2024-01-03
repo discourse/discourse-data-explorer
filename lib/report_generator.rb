@@ -28,15 +28,16 @@ module ::DiscourseDataExplorer
 
     def filter_recipients_by_query_access(recipients, query)
       recipients.reduce([]) do |names, recipient|
-        if (group = Group.find_by(name: recipient))
-          names unless query.query_groups.exists?(group_id: group.id)
-          names.concat group.users.pluck(:username)
+        if (group = Group.find_by(name: recipient)) &&
+             (
+               group.id == Group::AUTO_GROUPS[:admins] ||
+                 query.query_groups.exists?(group_id: group.id)
+             )
+          next names.concat group.users.pluck(:username)
         elsif (user = User.find_by(username: recipient))
-          names unless Guardian.new(user).user_can_access_query?(query)
-          names << recipient
-        else
-          names
+          next names << recipient if Guardian.new(user).user_can_access_query?(query)
         end
+        next names
       end
     end
 
