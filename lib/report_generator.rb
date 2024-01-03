@@ -9,11 +9,10 @@ module ::DiscourseDataExplorer
     def generate(query_id, query_params, recipients)
       query = DiscourseDataExplorer::Query.find(query_id)
       return [] unless query
-
-      creator = User.find(@creator_user_id)
-      return [] unless Guardian.new(creator).can_send_private_messages?
-
       return [] if recipients.empty?
+
+      creator = User.find_by(id: @creator_user_id)
+      return [] unless Guardian.new(creator).can_send_private_messages?
 
       usernames = filter_recipients_by_query_access(recipients, query)
       params = params_to_hash(query_params)
@@ -24,21 +23,6 @@ module ::DiscourseDataExplorer
       table = ResultToMarkdown.convert(result[:pg_result])
 
       build_report_pms(query, table, usernames)
-    end
-
-    def filter_recipients_by_query_access(recipients, query)
-      recipients.reduce([]) do |names, recipient|
-        if (group = Group.find_by(name: recipient)) &&
-             (
-               group.id == Group::AUTO_GROUPS[:admins] ||
-                 query.query_groups.exists?(group_id: group.id)
-             )
-          next names.concat group.users.pluck(:username)
-        elsif (user = User.find_by(username: recipient))
-          next names << recipient if Guardian.new(user).user_can_access_query?(query)
-        end
-        next names
-      end
     end
 
     def params_to_hash(query_params)
@@ -74,6 +58,25 @@ module ::DiscourseDataExplorer
         pms << pm
       end
       pms
+    end
+
+    private
+
+    def filter_recipients_by_query_access(recipients, query)
+      recipients.reduce([]) do |names, recipient|
+        if (group = Group.find_by(name: recipient)) &&
+             (
+               group.id == Group::AUTO_GROUPS[:admins] ||
+                 query.query_groups.exists?(group_id: group.id)
+             )
+          names.concat group.users.pluck(:username)
+        elsif (user = User.find_by(username: recipient)) &&
+              Guardian.new(user).user_can_access_query?(query)
+          names << recipient
+        end
+
+        names
+      end
     end
   end
 end
