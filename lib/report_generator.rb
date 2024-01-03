@@ -9,9 +9,12 @@ module ::DiscourseDataExplorer
     def generate(query_id, query_params, recipients)
       query = DiscourseDataExplorer::Query.find(query_id)
       return [] unless query
+      return [] if recipients.empty?
+
+      creator = User.find_by(id: @creator_user_id)
+      return [] unless Guardian.new(creator).can_send_private_messages?
 
       usernames = filter_recipients_by_query_access(recipients, query)
-      return [] if usernames.empty?
       params = params_to_hash(query_params)
 
       result = DataExplorer.run_query(query, params)
@@ -20,22 +23,6 @@ module ::DiscourseDataExplorer
       table = ResultToMarkdown.convert(result[:pg_result])
 
       build_report_pms(query, table, usernames)
-    end
-
-    def filter_recipients_by_query_access(recipients, query)
-      return [] if recipients.empty?
-      creator = User.find(@creator_user_id)
-      return [] unless Guardian.new(creator).can_send_private_messages?
-
-      recipients.reduce([]) do |names, recipient|
-        if (group = Group.find_by(name: recipient))
-          next names unless query.query_groups.exists?(group_id: group.id)
-          next names.concat group.users.pluck(:username)
-        elsif (user = User.find_by(username: recipient))
-          next names unless Guardian.new(user).user_can_access_query?(query)
-          next names << recipient
-        end
-      end
     end
 
     def params_to_hash(query_params)
@@ -71,6 +58,25 @@ module ::DiscourseDataExplorer
         pms << pm
       end
       pms
+    end
+
+    private
+
+    def filter_recipients_by_query_access(recipients, query)
+      recipients.reduce([]) do |names, recipient|
+        if (group = Group.find_by(name: recipient)) &&
+             (
+               group.id == Group::AUTO_GROUPS[:admins] ||
+                 query.query_groups.exists?(group_id: group.id)
+             )
+          names.concat group.users.pluck(:username)
+        elsif (user = User.find_by(username: recipient)) &&
+              Guardian.new(user).user_can_access_query?(query)
+          names << recipient
+        end
+
+        names
+      end
     end
   end
 end
