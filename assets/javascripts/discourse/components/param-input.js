@@ -124,7 +124,13 @@ export default class ParamInput extends Component {
       case "int_list":
         return value.split(",").every((i) => /^(-?\d+|null)$/.test(i.trim()));
       case "post_id":
-        return isPositiveInt || /\d+\/\d+(\?u=.*)?$/.test(value);
+        return (
+          isPositiveInt ||
+          /\d+\/\d+(\?u=.*)?$/.test(value) ||
+          /\/t\/[^/]+\/(\d+)(\?u=.*)?/.test(value)
+        );
+      case "topic_id":
+        return isPositiveInt || /\/t\/[^/]+\/(\d+)/.test(value);
       case "category_id":
         if (isPositiveInt) {
           return !!this.site.categories.find((c) => c.id === intVal);
