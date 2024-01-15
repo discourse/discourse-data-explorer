@@ -11,15 +11,15 @@
       <DButton
         @action={{this.displayCreate}}
         @icon="plus"
-        @class="no-text btn-right"
+        class="no-text btn-right"
       />
       <PickFilesButton
-        @class="import-btn"
         @label="explorer.import.label"
         @icon="upload"
         @acceptedFormatsOverride={{this.acceptedImportFileTypes}}
         @showButton="true"
         @onFilesPicked={{this.import}}
+        class="import-btn"
       />
     </div>
 
@@ -56,12 +56,12 @@
               <DButton
                 @action={{this.goHome}}
                 @icon="chevron-left"
-                @class="previous"
+                class="previous"
               />
               <DButton
                 @action={{this.exitEdit}}
                 @icon="times"
-                @class="previous"
+                class="previous"
               />
               <div class="name-text-field">
                 <TextField
@@ -83,7 +83,7 @@
               <DButton
                 @action={{this.goHome}}
                 @icon="chevron-left"
-                @class="previous"
+                class="previous"
               />
 
               <h1>
@@ -217,9 +217,9 @@
 
               <DButton
                 @action={{this.destroyQuery}}
-                @class="btn-danger"
                 @icon="trash-alt"
                 @label="explorer.delete"
+                class="btn-danger"
               />
             {{/if}}
           </div>
@@ -242,14 +242,14 @@
             <DButton
               @label="explorer.run"
               @disabled="true"
-              @class="btn-primary"
+              class="btn-primary"
             />
           {{else}}
             <DButton
               @action={{this.saveAndRun}}
               @icon="play"
               @label="explorer.saverun"
-              @class="btn-primary"
+              class="btn-primary"
             />
           {{/if}}
         {{else}}
@@ -258,8 +258,8 @@
             @icon="play"
             @label="explorer.run"
             @disabled={{this.runDisabled}}
-            @class="btn-primary"
             @type="submit"
+            class="btn-primary"
           />
         {{/if}}
 
