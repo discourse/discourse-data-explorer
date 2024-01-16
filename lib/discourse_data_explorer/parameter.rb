@@ -67,6 +67,46 @@ module ::DiscourseDataExplorer
       @type_aliases ||= { integer: :int, text: :string, timestamp: :datetime }
     end
 
+    def self.create_from_sql(sql, opts = {})
+      in_params = false
+      ret_params = []
+      sql.lines.find do |line|
+        line.chomp!
+
+        if in_params
+          # -- (ident) :(ident) (= (ident))?
+
+          if line =~ /^\s*--\s*([a-zA-Z_ ]+)\s*:([a-z_]+)\s*(?:=\s+(.*)\s*)?$/
+            type = $1
+            ident = $2
+            default = $3
+            nullable = false
+            if type =~ /^(null)?(.*?)(null)?$/i
+              nullable = true if $1 || $3
+              type = $2
+            end
+            type = type.strip
+
+            begin
+              ret_params << Parameter.new(ident, type, default, nullable)
+            rescue StandardError
+              raise if opts[:strict]
+            end
+
+            false
+          elsif line =~ /^\s+$/
+            false
+          else
+            true
+          end
+        else
+          in_params = true if line =~ /^\s*--\s*\[params\]\s*$/
+          false
+        end
+      end
+      ret_params
+    end
+
     def cast_to_ruby(string)
       string = @default unless string
 
@@ -78,14 +118,6 @@ module ::DiscourseDataExplorer
         end
       end
       return nil if string.downcase == "#null"
-
-      def invalid_format(string, msg = nil)
-        if msg
-          raise ValidationError.new("'#{string}' is an invalid #{type} - #{msg}")
-        else
-          raise ValidationError.new("'#{string}' is an invalid value for #{type}")
-        end
-      end
 
       value = nil
 
@@ -144,7 +176,7 @@ module ::DiscourseDataExplorer
           parent = Category.query_parent_category(parent_name)
           invalid_format string, "Could not find category named #{parent_name}" unless parent
           object = Category.query_category(child_name, parent)
-          unless object
+          if object.blank?
             invalid_format string,
                            "Could not find subcategory of #{parent_name} named #{child_name}"
           end
@@ -152,18 +184,18 @@ module ::DiscourseDataExplorer
           object =
             Category.where(id: string.to_i).first || Category.where(slug: string).first ||
               Category.where(name: string).first
-          invalid_format string, "Could not find category named #{string}" unless object
+          invalid_format string, "Could not find category named #{string}" if object.blank?
         end
 
         value = object.id
       when :user_id, :post_id, :topic_id, :group_id, :badge_id
         if string.gsub(/[ _]/, "") =~ /^-?\d+$/
-          clazz_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
+          klass_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
           begin
-            object = Object.const_get(clazz_name).with_deleted.find(string.gsub(/[ _]/, "").to_i)
+            object = Object.const_get(klass_name).with_deleted.find(string.gsub(/[ _]/, "").to_i)
             value = object.id
           rescue ActiveRecord::RecordNotFound
-            invalid_format string, "The specified #{clazz_name} was not found"
+            invalid_format string, "The specified #{klass_name} was not found"
           end
         elsif type == :user_id
           begin
@@ -173,9 +205,13 @@ module ::DiscourseDataExplorer
             invalid_format string, "The user named #{string} was not found"
           end
         elsif type == :post_id
-          if string =~ %r{(\d+)/(\d+)(\?u=.*)?$}
+          if string =~ %r{/t/[^/]+/(\d+)(\?u=.*)?$}
+            object = Post.with_deleted.find_by(topic_id: $1, post_number: 1)
+            invalid_format string, "The first post for topic:#{$1} was not found" if object.blank?
+            value = object.id
+          elsif string =~ %r{(\d+)/(\d+)(\?u=.*)?$}
             object = Post.with_deleted.find_by(topic_id: $1, post_number: $2)
-            unless object
+            if object.blank?
               invalid_format string, "The post at topic:#{$1} post_number:#{$2} was not found"
             end
             value = object.id
@@ -191,7 +227,7 @@ module ::DiscourseDataExplorer
           end
         elsif type == :group_id
           object = Group.where(name: string).first
-          invalid_format string, "The group named #{string} was not found" unless object
+          invalid_format string, "The group named #{string} was not found" if object.blank?
           value = object.id
         else
           invalid_format string
@@ -212,44 +248,14 @@ module ::DiscourseDataExplorer
       value
     end
 
-    def self.create_from_sql(sql, opts = {})
-      in_params = false
-      ret_params = []
-      sql.lines.find do |line|
-        line.chomp!
+    private
 
-        if in_params
-          # -- (ident) :(ident) (= (ident))?
-
-          if line =~ /^\s*--\s*([a-zA-Z_ ]+)\s*:([a-z_]+)\s*(?:=\s+(.*)\s*)?$/
-            type = $1
-            ident = $2
-            default = $3
-            nullable = false
-            if type =~ /^(null)?(.*?)(null)?$/i
-              nullable = true if $1 || $3
-              type = $2
-            end
-            type = type.strip
-
-            begin
-              ret_params << Parameter.new(ident, type, default, nullable)
-            rescue StandardError
-              raise if opts[:strict]
-            end
-
-            false
-          elsif line =~ /^\s+$/
-            false
-          else
-            true
-          end
-        else
-          in_params = true if line =~ /^\s*--\s*\[params\]\s*$/
-          false
-        end
+    def invalid_format(string, msg = nil)
+      if msg
+        raise ValidationError.new("'#{string}' is an invalid #{type} - #{msg}")
+      else
+        raise ValidationError.new("'#{string}' is an invalid value for #{type}")
       end
-      ret_params
     end
   end
 end
