@@ -40,6 +40,7 @@ tr_TR:
           no: "Hayır"
           null_: "Boş"
       export: "Dışarı Aktar"
+      view_json: "JSON'u görüntüle"
       save: "Değişiklikleri Kaydet"
       saverun: "Değişiklikleri Kaydet ve Çalıştır"
       run: "Çalıştır"

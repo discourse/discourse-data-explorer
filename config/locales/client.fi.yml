@@ -40,6 +40,7 @@ fi:
           no: "Ei"
           null_: "Tyhjä"
       export: "Vie"
+      view_json: "Näytä JSON"
       save: "Tallenna muutokset"
       saverun: "Tallenna muutokset ja suorita"
       run: "Suorita"

@@ -40,6 +40,7 @@ ar:
           no: "لا"
           null_: "فارغ"
       export: "تصدير"
+      view_json: "عرض JSON"
       save: "حفظ التغييرات"
       saverun: "حفظ التغييرات والتشغيل"
       run: "تشغيل"

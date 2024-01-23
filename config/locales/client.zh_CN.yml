@@ -40,6 +40,7 @@ zh_CN:
           no: "否"
           null_: "空"
       export: "导出"
+      view_json: "查看 JSON"
       save: "保存变更"
       saverun: "保存变更并运行"
       run: "运行"

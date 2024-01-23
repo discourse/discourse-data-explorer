@@ -7,3 +7,8 @@
 pl_PL:
   site_settings:
     data_explorer_enabled: "Włącz eksplorator danych w /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Zaplanuj PW z wynikami eksploratora danych
+        description: Otrzymuj zaplanowane raporty wysyłane co miesiąc do Twoich wiadomości

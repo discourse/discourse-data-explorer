@@ -40,6 +40,7 @@ es:
           no: "No"
           null_: "Nulo"
       export: "Exportar"
+      view_json: "Ver JSON"
       save: "Guardar cambios"
       saverun: "Guardar cambios y ejecutar"
       run: "Ejecutar"
