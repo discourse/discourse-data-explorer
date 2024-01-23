@@ -40,6 +40,7 @@ ja:
           no: "いいえ"
           null_: "Null"
       export: "エクスポート"
+      view_json: "JSON を表示"
       save: "変更を保存"
       saverun: "変更を保存して実行"
       run: "実行"
