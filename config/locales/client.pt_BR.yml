@@ -40,6 +40,7 @@ pt_BR:
           no: "Não"
           null_: "Nulo"
       export: "Exportar"
+      view_json: "Visualizar JSON"
       save: "Salvar Mudanças"
       saverun: "Salvar Mudanças e Executar"
       run: "Executar"
