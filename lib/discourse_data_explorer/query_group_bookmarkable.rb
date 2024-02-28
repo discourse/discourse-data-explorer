@@ -55,8 +55,12 @@ module ::DiscourseDataExplorer
     end
 
     def self.can_see?(guardian, bookmark)
-      return false if !bookmark.bookmarkable.group
-      guardian.user_is_a_member_of_group?(bookmark.bookmarkable.group)
+      can_see_bookmarkable?(guardian, bookmark.bookmarkable)
+    end
+
+    def self.can_see_bookmarkable?(guardian, bookmarkable)
+      return false if !bookmarkable.group
+      guardian.user_is_a_member_of_group?(bookmarkable.group)
     end
   end
 end

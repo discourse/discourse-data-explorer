@@ -141,7 +141,7 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   end
 
   describe "#reminder_handler" do
-    xit "creates a notification for the user with the correct details" do
+    it "creates a notification for the user with the correct details" do
       expect { registered_bookmarkable.send_reminder_notification(bookmark1) }.to change {
         Notification.count
       }.by(1)
@@ -155,6 +155,8 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
           display_username: bookmark1.user.username,
           bookmark_name: bookmark1.name,
           bookmark_id: bookmark1.id,
+          bookmarkable_type: bookmark1.bookmarkable_type,
+          bookmarkable_id: bookmark1.bookmarkable_id,
         }.to_json,
       )
     end
