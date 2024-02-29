@@ -2,7 +2,7 @@
 
 describe DiscourseDataExplorer::DataExplorer do
   describe ".run_query" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "should run a query that includes PG template patterns" do
       sql = <<~SQL

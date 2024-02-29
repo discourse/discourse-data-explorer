@@ -22,7 +22,7 @@ describe DiscourseDataExplorer::QueryController do
   end
 
   describe "Admin" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { sign_in(admin) }
 
@@ -437,7 +437,7 @@ describe DiscourseDataExplorer::QueryController do
   end
 
   describe "Non-Admin" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:group) { Fabricate(:group, users: [user]) }
 
     before { sign_in(user) }

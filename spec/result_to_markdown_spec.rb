@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe DiscourseDataExplorer::ResultToMarkdown do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:user)
+  fab!(:post)
   fab!(:query) { DiscourseDataExplorer::Query.find(-1) }
 
   let(:query_params) { [{ from_days_ago: 0 }, { duration_days: 15 }] }
