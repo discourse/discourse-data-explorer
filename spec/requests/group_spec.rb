@@ -5,7 +5,7 @@ require "rails_helper"
 describe "Data explorer group serializer additions" do
   fab!(:group_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   let!(:query) { DiscourseDataExplorer::Query.create!(name: "My query", sql: "") }
 
   before do

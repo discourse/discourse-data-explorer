@@ -81,11 +81,7 @@ after_initialize do
   require_relative "lib/result_to_markdown"
   reloadable_patch do
     if defined?(DiscourseAutomation)
-      DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM =
-        "recurring_data_explorer_result_pm"
-      add_automation_scriptable(
-        DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM,
-      ) do
+      add_automation_scriptable("recurring_data_explorer_result_pm") do
         queries =
           DiscourseDataExplorer::Query
             .where(hidden: false)

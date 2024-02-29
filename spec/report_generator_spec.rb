@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe DiscourseDataExplorer::ReportGenerator do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:unauthorised_user) { Fabricate(:user) }
   fab!(:unauthorised_group) { Fabricate(:group) }
   fab!(:group) { Fabricate(:group, users: [user]) }

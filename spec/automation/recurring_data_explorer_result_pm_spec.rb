@@ -3,9 +3,9 @@
 require "rails_helper"
 
 describe "RecurringDataExplorerResultPm" do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:another_user) { Fabricate(:user) }
   fab!(:group_user) { Fabricate(:user) }
   fab!(:not_allowed_user) { Fabricate(:user) }
@@ -14,13 +14,9 @@ describe "RecurringDataExplorerResultPm" do
   fab!(:another_group) { Fabricate(:group, users: [group_user]) }
 
   fab!(:automation) do
-    Fabricate(
-      :automation,
-      script: DiscourseAutomation::Scriptable::RECURRING_DATA_EXPLORER_RESULT_PM,
-      trigger: "recurring",
-    )
+    Fabricate(:automation, script: "recurring_data_explorer_result_pm", trigger: "recurring")
   end
-  fab!(:query) { Fabricate(:query) }
+  fab!(:query)
   fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: another_group) }
 

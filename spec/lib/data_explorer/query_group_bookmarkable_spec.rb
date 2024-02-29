@@ -8,7 +8,7 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   end
 
   fab!(:admin_user) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:guardian) { Guardian.new(user) }
   fab!(:group0) { Fabricate(:group) }
   fab!(:group1) { Fabricate(:group) }
