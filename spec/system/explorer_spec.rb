@@ -35,21 +35,28 @@ RSpec.describe "Explorer", type: :system, js: true do
         :query,
         name: "My query with group_list",
         description: "Test group_list query",
-
-        sql: "-- [params]\n-- group_list :groups\n\nSELECT g.id,g.name FROM groups g WHERE g.name IN(:groups) ORDER BY g.name ASC",
+        sql:
+          "-- [params]\n-- group_list :groups\n\nSELECT g.id,g.name FROM groups g WHERE g.name IN(:groups) ORDER BY g.name ASC",
         user: admin,
       )
     end
 
     it "supports setting a group_list param" do
-      visit("/admin/plugins/explorer?id=#{q2.id}&params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D")
+      visit(
+        "/admin/plugins/explorer?id=#{q2.id}&params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
+      )
       find(".query-run .btn-primary").click
 
       expect(page).to have_css(".query-results .result-header")
 
-      expect(page).to have_css(".query-results tbody tr:nth-child(1) td:nth-child(2)", text: "admins")
-      expect(page).to have_css(".query-results tbody tr:nth-child(2) td:nth-child(2)", text: "trust_level_1")
+      expect(page).to have_css(
+        ".query-results tbody tr:nth-child(1) td:nth-child(2)",
+        text: "admins",
+      )
+      expect(page).to have_css(
+        ".query-results tbody tr:nth-child(2) td:nth-child(2)",
+        text: "trust_level_1",
+      )
     end
   end
-
 end
