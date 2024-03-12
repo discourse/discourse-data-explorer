@@ -46,6 +46,16 @@
     />
     <span class="param-name">{{@info.identifier}}</span>
 
+  {{else if (eq this.type "group_list")}}
+    <GroupChooser
+      @content={{this.allGroups}}
+      @value={{this.value}}
+      @labelProperty="name"
+      @valueProperty="name"
+      @onChange={{this.updateGroupValue}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
   {{else if (eq this.type "user_list")}}
     <EmailGroupUserChooser
       @value={{this.value}}

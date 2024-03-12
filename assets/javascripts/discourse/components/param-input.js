@@ -25,6 +25,7 @@ const layoutMap = {
   int_list: "generic",
   string_list: "generic",
   user_list: "user_list",
+  group_list: "group_list",
 };
 
 export default class ParamInput extends Component {
@@ -158,6 +159,10 @@ export default class ParamInput extends Component {
     return true;
   }
 
+  get allGroups() {
+    return this.site.get("groups");
+  }
+
   dasherizeCategoryId(value) {
     const isPositiveInt = /^\d+$/.test(value);
     if (!isPositiveInt && value !== dasherize(value)) {
@@ -195,6 +200,12 @@ export default class ParamInput extends Component {
   updateNullableBoolValue(input) {
     this.nullableBoolValue = input;
     this.args.updateParams(this.args.info.identifier, this.nullableBoolValue);
+  }
+
+  @action
+  updateGroupValue(input) {
+    this.value = input;
+    this.args.updateParams(this.args.info.identifier, this.value.join(","));
   }
 }
 

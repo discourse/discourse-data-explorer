@@ -42,6 +42,8 @@ export default class Query extends RestModel {
         newParams[name] = null;
       } else if (pinfo["type"] === "user_list") {
         newParams[name] = null;
+      } else if (pinfo["type"] === "group_list") {
+        newParams[name] = null;
       } else {
         newParams[name] = "";
       }

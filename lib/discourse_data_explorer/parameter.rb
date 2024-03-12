@@ -60,6 +60,7 @@ module ::DiscourseDataExplorer
           :int_list,
           :string_list,
           :user_list,
+          :group_list,
         )
     end
 
@@ -241,6 +242,9 @@ module ::DiscourseDataExplorer
       when :user_list
         value = string.split(",").map { |s| User.find_by_username_or_email(s).id }
         invalid_format string, "can't be empty" if value.length == 0
+      when :group_list
+        value = string.split(",").map { |s| Group.where(name: s).first.name }
+        invalid_format string, "The group with id #{string} was not found" if value.length == 0
       else
         raise TypeError.new("unknown parameter type??? should not get here")
       end
