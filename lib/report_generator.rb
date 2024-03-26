@@ -61,17 +61,17 @@ module ::DiscourseDataExplorer
       recipients
         .uniq
         .reduce([]) do |names, recipient|
-          if recipient.include?("@")
-            names << [recipient, "email"]
-          elsif (user = User.find_by(username: recipient)) &&
-                Guardian.new(user).user_can_access_query?(query)
-            names << [recipient, "user"]
-          elsif (group = Group.find_by(name: recipient)) &&
-                (
-                  group.id == Group::AUTO_GROUPS[:admins] ||
-                    query.query_groups.exists?(group_id: group.id)
-                )
+          if (group = Group.find_by(name: recipient)) &&
+            (
+              group.id == Group::AUTO_GROUPS[:admins] ||
+              query.query_groups.exists?(group_id: group.id)
+            )
             names << [recipient, "group"]
+          elsif (user = User.find_by(username: recipient)) &&
+            Guardian.new(user).user_can_access_query?(query)
+            names << [recipient, "user"]
+          elsif Email.is_valid?(recipient)
+            names << [recipient, "email"]
           end
           names
         end
