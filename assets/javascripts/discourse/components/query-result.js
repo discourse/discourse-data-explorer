@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
+import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import BadgeViewComponent from "./result-types/badge";
@@ -199,7 +200,7 @@ export default class QueryResult extends Component {
   }
 
   lookupCategory(id) {
-    return this.site.categoriesById[id];
+    return Category.findById(id);
   }
 
   _cutChartLabel(label) {
