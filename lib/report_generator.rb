@@ -62,13 +62,13 @@ module ::DiscourseDataExplorer
         .uniq
         .reduce([]) do |names, recipient|
           if (group = Group.find_by(name: recipient)) &&
-            (
-              group.id == Group::AUTO_GROUPS[:admins] ||
-              query.query_groups.exists?(group_id: group.id)
-            )
+               (
+                 group.id == Group::AUTO_GROUPS[:admins] ||
+                   query.query_groups.exists?(group_id: group.id)
+               )
             names << [recipient, "group"]
           elsif (user = User.find_by(username: recipient)) &&
-            Guardian.new(user).user_can_access_query?(query)
+                Guardian.new(user).user_can_access_query?(query)
             names << [recipient, "user"]
           elsif Email.is_valid?(recipient)
             names << [recipient, "email"]
