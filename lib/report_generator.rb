@@ -43,7 +43,7 @@ module ::DiscourseDataExplorer
       pms = []
       targets.each do |target|
         name = target[0]
-        pm_type = target[1] == "group" ? "target_group_names" : "target_usernames"
+        pm_type = "target_#{target[1]}s"
 
         pm = {}
         pm["title"] = "Scheduled Report for #{query.name}"
@@ -66,10 +66,10 @@ module ::DiscourseDataExplorer
                  group.id == Group::AUTO_GROUPS[:admins] ||
                    query.query_groups.exists?(group_id: group.id)
                )
-            names << [recipient, "group"]
+            names << [recipient, "group_name"]
           elsif (user = User.find_by(username: recipient)) &&
                 Guardian.new(user).user_can_access_query?(query)
-            names << [recipient, "user"]
+            names << [recipient, "username"]
           elsif Email.is_valid?(recipient)
             names << [recipient, "email"]
           end

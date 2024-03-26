@@ -83,7 +83,7 @@ describe DiscourseDataExplorer::ReportGenerator do
         [
           {
             "title" => "Scheduled Report for #{query.name}",
-            "target_usernames" => [email],
+            "target_emails" => [email],
             "raw" =>
               "Hi #{email}, your data explorer report is ready.\n\n" +
                 "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
