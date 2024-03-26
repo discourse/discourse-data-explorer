@@ -60,16 +60,19 @@ describe "RecurringDataExplorerResultPm" do
         automation.trigger!
       end.to change { Topic.count }.by(3)
 
-      created_topics = Topic.last(3)
-      expect(created_topics.pluck(:archetype)).to eq(
+      user_topics = Topic.first(2)
+      group_topics = Topic.last(1)
+      expect(Topic.last(3).pluck(:archetype)).to eq(
         [Archetype.private_message, Archetype.private_message, Archetype.private_message],
       )
-      expect(created_topics.map { |t| t.allowed_users.pluck(:username).sort }).to match_array(
+      expect(user_topics.map { |t| t.allowed_users.pluck(:username).sort }).to match_array(
         [
           [user.username, Discourse.system_user.username],
           [another_user.username, Discourse.system_user.username],
-          [group_user.username, Discourse.system_user.username],
         ],
+      )
+      expect(group_topics.map { |t| t.allowed_groups.pluck(:name).sort }).to match_array(
+        [[another_group.name]],
       )
     end
 
@@ -78,7 +81,7 @@ describe "RecurringDataExplorerResultPm" do
       automation.trigger!
 
       expect(Post.last.raw).to include(
-        "Hi #{group_user.username}, your data explorer report is ready.\n\nQuery Name:\n#{query.name}",
+        "Hi #{another_group.name}, your data explorer report is ready.\n\nQuery Name:\n#{query.name}",
       )
     end
   end
