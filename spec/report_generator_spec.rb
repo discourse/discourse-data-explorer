@@ -113,5 +113,22 @@ describe DiscourseDataExplorer::ReportGenerator do
         ],
       )
     end
+
+    it "works with multiple recipient types" do
+      Fabricate(:query_group, query: query, group: group)
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("table data")
+
+      result =
+        described_class.generate(
+          query.id,
+          query_params,
+          [group.name, user.username, "john@doe.com"],
+        )
+
+      expect(result.length).to eq(3)
+      expect(result[0]["target_group_names"]).to eq([group.name])
+      expect(result[1]["target_usernames"]).to eq([user.username])
+      expect(result[2]["target_emails"]).to eq(["john@doe.com"])
+    end
   end
 end

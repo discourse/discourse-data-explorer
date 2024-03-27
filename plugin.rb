@@ -94,7 +94,7 @@ after_initialize do
         triggerables [:recurring]
 
         script do |_, fields, automation|
-          recipients = Array(fields.dig("recipients", "value"))
+          recipients = Array(fields.dig("recipients", "value")).uniq
           query_id = fields.dig("query_id", "value")
           query_params = fields.dig("query_params", "value") || {}
 
