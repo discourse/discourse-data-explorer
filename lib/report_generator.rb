@@ -58,19 +58,19 @@ module ::DiscourseDataExplorer
     end
 
     def self.filter_recipients_by_query_access(recipients, query)
-      groups = Group.where(name: recipients)
       users = User.where(username: recipients)
-      emails = recipients - groups.pluck(:name) - users.pluck(:username)
+      groups = Group.where(name: recipients)
+      emails = recipients - users.pluck(:username) - groups.pluck(:name)
       result = []
+
+      users.each do |user|
+        result << [user.username, "username"] if Guardian.new(user).user_can_access_query?(query)
+      end
 
       groups.each do |group|
         if group.id == Group::AUTO_GROUPS[:admins] || query.query_groups.exists?(group_id: group.id)
           result << [group.name, "group_name"]
         end
-      end
-
-      users.each do |user|
-        result << [user.username, "username"] if Guardian.new(user).user_can_access_query?(query)
       end
 
       emails.each { |email| result << [email, "email"] if Email.is_valid?(email) }
