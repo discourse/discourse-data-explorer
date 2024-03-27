@@ -15,16 +15,10 @@ describe DiscourseDataExplorer::ReportGenerator do
   before { SiteSetting.data_explorer_enabled = true }
 
   describe ".generate" do
-    it "returns [] if the creator cannot send PMs" do
-      result = described_class.new(user.id).generate(query.id, query_params, [user.username])
-
-      expect(result).to eq []
-    end
-
     it "returns [] if the recipient is not in query group" do
       Fabricate(:query_group, query: query, group: group)
       result =
-        described_class.new(user.id).generate(
+        described_class.generate(
           query.id,
           query_params,
           [unauthorised_user.username, unauthorised_group.name],
@@ -38,7 +32,7 @@ describe DiscourseDataExplorer::ReportGenerator do
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time
 
-      result = described_class.new(user.id).generate(query.id, query_params, [user.username])
+      result = described_class.generate(query.id, query_params, [user.username])
 
       expect(result).to eq(
         [
@@ -56,27 +50,85 @@ describe DiscourseDataExplorer::ReportGenerator do
     end
 
     it "still returns a list of pms if a group or user does not exist" do
-      admin = Fabricate(:admin)
+      Fabricate(:query_group, query: query, group: group)
+
       SiteSetting.personal_message_enabled_groups = group.id
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time
 
-      result =
-        described_class.new(user.id).generate(query.id, query_params, %w[admins non-existent-group])
+      result = described_class.generate(query.id, query_params, [group.name, "non-existent-group"])
 
       expect(result).to eq(
         [
           {
             "title" => "Scheduled Report for #{query.name}",
-            "target_usernames" => [admin.username],
+            "target_group_names" => [group.name],
             "raw" =>
-              "Hi #{admin.username}, your data explorer report is ready.\n\n" +
+              "Hi #{group.name}, your data explorer report is ready.\n\n" +
                 "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
                 "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
                 "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
           },
         ],
       )
+    end
+
+    it "works with email recipients" do
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+
+      email = "john@doe.com"
+      result = described_class.generate(query.id, query_params, [email])
+
+      expect(result).to eq(
+        [
+          {
+            "title" => "Scheduled Report for #{query.name}",
+            "target_emails" => [email],
+            "raw" =>
+              "Hi #{email}, your data explorer report is ready.\n\n" +
+                "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
+                "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
+                "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+          },
+        ],
+      )
+    end
+
+    it "works with duplicate recipients" do
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("table data")
+
+      result = described_class.generate(query.id, query_params, [user.username, user.username])
+
+      expect(result).to eq(
+        [
+          {
+            "title" => "Scheduled Report for #{query.name}",
+            "target_usernames" => [user.username],
+            "raw" =>
+              "Hi #{user.username}, your data explorer report is ready.\n\n" +
+                "Query Name:\n#{query.name}\n\nHere are the results:\ntable data\n\n" +
+                "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
+                "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+          },
+        ],
+      )
+    end
+
+    it "works with multiple recipient types" do
+      Fabricate(:query_group, query: query, group: group)
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("table data")
+
+      result =
+        described_class.generate(
+          query.id,
+          query_params,
+          [group.name, user.username, "john@doe.com"],
+        )
+
+      expect(result.length).to eq(3)
+      expect(result[0]["target_usernames"]).to eq([user.username])
+      expect(result[1]["target_group_names"]).to eq([group.name])
+      expect(result[2]["target_emails"]).to eq(["john@doe.com"])
     end
   end
 end

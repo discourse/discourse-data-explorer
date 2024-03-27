@@ -2,19 +2,11 @@
 
 module ::DiscourseDataExplorer
   class ReportGenerator
-    def initialize(creator_user_id)
-      @creator_user_id = creator_user_id
-    end
-
-    def generate(query_id, query_params, recipients)
+    def self.generate(query_id, query_params, recipients)
       query = DiscourseDataExplorer::Query.find(query_id)
-      return [] unless query
-      return [] if recipients.empty?
+      return [] if !query || recipients.empty?
 
-      creator = User.find_by(id: @creator_user_id)
-      return [] unless Guardian.new(creator).can_send_private_messages?
-
-      usernames = filter_recipients_by_query_access(recipients, query)
+      recipients = filter_recipients_by_query_access(recipients, query)
       params = params_to_hash(query_params)
 
       result = DataExplorer.run_query(query, params)
@@ -22,10 +14,12 @@ module ::DiscourseDataExplorer
 
       table = ResultToMarkdown.convert(result[:pg_result])
 
-      build_report_pms(query, table, usernames)
+      build_report_pms(query, table, recipients)
     end
 
-    def params_to_hash(query_params)
+    private
+
+    def self.params_to_hash(query_params)
       params = JSON.parse(query_params)
       params_hash = {}
 
@@ -45,13 +39,16 @@ module ::DiscourseDataExplorer
       params_hash
     end
 
-    def build_report_pms(query, table = "", usernames = [])
+    def self.build_report_pms(query, table = "", targets = [])
       pms = []
-      usernames.flatten.compact.uniq.each do |username|
+      targets.each do |target|
+        name = target[0]
+        pm_type = "target_#{target[1]}s"
+
         pm = {}
         pm["title"] = "Scheduled Report for #{query.name}"
-        pm["target_usernames"] = Array(username)
-        pm["raw"] = "Hi #{username}, your data explorer report is ready.\n\n" +
+        pm[pm_type] = Array(name)
+        pm["raw"] = "Hi #{name}, your data explorer report is ready.\n\n" +
           "Query Name:\n#{query.name}\n\nHere are the results:\n#{table}\n\n" +
           "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
           "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})"
@@ -60,23 +57,25 @@ module ::DiscourseDataExplorer
       pms
     end
 
-    private
+    def self.filter_recipients_by_query_access(recipients, query)
+      users = User.where(username: recipients)
+      groups = Group.where(name: recipients)
+      emails = recipients - users.pluck(:username) - groups.pluck(:name)
+      result = []
 
-    def filter_recipients_by_query_access(recipients, query)
-      recipients.reduce([]) do |names, recipient|
-        if (group = Group.find_by(name: recipient)) &&
-             (
-               group.id == Group::AUTO_GROUPS[:admins] ||
-                 query.query_groups.exists?(group_id: group.id)
-             )
-          names.concat group.users.pluck(:username)
-        elsif (user = User.find_by(username: recipient)) &&
-              Guardian.new(user).user_can_access_query?(query)
-          names << recipient
-        end
-
-        names
+      users.each do |user|
+        result << [user.username, "username"] if Guardian.new(user).user_can_access_query?(query)
       end
+
+      groups.each do |group|
+        if group.id == Group::AUTO_GROUPS[:admins] || query.query_groups.exists?(group_id: group.id)
+          result << [group.name, "group_name"]
+        end
+      end
+
+      emails.each { |email| result << [email, "email"] if Email.is_valid?(email) }
+
+      result
     end
   end
 end
