@@ -126,8 +126,8 @@ describe DiscourseDataExplorer::ReportGenerator do
         )
 
       expect(result.length).to eq(3)
-      expect(result[0]["target_group_names"]).to eq([group.name])
-      expect(result[1]["target_usernames"]).to eq([user.username])
+      expect(result[0]["target_usernames"]).to eq([user.username])
+      expect(result[1]["target_group_names"]).to eq([group.name])
       expect(result[2]["target_emails"]).to eq(["john@doe.com"])
     end
   end
