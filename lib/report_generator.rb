@@ -2,7 +2,7 @@
 
 module ::DiscourseDataExplorer
   class ReportGenerator
-    def self.generate(query_id, query_params, recipients, opts)
+    def self.generate(query_id, query_params, recipients, opts = {})
       query = DiscourseDataExplorer::Query.find(query_id)
       return [] if !query || recipients.empty?
 
