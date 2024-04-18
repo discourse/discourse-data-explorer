@@ -89,6 +89,7 @@ after_initialize do
         field :recipients, component: :email_group_user, required: true
         field :query_id, component: :choices, required: true, extra: { content: queries }
         field :query_params, component: :"key-value", accepts_placeholders: true
+        field :skip_empty, component: :boolean
 
         version 1
         triggerables [:recurring]
@@ -97,6 +98,7 @@ after_initialize do
           recipients = Array(fields.dig("recipients", "value")).uniq
           query_id = fields.dig("query_id", "value")
           query_params = fields.dig("query_params", "value") || {}
+          skip_empty = fields.dig("skip_empty", "value") || false
 
           unless SiteSetting.data_explorer_enabled
             Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - plugin must be enabled to run automation #{automation.id}"
@@ -109,7 +111,7 @@ after_initialize do
           end
 
           DiscourseDataExplorer::ReportGenerator
-            .generate(query_id, query_params, recipients)
+            .generate(query_id, query_params, recipients, { skip_empty: })
             .each do |pm|
               begin
                 utils.send_pm(pm, automation_id: automation.id, prefers_encrypt: false)

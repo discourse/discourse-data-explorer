@@ -2,17 +2,18 @@
 
 module ::DiscourseDataExplorer
   class ReportGenerator
-    def self.generate(query_id, query_params, recipients)
+    def self.generate(query_id, query_params, recipients, opts)
       query = DiscourseDataExplorer::Query.find(query_id)
       return [] if !query || recipients.empty?
 
       recipients = filter_recipients_by_query_access(recipients, query)
       params = params_to_hash(query_params)
 
-      result = DataExplorer.run_query(query, params)
+      result = DataExplorer.run_query(query, params)[:pg_result]
       query.update!(last_run_at: Time.now)
 
-      table = ResultToMarkdown.convert(result[:pg_result])
+      return [] if opts[:skip_empty] && result.values.empty?
+      table = ResultToMarkdown.convert(result)
 
       build_report_pms(query, table, recipients)
     end
