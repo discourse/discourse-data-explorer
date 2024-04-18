@@ -90,7 +90,7 @@ describe "RecurringDataExplorerResultPm" do
 
       automation.update(last_updated_by_id: admin.id)
 
-      expect{ automation.trigger! }.to_not change { Post.count }
+      expect { automation.trigger! }.to_not change { Post.count }
     end
   end
 end
