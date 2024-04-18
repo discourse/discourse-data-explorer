@@ -84,5 +84,13 @@ describe "RecurringDataExplorerResultPm" do
         "Hi #{another_group.name}, your data explorer report is ready.\n\nQuery Name:\n#{query.name}",
       )
     end
+
+    it "does not send the PM if skip_empty" do
+      automation.upsert_field!("skip_empty", "boolean", { value: true })
+
+      automation.update(last_updated_by_id: admin.id)
+
+      expect { automation.trigger! }.to_not change { Post.count }
+    end
   end
 end

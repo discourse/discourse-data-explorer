@@ -107,4 +107,6 @@ en:
               label: Data Explorer Query
             query_params:
               label: Data Explorer Query parameters
+            skip_empty:
+              label: Skip sending PM if there are no results
 
