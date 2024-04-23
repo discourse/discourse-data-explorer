@@ -91,3 +91,5 @@ de:
               label: Daten-Explorer-Anfrage
             query_params:
               label: Daten-Explorer-Anfrageparameter
+            skip_empty:
+              label: Überspringe das Senden einer PN, wenn es keine Ergebnisse gibt
