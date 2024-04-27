@@ -1,5 +1,5 @@
+import { htmlSafe } from "@ember/template";
 import DModal from "discourse/components/d-modal";
-import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 
 const QueryHelp = <template>
