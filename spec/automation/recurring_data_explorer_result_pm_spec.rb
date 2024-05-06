@@ -47,7 +47,7 @@ describe "RecurringDataExplorerResultPm" do
   context "when using recurring trigger" do
     it "sends the pm at recurring date_date" do
       freeze_time 1.day.from_now do
-        expect { Jobs::DiscourseAutomationTracker.new.execute }.to change { Topic.count }.by(3)
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change { Topic.count }.by(3)
 
         title = "Scheduled Report for #{query.name}"
         expect(Topic.last(3).pluck(:title)).to eq([title, title, title])
