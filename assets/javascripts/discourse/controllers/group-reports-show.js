@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { BookmarkFormData } from "discourse/lib/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
@@ -91,12 +91,15 @@ export default class GroupReportsShowController extends Controller {
     return this.modal.show(BookmarkModal, {
       model: {
         bookmark: new BookmarkFormData(modalBookmark),
-        afterSave: (savedData) => {
-          const bookmark = this.store.createRecord("bookmark", savedData);
+        afterSave: (bookmarkFormData) => {
+          const bookmark = this.store.createRecord(
+            "bookmark",
+            bookmarkFormData.saveData
+          );
           this.queryGroupBookmark = bookmark;
           this.appEvents.trigger(
             "bookmarks:changed",
-            savedData,
+            bookmarkFormData.saveData,
             bookmark.attachedTo()
           );
         },
