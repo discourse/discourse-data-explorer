@@ -25,7 +25,7 @@ module ::DiscourseDataExplorer
       @default = default
       @nullable = nullable
       begin
-        cast_to_ruby default unless default.blank?
+        cast_to_ruby default if default.present?
       rescue ValidationError
         raise ValidationError.new(
                 "Parameter declaration error - the default value is not a valid #{type}",
