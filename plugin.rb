@@ -105,7 +105,7 @@ after_initialize do
             next
           end
 
-          unless recipients.present?
+          if recipients.blank?
             Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't find any recipients for automation #{automation.id}"
             next
           end

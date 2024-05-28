@@ -170,7 +170,7 @@ module ::DiscourseDataExplorer
       end
 
       needed_classes.each do |cls, column_nums|
-        next unless column_nums.present?
+        next if column_nums.blank?
         support_info = extra_data_pluck_fields[cls]
         next unless support_info
 
