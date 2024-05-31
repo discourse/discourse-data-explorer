@@ -21,5 +21,6 @@ id:
       edit: "Ubah"
       delete: "Hapus"
       query_groups: "Grup"
+      query_description: "Deskripsi"
       reset_params: "Reset"
       search_placeholder: "Cari..."

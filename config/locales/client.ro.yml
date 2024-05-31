@@ -26,3 +26,5 @@ ro:
       query_description: "Descriere"
       reset_params: "Resetează"
       search_placeholder: "Caută..."
+    group:
+      reports: "Rapoarte"

@@ -26,7 +26,14 @@ cs:
       delete: "Smazat"
       download_json: "JSON"
       download_csv: "CSV"
+      result_count:
+        one: "%{count} výsledek."
+        few: "%{count} výsledky."
+        many: "%{count} výsledky."
+        other: "%{count} výsledků."
       query_groups: "Skupiny"
       query_description: "Popis"
       reset_params: "obnovit výchozí"
       search_placeholder: "Hledat..."
+    group:
+      reports: "Přehledy"

@@ -20,3 +20,7 @@ te:
       delete: "తొలగించు"
       query_groups: "గుంపులు"
       query_description: "వివరణ"
+      query_user: "సృష్టికర్త"
+      reset_params: "రీసెట్ చేయండి"
+    group:
+      reports: "నివేదికలు"
