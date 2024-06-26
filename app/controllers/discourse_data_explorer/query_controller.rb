@@ -44,7 +44,7 @@ module ::DiscourseDataExplorer
     end
 
     def groups
-      render json: Group.all.select(:id, :name), root: false
+      render json: Group.all.select(:id, :name).as_json(only: %i[id name]), root: false
     end
 
     def group_reports_index
