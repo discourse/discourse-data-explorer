@@ -15,13 +15,20 @@ import { bind } from "discourse-common/utils/decorators";
 export default class GroupReportsShowController extends Controller {
   @service currentUser;
   @service modal;
+  @service router;
 
   @tracked showResults = false;
   @tracked loading = false;
   @tracked results = this.model.results;
   @tracked queryGroupBookmark = this.queryGroup?.bookmark;
 
+  queryParams = ["params"];
+
   explain = false;
+
+  get parsedParams() {
+    return this.params ? JSON.parse(this.params) : null;
+  }
 
   get hasParams() {
     return this.model.param_info.length > 0;
@@ -52,12 +59,18 @@ export default class GroupReportsShowController extends Controller {
     this.showResults = false;
 
     try {
+      const stringifiedParams = JSON.stringify(this.model.params);
+      this.router.transitionTo({
+        queryParams: {
+          params: this.model.params ? stringifiedParams : null,
+        },
+      });
       const response = await ajax(
         `/g/${this.get("group.name")}/reports/${this.model.id}/run`,
         {
           type: "POST",
           data: {
-            params: JSON.stringify(this.model.params),
+            params: stringifiedParams,
             explain: this.explain,
           },
         }
