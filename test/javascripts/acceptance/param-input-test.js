@@ -304,7 +304,18 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
 
-    const searchParams = new URLSearchParams(currentURL());
+    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
+    const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
+    assert.equal(monthsAgoParam, monthsAgoValue);
+  });
+
+  test("it puts params for the query into the url for group reports", async function (assert) {
+    await visit("/g/discourse/reports/-8");
+    const monthsAgoValue = "2";
+    await fillIn(".query-params input", monthsAgoValue);
+    await click("form.query-run button");
+
+    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
     const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
     assert.equal(monthsAgoParam, monthsAgoValue);
   });
@@ -312,6 +323,12 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   test("it loads the page if one of the parameter is null", async function (assert) {
     await visit('/admin/plugins/explorer?id=-7&params={"user":null}');
     assert.ok(exists(".query-params .user-chooser"));
+    assert.ok(exists(".query-run .btn.btn-primary"));
+  });
+
+  test("it loads the page if one of the parameter is null for group reports", async function (assert) {
+    await visit('/g/discourse/reports/-8?params={"months_ago":null}');
+    assert.ok(exists(".query-params input"));
     assert.ok(exists(".query-run .btn.btn-primary"));
   });
 
