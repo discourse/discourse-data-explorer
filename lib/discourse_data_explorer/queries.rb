@@ -110,11 +110,11 @@ module ::DiscourseDataExplorer
           name: "Number of replies by category",
           description: "List the number of replies by category.",
         },
-        "poll-results-irv": {
+        "poll-results-ranked-choice": {
           id: -19,
-          name: "Poll results report (for Instant Run-off Voting polls)",
+          name: "Poll results report (for Ranked Choice polls)",
           description:
-            "Details of an Instant Run-off poll result, including details about each vote and voter, useful for analyzing results in external software.",
+            "Details of a Ranked Choice poll result, including details about each vote and voter inc. rank, useful for analyzing results in external software.",
         },
       }.with_indifferent_access
 
@@ -511,7 +511,7 @@ module ::DiscourseDataExplorer
           polls.post_id = :post_id
       SQL
 
-      queries["poll-results-irv"]["sql"] = <<~SQL
+      queries["poll-results-ranked-choice"]["sql"] = <<~SQL
       -- [params]
       -- string :poll_name
       -- int :post_id
