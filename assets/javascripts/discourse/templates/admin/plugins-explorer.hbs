@@ -128,6 +128,8 @@
                     @mode="sql"
                     @disabled={{this.selectedItem.destroyed}}
                     {{on "click" this.setDirty}}
+                    @save={{this.save}}
+                    @submit={{this.saveAndRun}}
                   />
                 </div>
 
