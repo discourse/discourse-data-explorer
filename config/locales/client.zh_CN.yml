@@ -89,3 +89,5 @@ zh_CN:
               label: 数据资源管理器查询
             query_params:
               label: 数据资源管理器查询参数
+            skip_empty:
+              label: 如果没有结果，则跳过发送 PM

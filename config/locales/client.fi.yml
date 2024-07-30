@@ -91,3 +91,5 @@ fi:
               label: Dataselaimen kysely
             query_params:
               label: Dataselaimen kyselyparametrit
+            skip_empty:
+              label: Ohita yksityisviestin lähettäminen, jos tuloksia ei ole

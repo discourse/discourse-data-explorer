@@ -91,3 +91,5 @@ it:
               label: Query di Data Explorer
             query_params:
               label: Parametri della query di Data Explorer
+            skip_empty:
+              label: Salta l'invio di MP se non ci sono risultati

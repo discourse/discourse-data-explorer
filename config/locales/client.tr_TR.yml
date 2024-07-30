@@ -91,3 +91,5 @@ tr_TR:
               label: Veri Gezgini Sorgusu
             query_params:
               label: Veri Gezgini Sorgu parametreleri
+            skip_empty:
+              label: Sonuç yoksa kişisel mesaj göndermeyi atlayın
