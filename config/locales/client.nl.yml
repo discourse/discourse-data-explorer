@@ -91,3 +91,5 @@ nl:
               label: Gegevensverkenner-query
             query_params:
               label: Gegevensverkenner-queryparameters
+            skip_empty:
+              label: PB verzenden overslaan als er geen resultaten zijn
