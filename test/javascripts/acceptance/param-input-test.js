@@ -134,6 +134,19 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
             hidden: false,
             user_id: 1,
           },
+          {
+            id: 3,
+            sql: "SELECT 1",
+            name: "Params test",
+            description: "test for params.",
+            param_info: [],
+            created_at: "2021-02-02T12:21:11.449Z",
+            username: "system",
+            group_ids: [41],
+            last_run_at: "2021-02-11T08:29:59.337Z",
+            hidden: false,
+            user_id: -1,
+          },
         ],
       });
     });
@@ -296,6 +309,48 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
         ],
       });
     });
+
+    server.get("/admin/plugins/explorer/queries/3", () => {
+      return helper.response({
+        query: {
+          id: 3,
+          sql: "SELECT 1",
+          name: "Params test",
+          description: "test for params.",
+          param_info: [],
+          created_at: "2021-02-02T12:21:11.449Z",
+          username: "system",
+          group_ids: [41],
+          last_run_at: "2021-02-11T08:29:59.337Z",
+          hidden: false,
+          user_id: -1,
+        },
+      });
+    });
+    server.put("/admin/plugins/explorer/queries/3", () => {
+      return helper.response({
+        query: {
+          id: 3,
+          sql: "-- [params]\n-- int :months_ago = 1\n\nSELECT 1",
+          name: "Params test",
+          description: "test for params.",
+          param_info: [
+            {
+              identifier: "months_ago",
+              type: "int",
+              default: "1",
+              nullable: false,
+            },
+          ],
+          created_at: "2021-02-02T12:21:11.449Z",
+          username: "system",
+          group_ids: [41],
+          last_run_at: "2021-02-11T08:29:59.337Z",
+          hidden: false,
+          user_id: -1,
+        },
+      });
+    });
   });
 
   test("it puts params for the query into the url", async function (assert) {
@@ -338,5 +393,18 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
     assert.equal(query(".query-params input").value, monthsAgoValue);
+  });
+
+  test("it creates input boxes if has parameters when save", async function (assert) {
+    await visit("/admin/plugins/explorer?id=3");
+    assert.notOk(exists(".query-params input"));
+    await click(".query-edit .btn-edit-query");
+    await click(".query-editor .ace_text-input");
+    await fillIn(
+      ".query-editor .ace_text-input",
+      "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
+    );
+    await click(".query-edit .btn-save-query");
+    assert.ok(exists(".query-params input"));
   });
 });
