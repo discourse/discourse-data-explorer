@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "Param input", type: :system, js: true do
-  fab!(:category)
-  fab!(:group)
-
   ALL_PARAMS_SQL = <<~SQL
     -- [params]
     -- int          :int
@@ -39,8 +36,8 @@ RSpec.describe "Param input", type: :system, js: true do
     -- topic_id     :topic_id_with_default = /t/-/21
     -- int_list     :int_list_with_default = 1,2,3
     -- string_list  :string_list_with_default = a,b,c
-    -- category_id  :category_id_with_default = #{category.name}
-    -- group_id     :group_id_with_default = #{group.name}
+    -- category_id  :category_id_with_default = general
+    -- group_id     :group_id_with_default = staff
     -- user_list    :mul_users_with_default = system,discobot
     SELECT 1
   SQL
