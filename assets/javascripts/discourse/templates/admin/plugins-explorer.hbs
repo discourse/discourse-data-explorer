@@ -170,6 +170,7 @@
           <div class="pull-left left-buttons">
             {{#if this.editingQuery}}
               <DButton
+                class="btn-save-query"
                 @action={{this.save}}
                 @label="explorer.save"
                 @disabled={{this.saveDisabled}}
@@ -177,6 +178,7 @@
             {{else}}
               {{#unless this.editDisabled}}
                 <DButton
+                  class="btn-edit-query"
                   @action={{this.editQuery}}
                   @label="explorer.edit"
                   @icon="pencil-alt"

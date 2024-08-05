@@ -1,3 +1,4 @@
+import { computed } from "@ember/object";
 import RestModel from "discourse/models/rest";
 import getURL from "discourse-common/lib/get-url";
 
@@ -23,6 +24,7 @@ export default class Query extends RestModel {
     return getURL(`/admin/plugins/explorer/queries/${this.id}.json?export=1`);
   }
 
+  @computed("param_info")
   get hasParams() {
     return this.param_info.length;
   }
