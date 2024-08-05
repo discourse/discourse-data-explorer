@@ -164,6 +164,7 @@ export default class ParamInput extends Component {
   }
 
   dasherizeCategoryId(value) {
+    value = String(value || "");
     const isPositiveInt = /^\d+$/.test(value);
     if (!isPositiveInt && value !== dasherize(value)) {
       return dasherize(value);
