@@ -89,3 +89,5 @@ ja:
               label: データエクスプローラーのクエリ
             query_params:
               label: データエクスプローラーのクエリパラメーター
+            skip_empty:
+              label: 結果がない場合は PM の送信をスキップする
