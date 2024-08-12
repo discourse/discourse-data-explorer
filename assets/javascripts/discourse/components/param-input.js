@@ -19,7 +19,7 @@ const layoutMap = {
   user_id: "user_id",
   post_id: "string",
   topic_id: "generic",
-  category_id: "generic",
+  category_id: "category_id",
   group_id: "generic",
   badge_id: "generic",
   int_list: "generic",
@@ -47,6 +47,8 @@ export default class ParamInput extends Component {
     const identifier = this.args.info.identifier;
     const initialValues = this.args.initialValues;
 
+    console.log(this.args);
+
     // access parsed params if present to update values to previously ran values
     if (initialValues && identifier in initialValues) {
       const initialValue = initialValues[identifier];
@@ -62,21 +64,24 @@ export default class ParamInput extends Component {
           this.args.updateParams(this.args.info.identifier, this.boolValue);
         }
       } else {
-        this.value =
-          this.args.info.type === "category_id"
-            ? this.dasherizeCategoryId(initialValue)
-            : initialValue;
+        this.value = this.normalizeValue(initialValue);
         this.args.updateParams(this.args.info.identifier, this.value);
       }
     } else {
       // if no parsed params then get and set default values
       const defaultValue = this.args.info.default;
-      this.value =
-        this.args.info.type === "category_id"
-          ? this.dasherizeCategoryId(defaultValue)
-          : defaultValue;
+      this.value = this.normalizeValue(defaultValue);
       this.boolValue = defaultValue !== "false";
       this.nullableBoolValue = defaultValue;
+    }
+  }
+
+  normalizeValue(value) {
+    switch (this.args.info.type) {
+      case "category_id":
+        return this.digitalizeCategoryId(value);
+      default:
+        return value;
     }
   }
 
@@ -135,18 +140,8 @@ export default class ParamInput extends Component {
       case "category_id":
         if (isPositiveInt) {
           return !!this.site.categories.find((c) => c.id === intVal);
-        } else if (/\//.test(value)) {
-          const match = /(.*)\/(.*)/.exec(value);
-          if (!match) {
-            return false;
-          }
-          const result = Category.findBySlug(
-            dasherize(match[2]),
-            dasherize(match[1])
-          );
-          return !!result;
         } else {
-          return !!Category.findBySlug(dasherize(value));
+          return false;
         }
       case "group_id":
         const groups = this.site.get("groups");
@@ -163,13 +158,25 @@ export default class ParamInput extends Component {
     return this.site.get("groups");
   }
 
-  dasherizeCategoryId(value) {
+  digitalizeCategoryId(value) {
     value = String(value || "");
     const isPositiveInt = /^\d+$/.test(value);
-    if (!isPositiveInt && value !== dasherize(value)) {
-      return dasherize(value);
+    if (!isPositiveInt) {
+      if (/\//.test(value)) {
+        const match = /(.*)\/(.*)/.exec(value);
+        if (!match) {
+          value = null;
+        } else {
+          value = Category.findBySlug(
+            dasherize(match[2]),
+            dasherize(match[1])
+          )?.id;
+        }
+      } else {
+        value = Category.findBySlug(dasherize(value))?.id;
+      }
     }
-    return value;
+    return value?.toString();
   }
 
   @action
@@ -177,12 +184,9 @@ export default class ParamInput extends Component {
     // handle selectKit inputs as well as traditional inputs
     const value = input.target ? input.target.value : input;
     if (value.length) {
-      this.value =
-        this.args.info.type === "category_id"
-          ? this.dasherizeCategoryId(value.toString())
-          : value.toString();
+      this.value = this.normalizeValue(value.toString());
     } else {
-      this.value = value;
+      this.value = this.normalizeValue(value);
     }
 
     this.args.updateParams(this.args.info.identifier, this.value);
