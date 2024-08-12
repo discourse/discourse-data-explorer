@@ -47,8 +47,6 @@ export default class ParamInput extends Component {
     const identifier = this.args.info.identifier;
     const initialValues = this.args.initialValues;
 
-    console.log(this.args);
-
     // access parsed params if present to update values to previously ran values
     if (initialValues && identifier in initialValues) {
       const initialValue = initialValues[identifier];
