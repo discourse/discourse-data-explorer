@@ -91,3 +91,5 @@ pt_BR:
               label: Consulta do explorador de dados
             query_params:
               label: Parâmetros da consulta do explorador de dados
+            skip_empty:
+              label: Pular envio de PM se não houver resultados
