@@ -63,6 +63,12 @@ RSpec.describe "Param input", type: :system, js: true do
 
     ::DiscourseDataExplorer::Parameter
       .create_from_sql(ALL_PARAMS_SQL)
-      .each { |param| expect(page).to have_css(".query-params [name=\"#{param.identifier}\"]") }
+      .each do |param|
+        if !param.nullable && param.type != :boolean && param.default.nil?
+          expect(page).to have_css(".query-params .param.invalid [name=\"#{param.identifier}\"]")
+        else
+          expect(page).to have_css(".query-params .param.valid [name=\"#{param.identifier}\"]")
+        end
+      end
   end
 end

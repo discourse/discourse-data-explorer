@@ -64,6 +64,14 @@
     />
     <span class="param-name">{{@info.identifier}}</span>
 
+  {{else if (eq this.type "category_id")}}
+    <CategoryChooser
+      @value={{this.value}}
+      @onChange={{this.updateValue}}
+      name={{@info.identifier}}
+    />
+    <span class="param-name">{{@info.identifier}}</span>
+
   {{else}}
     <TextField
       @value={{this.value}}
