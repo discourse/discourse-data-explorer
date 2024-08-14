@@ -37,6 +37,7 @@ export default class PluginsExplorerController extends Controller {
   explain = false;
   acceptedImportFileTypes = ["application/json"];
   order = null;
+  form = null;
 
   get validQueryPresent() {
     return !!this.selectedItem.id;
@@ -353,6 +354,11 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  onRegisterApi(form) {
+    this.form = form;
+  }
+
+  @action
   updateParams(identifier, value) {
     this.selectedItem.set(`params.${identifier}`, value);
   }
@@ -379,6 +385,11 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   run() {
+    // For now, this is just a form validation.
+    // defer the validation to load params
+    setTimeout(() => {
+      this.form?.submit();
+    }, 10);
     this.setProperties({
       loading: true,
       showResults: false,

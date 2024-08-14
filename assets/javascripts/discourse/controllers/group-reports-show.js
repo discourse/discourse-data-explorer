@@ -23,7 +23,7 @@ export default class GroupReportsShowController extends Controller {
   @tracked queryGroupBookmark = this.queryGroup?.bookmark;
 
   queryParams = ["params"];
-
+  form = null;
   explain = false;
 
   get parsedParams() {
@@ -55,6 +55,7 @@ export default class GroupReportsShowController extends Controller {
 
   @bind
   async run() {
+    this.form?.submit();
     this.loading = true;
     this.showResults = false;
 
@@ -128,5 +129,10 @@ export default class GroupReportsShowController extends Controller {
   @action
   updateParams(identifier, value) {
     this.set(`model.params.${identifier}`, value);
+  }
+
+  @action
+  onRegisterApi(form) {
+    this.form = form;
   }
 }

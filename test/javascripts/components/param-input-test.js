@@ -25,12 +25,16 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
       updateParams,
     });
 
-    await render(hbs`<ParamInput
-      @params={{this.params}}
-      @initialValues={{this.initialValues}}
-      @info={{this.info}}
-      @updateParams={{this.updateParams}}
-    />`);
+    await render(hbs`
+    <Form as |form|>
+      <ParamInput
+        @params={{this.params}}
+        @initialValues={{this.initialValues}}
+        @info={{this.info}}
+        @updateParams={{this.updateParams}}
+        @form={{form}}
+      />
+    </Form>`);
 
     const categoryChooser = selectKit(".category-chooser");
 

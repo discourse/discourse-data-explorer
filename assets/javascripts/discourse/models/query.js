@@ -24,9 +24,17 @@ export default class Query extends RestModel {
     return getURL(`/admin/plugins/explorer/queries/${this.id}.json?export=1`);
   }
 
-  @computed("param_info")
+  @computed("param_info", "updateing")
   get hasParams() {
-    return this.param_info.length;
+    // When saving, we need to refresh the param-input component to clean up the old key
+    return this.param_info.length && !this.updateing;
+  }
+
+  beforeUpdate() {
+    this.set("updateing", true);
+  }
+  afterUpdate() {
+    this.set("updateing", false);
   }
 
   resetParams() {

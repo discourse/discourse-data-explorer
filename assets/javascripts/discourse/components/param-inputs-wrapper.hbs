@@ -1,12 +1,15 @@
 {{#if @hasParams}}
   <div class="query-params">
-    {{#each @paramInfo as |pinfo|}}
-      <ParamInput
-        @params={{@params}}
-        @initialValues={{@initialValues}}
-        @info={{pinfo}}
-        @updateParams={{@updateParams}}
-      />
-    {{/each}}
+    <Form @onRegisterApi={{@onRegisterApi}} class="params-form" as |form|>
+      {{#each @paramInfo as |pinfo|}}
+        <ParamInput
+          @params={{@params}}
+          @initialValues={{@initialValues}}
+          @info={{pinfo}}
+          @updateParams={{@updateParams}}
+          @form={{form}}
+        />
+      {{/each}}
+    </Form>
   </div>
 {{/if}}

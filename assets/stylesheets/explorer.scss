@@ -244,11 +244,16 @@ table.group-reports {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  .params-form {
+    margin: 5px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
   .param > input,
   .param > .select-kit {
     margin: 9px;
   }
-  .invalid > input {
+  .invalid input {
     background-color: var(--danger-low);
   }
   .invalid .ac-wrap {
@@ -269,9 +274,6 @@ table.group-reports {
       width: auto;
       max-width: 250px;
     }
-  }
-  .param-name {
-    margin-right: 1em;
   }
 }
 

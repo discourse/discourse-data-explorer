@@ -9,9 +9,9 @@ import I18n from "I18n";
 
 const layoutMap = {
   int: "int",
-  bigint: "int",
+  bigint: "string",
   boolean: "boolean",
-  string: "generic",
+  string: "string",
   time: "generic",
   date: "generic",
   datetime: "generic",
@@ -28,12 +28,24 @@ const layoutMap = {
   group_list: "group_list",
 };
 
+const ERRORS = {
+  REQUIRED: I18n.t("form_kit.errors.required"),
+  NOT_AN_INTEGER: I18n.t("form_kit.errors.not_an_integer"),
+  NOT_A_NUMBER: I18n.t("form_kit.errors.not_a_number"),
+  OVERFLOW_HIGH: I18n.t("form_kit.errors.too_high", { count: 2147484647 }),
+  OVERFLOW_LOW: I18n.t("form_kit.errors.too_low", { count: -2147484648 }),
+  INVALID: I18n.t("explorer.form.errors.invalid"),
+  NO_SUCH_CATEGORY: I18n.t("explorer.form.errors.no_such_category"),
+  NO_SUCH_GROUP: I18n.t("explorer.form.errors.no_such_group"),
+};
+
 export default class ParamInput extends Component {
   @service site;
 
+  /**
+   * @type {string | string[] | boolean | null}
+   */
   @tracked value;
-  @tracked boolValue;
-  @tracked nullableBoolValue;
 
   boolTypes = [
     { name: I18n.t("explorer.types.bool.true"), id: "Y" },
@@ -47,40 +59,70 @@ export default class ParamInput extends Component {
     const identifier = this.args.info.identifier;
     const initialValues = this.args.initialValues;
 
-    // access parsed params if present to update values to previously ran values
-    if (initialValues && identifier in initialValues) {
-      const initialValue = initialValues[identifier];
-      if (this.type === "boolean") {
-        if (this.args.info.nullable) {
-          this.nullableBoolValue = initialValue;
-          this.args.updateParams(
-            this.args.info.identifier,
-            this.nullableBoolValue
-          );
-        } else {
-          this.boolValue = initialValue !== "false";
-          this.args.updateParams(this.args.info.identifier, this.boolValue);
-        }
-      } else {
+    // defet it to next tick to prevent infinite looping.
+    setTimeout(() => {
+      // access parsed params if present to update values to previously ran values
+      if (initialValues && identifier in initialValues) {
+        const initialValue = initialValues[identifier];
         this.value = this.normalizeValue(initialValue);
-        this.args.updateParams(this.args.info.identifier, this.value);
+        this.args.updateParams(this.args.info.identifier, this.provideValue);
+        this.form.set(identifier, this.value);
+      } else {
+        // if no parsed params then get and set default values
+        const defaultValue = this.args.info.default;
+        this.value = this.normalizeValue(defaultValue);
+        if (this.value != null) {
+          this.args.updateParams(this.args.info.identifier, this.provideValue);
+          this.form.set(identifier, this.value);
+        }
       }
-    } else {
-      // if no parsed params then get and set default values
-      const defaultValue = this.args.info.default;
-      this.value = this.normalizeValue(defaultValue);
-      this.boolValue = defaultValue !== "false";
-      this.nullableBoolValue = defaultValue;
-    }
+    }, 0);
   }
 
+  /** The value we will store in this.value */
   normalizeValue(value) {
     switch (this.args.info.type) {
       case "category_id":
         return this.digitalizeCategoryId(value);
+      case "boolean":
+        if (value == null) {
+          return this.args.info.nullable ? "#null" : false;
+        }
+        return value;
+      case "group_list":
+      case "user_list":
+        if (Array.isArray(value)) {
+          return value || null;
+        }
+        return value?.split(",") || null;
+      case "user_id":
+        if (Array.isArray(value)) {
+          return value[0];
+        }
+        return value;
       default:
         return value;
     }
+  }
+
+  /** The value we submitted when updatingParams */
+  get provideValue() {
+    switch (this.type) {
+      case "string":
+      case "int":
+        return this.value != null ? String(this.value) : "";
+      case "boolean":
+        return String(this.value);
+      case "group_list":
+      case "user_list":
+        return this.value.join(",");
+      default:
+        return this.value;
+    }
+  }
+
+  get form() {
+    return this.args.form;
   }
 
   get type() {
@@ -91,69 +133,94 @@ export default class ParamInput extends Component {
     return layoutMap[type] || "generic";
   }
 
-  get valid() {
+  /** @returns {null | string} */
+  getError() {
     const nullable = this.args.info.nullable;
+    if (isEmpty(this.value)) {
+      return nullable ? null : ERRORS.REQUIRED;
+    }
+
     // intentionally use 'this.args' here instead of 'this.type'
     // to get the original key instead of the translated value from the layoutMap
     const type = this.args.info.type;
-    let value;
-
-    if (type === "boolean") {
-      value = nullable ? this.nullableBoolValue : this.boolValue;
-    } else {
-      value = this.value;
-    }
-
-    if (isEmpty(value)) {
-      return nullable;
-    }
+    const value = String(this.value);
 
     const intVal = parseInt(value, 10);
-    const intValid =
-      !isNaN(intVal) && intVal < 2147483648 && intVal > -2147483649;
     const isPositiveInt = /^\d+$/.test(value);
     switch (type) {
       case "int":
-        return /^-?\d+$/.test(value) && intValid;
+        if (intVal >= 2147483648) {
+          return ERRORS.OVERFLOW_HIGH;
+        }
+        if (intVal <= -2147483649) {
+          return ERRORS.OVERFLOW_LOW;
+        }
+        return null;
       case "bigint":
-        return /^-?\d+$/.test(value) && !isNaN(intVal);
+        if (isNaN(intVal)) {
+          return ERRORS.NOT_A_NUMBER;
+        }
+        return /^-?\d+$/.test(value) ? null : ERRORS.NOT_AN_INTEGER;
       case "boolean":
-        return /^Y|N|#null|true|false/.test(value);
+        return /^Y|N|#null|true|false/.test(value) ? null : ERRORS.INVALID;
       case "double":
-        return (
-          !isNaN(parseFloat(value)) ||
-          /^(-?)Inf(inity)?$/i.test(value) ||
-          /^(-?)NaN$/i.test(value)
-        );
+        if (isNaN(parseFloat(value))) {
+          if (/^(-?)Inf(inity)?$/i.test(value) || /^(-?)NaN$/i.test(value)) {
+            return null;
+          }
+          return ERRORS.NOT_A_NUMBER;
+        }
+        return null;
       case "int_list":
-        return value.split(",").every((i) => /^(-?\d+|null)$/.test(i.trim()));
+        return value.split(",").every((i) => /^(-?\d+|null)$/.test(i.trim()))
+          ? null
+          : ERRORS.INVALID;
       case "post_id":
-        return (
-          isPositiveInt ||
+        return isPositiveInt ||
           /\d+\/\d+(\?u=.*)?$/.test(value) ||
           /\/t\/[^/]+\/(\d+)(\?u=.*)?/.test(value)
-        );
+          ? null
+          : ERRORS.INVALID;
       case "topic_id":
-        return isPositiveInt || /\/t\/[^/]+\/(\d+)/.test(value);
+        return isPositiveInt || /\/t\/[^/]+\/(\d+)/.test(value)
+          ? null
+          : ERRORS.INVALID;
       case "category_id":
         if (isPositiveInt) {
-          return !!this.site.categories.find((c) => c.id === intVal);
+          return this.site.categories.find((c) => c.id === intVal)
+            ? null
+            : ERRORS.NO_SUCH_CATEGORY;
         } else {
-          return false;
+          return ERRORS.REQUIRED;
         }
       case "group_id":
         const groups = this.site.get("groups");
         if (isPositiveInt) {
-          return !!groups.find((g) => g.id === intVal);
+          return groups.find((g) => g.id === intVal)
+            ? null
+            : ERRORS.NO_SUCH_GROUP;
         } else {
-          return !!groups.find((g) => g.name === value);
+          return groups.find((g) => g.name === value)
+            ? null
+            : ERRORS.NO_SUCH_GROUP;
         }
     }
-    return true;
+    return null;
+  }
+
+  get valid() {
+    return this.getError() == null;
   }
 
   get allGroups() {
     return this.site.get("groups");
+  }
+
+  get validation() {
+    if (this.type === "boolean") {
+      return "";
+    }
+    return this.args.info.nullable ? "" : "required";
   }
 
   digitalizeCategoryId(value) {
@@ -178,37 +245,27 @@ export default class ParamInput extends Component {
   }
 
   @action
+  validate(name, value, { addError }) {
+    const message = this.getError();
+    if (message != null) {
+      // skip require validation for we have used them in @validation
+      if (message === ERRORS.REQUIRED) {
+        return;
+      }
+      addError(name, {
+        title: this.args.info.identifier,
+        message,
+      });
+    }
+  }
+
+  @action
   updateValue(input) {
     // handle selectKit inputs as well as traditional inputs
-    const value = input.target ? input.target.value : input;
-    if (value.length) {
-      this.value = this.normalizeValue(value.toString());
-    } else {
-      this.value = this.normalizeValue(value);
-    }
-
-    this.args.updateParams(this.args.info.identifier, this.value);
-  }
-
-  @action
-  updateBoolValue(input) {
-    this.boolValue = input.target.checked;
-    this.args.updateParams(
-      this.args.info.identifier,
-      this.boolValue.toString()
-    );
-  }
-
-  @action
-  updateNullableBoolValue(input) {
-    this.nullableBoolValue = input;
-    this.args.updateParams(this.args.info.identifier, this.nullableBoolValue);
-  }
-
-  @action
-  updateGroupValue(input) {
-    this.value = input;
-    this.args.updateParams(this.args.info.identifier, this.value.join(","));
+    const value = input?.target ? input.target.value : input;
+    this.value = this.normalizeValue(value);
+    this.args.updateParams(this.args.info.identifier, this.provideValue);
+    this.form.set(this.args.info.identifier, value);
   }
 }
 
