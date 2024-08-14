@@ -384,22 +384,30 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  run() {
-    // For now, this is just a form validation.
-    // defer the validation to load params
-    setTimeout(() => {
-      this.form?.submit();
-    }, 10);
+  async run() {
+    let params = null;
+    if (this.selectedItem.hasParams) {
+      try {
+        params = await this.form?.submit();
+      } catch (err) {
+        if (err !== "validation_failed") {
+          throw err;
+        }
+      }
+      if (params == null) {
+        return;
+      }
+    }
     this.setProperties({
       loading: true,
       showResults: false,
-      params: JSON.stringify(this.selectedItem.params),
+      params: JSON.stringify(params),
     });
 
     ajax("/admin/plugins/explorer/queries/" + this.selectedItem.id + "/run", {
       type: "POST",
       data: {
-        params: JSON.stringify(this.selectedItem.params),
+        params: JSON.stringify(params),
         explain: this.explain,
       },
     })

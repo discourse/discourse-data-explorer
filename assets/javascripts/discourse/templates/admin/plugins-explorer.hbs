@@ -233,14 +233,13 @@
       </div>
 
       <form class="query-run" {{on "submit" this.run}}>
-        <ParamInputsWrapper
-          @hasParams={{this.selectedItem.hasParams}}
-          @params={{this.selectedItem.params}}
-          @initialValues={{this.parsedParams}}
-          @paramInfo={{this.selectedItem.param_info}}
-          @updateParams={{this.updateParams}}
-          @onRegisterApi={{this.onRegisterApi}}
-        />
+        {{#if this.selectedItem.hasParams}}
+          <ParamInputForm
+            @initialValues={{this.parsedParams}}
+            @paramInfo={{this.selectedItem.param_info}}
+            @onRegisterApi={{this.onRegisterApi}}
+          />
+        {{/if}}
 
         {{#if this.runDisabled}}
           {{#if this.saveDisabled}}

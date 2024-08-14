@@ -4,43 +4,40 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-const values = {};
-function updateParams(identifier, value) {
-  values[identifier] = value;
-}
-
 module("Data Explorer Plugin | Component | param-input", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the categroy_id type correctly", async function (assert) {
     this.setProperties({
-      info: {
-        identifier: "category_id",
-        type: "category_id",
-        default: null,
-        nullable: false,
-      },
+      param_info: [
+        {
+          identifier: "category_id",
+          type: "category_id",
+          default: null,
+          nullable: false,
+        },
+      ],
       initialValues: {},
-      params: {},
-      updateParams,
+      onRegisterApi: ({ submit }) => {
+        this.submit = submit;
+      },
     });
 
     await render(hbs`
-    <Form as |form|>
-      <ParamInput
-        @params={{this.params}}
-        @initialValues={{this.initialValues}}
-        @info={{this.info}}
-        @updateParams={{this.updateParams}}
-        @form={{form}}
-      />
-    </Form>`);
+    <ParamInputForm
+      @hasParams=true
+      @initialValues={{this.initialValues}}
+      @paramInfo={{this.param_info}}
+      @onRegisterApi={{this.onRegisterApi}}
+    />`);
 
     const categoryChooser = selectKit(".category-chooser");
 
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
 
-    assert.strictEqual(values.category_id, "2");
+    this.submit().then(({ category_id }) => {
+      assert.strictEqual(category_id, "2");
+    });
   });
 });
