@@ -193,7 +193,13 @@ module ::DiscourseDataExplorer
         if string.gsub(/[ _]/, "") =~ /^-?\d+$/
           klass_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
           begin
-            object = Object.const_get(klass_name).with_deleted.find(string.gsub(/[ _]/, "").to_i)
+            finder =
+              if type == :post_id || type == :topic_id
+                Object.const_get(klass_name).with_deleted
+              else
+                Object.const_get(klass_name)
+              end
+            object = finder.find(string.gsub(/[ _]/, "").to_i)
             value = object.id
           rescue ActiveRecord::RecordNotFound
             invalid_format string, "The specified #{klass_name} was not found"
