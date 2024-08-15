@@ -58,5 +58,23 @@ RSpec.describe DiscourseDataExplorer::Parameter do
         end
       end
     end
+
+    describe "group_id type" do
+      fab!(:group)
+
+      context "when the value provided is an integer" do
+        it "raises an error if no such group exists" do
+          expect { param("group_id", :group_id, nil, false).cast_to_ruby("-999") }.to raise_error(
+            ::DiscourseDataExplorer::ValidationError,
+          )
+        end
+
+        it "returns the group id if the group exists" do
+          expect(param("group_id", :group_id, nil, false).cast_to_ruby(group.id.to_s)).to eq(
+            group.id,
+          )
+        end
+      end
+    end
   end
 end
