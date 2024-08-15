@@ -106,10 +106,14 @@ function serializeValue(type, value) {
 }
 
 function validationOf(info) {
-  if (info.type === "boolean") {
-    return "";
+  switch (info.type) {
+    case "boolean":
+      return info.nullable ? "required" : "";
+    case "string_list":
+      return "required:trim";
+    default:
+      return info.nullable ? "" : "required";
   }
-  return info.nullable ? "" : "required";
 }
 
 function componentOf(info) {
