@@ -106,11 +106,13 @@ function serializeValue(type, value) {
 }
 
 function validationOf(info) {
-  switch (info.type) {
+  switch (layoutMap[info.type]) {
     case "boolean":
       return info.nullable ? "required" : "";
+    case "string":
     case "string_list":
-      return "required:trim";
+    case "generic":
+      return info.nullable ? "" : "required:trim";
     default:
       return info.nullable ? "" : "required";
   }
