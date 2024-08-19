@@ -246,8 +246,10 @@ table.group-reports {
   flex-wrap: wrap;
   .params-form {
     margin: 5px;
-    flex-direction: row;
-    flex-wrap: wrap;
+    html.desktop-view & {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
   }
   .param > input,
   .param > .select-kit {

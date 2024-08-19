@@ -11,6 +11,7 @@ import {
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
 import { bind } from "discourse-common/utils/decorators";
+import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 
 export default class GroupReportsShowController extends Controller {
   @service currentUser;
@@ -90,7 +91,7 @@ export default class GroupReportsShowController extends Controller {
     } catch (error) {
       if (error.jqXHR?.status === 422 && error.jqXHR.responseJSON) {
         this.results = error.jqXHR.responseJSON;
-      } else if (error !== "validation_failed") {
+      } else if (error instanceof ParamValidationError) {
         popupAjaxError(error);
       }
     } finally {

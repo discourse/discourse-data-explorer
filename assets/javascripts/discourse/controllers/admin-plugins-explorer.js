@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
+import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
@@ -390,8 +391,8 @@ export default class PluginsExplorerController extends Controller {
       try {
         params = await this.form?.submit();
       } catch (err) {
-        if (err !== "validation_failed") {
-          throw err;
+        if (err instanceof ParamValidationError) {
+          return;
         }
       }
       if (params == null) {

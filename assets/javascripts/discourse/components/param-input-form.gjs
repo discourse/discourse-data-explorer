@@ -12,6 +12,8 @@ import GroupListInput from "./param-input/group-list-input";
 import UserIdInput from "./param-input/user-id-input";
 import UserListInput from "./param-input/user-list-input";
 
+export class ParamValidationError extends Error {}
+
 const layoutMap = {
   int: "int",
   bigint: "string",
@@ -278,7 +280,7 @@ export default class ParamInputForm extends Component {
     }
     await this.form.submit();
     if (this.serializedData == null) {
-      throw "validation_failed";
+      throw new ParamValidationError("validation_failed");
     } else {
       return this.serializedData;
     }
