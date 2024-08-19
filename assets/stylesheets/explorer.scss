@@ -241,9 +241,6 @@ table.group-reports {
 
 .query-params {
   border: 1px solid var(--header_primary-medium);
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
   .params-form {
     margin: 5px;
     html.desktop-view & {
