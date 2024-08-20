@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import CategoryChooser from "select-kit/components/category-chooser";
 
-export default class GroupListInput extends Component {
+export default class CategoryIdInput extends Component {
   // CategoryChooser will try to modify the value of value,
   // triggering a setting-on-hash error. So we have to do the dirty work.
   get data() {
