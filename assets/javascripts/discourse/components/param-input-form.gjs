@@ -278,6 +278,7 @@ export default class ParamInputForm extends Component {
     if (this.form == null) {
       throw "No form";
     }
+    this.serializedData = null;
     await this.form.submit();
     if (this.serializedData == null) {
       throw new ParamValidationError("validation_failed");
@@ -293,7 +294,6 @@ export default class ParamInputForm extends Component {
 
   @action
   onSubmit(data) {
-    this.serializedData = null;
     const serializedData = {};
     for (const [id, val] of Object.entries(data)) {
       serializedData[id] =

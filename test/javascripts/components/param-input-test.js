@@ -169,4 +169,30 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
       });
     }
   }
+
+  test("empty form will reject submit", async function (assert) {
+    this.setProperties({
+      param_info: [
+        {
+          identifier: "string",
+          type: "string",
+          default: null,
+          nullable: false,
+        },
+      ],
+      initialValues: {},
+      onRegisterApi: ({ submit }) => {
+        this.submit = submit;
+      },
+    });
+
+    await render(hbs`
+    <ParamInputForm
+      @initialValues={{this.initialValues}}
+      @paramInfo={{this.param_info}}
+      @onRegisterApi={{this.onRegisterApi}}
+    />`);
+
+    assert.rejects(this.submit());
+  });
 });
