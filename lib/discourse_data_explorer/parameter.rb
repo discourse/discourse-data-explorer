@@ -4,7 +4,7 @@ module ::DiscourseDataExplorer
   class Parameter
     attr_accessor :identifier, :type, :default, :nullable
 
-    def initialize(identifier, type, default, nullable, check: true)
+    def initialize(identifier, type, default, nullable)
       unless identifier
         raise ValidationError.new("Parameter declaration error - identifier is missing")
       end
@@ -25,7 +25,7 @@ module ::DiscourseDataExplorer
       @default = default
       @nullable = nullable
       begin
-        cast_to_ruby default if default.present? && check
+        cast_to_ruby default if default.present?
       rescue ValidationError
         raise ValidationError.new(
                 "Parameter declaration error - the default value is not a valid #{type}",
@@ -89,7 +89,7 @@ module ::DiscourseDataExplorer
             type = type.strip
 
             begin
-              ret_params << Parameter.new(ident, type, default, nullable, check: false)
+              ret_params << Parameter.new(ident, type, default, nullable)
             rescue StandardError
               raise if opts[:strict]
             end
