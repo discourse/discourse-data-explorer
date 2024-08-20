@@ -77,6 +77,11 @@ he:
       reset_params: "איפוס"
       search_placeholder: "חיפוש…"
       no_search_results: "לא הצלחנו למצוא תוצאות שעונות לטקסט שלך, עמך הסליחה."
+      form:
+        errors:
+          invalid: "שגוי"
+          no_such_category: "אין קטגוריה כזו"
+          no_such_group: "אין קבוצה כזו"
     group:
       reports: "דוחות"
     admin:
