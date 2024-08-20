@@ -3,13 +3,13 @@
   <p>{{this.model.description}}</p>
 
   <form class="query-run" {{on "submit" this.run}}>
-    <ParamInputsWrapper
-      @hasParams={{this.hasParams}}
-      @params={{this.model.params}}
-      @initialValues={{this.parsedParams}}
-      @paramInfo={{this.model.param_info}}
-      @updateParams={{this.updateParams}}
-    />
+    {{#if this.hasParams}}
+      <ParamInputForm
+        @initialValues={{this.parsedParams}}
+        @paramInfo={{this.model.param_info}}
+        @onRegisterApi={{this.onRegisterApi}}
+      />
+    {{/if}}
 
     <DButton
       @action={{this.run}}

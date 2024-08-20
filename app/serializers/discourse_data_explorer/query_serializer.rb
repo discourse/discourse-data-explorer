@@ -15,7 +15,7 @@ module ::DiscourseDataExplorer
                :user_id
 
     def param_info
-      object&.params&.map(&:to_hash)
+      object&.params&.uniq { |p| p.identifier }&.map(&:to_hash)
     end
 
     def username

@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
+import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
@@ -37,6 +38,7 @@ export default class PluginsExplorerController extends Controller {
   explain = false;
   acceptedImportFileTypes = ["application/json"];
   order = null;
+  form = null;
 
   get validQueryPresent() {
     return !!this.selectedItem.id;
@@ -353,6 +355,11 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  onRegisterApi(form) {
+    this.form = form;
+  }
+
+  @action
   updateParams(identifier, value) {
     this.selectedItem.set(`params.${identifier}`, value);
   }
@@ -378,17 +385,30 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  run() {
+  async run() {
+    let params = null;
+    if (this.selectedItem.hasParams) {
+      try {
+        params = await this.form?.submit();
+      } catch (err) {
+        if (err instanceof ParamValidationError) {
+          return;
+        }
+      }
+      if (params == null) {
+        return;
+      }
+    }
     this.setProperties({
       loading: true,
       showResults: false,
-      params: JSON.stringify(this.selectedItem.params),
+      params: JSON.stringify(params),
     });
 
     ajax("/admin/plugins/explorer/queries/" + this.selectedItem.id + "/run", {
       type: "POST",
       data: {
-        params: JSON.stringify(this.selectedItem.params),
+        params: JSON.stringify(params),
         explain: this.explain,
       },
     })

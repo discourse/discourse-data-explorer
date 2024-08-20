@@ -11,6 +11,7 @@ import {
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
 import { bind } from "discourse-common/utils/decorators";
+import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 
 export default class GroupReportsShowController extends Controller {
   @service currentUser;
@@ -23,7 +24,7 @@ export default class GroupReportsShowController extends Controller {
   @tracked queryGroupBookmark = this.queryGroup?.bookmark;
 
   queryParams = ["params"];
-
+  form = null;
   explain = false;
 
   get parsedParams() {
@@ -55,14 +56,20 @@ export default class GroupReportsShowController extends Controller {
 
   @bind
   async run() {
-    this.loading = true;
-    this.showResults = false;
-
     try {
-      const stringifiedParams = JSON.stringify(this.model.params);
+      let params = null;
+      if (this.hasParams) {
+        params = await this.form.submit();
+        if (params == null) {
+          return;
+        }
+      }
+      this.loading = true;
+      this.showResults = false;
+      const stringifiedParams = JSON.stringify(params);
       this.router.transitionTo({
         queryParams: {
-          params: this.model.params ? stringifiedParams : null,
+          params: params ? stringifiedParams : null,
         },
       });
       const response = await ajax(
@@ -84,7 +91,7 @@ export default class GroupReportsShowController extends Controller {
     } catch (error) {
       if (error.jqXHR?.status === 422 && error.jqXHR.responseJSON) {
         this.results = error.jqXHR.responseJSON;
-      } else {
+      } else if (error instanceof ParamValidationError) {
         popupAjaxError(error);
       }
     } finally {
@@ -128,5 +135,10 @@ export default class GroupReportsShowController extends Controller {
   @action
   updateParams(identifier, value) {
     this.set(`model.params.${identifier}`, value);
+  }
+
+  @action
+  onRegisterApi(form) {
+    this.form = form;
   }
 }
