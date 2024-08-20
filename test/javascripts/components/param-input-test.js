@@ -60,7 +60,7 @@ const InputTestCases = [
     tests: [
       {
         input: null,
-        data_null: undefined,
+        data_null: "",
         error: ERRORS.REQUIRED,
       },
       {
@@ -111,8 +111,9 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
           initialValues: config.initial
             ? { [testcase.type]: config.initial }
             : {},
-          onRegisterApi: ({ submit }) => {
+          onRegisterApi: ({ submit, allNormalized }) => {
             this.submit = submit;
+            this.allNormalized = allNormalized;
           },
         });
 
@@ -123,6 +124,8 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
           @paramInfo={{this.param_info}}
           @onRegisterApi={{this.onRegisterApi}}
         />`);
+
+        await this.allNormalized;
 
         if (config.initial || config.default) {
           const data = await this.submit();
@@ -200,5 +203,35 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
     await this.submit();
     await fillIn(`[name="string"]`, "");
     assert.rejects(this.submit());
+  });
+
+  test("async normalizion", async function (assert) {
+    this.setProperties({
+      param_info: [
+        {
+          identifier: "category_id",
+          type: "category_id",
+          default: "support",
+          nullable: false,
+        },
+      ],
+      initialValues: {},
+      onRegisterApi: (paramInputApi) => {
+        this.paramInputApi = paramInputApi;
+      },
+    });
+
+    await render(hbs`
+    <ParamInputForm
+      @initialValues={{this.initialValues}}
+      @paramInfo={{this.param_info}}
+      @onRegisterApi={{this.onRegisterApi}}
+    />`);
+
+    await this.paramInputApi.allNormalized;
+
+    this.paramInputApi.submit().then((res) => {
+      assert.strictEqual(res.category_id, "1003");
+    });
   });
 });

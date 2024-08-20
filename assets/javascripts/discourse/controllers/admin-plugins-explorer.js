@@ -360,11 +360,6 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  updateParams(identifier, value) {
-    this.selectedItem.set(`params.${identifier}`, value);
-  }
-
-  @action
   updateSearch(value) {
     this.search = value;
   }
