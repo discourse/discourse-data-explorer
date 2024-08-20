@@ -11,7 +11,7 @@ export default class GroupListInput extends Component {
   }
 
   <template>
-    <@field.Custom id={{@field.id}} @_tmp={{this.valueChange}}>
+    <@field.Custom id={{@field.id}}>
       <CategoryChooser
         @value={{this.data.value}}
         @onChange={{@field.set}}
