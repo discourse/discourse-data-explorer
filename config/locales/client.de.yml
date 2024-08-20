@@ -73,6 +73,11 @@ de:
       reset_params: "Zurücksetzen"
       search_placeholder: "Suchen …"
       no_search_results: "Leider konnten wir keine Ergebnisse finden, die deinem Text entsprechen."
+      form:
+        errors:
+          invalid: "Ungültig"
+          no_such_category: "Keine solche Kategorie"
+          no_such_group: "Keine solche Gruppe"
     group:
       reports: "Berichte"
     admin:
