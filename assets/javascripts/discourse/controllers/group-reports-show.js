@@ -91,7 +91,7 @@ export default class GroupReportsShowController extends Controller {
     } catch (error) {
       if (error.jqXHR?.status === 422 && error.jqXHR.responseJSON) {
         this.results = error.jqXHR.responseJSON;
-      } else if (error instanceof ParamValidationError) {
+      } else if (!(error instanceof ParamValidationError)) {
         popupAjaxError(error);
       }
     } finally {
