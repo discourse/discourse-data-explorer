@@ -157,58 +157,70 @@ export default class ParamInputForm extends Component {
   infoOf = {};
   form = null;
 
+  promiseNormalizations = [];
+
   constructor() {
     super(...arguments);
-
-    const initialValues = this.args.initialValues;
-    const promiseNormalizaions = [];
-    for (const info of this.args.paramInfo) {
-      const identifier = info.identifier;
-
-      const pinfo = EmberObject.create({
-        ...info,
-        validation: validationOf(info),
-        validate: this.validatorOf(info),
-        component: componentOf(info),
-      });
-      this.paramInfo.push(pinfo);
-      this.infoOf[identifier] = info;
-
-      // access parsed params if present to update values to previously ran values
-      const normalized = normalizeValue(
-        info,
-        initialValues && identifier in initialValues
-          ? initialValues[identifier]
-          : info.default
-      );
-      if (normalized instanceof Promise) {
-        promiseNormalizaions.push(normalized);
-        pinfo.set("loading", true);
-        this.data[identifier] = null;
-        normalized
-          .then((res) => {
-            this.form.set(identifier, res);
-          })
-          .catch((err) => {
-            this.form.addError(identifier, {
-              title: identifier,
-              message: err.message,
-            });
-          })
-          .finally(() => {
-            pinfo.set("loading", false);
-          });
-      } else {
-        this.data[identifier] = normalized;
-      }
-    }
-
-    const allNormalized = Promise.allSettled(promiseNormalizaions);
+    this.initializeParams();
 
     this.args.onRegisterApi?.({
       submit: this.submit,
-      allNormalized,
+      allNormalized: Promise.allSettled(this.promiseNormalizations),
     });
+  }
+
+  initializeParams() {
+    this.args.paramInfo.forEach((info) => {
+      const identifier = info.identifier;
+      const pinfo = this.createParamInfo(info);
+
+      this.paramInfo.push(pinfo);
+      this.infoOf[identifier] = info;
+
+      const normalized = this.getNormalizedValue(info);
+
+      if (normalized instanceof Promise) {
+        this.handlePromiseNormalization(normalized, pinfo);
+      } else {
+        this.data[identifier] = normalized;
+      }
+    });
+  }
+
+  createParamInfo(info) {
+    return EmberObject.create({
+      ...info,
+      validation: validationOf(info),
+      validate: this.validatorOf(info),
+      component: componentOf(info),
+    });
+  }
+
+  getNormalizedValue(info) {
+    const initialValues = this.args.initialValues;
+    const identifier = info.identifier;
+    return normalizeValue(
+      info,
+      initialValues && identifier in initialValues
+        ? initialValues[identifier]
+        : info.default
+    );
+  }
+
+  handlePromiseNormalization(promise, pinfo) {
+    this.promiseNormalizations.push(promise);
+    pinfo.set("loading", true);
+    this.data[pinfo.identifier] = null;
+
+    promise
+      .then((res) => this.form.set(pinfo.identifier, res))
+      .catch((err) =>
+        this.form.addError(pinfo.identifier, {
+          title: pinfo.identifier,
+          message: err.message,
+        })
+      )
+      .finally(() => pinfo.set("loading", false));
   }
 
   getErrorFn(info) {
