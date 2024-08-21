@@ -76,5 +76,22 @@ RSpec.describe DiscourseDataExplorer::Parameter do
         end
       end
     end
+
+    describe "user_id type" do
+      fab!(:user)
+      it "raises an error if no such user exists" do
+        expect {
+          param("user_id", :user_id, nil, false).cast_to_ruby("user_not_exist")
+        }.to raise_error(::DiscourseDataExplorer::ValidationError)
+        expect {
+          param("user_id", :user_id, nil, false).cast_to_ruby("user_not_exist@fake.email")
+        }.to raise_error(::DiscourseDataExplorer::ValidationError)
+      end
+
+      it "returns the user id if the user exists" do
+        expect(param("user_id", :user_id, nil, false).cast_to_ruby(user.username)).to eq(user.id)
+        expect(param("user_id", :user_id, nil, false).cast_to_ruby(user.email)).to eq(user.id)
+      end
+    end
   end
 end
