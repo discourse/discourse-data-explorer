@@ -9,7 +9,7 @@ import Category from "discourse/models/category";
 import I18n from "I18n";
 import BooleanThree from "./param-input/boolean-three";
 import CategoryIdInput from "./param-input/category-id-input";
-import GroupListInput from "./param-input/group-list-input";
+import GroupInput from "./param-input/group-list-input";
 import UserIdInput from "./param-input/user-id-input";
 import UserListInput from "./param-input/user-list-input";
 
@@ -28,7 +28,7 @@ const layoutMap = {
   post_id: "string",
   topic_id: "generic",
   category_id: "category_id",
-  group_id: "generic",
+  group_id: "group_list",
   badge_id: "generic",
   int_list: "generic",
   string_list: "generic",
@@ -36,7 +36,7 @@ const layoutMap = {
   group_list: "group_list",
 };
 
-const ERRORS = {
+export const ERRORS = {
   REQUIRED: I18n.t("form_kit.errors.required"),
   NOT_AN_INTEGER: I18n.t("form_kit.errors.not_an_integer"),
   NOT_A_NUMBER: I18n.t("form_kit.errors.not_a_number"),
@@ -66,31 +66,6 @@ function digitalizeCategoryId(value) {
   return value;
 }
 
-function normalizeValue(info, value) {
-  switch (info.type) {
-    case "category_id":
-      return digitalizeCategoryId(value);
-    case "boolean":
-      if (value == null) {
-        return info.nullable ? "#null" : false;
-      }
-      return value;
-    case "group_list":
-    case "user_list":
-      if (Array.isArray(value)) {
-        return value || null;
-      }
-      return value?.split(",") || null;
-    case "user_id":
-      if (Array.isArray(value)) {
-        return value[0];
-      }
-      return value;
-    default:
-      return value;
-  }
-}
-
 function serializeValue(type, value) {
   switch (type) {
     case "string":
@@ -101,6 +76,8 @@ function serializeValue(type, value) {
     case "group_list":
     case "user_list":
       return value?.join(",");
+    case "group_id":
+      return value[0];
     default:
       return value?.toString();
   }
@@ -141,8 +118,7 @@ function componentOf(info) {
     case "user_list":
       return UserListInput;
     case "group_list":
-      return GroupListInput;
-
+      return GroupInput;
     case "bigint":
     case "string":
     default:
@@ -158,6 +134,9 @@ export default class ParamInputForm extends Component {
   form = null;
 
   promiseNormalizations = [];
+  formLoaded = new Promise((res) => {
+    this.__form_load_callback = res;
+  });
 
   constructor() {
     super(...arguments);
@@ -196,10 +175,54 @@ export default class ParamInputForm extends Component {
     });
   }
 
+  @action
+  addError(identifier, message) {
+    this.form.addError(identifier, {
+      title: identifier,
+      message,
+    });
+  }
+
+  @action
+  normalizeValue(info, value) {
+    switch (info.type) {
+      case "category_id":
+        return digitalizeCategoryId(value);
+      case "boolean":
+        if (value == null) {
+          return info.nullable ? "#null" : false;
+        }
+        return value;
+      case "group_id":
+      case "group_list":
+        const normalized = this.normalizeGroups(value);
+        if (normalized.errorMsg) {
+          this.formLoaded.then(() => {
+            this.addError(info.identifier, normalized.errorMsg);
+          });
+        }
+        return info.type === "group_id"
+          ? normalized.value.slice(0, 1)
+          : normalized.value;
+      case "user_list":
+        if (Array.isArray(value)) {
+          return value || null;
+        }
+        return value?.split(",") || null;
+      case "user_id":
+        if (Array.isArray(value)) {
+          return value[0];
+        }
+        return value;
+      default:
+        return value;
+    }
+  }
+
   getNormalizedValue(info) {
     const initialValues = this.args.initialValues;
     const identifier = info.identifier;
-    return normalizeValue(
+    return this.normalizeValue(
       info,
       initialValues && identifier in initialValues
         ? initialValues[identifier]
@@ -214,13 +237,42 @@ export default class ParamInputForm extends Component {
 
     promise
       .then((res) => this.form.set(pinfo.identifier, res))
-      .catch((err) =>
-        this.form.addError(pinfo.identifier, {
-          title: pinfo.identifier,
-          message: err.message,
-        })
-      )
+      .catch((err) => this.addError(pinfo.identifier, err.message))
       .finally(() => pinfo.set("loading", false));
+  }
+
+  @action
+  normalizeGroups(values) {
+    values ||= [];
+    if (typeof values === "string") {
+      values = values.split(",");
+    }
+
+    const GroupNames = new Set(this.site.get("groups").map((g) => g.name));
+    const GroupNameOf = Object.fromEntries(
+      this.site.get("groups").map((g) => [g.id, g.name])
+    );
+
+    const valid_groups = [];
+    const invalid_groups = [];
+
+    for (const val of values) {
+      if (GroupNames.has(val)) {
+        valid_groups.push(val);
+      } else if (GroupNameOf[Number(val)]) {
+        valid_groups.push(GroupNameOf[Number(val)]);
+      } else {
+        invalid_groups.push(String(val));
+      }
+    }
+
+    return {
+      value: valid_groups,
+      errorMsg:
+        invalid_groups.length !== 0
+          ? `${ERRORS.NO_SUCH_GROUP}: ${invalid_groups.join(", ")}`
+          : null,
+    };
   }
 
   getErrorFn(info) {
@@ -277,18 +329,11 @@ export default class ParamInputForm extends Component {
           ? null
           : ERRORS.NO_SUCH_CATEGORY;
       },
+      group_list: (value) => {
+        return this.normalizeGroups(value).errorMsg;
+      },
       group_id: (value) => {
-        const groups = this.site.get("groups");
-        if (isPositiveInt(value)) {
-          const intVal = parseInt(value, 10);
-          return groups.find((g) => g.id === intVal)
-            ? null
-            : ERRORS.NO_SUCH_GROUP;
-        } else {
-          return groups.find((g) => g.name === value)
-            ? null
-            : ERRORS.NO_SUCH_GROUP;
-        }
+        return this.normalizeGroups(value).errorMsg;
       },
     };
     return VALIDATORS[info.type] ?? (() => null);
@@ -324,6 +369,7 @@ export default class ParamInputForm extends Component {
 
   @action
   onRegisterApi(form) {
+    this.__form_load_callback();
     this.form = form;
   }
 

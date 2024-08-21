@@ -2,11 +2,19 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import GroupChooser from "select-kit/components/group-chooser";
 
-export default class GroupListInput extends Component {
+export default class GroupInput extends Component {
   @service site;
 
   get allGroups() {
     return this.site.get("groups");
+  }
+
+  get groupChooserOption() {
+    return this.args.info.type === "group_id"
+      ? {
+          maximum: 1,
+        }
+      : {};
   }
 
   <template>
@@ -17,6 +25,7 @@ export default class GroupListInput extends Component {
         @labelProperty="name"
         @valueProperty="name"
         @onChange={{@field.set}}
+        @options={{this.groupChooserOption}}
       />
     </@field.Custom>
   </template>

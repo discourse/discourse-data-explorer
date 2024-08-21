@@ -4,16 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
-
-const ERRORS = {
-  REQUIRED: I18n.t("form_kit.errors.required"),
-  NOT_AN_INTEGER: I18n.t("form_kit.errors.not_an_integer"),
-  NOT_A_NUMBER: I18n.t("form_kit.errors.not_a_number"),
-  OVERFLOW_HIGH: I18n.t("form_kit.errors.too_high", { count: 2147484647 }),
-  OVERFLOW_LOW: I18n.t("form_kit.errors.too_low", { count: -2147484648 }),
-  INVALID: I18n.t("explorer.form.errors.invalid"),
-};
+import { ERRORS } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 
 const InputTestCases = [
   {
@@ -71,6 +62,38 @@ const InputTestCases = [
           await categoryChooser.selectRowByValue(2);
         },
         data: "2",
+      },
+    ],
+  },
+  {
+    type: "group_id",
+    default: "trust_level_1",
+    initial: "trust_level_3",
+    tests: [
+      {
+        input: null,
+        data_null: undefined,
+        error: ERRORS.REQUIRED,
+      },
+      {
+        input: async () => {
+          const groupChooser = selectKit(".group-chooser");
+          await groupChooser.expand();
+          await groupChooser.selectRowByValue("trust_level_2");
+        },
+        data: "trust_level_2",
+      },
+    ],
+  },
+  {
+    type: "group_list",
+    default: "trust_level_1",
+    initial: "trust_level_3,trust_level_4",
+    tests: [
+      {
+        input: null,
+        data_null: "",
+        error: ERRORS.REQUIRED,
       },
     ],
   },
@@ -233,5 +256,32 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
     this.paramInputApi.submit().then((res) => {
       assert.strictEqual(res.category_id, "1003");
     });
+  });
+
+  test("show error message when default value is invalid", async function (assert) {
+    this.setProperties({
+      param_info: [
+        {
+          identifier: "group_id",
+          type: "group_id",
+          default: "invalid_group_name",
+          nullable: false,
+        },
+      ],
+      initialValues: {},
+      onRegisterApi: () => {},
+    });
+
+    await render(hbs`
+    <ParamInputForm
+      @initialValues={{this.initialValues}}
+      @paramInfo={{this.param_info}}
+      @onRegisterApi={{this.onRegisterApi}}
+    />`);
+
+    assert
+      .form()
+      .field("group_id")
+      .hasError(`${ERRORS.NO_SUCH_GROUP}: invalid_group_name`);
   });
 });
