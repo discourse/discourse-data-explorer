@@ -153,16 +153,16 @@ module ::DiscourseDataExplorer
           invalid_format string, e.message
         end
       when :double
-        if string =~ /-?\d*(\.\d+)/
+        if string.strip =~ /^-?\d*\.?\d+$/
           value = Float(string)
         elsif string =~ /^(-?)Inf(inity)?$/i
-          if $1
+          if $1.present?
             value = -Float::INFINITY
           else
             value = Float::INFINITY
           end
         elsif string =~ /^(-?)NaN$/i
-          if $1
+          if $1.present?
             value = -Float::NAN
           else
             value = Float::NAN
