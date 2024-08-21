@@ -26,6 +26,7 @@ export default class GroupInput extends Component {
         @valueProperty="name"
         @onChange={{@field.set}}
         @options={{this.groupChooserOption}}
+        name={{@info.identifier}}
       />
     </@field.Custom>
   </template>
