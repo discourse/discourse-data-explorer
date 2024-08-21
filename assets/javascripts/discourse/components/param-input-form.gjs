@@ -9,7 +9,7 @@ import Category from "discourse/models/category";
 import I18n from "I18n";
 import BooleanThree from "./param-input/boolean-three";
 import CategoryIdInput from "./param-input/category-id-input";
-import GroupInput from "./param-input/group-list-input";
+import GroupInput from "./param-input/group-input";
 import UserIdInput from "./param-input/user-id-input";
 import UserListInput from "./param-input/user-list-input";
 
