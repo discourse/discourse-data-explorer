@@ -205,12 +205,9 @@ module ::DiscourseDataExplorer
             invalid_format string, "The specified #{klass_name} was not found"
           end
         elsif type == :user_id
-          begin
-            object = User.find_by_username_or_email(string)
-            value = object.id
-          rescue ActiveRecord::RecordNotFound
-            invalid_format string, "The user named #{string} was not found"
-          end
+          object = User.find_by_username_or_email(string)
+          invalid_format string, "The user named #{string} was not found" if object.blank?
+          value = object.id
         elsif type == :post_id
           if string =~ %r{/t/[^/]+/(\d+)(\?u=.*)?$}
             object = Post.with_deleted.find_by(topic_id: $1, post_number: 1)
