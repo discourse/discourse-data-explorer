@@ -77,4 +77,22 @@ RSpec.describe DiscourseDataExplorer::Parameter do
       end
     end
   end
+
+  describe ".create_from_sql" do
+    it "should not validate default value" do
+      TEST_SQL = <<~SQL
+        -- [params]
+        -- user_id      :user_id = user_not_exists
+        -- post_id      :post_id = /t/should-not-exist/33554432/1
+        -- topic_id     :topic_id = /t/should-not-exist/2147483646
+        -- category_id  :category_id = category_not_exists
+        -- group_id     :group_id = group_not_exists
+        -- group_list   :group_list = group_not_exists1,group_not_exists1
+        -- user_list    :mul_users = user_not_exists1,user_not_exists2
+        SELECT 1
+      SQL
+
+      expect(described_class.create_from_sql(TEST_SQL).length).to eq(7)
+    end
+  end
 end
