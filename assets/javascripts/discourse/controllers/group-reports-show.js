@@ -130,13 +130,6 @@ export default class GroupReportsShowController extends Controller {
     });
   }
 
-  // This is necessary with glimmer's one way data stream to get the child's
-  // changes of 'params' to bubble up.
-  @action
-  updateParams(identifier, value) {
-    this.set(`model.params.${identifier}`, value);
-  }
-
   @action
   onRegisterApi(form) {
     this.form = form;

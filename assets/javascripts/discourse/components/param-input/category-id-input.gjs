@@ -1,26 +1,20 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import CategoryChooser from "select-kit/components/category-chooser";
 
-export default class GroupListInput extends Component {
-  @tracked value;
-  constructor() {
-    super(...arguments);
-    this.value = this.args.field.value;
-  }
-
-  @action
-  update(id) {
-    this.value = id;
-    this.args.field.set(id);
+export default class CategoryIdInput extends Component {
+  // CategoryChooser will try to modify the value of value,
+  // triggering a setting-on-hash error. So we have to do the dirty work.
+  get data() {
+    return {
+      value: this.args.field.value,
+    };
   }
 
   <template>
     <@field.Custom id={{@field.id}}>
       <CategoryChooser
-        @value={{this.value}}
-        @onChange={{this.update}}
+        @value={{this.data.value}}
+        @onChange={{@field.set}}
         name={{@info.identifier}}
       />
     </@field.Custom>

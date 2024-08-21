@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import Category from "discourse/models/category";
 import I18n from "I18n";
@@ -49,22 +50,20 @@ const ERRORS = {
 function digitalizeCategoryId(value) {
   value = String(value || "");
   const isPositiveInt = /^\d+$/.test(value);
-  if (!isPositiveInt) {
-    if (/\//.test(value)) {
-      const match = /(.*)\/(.*)/.exec(value);
-      if (!match) {
-        value = null;
-      } else {
-        value = Category.findBySlug(
-          dasherize(match[2]),
-          dasherize(match[1])
-        )?.id;
-      }
-    } else {
-      value = Category.findBySlug(dasherize(value))?.id;
-    }
+  if (!isPositiveInt && value.trim()) {
+    return Category.asyncFindBySlugPath(dasherize(value))
+      .then((res) => res.id)
+      .catch((err) => {
+        if (err.jqXHR?.status === 404) {
+          throw new ParamValidationError(
+            `${ERRORS.NO_SUCH_CATEGORY}: ${value}`
+          );
+        } else {
+          throw new Error(err.errorThrow || err.message);
+        }
+      });
   }
-  return value?.toString();
+  return value;
 }
 
 function normalizeValue(info, value) {
@@ -158,34 +157,70 @@ export default class ParamInputForm extends Component {
   infoOf = {};
   form = null;
 
+  promiseNormalizations = [];
+
   constructor() {
     super(...arguments);
-
-    const initialValues = this.args.initialValues;
-    for (const info of this.args.paramInfo) {
-      const identifier = info.identifier;
-
-      // access parsed params if present to update values to previously ran values
-      let initialValue;
-      if (initialValues && identifier in initialValues) {
-        initialValue = initialValues[identifier];
-      } else {
-        // if no parsed params then get and set default values
-        initialValue = info.default;
-      }
-      this.data[identifier] = normalizeValue(info, initialValue);
-      this.paramInfo.push({
-        ...info,
-        validation: validationOf(info),
-        validate: this.validatorOf(info),
-        component: componentOf(info),
-      });
-      this.infoOf[identifier] = info;
-    }
+    this.initializeParams();
 
     this.args.onRegisterApi?.({
       submit: this.submit,
+      allNormalized: Promise.allSettled(this.promiseNormalizations),
     });
+  }
+
+  initializeParams() {
+    this.args.paramInfo.forEach((info) => {
+      const identifier = info.identifier;
+      const pinfo = this.createParamInfo(info);
+
+      this.paramInfo.push(pinfo);
+      this.infoOf[identifier] = info;
+
+      const normalized = this.getNormalizedValue(info);
+
+      if (normalized instanceof Promise) {
+        this.handlePromiseNormalization(normalized, pinfo);
+      } else {
+        this.data[identifier] = normalized;
+      }
+    });
+  }
+
+  createParamInfo(info) {
+    return EmberObject.create({
+      ...info,
+      validation: validationOf(info),
+      validate: this.validatorOf(info),
+      component: componentOf(info),
+    });
+  }
+
+  getNormalizedValue(info) {
+    const initialValues = this.args.initialValues;
+    const identifier = info.identifier;
+    return normalizeValue(
+      info,
+      initialValues && identifier in initialValues
+        ? initialValues[identifier]
+        : info.default
+    );
+  }
+
+  handlePromiseNormalization(promise, pinfo) {
+    this.promiseNormalizations.push(promise);
+    pinfo.set("loading", true);
+    this.data[pinfo.identifier] = null;
+
+    promise
+      .then((res) => this.form.set(pinfo.identifier, res))
+      .catch((err) =>
+        this.form.addError(pinfo.identifier, {
+          title: pinfo.identifier,
+          message: err.message,
+        })
+      )
+      .finally(() => pinfo.set("loading", false));
   }
 
   getErrorFn(info) {
@@ -321,6 +356,10 @@ export default class ParamInputForm extends Component {
               as |field|
             >
               <info.component @field={{field}} @info={{info}} />
+              <ConditionalLoadingSpinner
+                @condition={{info.loading}}
+                @size="small"
+              />
             </form.Field>
           </div>
         {{/each}}
