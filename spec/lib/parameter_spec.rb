@@ -16,6 +16,26 @@ RSpec.describe DiscourseDataExplorer::Parameter do
       )
     end
 
+    describe "double type" do
+      let!(:double_param) { param("double", :double, nil, false) }
+
+      it "raises an error if not a double" do
+        expect { double_param.cast_to_ruby("abcd") }.to raise_error(
+          ::DiscourseDataExplorer::ValidationError,
+        )
+      end
+
+      it "returns the float number if it can be a valid double" do
+        expect(double_param.cast_to_ruby("3.14")).to eq(3.14)
+        expect(double_param.cast_to_ruby(".314")).to eq(0.314)
+        expect(double_param.cast_to_ruby("1")).to eq(1.0)
+        expect(double_param.cast_to_ruby("Inf")).to eq(Float::INFINITY)
+        expect(double_param.cast_to_ruby("-Infinity")).to eq(-Float::INFINITY)
+        expect(double_param.cast_to_ruby("-NaN").nan?).to eq(true)
+        expect(double_param.cast_to_ruby("NaN").nan?).to eq(true)
+      end
+    end
+
     describe "post_id type" do
       fab!(:post)
 
