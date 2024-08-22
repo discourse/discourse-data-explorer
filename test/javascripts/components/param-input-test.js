@@ -97,6 +97,54 @@ const InputTestCases = [
       },
     ],
   },
+  {
+    type: "date",
+    default: "2024-07-13",
+    initial: "1970-01-01",
+    tests: [
+      {
+        input: null,
+        data_null: undefined,
+        error: ERRORS.REQUIRED,
+      },
+      {
+        input: "2038-01-20",
+        data: "2038-01-20",
+      },
+    ],
+  },
+  {
+    type: "time",
+    default: "12:34",
+    initial: "11:45",
+    tests: [
+      {
+        input: null,
+        data_null: undefined,
+        error: ERRORS.REQUIRED,
+      },
+      {
+        input: "03:14",
+        data: "03:14",
+      },
+    ],
+  },
+  {
+    type: "datetime",
+    default: "2024-07-13 12:00",
+    initial: "1970-01-01 00:00",
+    tests: [
+      {
+        input: null,
+        data_null: undefined,
+        error: ERRORS.REQUIRED,
+      },
+      {
+        input: "2038-01-19 03:15",
+        data: "2038-01-19 03:15",
+      },
+    ],
+  },
 ];
 
 module("Data Explorer Plugin | Component | param-input", function (hooks) {
@@ -283,5 +331,53 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
       .form()
       .field("group_id")
       .hasError(`${ERRORS.NO_SUCH_GROUP}: invalid_group_name`);
+  });
+
+  test("date, time, datetime with initial value in other formats", async function (assert) {
+    this.setProperties({
+      param_info: [
+        {
+          identifier: "date",
+          type: "date",
+          default: null,
+          nullable: false,
+        },
+        {
+          identifier: "time",
+          type: "time",
+          default: null,
+          nullable: false,
+        },
+        {
+          identifier: "datetime",
+          type: "datetime",
+          default: null,
+          nullable: false,
+        },
+      ],
+      initialValues: {
+        date: "19 January 2038",
+        time: "3:15 am",
+        datetime: "19 January 2038 3:15 am",
+      },
+      onRegisterApi: ({ submit }) => {
+        this.submit = submit;
+      },
+    });
+
+    await render(hbs`
+    <ParamInputForm
+      @initialValues={{this.initialValues}}
+      @paramInfo={{this.param_info}}
+      @onRegisterApi={{this.onRegisterApi}}
+    />`);
+
+    this.submit().then((res) => {
+      assert.deepEqual(res, {
+        date: "2038-01-19",
+        time: "03:15",
+        datetime: "2038-01-19 03:15",
+      });
+    });
   });
 });
