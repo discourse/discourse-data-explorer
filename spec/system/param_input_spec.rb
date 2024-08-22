@@ -20,6 +20,7 @@ RSpec.describe "Param input", type: :system, js: true do
     -- string_list  :string_list
     -- category_id  :category_id
     -- group_id     :group_id
+    -- group_list   :group_list
     -- user_list    :mul_users
     -- int          :int_with_default = 3
     -- bigint       :bigint_with_default = 12345678912345
@@ -38,6 +39,7 @@ RSpec.describe "Param input", type: :system, js: true do
     -- string_list  :string_list_with_default = a,b,c
     -- category_id  :category_id_with_default = general
     -- group_id     :group_id_with_default = staff
+    -- group_list   :group_list_with_default = trust_level_0,trust_level_1
     -- user_list    :mul_users_with_default = system,discobot
     SELECT 1
   SQL
