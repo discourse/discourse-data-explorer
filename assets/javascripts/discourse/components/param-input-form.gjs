@@ -20,9 +20,9 @@ const layoutMap = {
   bigint: "string",
   boolean: "boolean",
   string: "string",
-  time: "generic",
-  date: "generic",
-  datetime: "generic",
+  time: "time",
+  date: "date",
+  datetime: "datetime",
   double: "string",
   user_id: "user_id",
   post_id: "string",
@@ -45,6 +45,8 @@ export const ERRORS = {
   INVALID: I18n.t("explorer.form.errors.invalid"),
   NO_SUCH_CATEGORY: I18n.t("explorer.form.errors.no_such_category"),
   NO_SUCH_GROUP: I18n.t("explorer.form.errors.no_such_group"),
+  INVALID_DATE: (date) => I18n.t("explorer.form.errors.invalid_date", { date }),
+  INVALID_TIME: (time) => I18n.t("explorer.form.errors.invalid_time", { time }),
 };
 
 function digitalizeCategoryId(value) {
@@ -78,6 +80,8 @@ function serializeValue(type, value) {
       return value?.join(",");
     case "group_id":
       return value[0];
+    case "datetime":
+      return value?.replaceAll("T", " ");
     default:
       return value?.toString();
   }
@@ -119,6 +123,18 @@ function componentOf(info) {
       return UserListInput;
     case "group_list":
       return GroupInput;
+    case "date":
+      return <template>
+        <@field.Input @type="date" name={{@info.identifier}} />
+      </template>;
+    case "time":
+      return <template>
+        <@field.Input @type="time" name={{@info.identifier}} />
+      </template>;
+    case "datetime":
+      return <template>
+        <@field.Input @type="datetime-local" name={{@info.identifier}} />
+      </template>;
     case "bigint":
     case "string":
     default:
@@ -213,6 +229,40 @@ export default class ParamInputForm extends Component {
           return value[0];
         }
         return value;
+      case "date":
+        try {
+          if (!value) {
+            return null;
+          }
+          return moment(new Date(value).toISOString()).format("YYYY-MM-DD");
+        } catch (err) {
+          this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
+          return null;
+        }
+      case "time":
+        try {
+          if (!value) {
+            return null;
+          }
+          return moment(new Date(`1970/01/01 ${value}`).toISOString()).format(
+            "HH:mm"
+          );
+        } catch (err) {
+          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
+          return null;
+        }
+      case "datetime":
+        try {
+          if (!value) {
+            return null;
+          }
+          return moment(new Date(value).toISOString()).format(
+            "YYYY-MM-DD HH:mm"
+          );
+        } catch (err) {
+          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
+          return null;
+        }
       default:
         return value;
     }
