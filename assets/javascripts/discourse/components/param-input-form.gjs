@@ -176,7 +176,8 @@ export default class ParamInputForm extends Component {
   }
 
   @action
-  addError(identifier, message) {
+  async addError(identifier, message) {
+    await this.formLoaded;
     this.form.addError(identifier, {
       title: identifier,
       message,
@@ -197,9 +198,7 @@ export default class ParamInputForm extends Component {
       case "group_list":
         const normalized = this.normalizeGroups(value);
         if (normalized.errorMsg) {
-          this.formLoaded.then(() => {
-            this.addError(info.identifier, normalized.errorMsg);
-          });
+          this.addError(info.identifier, normalized.errorMsg);
         }
         return info.type === "group_id"
           ? normalized.value.slice(0, 1)
