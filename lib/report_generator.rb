@@ -12,7 +12,7 @@ module ::DiscourseDataExplorer
       result = DataExplorer.run_query(query, params)
       query.update!(last_run_at: Time.now)
 
-      return [] if opts[:skip_empty] && result.values.empty?
+      return [] if opts[:skip_empty] && result[:pg_result].values.empty?
       table = ResultToMarkdown.convert(result[:pg_result])
 
       build_report_pms(query, table, recipients, opts: { attach_csv: opts[:attach_csv], result: })
