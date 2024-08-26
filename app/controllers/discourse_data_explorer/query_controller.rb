@@ -179,49 +179,25 @@ module ::DiscourseDataExplorer
 
         render json: { success: false, errors: [err_msg] }, status: 422
       else
-        pg_result = result[:pg_result]
-        cols = pg_result.fields
+        filename =
+          "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"
+
         respond_to do |format|
           format.json do
-            if params[:download]
-              response.headers[
-                "Content-Disposition"
-              ] = "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.json"
-            end
-            json = {
-              success: true,
-              errors: [],
-              duration: (result[:duration_secs].to_f * 1000).round(1),
-              result_count: pg_result.values.length || 0,
-              params: query_params,
-              columns: cols,
-              default_limit: SiteSetting.data_explorer_query_result_limit,
-            }
-            json[:explain] = result[:explain] if opts[:explain]
+            response.headers["Content-Disposition"] = "#{filename}.json" if params[:download]
 
-            if !params[:download]
-              relations, colrender = DataExplorer.add_extra_data(pg_result)
-              json[:relations] = relations
-              json[:colrender] = colrender
-            end
-
-            json[:rows] = pg_result.values
-
-            render json: json
+            render json:
+                     ResultFormatConverter.convert(
+                       :json,
+                       result,
+                       query_params:,
+                       download: params[:download],
+                     )
           end
           format.csv do
-            response.headers[
-              "Content-Disposition"
-            ] = "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
+            response.headers["Content-Disposition"] = "#{filename}.csv"
 
-            require "csv"
-            text =
-              CSV.generate do |csv|
-                csv << cols
-                pg_result.values.each { |row| csv << row }
-              end
-
-            render plain: text
+            render plain: ResultFormatConverter.convert(:csv, result)
           end
         end
       end

@@ -130,5 +130,25 @@ describe DiscourseDataExplorer::ReportGenerator do
       expect(result[1]["target_group_names"]).to eq([group.name])
       expect(result[2]["target_emails"]).to eq(["john@doe.com"])
     end
+
+    it "works with attached csv file" do
+      SiteSetting.personal_message_enabled_groups = group.id
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
+
+      result =
+        described_class.generate(query.id, query_params, [user.username], { attach_csv: true })
+
+      filename =
+        "#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
+
+      expect(result[0]["raw"]).to include(
+        "Hi #{user.username}, your data explorer report is ready.\n\n" +
+          "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
+          "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
+          "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})\n\n" +
+          "Appendix: [#{filename}|attachment](upload://",
+      )
+    end
   end
 end

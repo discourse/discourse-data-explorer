@@ -79,6 +79,7 @@ after_initialize do
 
   require_relative "lib/report_generator"
   require_relative "lib/result_to_markdown"
+  require_relative "lib/result_format_converter"
   reloadable_patch do
     if defined?(DiscourseAutomation)
       add_automation_scriptable("recurring_data_explorer_result_pm") do
@@ -90,6 +91,7 @@ after_initialize do
         field :query_id, component: :choices, required: true, extra: { content: queries }
         field :query_params, component: :"key-value", accepts_placeholders: true
         field :skip_empty, component: :boolean
+        field :attach_csv, component: :boolean
 
         version 1
         triggerables [:recurring]
@@ -99,6 +101,7 @@ after_initialize do
           query_id = fields.dig("query_id", "value")
           query_params = fields.dig("query_params", "value") || {}
           skip_empty = fields.dig("skip_empty", "value") || false
+          attach_csv = fields.dig("attach_csv", "value") || false
 
           unless SiteSetting.data_explorer_enabled
             Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - plugin must be enabled to run automation #{automation.id}"
@@ -111,7 +114,7 @@ after_initialize do
           end
 
           DiscourseDataExplorer::ReportGenerator
-            .generate(query_id, query_params, recipients, { skip_empty: })
+            .generate(query_id, query_params, recipients, { skip_empty:, attach_csv: })
             .each do |pm|
               begin
                 utils.send_pm(pm, automation_id: automation.id, prefers_encrypt: false)

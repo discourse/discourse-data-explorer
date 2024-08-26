@@ -9,13 +9,13 @@ module ::DiscourseDataExplorer
       recipients = filter_recipients_by_query_access(recipients, query)
       params = params_to_hash(query_params)
 
-      result = DataExplorer.run_query(query, params)[:pg_result]
+      result = DataExplorer.run_query(query, params)
       query.update!(last_run_at: Time.now)
 
       return [] if opts[:skip_empty] && result.values.empty?
-      table = ResultToMarkdown.convert(result)
+      table = ResultToMarkdown.convert(result[:pg_result])
 
-      build_report_pms(query, table, recipients)
+      build_report_pms(query, table, recipients, opts: { attach_csv: opts[:attach_csv], result: })
     end
 
     private
@@ -40,8 +40,20 @@ module ::DiscourseDataExplorer
       params_hash
     end
 
-    def self.build_report_pms(query, table = "", targets = [])
+    def self.build_report_pms(query, table = "", targets = [], opts: {})
       pms = []
+      upload =
+        if opts[:attach_csv]
+          tmp_filename =
+            "#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
+          tmp = Tempfile.new(tmp_filename)
+          tmp.write(ResultFormatConverter.convert(:csv, opts[:result]))
+          tmp.rewind
+          UploadCreator.new(tmp, tmp_filename, type: "csv_export").create_for(
+            Discourse.system_user.id,
+          )
+        end
+
       targets.each do |target|
         name = target[0]
         pm_type = "target_#{target[1]}s"
@@ -53,6 +65,9 @@ module ::DiscourseDataExplorer
           "Query Name:\n#{query.name}\n\nHere are the results:\n#{table}\n\n" +
           "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
           "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})"
+        if upload
+          pm["raw"] << "\n\nAppendix: [#{upload.original_filename}|attachment](#{upload.short_url})"
+        end
         pms << pm
       end
       pms

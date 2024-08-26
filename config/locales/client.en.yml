@@ -116,3 +116,5 @@ en:
               label: Data Explorer Query parameters
             skip_empty:
               label: Skip sending PM if there are no results
+            attach_csv:
+              label: Attach the CSV file to the PM
