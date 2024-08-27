@@ -179,12 +179,14 @@ module ::DiscourseDataExplorer
 
         render json: { success: false, errors: [err_msg] }, status: 422
       else
-        filename =
+        content_disposition =
           "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"
 
         respond_to do |format|
           format.json do
-            response.headers["Content-Disposition"] = "#{filename}.json" if params[:download]
+            response.headers["Content-Disposition"] = "#{content_disposition}.json" if params[
+              :download
+            ]
 
             render json:
                      ResultFormatConverter.convert(
@@ -195,7 +197,7 @@ module ::DiscourseDataExplorer
                      )
           end
           format.csv do
-            response.headers["Content-Disposition"] = "#{filename}.csv"
+            response.headers["Content-Disposition"] = "#{content_disposition}.csv"
 
             render plain: ResultFormatConverter.convert(:csv, result)
           end

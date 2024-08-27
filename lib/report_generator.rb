@@ -15,7 +15,7 @@ module ::DiscourseDataExplorer
       return [] if opts[:skip_empty] && result[:pg_result].values.empty?
       table = ResultToMarkdown.convert(result[:pg_result])
 
-      build_report_pms(query, table, recipients, opts: { attach_csv: opts[:attach_csv], result: })
+      build_report_pms(query, table, recipients, attach_csv:, result:)
     end
 
     private
@@ -40,14 +40,14 @@ module ::DiscourseDataExplorer
       params_hash
     end
 
-    def self.build_report_pms(query, table = "", targets = [], opts: {})
+    def self.build_report_pms(query, table = "", targets = [], attach_csv: false, result: nil)
       pms = []
       upload =
-        if opts[:attach_csv]
+        if attach_csv
           tmp_filename =
             "#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
           tmp = Tempfile.new(tmp_filename)
-          tmp.write(ResultFormatConverter.convert(:csv, opts[:result]))
+          tmp.write(ResultFormatConverter.convert(:csv, result))
           tmp.rewind
           UploadCreator.new(tmp, tmp_filename, type: "csv_export").create_for(
             Discourse.system_user.id,
