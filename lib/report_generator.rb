@@ -15,7 +15,7 @@ module ::DiscourseDataExplorer
       return [] if opts[:skip_empty] && result[:pg_result].values.empty?
       table = ResultToMarkdown.convert(result[:pg_result])
 
-      build_report_pms(query, table, recipients, attach_csv:, result:)
+      build_report_pms(query, table, recipients, attach_csv: opts[:attach_csv], result:)
     end
 
     private
