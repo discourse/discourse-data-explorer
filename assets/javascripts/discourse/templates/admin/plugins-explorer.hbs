@@ -124,10 +124,11 @@
               <div class="panels-flex">
                 <div class="editor-panel">
                   <AceEditor
+                    {{on "click" this.setDirty}}
                     @content={{this.selectedItem.sql}}
+                    @onChange={{fn (mut this.selectedItem.sql)}}
                     @mode="sql"
                     @disabled={{this.selectedItem.destroyed}}
-                    {{on "click" this.setDirty}}
                     @save={{this.save}}
                     @submit={{this.saveAndRun}}
                   />
