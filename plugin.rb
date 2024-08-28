@@ -32,12 +32,6 @@ end
 require_relative "lib/discourse_data_explorer/engine"
 
 after_initialize do
-  require_relative "app/jobs/scheduled/delete_hidden_queries"
-  require_relative "lib/discourse_data_explorer/data_explorer"
-  require_relative "lib/discourse_data_explorer/parameter"
-  require_relative "lib/discourse_data_explorer/queries"
-  require_relative "lib/discourse_data_explorer/query_group_bookmarkable"
-
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:
@@ -77,9 +71,6 @@ after_initialize do
     { run_queries: { actions: %w[discourse_data_explorer/query#run], params: %i[id] } },
   )
 
-  require_relative "lib/report_generator"
-  require_relative "lib/result_to_markdown"
-  require_relative "lib/result_format_converter"
   reloadable_patch do
     if defined?(DiscourseAutomation)
       add_automation_scriptable("recurring_data_explorer_result_pm") do
