@@ -1,14 +1,10 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Data Explorer Plugin | New Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/explorer/groups.json", () => {
@@ -61,6 +57,6 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     // select create new query button
     await click(".query-create button");
 
-    assert.equal(currentURL(), "/admin/plugins/explorer?id=-15");
+    assert.strictEqual(currentURL(), "/admin/plugins/explorer?id=-15");
   });
 });

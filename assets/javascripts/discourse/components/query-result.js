@@ -295,7 +295,7 @@ function randomIdShort() {
 
 function transformedRelTable(table, modelClass) {
   const result = {};
-  table.forEach((item) => {
+  table?.forEach((item) => {
     if (modelClass) {
       result[item.id] = modelClass.create(item);
     } else {
