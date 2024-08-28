@@ -276,7 +276,7 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
     assert.rejects(this.submit());
   });
 
-  test("async normalizion", async function (assert) {
+  test("async normalization", async function (assert) {
     this.setProperties({
       param_info: [
         {

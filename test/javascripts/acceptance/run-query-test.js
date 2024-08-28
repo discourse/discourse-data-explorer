@@ -1,20 +1,11 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import {
-  acceptance,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Data Explorer Plugin | Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/explorer/groups.json", () => {
@@ -185,71 +176,57 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     });
   });
 
-  test("it runs query and renders data and a chart", async function (assert) {
+  test("runs query and renders data and a chart", async function (assert) {
     await visit("/admin/plugins/explorer?id=-6");
 
-    assert.ok(
-      query("div.name h1").innerText.trim() === "Top 100 Likers",
-      "the query name was rendered"
-    );
+    assert
+      .dom("div.name h1")
+      .hasText("Top 100 Likers", "the query name was rendered");
 
-    assert.ok(exists("div.query-edit"), "the query code was rendered");
+    assert.dom("div.query-edit").exists("the query code was rendered");
 
-    assert.ok(
-      query("form.query-run button span").innerText.trim() ===
-        I18n.t("explorer.run"),
-      "the run button was rendered"
-    );
+    assert
+      .dom("form.query-run button span")
+      .hasText(I18n.t("explorer.run"), "the run button was rendered");
 
     await click("form.query-run button");
 
-    assert.ok(
-      queryAll("div.query-results table tbody tr").length === 2,
-      "the table with query results was rendered"
-    );
+    assert
+      .dom("div.query-results table tbody tr")
+      .exists({ count: 2 }, "the table with query results was rendered");
 
-    assert.ok(
-      query("div.result-info button:nth-child(3) span").innerText.trim() ===
-        I18n.t("explorer.show_graph"),
-      "the chart button was rendered"
-    );
+    assert
+      .dom("div.result-info button:nth-child(3) span")
+      .hasText(I18n.t("explorer.show_graph"), "the chart button was rendered");
 
     await click("div.result-info button:nth-child(3)");
 
-    assert.ok(exists("canvas"), "the chart was rendered");
+    assert.dom("canvas").exists("the chart was rendered");
   });
 
-  test("it runs query and renders 0, false, and NULL values correctly", async function (assert) {
+  test("runs query and renders 0, false, and NULL values correctly", async function (assert) {
     await visit("/admin/plugins/explorer?id=2");
 
-    assert.ok(
-      query("div.name h1").innerText.trim() === "What about 0?",
-      "the query name was rendered"
-    );
+    assert
+      .dom("div.name h1")
+      .hasText("What about 0?", "the query name was rendered");
 
-    assert.ok(
-      query("form.query-run button span").innerText.trim() ===
-        I18n.t("explorer.run"),
-      "the run button was rendered"
-    );
+    assert
+      .dom("form.query-run button span")
+      .hasText(I18n.t("explorer.run"), "the run button was rendered");
 
     await click("form.query-run button");
 
-    assert.ok(
-      query("div.query-results tbody td:nth-child(1)").innerText.trim() === "0",
-      "renders '0' values"
-    );
+    assert
+      .dom("div.query-results tbody td:nth-child(1)")
+      .hasText("0", "renders '0' values");
 
-    assert.ok(
-      query("div.query-results tbody td:nth-child(2)").innerText.trim() ===
-        "NULL",
-      "renders 'NULL' values"
-    );
+    assert
+      .dom("div.query-results tbody td:nth-child(2)")
+      .hasText("NULL", "renders 'NULL' values");
 
-    assert.ok(
-      query("div.query-results tbody td:nth-child(3)").innerText.trim() ===
-        "false",
-      "renders 'false' values"
-    );
+    assert
+      .dom("div.query-results tbody td:nth-child(3)")
+      .hasText("false", "renders 'false' values");
   });
 });

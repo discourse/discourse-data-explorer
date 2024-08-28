@@ -1,10 +1,6 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Data Explorer Plugin | Param Input", function (needs) {
   needs.user();
@@ -327,6 +323,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
         },
       });
     });
+
     server.put("/admin/plugins/explorer/queries/3", () => {
       return helper.response({
         query: {
@@ -353,7 +350,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     });
   });
 
-  test("it puts params for the query into the url", async function (assert) {
+  test("puts params for the query into the url", async function (assert) {
     await visit("/admin/plugins/explorer?id=-6");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
@@ -361,10 +358,10 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
 
     const searchParams = new URLSearchParams(currentURL().split("?")[1]);
     const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
-    assert.equal(monthsAgoParam, monthsAgoValue);
+    assert.strictEqual(monthsAgoParam, monthsAgoValue);
   });
 
-  test("it puts params for the query into the url for group reports", async function (assert) {
+  test("puts params for the query into the url for group reports", async function (assert) {
     await visit("/g/discourse/reports/-8");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
@@ -372,32 +369,32 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
 
     const searchParams = new URLSearchParams(currentURL().split("?")[1]);
     const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
-    assert.equal(monthsAgoParam, monthsAgoValue);
+    assert.strictEqual(monthsAgoParam, monthsAgoValue);
   });
 
-  test("it loads the page if one of the parameter is null", async function (assert) {
+  test("loads the page if one of the parameter is null", async function (assert) {
     await visit('/admin/plugins/explorer?id=-7&params={"user":null}');
-    assert.ok(exists(".query-params .user-chooser"));
-    assert.ok(exists(".query-run .btn.btn-primary"));
+    assert.dom(".query-params .user-chooser").exists();
+    assert.dom(".query-run .btn.btn-primary").exists();
   });
 
-  test("it loads the page if one of the parameter is null for group reports", async function (assert) {
+  test("loads the page if one of the parameter is null for group reports", async function (assert) {
     await visit('/g/discourse/reports/-8?params={"months_ago":null}');
-    assert.ok(exists(".query-params input"));
-    assert.ok(exists(".query-run .btn.btn-primary"));
+    assert.dom(".query-params input").exists();
+    assert.dom(".query-run .btn.btn-primary").exists();
   });
 
-  test("it applies params when running a report", async function (assert) {
+  test("applies params when running a report", async function (assert) {
     await visit("/g/discourse/reports/-8");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
-    assert.equal(query(".query-params input").value, monthsAgoValue);
+    assert.dom(".query-params input").hasValue(monthsAgoValue);
   });
 
-  test("it creates input boxes if has parameters when save", async function (assert) {
+  test("creates input boxes if has parameters when save", async function (assert) {
     await visit("/admin/plugins/explorer?id=3");
-    assert.notOk(exists(".query-params input"));
+    assert.dom(".query-params input").doesNotExist();
     await click(".query-edit .btn-edit-query");
     await click(".query-editor .ace_text-input");
     await fillIn(
@@ -405,6 +402,6 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
     await click(".query-edit .btn-save-query");
-    assert.ok(exists(".query-params input"));
+    assert.dom(".query-params input").exists();
   });
 });

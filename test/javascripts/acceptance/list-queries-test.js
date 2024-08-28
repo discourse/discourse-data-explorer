@@ -1,20 +1,11 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Data Explorer Plugin | List Queries", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/explorer/groups.json", () => {
@@ -142,44 +133,38 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
     });
   });
 
-  test("it renders the page with the list of queries", async function (assert) {
+  test("renders the page with the list of queries", async function (assert) {
     await visit("/admin/plugins/explorer");
 
-    assert.ok(
-      query("div.query-list input.ember-text-field").placeholder ===
+    assert
+      .dom("div.query-list input.ember-text-field")
+      .hasAttribute(
+        "placeholder",
         I18n.t("explorer.search_placeholder"),
-      "the search box was rendered"
-    );
+        "the search box was rendered"
+      );
 
-    assert.ok(
-      exists("div.query-list button.btn-icon svg.d-icon-plus"),
-      "the add query button was rendered"
-    );
+    assert
+      .dom("div.query-list button.btn-icon svg.d-icon-plus")
+      .exists("the add query button was rendered");
 
-    assert.ok(
-      query("div.query-list button.btn-icon-text span.d-button-label")
-        .innerText === I18n.t("explorer.import.label"),
-      "the import button was rendered"
-    );
+    assert
+      .dom("div.query-list button.btn-icon-text span.d-button-label")
+      .hasText(
+        I18n.t("explorer.import.label"),
+        "the import button was rendered"
+      );
 
-    assert.equal(
-      count("div.container table.recent-queries tbody tr"),
-      2,
-      "the list of queries was rendered"
-    );
+    assert
+      .dom("div.container table.recent-queries tbody tr")
+      .exists({ count: 2 }, "the list of queries was rendered");
 
-    assert.ok(
-      query(
-        "div.container table.recent-queries tbody tr:nth-child(1) td a"
-      ).innerText.startsWith("Top 100 Likers"),
-      "The first query was rendered"
-    );
+    assert
+      .dom("div.container table.recent-queries tbody tr:nth-child(1) td a")
+      .hasText(/^\s*Top 100 Likers/, "The first query was rendered");
 
-    assert.ok(
-      query(
-        "div.container table.recent-queries tbody tr:nth-child(2) td a"
-      ).innerText.startsWith("Top 100 Active Topics"),
-      "The second query was rendered"
-    );
+    assert
+      .dom("div.container table.recent-queries tbody tr:nth-child(2) td a")
+      .hasText(/^\s*Top 100 Active Topics/, "The second query was rendered");
   });
 });
