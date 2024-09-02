@@ -56,5 +56,9 @@ module("Data Explorer Plugin | Component | explorer-schema", function (hooks) {
     await fillIn(`.schema-search input`, "Cat");
 
     assert.dom(".schema-table").exists();
+
+    await fillIn(`.schema-search input`, "NotExist");
+
+    assert.dom(".schema-table").doesNotExist();
   });
 });
