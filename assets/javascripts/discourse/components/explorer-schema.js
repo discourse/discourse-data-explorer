@@ -114,7 +114,7 @@ export default class ExplorerSchema extends Component {
 
   @debounce(500)
   updateFilter(value) {
-    this.filter = value;
+    this.filter = value.toLowerCase();
     this.loading = false;
   }
 
