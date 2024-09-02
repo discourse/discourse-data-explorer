@@ -78,6 +78,8 @@ de:
           invalid: "Ungültig"
           no_such_category: "Keine solche Kategorie"
           no_such_group: "Keine solche Gruppe"
+          invalid_date: "%{date} ist ein ungültiges Datum"
+          invalid_time: "%{time} ist eine ungültige Zeit"
     group:
       reports: "Berichte"
     admin:
@@ -98,3 +100,5 @@ de:
               label: Daten-Explorer-Anfrageparameter
             skip_empty:
               label: Überspringe das Senden einer PN, wenn es keine Ergebnisse gibt
+            attach_csv:
+              label: Hänge die CSV-Datei an die PM an
