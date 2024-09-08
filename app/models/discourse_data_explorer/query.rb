@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 module ::DiscourseDataExplorer
+  class QueryFinder
+    def self.find(id)
+      default_query = Queries.default[id.to_s]
+      return raise ActiveRecord::RecordNotFound unless default_query
+
+      query = Query.find_by(id: id) || Query.new
+      query.attributes = default_query
+      query.user_id = Discourse::SYSTEM_USER_ID.to_s
+      query
+    end
+  end
+
   class Query < ActiveRecord::Base
     self.table_name = "data_explorer_queries"
 
@@ -35,15 +47,16 @@ module ::DiscourseDataExplorer
     end
 
     def self.find(id)
-      if id.to_i < 0
-        default_query = Queries.default[id.to_s]
-        return raise ActiveRecord::RecordNotFound unless default_query
-        query = Query.find_by(id: id) || Query.new
-        query.attributes = default_query
-        query.user_id = Discourse::SYSTEM_USER_ID.to_s
-        query
-      else
-        super
+      return super if id.to_i >= 0
+      QueryFinder.find(id)
+    end
+
+    private
+
+    class ActiveRecord_Relation
+      def find(id)
+        return super if id.to_i >= 0
+        QueryFinder.find(id)
       end
     end
   end
