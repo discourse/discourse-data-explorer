@@ -53,6 +53,7 @@ module ::DiscourseDataExplorer
 
     private
 
+    # for `Query.unscoped.find`
     class ActiveRecord_Relation
       def find(id)
         return super if id.to_i >= 0
