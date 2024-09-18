@@ -75,6 +75,7 @@ describe DiscourseDataExplorer::ReportGenerator do
 
     it "works with email recipients" do
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
 
       email = "john@doe.com"
       result = described_class.generate(query.id, query_params, [email])
@@ -96,6 +97,7 @@ describe DiscourseDataExplorer::ReportGenerator do
 
     it "works with duplicate recipients" do
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("table data")
+      freeze_time
 
       result = described_class.generate(query.id, query_params, [user.username, user.username])
 
