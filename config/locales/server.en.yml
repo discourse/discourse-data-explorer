@@ -6,3 +6,6 @@ en:
       recurring_data_explorer_result_pm:
         title: Schedule a PM with Data Explorer results
         description: Get scheduled reports sent to your messages each month
+      recurring_data_explorer_result_topic:
+        title: Schedule a post in a topic with Data Explorer results
+        description: Get scheduled reports posted to a specific topic each month

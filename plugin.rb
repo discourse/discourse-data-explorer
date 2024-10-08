@@ -115,6 +115,60 @@ after_initialize do
             end
         end
       end
+
+      add_automation_scriptable("recurring_data_explorer_result_topic") do
+        queries =
+          DiscourseDataExplorer::Query
+            .where(hidden: false)
+            .map { |q| { id: q.id, translated_name: q.name } }
+        field :topic_id, component: :text, required: true
+        field :query_id, component: :choices, required: true, extra: { content: queries }
+        field :query_params, component: :"key-value", accepts_placeholders: true
+        field :skip_empty, component: :boolean
+        field :attach_csv, component: :boolean
+
+        version 1
+        triggerables [:recurring]
+
+        script do |_, fields, automation|
+          topic_id = fields.dig("topic_id", "value")
+          query_id = fields.dig("query_id", "value")
+          query_params = fields.dig("query_params", "value") || {}
+          skip_empty = fields.dig("skip_empty", "value") || false
+          attach_csv = fields.dig("attach_csv", "value") || false
+
+          unless SiteSetting.data_explorer_enabled
+            Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - plugin must be enabled to run automation #{automation.id}"
+            next
+          end
+
+          topic = Topic.find_by(id: topic_id)
+          if topic.blank?
+            Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't find topic ID (#{topic_id}) for automation #{automation.id}"
+            next
+          end
+
+          begin
+            post =
+              DiscourseDataExplorer::ReportGenerator.generate_post(
+                query_id,
+                query_params,
+                { skip_empty:, attach_csv: },
+              )
+
+            next if post.empty?
+
+            PostCreator.create!(
+              Discourse.system_user,
+              topic_id: topic.id,
+              raw: post["raw"],
+              skip_validations: true,
+            )
+          rescue ActiveRecord::RecordNotSaved => e
+            Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't reply to topic ID #{topic_id} for automation #{automation.id}: #{e.message}"
+          end
+        end
+      end
     end
   end
 end

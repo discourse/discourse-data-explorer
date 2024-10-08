@@ -153,4 +153,42 @@ describe DiscourseDataExplorer::ReportGenerator do
       )
     end
   end
+
+  describe ".generate_post" do
+    it "works without attached csv file" do
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
+
+      result = described_class.generate_post(query.id, query_params)
+
+      filename =
+        "#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
+
+      expect(result["raw"]).to include(
+        "### Scheduled Report for Most Common Likers\n\n" +
+          "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
+          "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
+          "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+      )
+      expect(result["raw"]).not_to include("Appendix")
+    end
+
+    it "works with attached csv file" do
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
+
+      result = described_class.generate_post(query.id, query_params, { attach_csv: true })
+
+      filename =
+        "#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
+
+      expect(result["raw"]).to include(
+        "### Scheduled Report for Most Common Likers\n\n" +
+          "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
+          "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
+          "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})\n\n" +
+          "Appendix: [#{filename}|attachment](upload://",
+      )
+    end
+  end
 end

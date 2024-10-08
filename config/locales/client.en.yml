@@ -118,3 +118,15 @@ en:
               label: Skip sending PM if there are no results
             attach_csv:
               label: Attach the CSV file to the PM
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: The topic to post query results in
+            query_id:
+              label: Data Explorer Query
+            query_params:
+              label: Data Explorer Query parameters
+            skip_empty:
+              label: Skip posting if there are no results
+            attach_csv:
+              label: Attach the CSV file to the post

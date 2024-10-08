@@ -2,34 +2,31 @@
 
 require "rails_helper"
 
-describe "RecurringDataExplorerResultPM" do
+describe "RecurringDataExplorerResultTopic" do
   fab!(:admin)
 
   fab!(:user)
   fab!(:another_user) { Fabricate(:user) }
   fab!(:group_user) { Fabricate(:user) }
   fab!(:not_allowed_user) { Fabricate(:user) }
+  fab!(:topic)
 
   fab!(:group) { Fabricate(:group, users: [user, another_user]) }
   fab!(:another_group) { Fabricate(:group, users: [group_user]) }
 
   fab!(:automation) do
-    Fabricate(:automation, script: "recurring_data_explorer_result_pm", trigger: "recurring")
+    Fabricate(:automation, script: "recurring_data_explorer_result_topic", trigger: "recurring")
   end
   fab!(:query)
   fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: another_group) }
-
-  let!(:recipients) do
-    [user.username, not_allowed_user.username, another_user.username, another_group.name]
-  end
 
   before do
     SiteSetting.data_explorer_enabled = true
     SiteSetting.discourse_automation_enabled = true
 
     automation.upsert_field!("query_id", "choices", { value: query.id })
-    automation.upsert_field!("recipients", "email_group_user", { value: recipients })
+    automation.upsert_field!("topic_id", "text", { value: topic.id })
     automation.upsert_field!(
       "query_params",
       "key-value",
@@ -45,47 +42,24 @@ describe "RecurringDataExplorerResultPM" do
   end
 
   context "when using recurring trigger" do
-    it "sends the pm at recurring date_date" do
+    it "sends the post at recurring date_date" do
       freeze_time 1.day.from_now do
-        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change { Topic.count }.by(3)
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change {
+          topic.reload.posts.count
+        }.by(1)
 
-        title = "Scheduled Report for #{query.name}"
-        expect(Topic.last(3).pluck(:title)).to eq([title, title, title])
+        expect(topic.posts.last.raw).to include("Scheduled Report for #{query.name}")
       end
-    end
-
-    it "ensures only allowed users in recipients field receive reports via pm" do
-      expect do
-        automation.update(last_updated_by_id: admin.id)
-        automation.trigger!
-      end.to change { Topic.count }.by(3)
-
-      user_topics = Topic.first(2)
-      group_topics = Topic.last(1)
-      expect(Topic.last(3).pluck(:archetype)).to eq(
-        [Archetype.private_message, Archetype.private_message, Archetype.private_message],
-      )
-      expect(user_topics.map { |t| t.allowed_users.pluck(:username).sort }).to match_array(
-        [
-          [user.username, Discourse.system_user.username],
-          [another_user.username, Discourse.system_user.username],
-        ],
-      )
-      expect(group_topics.map { |t| t.allowed_groups.pluck(:name).sort }).to match_array(
-        [[another_group.name]],
-      )
     end
 
     it "has appropriate content from the report generator" do
       automation.update(last_updated_by_id: admin.id)
       automation.trigger!
 
-      expect(Post.last.raw).to include(
-        "Hi #{another_group.name}, your data explorer report is ready.\n\nQuery Name:\n#{query.name}",
-      )
+      expect(topic.reload.posts.last.raw).to include("Query Name:\n#{query.name}")
     end
 
-    it "does not send the PM if skip_empty" do
+    it "does not create the post if skip_empty" do
       automation.upsert_field!("skip_empty", "boolean", { value: true })
 
       automation.update(last_updated_by_id: admin.id)
