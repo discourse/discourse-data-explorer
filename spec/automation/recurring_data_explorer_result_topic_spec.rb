@@ -17,7 +17,7 @@ describe "RecurringDataExplorerResultTopic" do
   fab!(:automation) do
     Fabricate(:automation, script: "recurring_data_explorer_result_topic", trigger: "recurring")
   end
-  fab!(:query)
+  fab!(:query) { Fabricate(:query, sql: "SELECT 'testabcd' AS data") }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: another_group) }
 
@@ -48,24 +48,43 @@ describe "RecurringDataExplorerResultTopic" do
           topic.reload.posts.count
         }.by(1)
 
-        expect(topic.posts.last.raw).to include("Scheduled Report for #{query.name}")
+        expect(topic.posts.last.raw).to eq(
+          I18n.t(
+            "data_explorer.report_generator.post.body",
+            query_name: query.name,
+            table: "| data |\n| :----- |\n| testabcd |\n",
+            base_url: Discourse.base_url,
+            query_id: query.id,
+            created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+            timezone: Time.zone.name,
+          ).chomp,
+        )
       end
     end
 
     it "has appropriate content from the report generator" do
+      freeze_time
       automation.update(last_updated_by_id: admin.id)
       automation.trigger!
 
-      expect(topic.reload.posts.last.raw).to include("Query Name:\n#{query.name}")
+      expect(topic.posts.last.raw).to eq(
+        I18n.t(
+          "data_explorer.report_generator.post.body",
+          query_name: query.name,
+          table: "| data |\n| :----- |\n| testabcd |\n",
+          base_url: Discourse.base_url,
+          query_id: query.id,
+          created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+          timezone: Time.zone.name,
+        ).chomp,
+      )
     end
 
     it "does not create the post if skip_empty" do
+      query.update!(sql: "SELECT NULL LIMIT 0")
       automation.upsert_field!("skip_empty", "boolean", { value: true })
 
       automation.update(last_updated_by_id: admin.id)
-
-      # Done because the fabricated query selects all users
-      User.destroy_all
 
       expect { automation.trigger! }.to_not change { Post.count }
     end

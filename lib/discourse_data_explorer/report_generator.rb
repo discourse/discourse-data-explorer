@@ -64,14 +64,28 @@ module ::DiscourseDataExplorer
         pm_type = "target_#{target[1]}s"
 
         pm = {}
-        pm["title"] = "Scheduled Report for #{query.name}"
+        pm["title"] = I18n.t(
+          "data_explorer.report_generator.private_message.title",
+          query_name: query.name,
+        )
         pm[pm_type] = Array(name)
-        pm["raw"] = "Hi #{name}, your data explorer report is ready.\n\n" +
-          "Query Name:\n#{query.name}\n\nHere are the results:\n#{table}\n\n" +
-          "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
-          "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})"
+        pm["raw"] = I18n.t(
+          "data_explorer.report_generator.private_message.body",
+          recipient_name: name,
+          query_name: query.name,
+          table: table,
+          base_url: Discourse.base_url,
+          query_id: query.id,
+          created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+          timezone: Time.zone.name,
+        )
         if upload
-          pm["raw"] << "\n\nAppendix: [#{upload.original_filename}|attachment](#{upload.short_url})"
+          pm["raw"] << "\n\n" +
+            I18n.t(
+              "data_explorer.report_generator.upload_appendix",
+              filename: upload.original_filename,
+              short_url: upload.short_url,
+            )
         end
         pms << pm
       end
@@ -79,18 +93,27 @@ module ::DiscourseDataExplorer
     end
 
     def self.build_report_post(query, table = "", attach_csv: false, result: nil)
-      pms = []
-
       upload = create_csv_upload(query, result) if attach_csv
 
       post = {}
-      post["raw"] = "### Scheduled Report for #{query.name}\n\n" +
-        "Query Name:\n#{query.name}\n\nHere are the results:\n#{table}\n\n" +
-        "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
-        "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})"
+      post["raw"] = I18n.t(
+        "data_explorer.report_generator.post.body",
+        recipient_name: name,
+        query_name: query.name,
+        table: table,
+        base_url: Discourse.base_url,
+        query_id: query.id,
+        created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+        timezone: Time.zone.name,
+      )
 
       if upload
-        post["raw"] << "\n\nAppendix: [#{upload.original_filename}|attachment](#{upload.short_url})"
+        post["raw"] << "\n\n" +
+          I18n.t(
+            "data_explorer.report_generator.upload_appendix",
+            filename: upload.original_filename,
+            short_url: upload.short_url,
+          )
       end
 
       post

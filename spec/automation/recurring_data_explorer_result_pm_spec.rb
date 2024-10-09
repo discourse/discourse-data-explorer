@@ -16,7 +16,7 @@ describe "RecurringDataExplorerResultPM" do
   fab!(:automation) do
     Fabricate(:automation, script: "recurring_data_explorer_result_pm", trigger: "recurring")
   end
-  fab!(:query)
+  fab!(:query) { Fabricate(:query, sql: "SELECT 'testabcd' AS data") }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: another_group) }
 
@@ -49,7 +49,8 @@ describe "RecurringDataExplorerResultPM" do
       freeze_time 1.day.from_now do
         expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change { Topic.count }.by(3)
 
-        title = "Scheduled Report for #{query.name}"
+        title =
+          I18n.t("data_explorer.report_generator.private_message.title", query_name: query.name)
         expect(Topic.last(3).pluck(:title)).to eq([title, title, title])
       end
     end
@@ -77,21 +78,30 @@ describe "RecurringDataExplorerResultPM" do
     end
 
     it "has appropriate content from the report generator" do
+      freeze_time
+
       automation.update(last_updated_by_id: admin.id)
       automation.trigger!
 
-      expect(Post.last.raw).to include(
-        "Hi #{another_group.name}, your data explorer report is ready.\n\nQuery Name:\n#{query.name}",
+      expect(Post.last.raw).to eq(
+        I18n.t(
+          "data_explorer.report_generator.private_message.body",
+          recipient_name: another_group.name,
+          query_name: query.name,
+          table: "| data |\n| :----- |\n| testabcd |\n",
+          base_url: Discourse.base_url,
+          query_id: query.id,
+          created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+          timezone: Time.zone.name,
+        ).chomp,
       )
     end
 
     it "does not send the PM if skip_empty" do
+      query.update!(sql: "SELECT NULL LIMIT 0")
       automation.upsert_field!("skip_empty", "boolean", { value: true })
 
       automation.update(last_updated_by_id: admin.id)
-
-      # Done because the fabricated query selects all users
-      User.destroy_all
 
       expect { automation.trigger! }.to_not change { Post.count }
     end
