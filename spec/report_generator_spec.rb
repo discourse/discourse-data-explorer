@@ -12,7 +12,10 @@ describe DiscourseDataExplorer::ReportGenerator do
 
   let(:query_params) { [%w[from_days_ago 0], %w[duration_days 15]] }
 
-  before { SiteSetting.data_explorer_enabled = true }
+  before do
+    SiteSetting.data_explorer_enabled = true
+    SiteSetting.authorized_extensions = "csv"
+  end
 
   describe ".generate" do
     it "returns [] if the recipient is not in query group" do
@@ -37,13 +40,23 @@ describe DiscourseDataExplorer::ReportGenerator do
       expect(result).to eq(
         [
           {
-            "title" => "Scheduled Report for #{query.name}",
+            "title" =>
+              I18n.t(
+                "data_explorer.report_generator.private_message.title",
+                query_name: query.name,
+              ),
             "target_usernames" => [user.username],
             "raw" =>
-              "Hi #{user.username}, your data explorer report is ready.\n\n" +
-                "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
-                "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
-                "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+              I18n.t(
+                "data_explorer.report_generator.private_message.body",
+                recipient_name: user.username,
+                query_name: query.name,
+                table: "le table",
+                base_url: Discourse.base_url,
+                query_id: query.id,
+                created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+                timezone: Time.zone.name,
+              ),
           },
         ],
       )
@@ -57,17 +70,26 @@ describe DiscourseDataExplorer::ReportGenerator do
       freeze_time
 
       result = described_class.generate(query.id, query_params, [group.name, "non-existent-group"])
-
       expect(result).to eq(
         [
           {
-            "title" => "Scheduled Report for #{query.name}",
+            "title" =>
+              I18n.t(
+                "data_explorer.report_generator.private_message.title",
+                query_name: query.name,
+              ),
             "target_group_names" => [group.name],
             "raw" =>
-              "Hi #{group.name}, your data explorer report is ready.\n\n" +
-                "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
-                "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
-                "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+              I18n.t(
+                "data_explorer.report_generator.private_message.body",
+                recipient_name: group.name,
+                query_name: query.name,
+                table: "le table",
+                base_url: Discourse.base_url,
+                query_id: query.id,
+                created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+                timezone: Time.zone.name,
+              ),
           },
         ],
       )
@@ -83,20 +105,30 @@ describe DiscourseDataExplorer::ReportGenerator do
       expect(result).to eq(
         [
           {
-            "title" => "Scheduled Report for #{query.name}",
+            "title" =>
+              I18n.t(
+                "data_explorer.report_generator.private_message.title",
+                query_name: query.name,
+              ),
             "target_emails" => [email],
             "raw" =>
-              "Hi #{email}, your data explorer report is ready.\n\n" +
-                "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
-                "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
-                "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+              I18n.t(
+                "data_explorer.report_generator.private_message.body",
+                recipient_name: email,
+                query_name: query.name,
+                table: "le table",
+                base_url: Discourse.base_url,
+                query_id: query.id,
+                created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+                timezone: Time.zone.name,
+              ),
           },
         ],
       )
     end
 
     it "works with duplicate recipients" do
-      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("table data")
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time
 
       result = described_class.generate(query.id, query_params, [user.username, user.username])
@@ -104,13 +136,23 @@ describe DiscourseDataExplorer::ReportGenerator do
       expect(result).to eq(
         [
           {
-            "title" => "Scheduled Report for #{query.name}",
+            "title" =>
+              I18n.t(
+                "data_explorer.report_generator.private_message.title",
+                query_name: query.name,
+              ),
             "target_usernames" => [user.username],
             "raw" =>
-              "Hi #{user.username}, your data explorer report is ready.\n\n" +
-                "Query Name:\n#{query.name}\n\nHere are the results:\ntable data\n\n" +
-                "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
-                "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})",
+              I18n.t(
+                "data_explorer.report_generator.private_message.body",
+                recipient_name: user.username,
+                query_name: query.name,
+                table: "le table",
+                base_url: Discourse.base_url,
+                query_id: query.id,
+                created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+                timezone: Time.zone.name,
+              ),
           },
         ],
       )
@@ -118,7 +160,7 @@ describe DiscourseDataExplorer::ReportGenerator do
 
     it "works with multiple recipient types" do
       Fabricate(:query_group, query: query, group: group)
-      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("table data")
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
 
       result =
         described_class.generate(
@@ -144,12 +186,70 @@ describe DiscourseDataExplorer::ReportGenerator do
       filename =
         "#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
 
-      expect(result[0]["raw"]).to include(
-        "Hi #{user.username}, your data explorer report is ready.\n\n" +
-          "Query Name:\n#{query.name}\n\nHere are the results:\nle table\n\n" +
-          "<a href='#{Discourse.base_url}/admin/plugins/explorer?id=#{query.id}'>View query in Data Explorer</a>\n\n" +
-          "Report created at #{Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S")} (#{Time.zone.name})\n\n" +
-          "Appendix: [#{filename}|attachment](upload://",
+      expect(result[0]["raw"]).to eq(
+        I18n.t(
+          "data_explorer.report_generator.private_message.body",
+          recipient_name: user.username,
+          query_name: query.name,
+          table: "le table",
+          base_url: Discourse.base_url,
+          query_id: query.id,
+          created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+          timezone: Time.zone.name,
+        ) + "\n\n" +
+          I18n.t(
+            "data_explorer.report_generator.upload_appendix",
+            filename: filename,
+            short_url: Upload.find_by(original_filename: filename).short_url,
+          ),
+      )
+    end
+  end
+
+  describe ".generate_post" do
+    it "works without attached csv file" do
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
+
+      result = described_class.generate_post(query.id, query_params)
+
+      expect(result["raw"]).to eq(
+        I18n.t(
+          "data_explorer.report_generator.post.body",
+          query_name: query.name,
+          table: "le table",
+          base_url: Discourse.base_url,
+          query_id: query.id,
+          created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+          timezone: Time.zone.name,
+        ),
+      )
+    end
+
+    it "works with attached csv file" do
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
+
+      result = described_class.generate_post(query.id, query_params, { attach_csv: true })
+
+      filename =
+        "#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult.csv"
+
+      expect(result["raw"]).to eq(
+        I18n.t(
+          "data_explorer.report_generator.post.body",
+          query_name: query.name,
+          table: "le table",
+          base_url: Discourse.base_url,
+          query_id: query.id,
+          created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+          timezone: Time.zone.name,
+        ) + "\n\n" +
+          I18n.t(
+            "data_explorer.report_generator.upload_appendix",
+            filename: filename,
+            short_url: Upload.find_by(original_filename: filename).short_url,
+          ),
       )
     end
   end
