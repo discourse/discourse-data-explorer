@@ -8,7 +8,7 @@ import TextViewComponent from "./result-types/text";
 export default class QueryRowContent extends Component {
   @cached
   get results() {
-    return this.args.columnComponents.map((t, idx) => {
+    return this.args.columnComponents.map((componentDefinition, idx) => {
       const value = this.args.row[idx],
         id = parseInt(value, 10);
 
@@ -23,19 +23,20 @@ export default class QueryRowContent extends Component {
           component: TextViewComponent,
           textValue: "NULL",
         };
-      } else if (t.name === "text") {
+      } else if (componentDefinition.name === "text") {
         return {
           component: TextViewComponent,
           textValue: escapeExpression(this.args.row[idx].toString()),
         };
       }
 
-      const lookupFunc = this.args[`lookup${capitalize(t.name)}`];
+      const lookupFunc =
+        this.args[`lookup${capitalize(componentDefinition.name)}`];
       if (lookupFunc) {
-        ctx[t.name] = lookupFunc.call(this.args, id);
+        ctx[componentDefinition.name] = lookupFunc.call(this.args, id);
       }
 
-      if (t.name === "url") {
+      if (componentDefinition.name === "url") {
         let [url, name] = guessUrl(value);
         ctx["href"] = url;
         ctx["target"] = name;
@@ -43,7 +44,7 @@ export default class QueryRowContent extends Component {
 
       try {
         return {
-          component: t.component || TextViewComponent,
+          component: componentDefinition.component || TextViewComponent,
           ctx,
         };
       } catch (e) {
@@ -53,10 +54,10 @@ export default class QueryRowContent extends Component {
   }
 }
 
-function guessUrl(t) {
-  let [dest, name] = [t, t];
+function guessUrl(columnValue) {
+  let [dest, name] = [columnValue, columnValue];
 
-  const split = t.split(/,(.+)/);
+  const split = columnValue.split(/,(.+)/);
 
   if (split.length > 1) {
     name = split[0];

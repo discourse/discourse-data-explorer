@@ -12,14 +12,12 @@ describe "RecurringDataExplorerResultTopic" do
   fab!(:topic)
 
   fab!(:group) { Fabricate(:group, users: [user, another_user]) }
-  fab!(:another_group) { Fabricate(:group, users: [group_user]) }
 
   fab!(:automation) do
     Fabricate(:automation, script: "recurring_data_explorer_result_topic", trigger: "recurring")
   end
   fab!(:query) { Fabricate(:query, sql: "SELECT 'testabcd' AS data") }
   fab!(:query_group) { Fabricate(:query_group, query: query, group: group) }
-  fab!(:query_group) { Fabricate(:query_group, query: query, group: another_group) }
 
   before do
     SiteSetting.data_explorer_enabled = true
@@ -87,6 +85,25 @@ describe "RecurringDataExplorerResultTopic" do
       automation.update(last_updated_by_id: admin.id)
 
       expect { automation.trigger! }.to_not change { Post.count }
+    end
+
+    it "works with a query that returns URLs in a number,url format" do
+      freeze_time
+      query.update!(sql: "SELECT 3 || ',https://test.com' AS some_url")
+      automation.update(last_updated_by_id: admin.id)
+      automation.trigger!
+
+      expect(topic.posts.last.raw).to eq(
+        I18n.t(
+          "data_explorer.report_generator.post.body",
+          query_name: query.name,
+          table: "| some_url |\n| :----- |\n| [3](https://test.com) |\n",
+          base_url: Discourse.base_url,
+          query_id: query.id,
+          created_at: Time.zone.now.strftime("%Y-%m-%d at %H:%M:%S"),
+          timezone: Time.zone.name,
+        ).chomp,
+      )
     end
   end
 end
