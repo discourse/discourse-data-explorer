@@ -105,7 +105,12 @@ after_initialize do
           end
 
           DiscourseDataExplorer::ReportGenerator
-            .generate(query_id, query_params, recipients, { skip_empty:, attach_csv: })
+            .generate(
+              query_id,
+              query_params,
+              recipients,
+              { skip_empty:, attach_csv:, render_url_columns: true },
+            )
             .each do |pm|
               begin
                 utils.send_pm(pm, automation_id: automation.id, prefers_encrypt: false)
@@ -153,7 +158,7 @@ after_initialize do
               DiscourseDataExplorer::ReportGenerator.generate_post(
                 query_id,
                 query_params,
-                { skip_empty:, attach_csv: },
+                { skip_empty:, attach_csv:, render_url_columns: true },
               )
 
             next if post.empty?

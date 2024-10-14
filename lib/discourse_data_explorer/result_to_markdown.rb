@@ -4,7 +4,7 @@ include HasSanitizableFields
 
 module ::DiscourseDataExplorer
   class ResultToMarkdown
-    def self.convert(pg_result)
+    def self.convert(pg_result, opts = {})
       relations, colrender = DataExplorer.add_extra_data(pg_result)
       result_data = []
 
@@ -17,7 +17,8 @@ module ::DiscourseDataExplorer
 
         row.each_with_index do |col, col_index|
           col_name = pg_result.fields[col_index]
-          related = relations.dig(colrender[col_index].to_sym) unless colrender[col_index].nil?
+          col_render = colrender[col_index]
+          related = relations.dig(col_render.to_sym) if col_render.present?
 
           if related.is_a?(ActiveModel::ArraySerializer)
             related_row = related.object.find_by(id: col)
@@ -32,6 +33,9 @@ module ::DiscourseDataExplorer
             else
               row_data[col_index] = "#{related_row[column]} (#{col})"
             end
+          elsif col_render == "url" && opts[:render_url_columns]
+            url, text = guess_url(col)
+            row_data[col_index] = "[#{text}](#{url})"
           else
             row_data[col_index] = col
           end
@@ -44,6 +48,17 @@ module ::DiscourseDataExplorer
       table_body = pg_result.fields.size.times.map { " :----- |" }.join
 
       "|#{table_headers}\n|#{table_body}\n#{result_data.join}"
+    end
+
+    def self.guess_url(column_value)
+      split = column_value.split(/,(.+)/)
+
+      if split.length > 1
+        text = split[0]
+        url = split[1]
+      end
+
+      [url || column_value, text || column_value]
     end
   end
 end

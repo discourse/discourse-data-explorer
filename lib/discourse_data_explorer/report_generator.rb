@@ -13,7 +13,8 @@ module ::DiscourseDataExplorer
       query.update!(last_run_at: Time.now)
 
       return [] if opts[:skip_empty] && result[:pg_result].values.empty?
-      table = ResultToMarkdown.convert(result[:pg_result])
+      table =
+        ResultToMarkdown.convert(result[:pg_result], render_url_columns: opts[:render_url_columns])
 
       build_report_pms(query, table, recipients, attach_csv: opts[:attach_csv], result:)
     end
@@ -28,7 +29,8 @@ module ::DiscourseDataExplorer
       query.update!(last_run_at: Time.now)
 
       return {} if opts[:skip_empty] && result[:pg_result].values.empty?
-      table = ResultToMarkdown.convert(result[:pg_result])
+      table =
+        ResultToMarkdown.convert(result[:pg_result], render_url_columns: opts[:render_url_columns])
 
       build_report_post(query, table, attach_csv: opts[:attach_csv], result:)
     end
