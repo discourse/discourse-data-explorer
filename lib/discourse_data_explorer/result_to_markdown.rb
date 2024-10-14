@@ -4,7 +4,7 @@ include HasSanitizableFields
 
 module ::DiscourseDataExplorer
   class ResultToMarkdown
-    def self.convert(pg_result, opts = {})
+    def self.convert(pg_result, render_url_columns = false)
       relations, colrender = DataExplorer.add_extra_data(pg_result)
       result_data = []
 
@@ -33,7 +33,7 @@ module ::DiscourseDataExplorer
             else
               row_data[col_index] = "#{related_row[column]} (#{col})"
             end
-          elsif col_render == "url" && opts[:render_url_columns]
+          elsif col_render == "url" && render_url_columns
             url, text = guess_url(col)
             row_data[col_index] = "[#{text}](#{url})"
           else
@@ -51,12 +51,7 @@ module ::DiscourseDataExplorer
     end
 
     def self.guess_url(column_value)
-      split = column_value.split(/,(.+)/)
-
-      if split.length > 1
-        text = split[0]
-        url = split[1]
-      end
+      text, url = column_value.split(/,(.+)/)
 
       [url || column_value, text || column_value]
     end
