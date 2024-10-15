@@ -11,4 +11,3 @@ zh_CN:
     scriptables:
       recurring_data_explorer_result_pm:
         title: 使用数据资源管理器结果安排 PM
-        description: 每月将定时报告发送到您的消息中

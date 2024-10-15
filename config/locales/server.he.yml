@@ -11,4 +11,34 @@ he:
     scriptables:
       recurring_data_explorer_result_pm:
         title: תזמון הודעה פרטית עם תוצאות דפדפן נתונים
-        description: קבלת דוחות מתוזמנים להודעות שלך מדי חודש
+        description: קבלת דוחות מתוזמנים להודעות שלך
+      recurring_data_explorer_result_topic:
+        title: תזמון פוסט בנושא עם תוצאות דפדפן נתונים
+        description: קבלת דוחות מתוזמנים מפורסמים בנושא מסוים
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "דוח מתוזמן עבור %{query_name}"
+        body: |
+          היי %{recipient_name}, דוח דפדפן הנתונים שלך מוכן.
+
+           שם השאילתה:
+          %{query_name}
+
+          הנה התוצאות:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>הצגת השאילתה בדפדפן הנתונים</a>
+
+          הדוח נוצר ב־%{created_at} (%{timezone})
+      post:
+        body: |
+          ### דוח מתוזמן עבור %{query_name}
+
+          הנה התוצאות:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>הצגת השאילתה בדפדפן הנתונים</a>
+
+          הדוח נוצר ב־%{created_at} (%{timezone})
+      upload_appendix: "נספח: [%{filename}|attachment](%{short_url})"

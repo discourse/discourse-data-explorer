@@ -93,3 +93,9 @@ fi:
               label: Dataselaimen kyselyparametrit
             skip_empty:
               label: Ohita yksityisviestin lähettäminen, jos tuloksia ei ole
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Dataselaimen kysely
+            query_params:
+              label: Dataselaimen kyselyparametrit

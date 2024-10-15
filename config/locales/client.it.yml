@@ -93,3 +93,9 @@ it:
               label: Parametri della query di Data Explorer
             skip_empty:
               label: Salta l'invio di MP se non ci sono risultati
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Query di Data Explorer
+            query_params:
+              label: Parametri della query di Data Explorer

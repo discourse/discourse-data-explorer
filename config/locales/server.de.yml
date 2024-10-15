@@ -11,4 +11,34 @@ de:
     scriptables:
       recurring_data_explorer_result_pm:
         title: Plane eine PN mit den Ergebnissen des Daten-Explorers
-        description: Lass dir jeden Monat Berichte an deine Nachrichten schicken
+        description: Lass dir geplante Berichte an deine Nachrichten schicken
+      recurring_data_explorer_result_topic:
+        title: Einen Beitrag in einem Thema mit Data Explorer Ergebnissen planen
+        description: Geplante Berichte zu einem bestimmten Thema posten
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Geplanter Bericht für %{query_name}"
+        body: |
+          Hallo %{recipient_name}, dein Data Explorer Bericht ist fertig.
+
+          Abfragename:
+          %{query_name}
+
+          Hier sind die Ergebnisse:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Abfrage im Data Explorer anzeigen</a>
+
+          Bericht erstellt auf %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Geplanter Bericht für %{query_name}
+
+          Hier sind die Ergebnisse:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Abfrage im Data Explorer anzeigen</a>
+
+          Bericht erstellt auf %{created_at} (%{timezone})
+      upload_appendix: "Anhang: [%{filename}|attachment](%{short_url})"

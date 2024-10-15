@@ -11,4 +11,3 @@ pt_BR:
     scriptables:
       recurring_data_explorer_result_pm:
         title: Agendar uma MP com os resultados do explorador de dados
-        description: Obter relatórios agendados enviados às suas mensagens todo mês

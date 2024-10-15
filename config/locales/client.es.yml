@@ -93,3 +93,9 @@ es:
               label: Parámetros de consulta del explorador de datos
             skip_empty:
               label: Omitir el envío de MP si no hay resultados
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Consulta del explorador de datos
+            query_params:
+              label: Parámetros de consulta del explorador de datos

@@ -93,3 +93,9 @@ pt_BR:
               label: Parâmetros da consulta do explorador de dados
             skip_empty:
               label: Pular envio de PM se não houver resultados
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Consulta do explorador de dados
+            query_params:
+              label: Parâmetros da consulta do explorador de dados
