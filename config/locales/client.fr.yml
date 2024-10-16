@@ -93,3 +93,9 @@ fr:
               label: Paramètres de requête de l'explorateur de données
             skip_empty:
               label: Ignorer l'envoi d'un MP s'il n'y a aucun résultat
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Requête de l'explorateur de données
+            query_params:
+              label: Paramètres de requête de l'explorateur de données

@@ -93,3 +93,9 @@ tr_TR:
               label: Veri Gezgini Sorgu parametreleri
             skip_empty:
               label: Sonuç yoksa kişisel mesaj göndermeyi atlayın
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Veri Gezgini Sorgusu
+            query_params:
+              label: Veri Gezgini Sorgu parametreleri

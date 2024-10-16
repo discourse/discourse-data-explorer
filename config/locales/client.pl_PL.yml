@@ -90,3 +90,9 @@ pl_PL:
               label: Zapytanie eksploratora danych
             query_params:
               label: Parametry zapytania eksploratora danych
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Zapytanie eksploratora danych
+            query_params:
+              label: Parametry zapytania eksploratora danych

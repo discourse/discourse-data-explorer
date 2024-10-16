@@ -106,3 +106,15 @@ he:
               label: דילוג על שליחת הודעה פרטית אם אין תוצאות
             attach_csv:
               label: צירוף קובץ ה־CSV להודעה הפרטית
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: הנושא לפרסום תוצאות השאילתה אליו
+            query_id:
+              label: שאילתת דפדפן נתונים
+            query_params:
+              label: משתני שאילתת דפדפן נתונים
+            skip_empty:
+              label: דילוג על פרסום אם אין תוצאות
+            attach_csv:
+              label: צירוף קובץ ה־CSV לפוסט

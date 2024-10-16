@@ -91,3 +91,9 @@ ja:
               label: データエクスプローラーのクエリパラメーター
             skip_empty:
               label: 結果がない場合は PM の送信をスキップする
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: データエクスプローラーのクエリ
+            query_params:
+              label: データエクスプローラーのクエリパラメーター

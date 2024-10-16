@@ -93,3 +93,9 @@ nl:
               label: Gegevensverkenner-queryparameters
             skip_empty:
               label: PB verzenden overslaan als er geen resultaten zijn
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Gegevensverkenner-query
+            query_params:
+              label: Gegevensverkenner-queryparameters

@@ -101,3 +101,9 @@ ar:
               label: معلمات استعلام مستكشف البيانات
             skip_empty:
               label: تخطي إرسال رسالة شخصية إذا لم تكن هناك نتائج
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: استعلام مستكشف البيانات
+            query_params:
+              label: معلمات استعلام مستكشف البيانات

@@ -97,3 +97,9 @@ ru:
               label: Параметры запроса проводника данных
             skip_empty:
               label: Пропустить отправку личного сообщения, если нет результатов
+        recurring_data_explorer_result_topic:
+          fields:
+            query_id:
+              label: Запрос проводника данных
+            query_params:
+              label: Параметры запроса проводника данных
