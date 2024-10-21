@@ -196,8 +196,6 @@ describe DiscourseDataExplorer::QueryController do
 
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "limits query runs from API when using block mode" do
           global_setting :max_data_explorer_api_reqs_per_10_seconds, 1
           global_setting :max_data_explorer_api_req_mode, "block"
