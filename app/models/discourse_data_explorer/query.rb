@@ -62,3 +62,18 @@ module ::DiscourseDataExplorer
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: data_explorer_queries
+#
+#  id          :bigint           not null, primary key
+#  name        :string
+#  description :text
+#  sql         :text             default("SELECT 1"), not null
+#  user_id     :integer
+#  last_run_at :datetime
+#  hidden      :boolean          default(FALSE), not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
