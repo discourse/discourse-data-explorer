@@ -47,7 +47,7 @@ export default class QueryRowContent extends Component {
           component: componentDefinition.component || TextViewComponent,
           ctx,
         };
-      } catch (e) {
+      } catch {
         return "error";
       }
     });
