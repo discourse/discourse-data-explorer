@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import EmberObject, { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -235,7 +235,7 @@ export default class ParamInputForm extends Component {
             return null;
           }
           return moment(new Date(value).toISOString()).format("YYYY-MM-DD");
-        } catch (err) {
+        } catch {
           this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
           return null;
         }
@@ -247,7 +247,7 @@ export default class ParamInputForm extends Component {
           return moment(new Date(`1970/01/01 ${value}`).toISOString()).format(
             "HH:mm"
           );
-        } catch (err) {
+        } catch {
           this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
           return null;
         }
@@ -259,7 +259,7 @@ export default class ParamInputForm extends Component {
           return moment(new Date(value).toISOString()).format(
             "YYYY-MM-DD HH:mm"
           );
-        } catch (err) {
+        } catch {
           this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
           return null;
         }

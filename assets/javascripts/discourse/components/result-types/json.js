@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 
 export default class Json extends Component {
