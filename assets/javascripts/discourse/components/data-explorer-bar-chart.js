@@ -11,6 +11,11 @@ export default class DataExplorerBarChart extends Component {
   gridColor = themeColor("--primary-low");
   labelsColor = themeColor("--primary-medium");
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.chart.destroy();
+  }
+
   get config() {
     const data = this.data;
     const options = this.options;
@@ -83,10 +88,5 @@ export default class DataExplorerBarChart extends Component {
   updateChartData() {
     this.chart.data = this.data;
     this.chart.update();
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.chart.destroy();
   }
 }

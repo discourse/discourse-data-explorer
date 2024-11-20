@@ -33,6 +33,7 @@ export default class Query extends RestModel {
   beforeUpdate() {
     this.set("updateing", true);
   }
+
   afterUpdate() {
     this.set("updateing", false);
   }

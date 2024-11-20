@@ -186,15 +186,19 @@ export default class QueryResult extends Component {
   lookupUser(id) {
     return this.transformedUserTable[id];
   }
+
   lookupBadge(id) {
     return this.transformedBadgeTable[id];
   }
+
   lookupPost(id) {
     return this.transformedPostTable[id];
   }
+
   lookupTopic(id) {
     return this.transformedTopicTable[id];
   }
+
   lookupGroup(id) {
     return this.transformedGroupTable[id];
   }
