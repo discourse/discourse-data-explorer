@@ -100,46 +100,34 @@ function validationOf(info) {
   }
 }
 
+const components = {
+  int: <template>
+    <@field.Input @type="number" name={{@info.identifier}} />
+  </template>,
+  boolean: <template><@field.Checkbox name={{@info.identifier}} /></template>,
+  boolean_three: BooleanThree,
+  category_id: CategoryIdInput, // TODO
+  user_id: UserIdInput,
+  user_list: UserListInput,
+  group_list: GroupInput,
+  date: <template>
+    <@field.Input @type="date" name={{@info.identifier}} />
+  </template>,
+  time: <template>
+    <@field.Input @type="time" name={{@info.identifier}} />
+  </template>,
+  datetime: <template>
+    <@field.Input @type="datetime-local" name={{@info.identifier}} />
+  </template>,
+  default: <template><@field.Input name={{@info.identifier}} /></template>,
+};
+
 function componentOf(info) {
   let type = layoutMap[info.type] || "generic";
   if (info.nullable && type === "boolean") {
     type = "boolean_three";
   }
-  switch (type) {
-    case "int":
-      return <template>
-        <@field.Input @type="number" name={{@info.identifier}} />
-      </template>;
-    case "boolean":
-      return <template><@field.Checkbox name={{@info.identifier}} /></template>;
-    case "boolean_three":
-      return BooleanThree;
-    case "category_id":
-      // TODO
-      return CategoryIdInput;
-    case "user_id":
-      return UserIdInput;
-    case "user_list":
-      return UserListInput;
-    case "group_list":
-      return GroupInput;
-    case "date":
-      return <template>
-        <@field.Input @type="date" name={{@info.identifier}} />
-      </template>;
-    case "time":
-      return <template>
-        <@field.Input @type="time" name={{@info.identifier}} />
-      </template>;
-    case "datetime":
-      return <template>
-        <@field.Input @type="datetime-local" name={{@info.identifier}} />
-      </template>;
-    case "bigint":
-    case "string":
-    default:
-      return <template><@field.Input name={{@info.identifier}} /></template>;
-  }
+  return components[type] || components.default;
 }
 
 export default class ParamInputForm extends Component {
