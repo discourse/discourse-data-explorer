@@ -73,6 +73,13 @@ it:
       reset_params: "Reimposta"
       search_placeholder: "Ricerca..."
       no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."
+      form:
+        errors:
+          invalid: "Non valido"
+          no_such_category: "Categoria inesistente"
+          no_such_group: "Gruppo inesistente"
+          invalid_date: "%{date} è una data non valida"
+          invalid_time: "%{time} è un orario non valido"
     group:
       reports: "Rapporti"
     admin:
@@ -93,9 +100,17 @@ it:
               label: Parametri della query di Data Explorer
             skip_empty:
               label: Salta l'invio di MP se non ci sono risultati
+            attach_csv:
+              label: Allega il file CSV al MP
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: L'argomento in cui pubblicare i risultati della query
             query_id:
               label: Query di Data Explorer
             query_params:
               label: Parametri della query di Data Explorer
+            skip_empty:
+              label: Salta la pubblicazione se non ci sono risultati
+            attach_csv:
+              label: Allega il file CSV all'argomento

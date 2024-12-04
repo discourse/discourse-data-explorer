@@ -73,6 +73,13 @@ tr_TR:
       reset_params: "Sıfırla"
       search_placeholder: "Ara..."
       no_search_results: "Üzgünüz, metninizle eşleşen bir sonuç bulamadık."
+      form:
+        errors:
+          invalid: "Geçersiz"
+          no_such_category: "Böyle bir kategori yok"
+          no_such_group: "Böyle bir grup yok"
+          invalid_date: "%{date} geçersiz bir tarih"
+          invalid_time: "%{time} geçersiz bir saat"
     group:
       reports: "Raporlar"
     admin:
@@ -93,9 +100,17 @@ tr_TR:
               label: Veri Gezgini Sorgu parametreleri
             skip_empty:
               label: Sonuç yoksa kişisel mesaj göndermeyi atlayın
+            attach_csv:
+              label: CSV dosyasını kişisel mesaja ekleyin
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: Sorgu sonuçlarının gönderileceği konu
             query_id:
               label: Veri Gezgini Sorgusu
             query_params:
               label: Veri Gezgini Sorgu parametreleri
+            skip_empty:
+              label: Sonuç yoksa göndermeyi atlayın
+            attach_csv:
+              label: CSV dosyasını gönderiye ekleyin

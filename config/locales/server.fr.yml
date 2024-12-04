@@ -11,3 +11,34 @@ fr:
     scriptables:
       recurring_data_explorer_result_pm:
         title: Planifier un MP avec les résultats de l'explorateur de données
+        description: Recevez des rapports planifiés dans vos messages
+      recurring_data_explorer_result_topic:
+        title: Planifier une publication dans un sujet avec les résultats de l'explorateur de données
+        description: Recevoir des rapports planifiés sur un sujet spécifique
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Rapport planifié pour %{query_name}"
+        body: |
+          Bonjour %{recipient_name}, votre rapport de l'explorateur de données est prêt.
+
+          Nom de la requête :
+          %{query_name}
+
+          Voici les résultats :
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Afficher la requête dans l'explorateur de données</a>
+
+          Rapport créé à %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Rapport planifié pour %{query_name}
+
+          Voici les résultats :
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Afficher la requête dans l'explorateur de données</a>
+
+          Rapport créé à %{created_at} (%{timezone})
+      upload_appendix: "Annexe : [%{filename}|pièce jointe](%{short_url})"

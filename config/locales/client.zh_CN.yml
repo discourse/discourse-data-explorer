@@ -71,6 +71,13 @@ zh_CN:
       reset_params: "重置"
       search_placeholder: "搜索…"
       no_search_results: "抱歉，我们找不到任何与您的文本匹配的结果。"
+      form:
+        errors:
+          invalid: "无效"
+          no_such_category: "没有此类类别"
+          no_such_group: "没有此类群组"
+          invalid_date: "%{date} 是无效日期"
+          invalid_time: "%{time} 是无效时间"
     group:
       reports: "报告"
     admin:
@@ -91,9 +98,17 @@ zh_CN:
               label: 数据资源管理器查询参数
             skip_empty:
               label: 如果没有结果，则跳过发送 PM
+            attach_csv:
+              label: 将 CSV 文件附加到私信
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: 发布查询结果的话题
             query_id:
               label: 数据资源管理器查询
             query_params:
               label: 数据资源管理器查询参数
+            skip_empty:
+              label: 如果没有结果，则跳过发布
+            attach_csv:
+              label: 将 CSV 文件附加到帖子
