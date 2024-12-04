@@ -41,7 +41,7 @@
 
     {{#if this.othersDirty}}
       <div class="warning">
-        {{d-icon "exclamation-triangle"}}
+        {{d-icon "triangle-exclamation"}}
         {{i18n "explorer.others_dirty"}}
       </div>
     {{/if}}
@@ -90,7 +90,7 @@
                 {{this.selectedItem.name}}
                 {{#unless this.editDisabled}}
                   <a href {{action "editName"}} class="edit-query-name">
-                    {{d-icon "pencil-alt"}}
+                    {{d-icon "pencil"}}
                   </a>
                 {{/unless}}
               </h1>
