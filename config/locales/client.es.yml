@@ -73,6 +73,13 @@ es:
       reset_params: "Restablecer"
       search_placeholder: "Buscar..."
       no_search_results: "Lo sentimos, no hemos podido encontrar ningún resultado que coincida con tu texto."
+      form:
+        errors:
+          invalid: "No válido"
+          no_such_category: "No existe dicha categoria"
+          no_such_group: "No existe dicho grupo"
+          invalid_date: "%{date} es una fecha no válida"
+          invalid_time: "%{time} es una hora no válida"
     group:
       reports: "Informes"
     admin:
@@ -93,9 +100,17 @@ es:
               label: Parámetros de consulta del explorador de datos
             skip_empty:
               label: Omitir el envío de MP si no hay resultados
+            attach_csv:
+              label: Adjuntar el archivo CSV al MP
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: El tema en el que se publicarán los resultados de la consulta
             query_id:
-              label: Consulta del explorador de datos
+              label: Consulta del Explorador de datos
             query_params:
-              label: Parámetros de consulta del explorador de datos
+              label: Parámetros de consulta del Explorador de datos
+            skip_empty:
+              label: Omitir la publicación si no hay resultados
+            attach_csv:
+              label: Adjuntar el archivo CSV a la publicación

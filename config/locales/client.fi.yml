@@ -73,6 +73,13 @@ fi:
       reset_params: "Nollaa"
       search_placeholder: "Hae..."
       no_search_results: "Pahoittelut, emme löytäneet tekstiäsi vastaavia tuloksia."
+      form:
+        errors:
+          invalid: "Virheellinen"
+          no_such_category: "Tällaista luokkaa ei ole"
+          no_such_group: "Tällaista ryhmää ei ole"
+          invalid_date: "%{date} on virheellinen päivämäärä"
+          invalid_time: "%{time} on virheellinen aika"
     group:
       reports: "Raportit"
     admin:
@@ -93,9 +100,17 @@ fi:
               label: Dataselaimen kyselyparametrit
             skip_empty:
               label: Ohita yksityisviestin lähettäminen, jos tuloksia ei ole
+            attach_csv:
+              label: Liitä CSV-tiedosto yksityisviestiin
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: Ketju, johon kyselyn tulokset lähetetään
             query_id:
               label: Dataselaimen kysely
             query_params:
               label: Dataselaimen kyselyparametrit
+            skip_empty:
+              label: Ohita viestin lähettäminen, jos tuloksia ei ole
+            attach_csv:
+              label: Liitä CSV-tiedosto viestiin

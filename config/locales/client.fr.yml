@@ -73,6 +73,13 @@ fr:
       reset_params: "Réinitialiser"
       search_placeholder: "Recherche…"
       no_search_results: "Désolé, nous n'avons trouvé aucun résultat correspondant à votre texte."
+      form:
+        errors:
+          invalid: "Invalide"
+          no_such_category: "Aucune catégorie de ce type"
+          no_such_group: "Aucun groupe de ce type"
+          invalid_date: "%{date} est une date invalide"
+          invalid_time: "%{time} est une heure invalide"
     group:
       reports: "Rapports"
     admin:
@@ -93,9 +100,17 @@ fr:
               label: Paramètres de requête de l'explorateur de données
             skip_empty:
               label: Ignorer l'envoi d'un MP s'il n'y a aucun résultat
+            attach_csv:
+              label: Joindre le fichier CSV au MD
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: Le sujet dans lequel les résultats de la requête doivent être affichés
             query_id:
               label: Requête de l'explorateur de données
             query_params:
               label: Paramètres de requête de l'explorateur de données
+            skip_empty:
+              label: Ignorer la publication s'il n'y a aucun résultat
+            attach_csv:
+              label: Joindre le fichier CSV à la publication

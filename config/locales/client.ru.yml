@@ -77,6 +77,13 @@ ru:
       reset_params: "Сброс"
       search_placeholder: "Поиск..."
       no_search_results: "К сожалению, мы не смогли найти результаты, соответствующие вашему запросу."
+      form:
+        errors:
+          invalid: "Недопустимое значение"
+          no_such_category: "Нет такой категории"
+          no_such_group: "Нет такой группы"
+          invalid_date: "%{date} — недопустимая дата"
+          invalid_time: "%{time} — недопустимое время"
     group:
       reports: "Отчёты"
     admin:
@@ -97,9 +104,17 @@ ru:
               label: Параметры запроса проводника данных
             skip_empty:
               label: Пропустить отправку личного сообщения, если нет результатов
+            attach_csv:
+              label: Прикрепить CSV-файл к личному сообщению
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: Тема для публикации результатов запроса
             query_id:
               label: Запрос проводника данных
             query_params:
-              label: Параметры запроса проводника данных
+              label: Параметры запроса для проводника данных
+            skip_empty:
+              label: Пропустить публикацию, если нет результатов
+            attach_csv:
+              label: Прикрепить CSV-файл к публикации

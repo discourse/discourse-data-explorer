@@ -73,6 +73,13 @@ pt_BR:
       reset_params: "Redefinir"
       search_placeholder: "Pesquisar..."
       no_search_results: "Desculpe, não conseguimos encontrar nenhum resultado contendo o seu texto."
+      form:
+        errors:
+          invalid: "Inválido"
+          no_such_category: "Não há esta categoria"
+          no_such_group: "Não há este grupo"
+          invalid_date: "%{date} é uma data inválida"
+          invalid_time: "%{time} é um horário inválido"
     group:
       reports: "Relatórios"
     admin:
@@ -93,9 +100,17 @@ pt_BR:
               label: Parâmetros da consulta do explorador de dados
             skip_empty:
               label: Pular envio de PM se não houver resultados
+            attach_csv:
+              label: Anexe um arquivo CSV à MP
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: O tópico no qual postar os resultados da consulta
             query_id:
-              label: Consulta do explorador de dados
+              label: Consulta do Data Explorer
             query_params:
-              label: Parâmetros da consulta do explorador de dados
+              label: Parâmetros da consulta do Data Explorer
+            skip_empty:
+              label: Pular postagem se não houver resultados
+            attach_csv:
+              label: Anexe um arquivo CSV à postagem

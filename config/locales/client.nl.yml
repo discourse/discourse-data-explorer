@@ -73,6 +73,13 @@ nl:
       reset_params: "Herstellen"
       search_placeholder: "Zoeken..."
       no_search_results: "Er zijn geen resultaten gevonden voor je tekst."
+      form:
+        errors:
+          invalid: "Ongeldig"
+          no_such_category: "Geen dergelijke categorie"
+          no_such_group: "Geen dergelijke groep"
+          invalid_date: "%{date} is een ongeldige datum"
+          invalid_time: "%{time} is een ongeldige tijd"
     group:
       reports: "Rapporten"
     admin:
@@ -93,9 +100,17 @@ nl:
               label: Gegevensverkenner-queryparameters
             skip_empty:
               label: PB verzenden overslaan als er geen resultaten zijn
+            attach_csv:
+              label: Voeg het CSV-bestand bij de PB
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: Het topic om queryresultaten in te plaatsen
             query_id:
               label: Gegevensverkenner-query
             query_params:
               label: Gegevensverkenner-queryparameters
+            skip_empty:
+              label: Plaatsen overslaan als er geen resultaten zijn
+            attach_csv:
+              label: Voeg het CSV-bestand bij het bericht

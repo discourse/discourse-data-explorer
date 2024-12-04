@@ -11,3 +11,34 @@ pt_BR:
     scriptables:
       recurring_data_explorer_result_pm:
         title: Agendar uma MP com os resultados do explorador de dados
+        description: Obter relatórios agendados enviados às suas mensagens
+      recurring_data_explorer_result_topic:
+        title: Agendar uma postagem em um tópico com resultados do Data Explorer
+        description: Obter relatórios programados publicados em um tópico específico
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Relatório programado para %{query_name}"
+        body: |
+          Olá, %{recipient_name}, seu relatório do Data Explorer está pronto.
+
+          Nome da consulta:
+          %{query_name}
+
+          Aqui estão os resultados:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Ver consulta no Data Explorer</a>
+
+          Relatório criado em %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Relatório programado para %{query_name}
+
+          Aqui estão os resultados
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Ver consulta no Data Explorer</a>
+
+          Relatório criado em %{created_at} (%{timezone})
+      upload_appendix: "Apêndice: [%{filename}|anexo](%{short_url})"

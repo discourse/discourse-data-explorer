@@ -101,11 +101,11 @@ de:
             skip_empty:
               label: Überspringe das Senden einer PN, wenn es keine Ergebnisse gibt
             attach_csv:
-              label: Hänge die CSV-Datei an die PM an
+              label: Hänge die CSV-Datei an die PN an
         recurring_data_explorer_result_topic:
           fields:
             topic_id:
-              label: Das Thema, in dem die Abfrageergebnisse veröffentlicht werden
+              label: Das Thema, in dem die Anfrageergebnisse veröffentlicht werden
             query_id:
               label: Daten-Explorer-Anfrage
             query_params:
