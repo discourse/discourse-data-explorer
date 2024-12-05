@@ -60,7 +60,7 @@
               />
               <DButton
                 @action={{this.exitEdit}}
-                @icon="times"
+                @icon="xmark"
                 class="previous"
               />
               <div class="name-text-field">
@@ -182,7 +182,7 @@
                   class="btn-edit-query"
                   @action={{this.editQuery}}
                   @label="explorer.edit"
-                  @icon="pencil-alt"
+                  @icon="pencil"
                 />
               {{/unless}}
             {{/if}}
@@ -198,7 +198,7 @@
               <DButton
                 @action={{this.showHelpModal}}
                 @label="explorer.help.label"
-                @icon="question-circle"
+                @icon="circle-question"
               />
             {{/if}}
           </div>
@@ -207,14 +207,14 @@
             {{#if this.selectedItem.destroyed}}
               <DButton
                 @action={{this.recover}}
-                @icon="undo"
+                @icon="arrow-rotate-left"
                 @label="explorer.recover"
               />
             {{else}}
               {{#if this.editingQuery}}
                 <DButton
                   @action={{this.discard}}
-                  @icon="undo"
+                  @icon="arrow-rotate-left"
                   @label="explorer.undo"
                   @disabled={{this.saveDisabled}}
                 />
@@ -222,7 +222,7 @@
 
               <DButton
                 @action={{this.destroyQuery}}
-                @icon="trash-alt"
+                @icon="trash-can"
                 @label="explorer.delete"
                 class="btn-danger"
               />
