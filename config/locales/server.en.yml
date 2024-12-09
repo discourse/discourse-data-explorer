@@ -6,6 +6,7 @@ en:
       recurring_data_explorer_result_pm:
         title: Schedule a PM with Data Explorer results
         description: Get scheduled reports sent to your messages
+        no_csv_allowed: "When using `attach_csv` field, `csv` must be added to the list of authorized extensions in the site settings."
       recurring_data_explorer_result_topic:
         title: Schedule a post in a topic with Data Explorer results
         description: Get scheduled reports posted to a specific topic
