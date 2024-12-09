@@ -135,6 +135,12 @@ describe "RecurringDataExplorerResultPM" do
         ActiveRecord::RecordInvalid,
         /#{I18n.t("discourse_automation.scriptables.recurring_data_explorer_result_pm.no_csv_allowed")}/,
       )
+
+      SiteSetting.authorized_extensions = "pdf|txt|csv"
+
+      expect {
+        automation.upsert_field!("attach_csv", "boolean", { value: true })
+      }.to_not raise_error
     end
   end
 end
