@@ -85,7 +85,10 @@ after_initialize do
         field :attach_csv,
               component: :boolean,
               validator: ->(attach_csv) do
-                if attach_csv && !SiteSetting.authorized_extensions.split("|").include?("csv")
+                return if !attach_csv
+
+                extensions = SiteSetting.authorized_extensions.split("|")
+                if (extensions & %w[csv *]).empty?
                   I18n.t(
                     "discourse_automation.scriptables.recurring_data_explorer_result_pm.no_csv_allowed",
                   )

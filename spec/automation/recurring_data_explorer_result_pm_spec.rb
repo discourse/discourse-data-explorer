@@ -141,6 +141,12 @@ describe "RecurringDataExplorerResultPM" do
       expect {
         automation.upsert_field!("attach_csv", "boolean", { value: true })
       }.to_not raise_error
+
+      SiteSetting.authorized_extensions = "*"
+
+      expect {
+        automation.upsert_field!("attach_csv", "boolean", { value: true })
+      }.to_not raise_error
     end
   end
 end
