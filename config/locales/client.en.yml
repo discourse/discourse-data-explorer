@@ -118,6 +118,7 @@ en:
               label: Skip sending PM if there are no results
             attach_csv:
               label: Attach the CSV file to the PM
+              description: Requires to add `csv` to the list of authorized extensions in the site settings
         recurring_data_explorer_result_topic:
           fields:
             topic_id:
