@@ -82,7 +82,18 @@ after_initialize do
         field :query_id, component: :choices, required: true, extra: { content: queries }
         field :query_params, component: :"key-value", accepts_placeholders: true
         field :skip_empty, component: :boolean
-        field :attach_csv, component: :boolean
+        field :attach_csv,
+              component: :boolean,
+              validator: ->(attach_csv) do
+                return if !attach_csv
+
+                extensions = SiteSetting.authorized_extensions.split("|")
+                if (extensions & %w[csv *]).empty?
+                  I18n.t(
+                    "discourse_automation.scriptables.recurring_data_explorer_result_pm.no_csv_allowed",
+                  )
+                end
+              end
 
         version 1
         triggerables [:recurring]
