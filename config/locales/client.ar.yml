@@ -81,6 +81,13 @@ ar:
       reset_params: "إعادة التعيين"
       search_placeholder: "بحث..."
       no_search_results: "عذرًا، لم نتمكن من العثور على أي نتائج مطابقة لنصك."
+      form:
+        errors:
+          invalid: "غير صالح"
+          no_such_category: "لا توجد فئة بهذا الاسم"
+          no_such_group: "لا توجد مجموعة بهذا الاسم"
+          invalid_date: "%{date} هو تاريخ غير صالح"
+          invalid_time: "%{time} هو وقت غير صالح"
     group:
       reports: "التقارير"
     admin:
@@ -101,9 +108,17 @@ ar:
               label: معلمات استعلام مستكشف البيانات
             skip_empty:
               label: تخطي إرسال رسالة شخصية إذا لم تكن هناك نتائج
+            attach_csv:
+              label: إرفاق ملف CSV بالرسالة الشخصية
         recurring_data_explorer_result_topic:
           fields:
+            topic_id:
+              label: الموضوع الذي سيتم نشر نتائج الاستعلام فيه
             query_id:
               label: استعلام مستكشف البيانات
             query_params:
               label: معلمات استعلام مستكشف البيانات
+            skip_empty:
+              label: تخطي النشر إذا لم تكن هناك نتائج
+            attach_csv:
+              label: إرفاق ملف CSV بالمنشور
