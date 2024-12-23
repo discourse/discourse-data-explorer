@@ -369,9 +369,9 @@
                     {{i18n "explorer.query_groups"}}
                   </div>
                   <div class="group-names">
-                  {{#each query.group_names as |group|}}
-                    <ShareReport @group={{group}} @query={{query}} />
-                  {{/each}}
+                    {{#each query.group_names as |group|}}
+                      <ShareReport @group={{group}} @query={{query}} />
+                    {{/each}}
                   </div>
                 </td>
                 <td class="d-admin-row__detail query-created-at">
