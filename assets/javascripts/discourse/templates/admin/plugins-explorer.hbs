@@ -102,18 +102,16 @@
           {{/if}}
 
           {{#unless this.selectedItem.destroyed}}
-            <div class="pull-left">
-              <div class="groups">
-                <span class="label">{{i18n "explorer.allow_groups"}}</span>
-                <span>
-                  <MultiSelect
-                    @value={{this.selectedItem.group_ids}}
-                    @content={{this.groupOptions}}
-                    @options={{hash allowAny=false}}
-                    @onChange={{this.updateGroupIds}}
-                  />
-                </span>
-              </div>
+            <div class="groups">
+              <span class="label">{{i18n "explorer.allow_groups"}}</span>
+              <span>
+                <MultiSelect
+                  @value={{this.selectedItem.group_ids}}
+                  @content={{this.groupOptions}}
+                  @options={{hash allowAny=false}}
+                  @onChange={{this.updateGroupIds}}
+                />
+              </span>
             </div>
           {{/unless}}
 
@@ -289,7 +287,7 @@
 
     {{#unless this.validQueryPresent}}
       <div class="container">
-        <table class="recent-queries">
+        <table class="d-admin-table recent-queries">
           <thead class="heading-container">
             <th class="col heading name">
               <div
@@ -344,8 +342,8 @@
           </thead>
           <tbody>
             {{#each this.filteredContent as |query|}}
-              <tr class="query-row">
-                <td>
+              <tr class="d-admin-row__content query-row">
+                <td class="d-admin-row__overview">
                   <a
                     {{on "click" this.scrollTop}}
                     href="/admin/plugins/explorer/?id={{query.id}}"
@@ -354,19 +352,32 @@
                     <medium class="query-desc">{{query.description}}</medium>
                   </a>
                 </td>
-                <td class="query-created-by">
+                <td class="d-admin-row__detail query-created-by">
+                  <div class="d-admin-row__mobile-label">
+                    {{i18n "explorer.query_user"}}
+                  </div>
                   {{#if query.username}}
-                    <a href="/u/{{query.username}}/activity">
-                      <medium>{{query.username}}</medium>
-                    </a>
+                    <div>
+                      <a href="/u/{{query.username}}/activity">
+                        <medium>{{query.username}}</medium>
+                      </a>
+                    </div>
                   {{/if}}
                 </td>
-                <td class="query-group-names">
-                  {{#each query.group_names as |group|}}
-                    <ShareReport @group={{group}} @query={{query}} />
-                  {{/each}}
+                <td class="d-admin-row__detail query-group-names">
+                  <div class="d-admin-row__mobile-label">
+                    {{i18n "explorer.query_groups"}}
+                  </div>
+                  <div class="group-names">
+                    {{#each query.group_names as |group|}}
+                      <ShareReport @group={{group}} @query={{query}} />
+                    {{/each}}
+                  </div>
                 </td>
-                <td class="query-created-at">
+                <td class="d-admin-row__detail query-created-at">
+                  <div class="d-admin-row__mobile-label">
+                    {{i18n "explorer.query_time"}}
+                  </div>
                   {{#if query.last_run_at}}
                     <medium>
                       {{bound-date query.last_run_at}}

@@ -211,13 +211,26 @@ table.group-reports {
     margin: 10px 0;
   }
   .groups {
-    margin-bottom: 10px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include breakpoint("tablet") {
+      flex-direction: column;
+      align-items: flex-start;
+    }
     .label {
       margin-right: 10px;
       color: var(--primary-high);
     }
     .name {
       display: inline;
+    }
+
+    .select-kit.multi-select {
+      @include breakpoint("tablet") {
+        width: 360px;
+      }
     }
   }
 }
@@ -383,6 +396,11 @@ table.group-reports {
       color: var(--tertiary);
       a {
         display: inline;
+      }
+    }
+    .group-names {
+      @include breakpoint("tablet") {
+        text-align: right;
       }
     }
     .query-created-at {
