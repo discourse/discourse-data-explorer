@@ -12,6 +12,7 @@ nl:
       recurring_data_explorer_result_pm:
         title: Plan een PB met de resultaten van Gegevensverkenner
         description: Laat geplande rapporten naar je berichten sturen
+        no_csv_allowed: "Als het veld 'attach_csv' wordt gebruikt, moet 'csv' worden toegevoegd aan de lijst van toegestane extensies in de site-instellingen."
       recurring_data_explorer_result_topic:
         title: Plaats een bericht in een topic met Gegevensverkenner-resultaten
         description: Ontvang geplande rapporten over een specifiek topic

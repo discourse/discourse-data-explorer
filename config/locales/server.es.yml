@@ -12,6 +12,7 @@ es:
       recurring_data_explorer_result_pm:
         title: Programar un MP con los resultados del explorador de datos
         description: Recibir informes programados enviados a tus mensajes
+        no_csv_allowed: "Cuando utilices el campo `attach_csv`, debe añadirse `csv` a la lista de extensiones autorizadas en los ajustes del sitio."
       recurring_data_explorer_result_topic:
         title: Programar una publicación en un tema con los resultados del Explorador de datos
         description: Obtener informes programados publicados en un tema específico

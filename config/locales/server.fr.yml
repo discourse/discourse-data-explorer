@@ -12,6 +12,7 @@ fr:
       recurring_data_explorer_result_pm:
         title: Planifier un MP avec les résultats de l'explorateur de données
         description: Recevez des rapports planifiés dans vos messages
+        no_csv_allowed: "Lors de l'utilisation du champ `attach_csv`, `csv` doit être ajouté à la liste des extensions autorisées dans les paramètres du site."
       recurring_data_explorer_result_topic:
         title: Planifier une publication dans un sujet avec les résultats de l'explorateur de données
         description: Recevoir des rapports planifiés sur un sujet spécifique

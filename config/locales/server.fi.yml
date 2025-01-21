@@ -12,6 +12,7 @@ fi:
       recurring_data_explorer_result_pm:
         title: Ajoita yksityisviesti Dataselaimen tuloksilla
         description: Vastaanota ajoitettuja raportteja viesteihisi
+        no_csv_allowed: "Kun käytät attach_csv-kenttää, \"csv\" täytyy lisätä sallittujen päätteiden luetteloon sivustoasetuksissa."
       recurring_data_explorer_result_topic:
         title: Ajoita viesti ketjussa Dataselaimen tuloksilla
         description: Vastaanota ajoitettuja raportteja tiettyyn ketjuun
