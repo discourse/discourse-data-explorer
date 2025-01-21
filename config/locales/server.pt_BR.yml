@@ -12,6 +12,7 @@ pt_BR:
       recurring_data_explorer_result_pm:
         title: Agendar uma MP com os resultados do explorador de dados
         description: Obter relatórios agendados enviados às suas mensagens
+        no_csv_allowed: "Ao usar o campo \"attach_csv\", é preciso acrescentar \"csv\" à lista de extensões autorizadas nas configurações do site."
       recurring_data_explorer_result_topic:
         title: Agendar uma postagem em um tópico com resultados do Data Explorer
         description: Obter relatórios programados publicados em um tópico específico

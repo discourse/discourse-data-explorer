@@ -12,6 +12,7 @@ tr_TR:
       recurring_data_explorer_result_pm:
         title: Veri Gezgini sonuçlarıyla kişisel mesaj planlayın
         description: Mesajlarınıza gönderilen planlanmış raporları alın
+        no_csv_allowed: "`attach_csv` alanını kullanırken site ayarlarında izin verilen uzantılar listesine `csv` eklenmelidir."
       recurring_data_explorer_result_topic:
         title: Veri Gezgini sonuçlarını içeren bir konuda gönderi planlayın
         description: Belirli bir konuya gönderilen planlanmış raporları alın
