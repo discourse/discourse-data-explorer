@@ -12,6 +12,7 @@ ar:
       recurring_data_explorer_result_pm:
         title: جدولة رسالة خاصة بنتائج مستكشف البيانات
         description: احصل على تقارير مجدولة يتم إرسالها إلى رسائلك
+        no_csv_allowed: "عند استخدام الحقل `attach_csv`، يجب إضافة `csv` إلى قائمة الامتدادات المعتمدة في إعدادات الموقع."
       recurring_data_explorer_result_topic:
         title: جدولة منشور في موضوع باستخدام نتائج مستكشف البيانات
         description: احصل على تقارير مجدولة يتم نشرها في موضوع معيَّن
