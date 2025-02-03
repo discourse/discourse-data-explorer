@@ -194,10 +194,10 @@ export default class ParamInputForm extends Component {
       case "category_id":
         return digitalizeCategoryId(value);
       case "boolean":
-        if (value == null) {
+        if (value == null || value === "#null") {
           return info.nullable ? "#null" : false;
         }
-        return value;
+        return value === "true";
       case "group_id":
       case "group_list":
         const normalized = this.normalizeGroups(value);
