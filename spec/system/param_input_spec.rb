@@ -26,6 +26,7 @@ RSpec.describe "Param input", type: :system, js: true do
     -- bigint       :bigint_with_default = 12345678912345
     -- boolean      :boolean
     -- null boolean :boolean_three_with_default = #null
+    -- boolean      :boolean_with_default = true
     -- string       :string_with_default = little bunny foo foo
     -- date         :date_with_default = 14 jul 2015
     -- time         :time_with_default = 5:02 pm
@@ -67,6 +68,33 @@ RSpec.describe "Param input", type: :system, js: true do
       .create_from_sql(ALL_PARAMS_SQL)
       .each do |param|
         expect(page).to have_css(".query-params .param [name=\"#{param.identifier}\"]")
+
+        # select-kit fields
+        ignore_fields = %i[user_id post_id topic_id category_id group_id group_list user_list]
+
+        if param.default.present? && ignore_fields.exclude?(param.type)
+          expect(page).to have_field(
+            param.identifier,
+            with: simple_normalize(param.type, param.default),
+          )
+        end
       end
+  end
+end
+
+def simple_normalize(type, value)
+  case type
+  when :date
+    value.to_date.to_s
+  when :time
+    value.to_time.strftime("%H:%M")
+  when :datetime
+    value.to_datetime.strftime("%Y-%m-%dT%H:%M")
+  when :boolean
+    value == "#null" ? "#null" : value ? "on" : "off"
+  when :boolean_three
+    value == "#null" ? "#null" : value ? "Y" : "N"
+  else
+    value.to_s
   end
 end
