@@ -1,7 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Data Explorer Plugin | List Queries", function (needs) {
   needs.user();
@@ -140,7 +140,7 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
       .dom("div.query-list input.ember-text-field")
       .hasAttribute(
         "placeholder",
-        I18n.t("explorer.search_placeholder"),
+        i18n("explorer.search_placeholder"),
         "the search box was rendered"
       );
 
@@ -150,10 +150,7 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
 
     assert
       .dom("div.query-list button.btn-icon-text span.d-button-label")
-      .hasText(
-        I18n.t("explorer.import.label"),
-        "the import button was rendered"
-      );
+      .hasText(i18n("explorer.import.label"), "the import button was rendered");
 
     assert
       .dom("div.container table.recent-queries tbody tr")

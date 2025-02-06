@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { capitalize } from "@ember/string";
+import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
 import TextViewComponent from "./result-types/text";
 
 export default class QueryRowContent extends Component {

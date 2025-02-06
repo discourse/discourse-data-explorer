@@ -6,11 +6,11 @@ import BookmarkModal from "discourse/components/modal/bookmark";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
+import { bind } from "discourse/lib/decorators";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { bind } from "discourse-common/utils/decorators";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 
 export default class GroupReportsShowController extends Controller {

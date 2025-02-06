@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
+import getURL from "discourse/lib/get-url";
 import RestModel from "discourse/models/rest";
-import getURL from "discourse-common/lib/get-url";
 
 export default class Query extends RestModel {
   static updatePropertyNames = [

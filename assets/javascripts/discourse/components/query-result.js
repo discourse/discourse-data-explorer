@@ -5,10 +5,10 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse/lib/get-url";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n, { i18n } from "discourse-i18n";
 import BadgeViewComponent from "./result-types/badge";
 import CategoryViewComponent from "./result-types/category";
 import GroupViewComponent from "./result-types/group";
@@ -104,14 +104,14 @@ export default class QueryResult extends Component {
   get resultCount() {
     const count = this.args.content.result_count;
     if (count === this.args.content.default_limit) {
-      return I18n.t("explorer.max_result_count", { count });
+      return i18n("explorer.max_result_count", { count });
     } else {
-      return I18n.t("explorer.result_count", { count });
+      return i18n("explorer.result_count", { count });
     }
   }
 
   get duration() {
-    return I18n.t("explorer.run_time", {
+    return i18n("explorer.run_time", {
       value: I18n.toNumber(this.args.content.duration, { precision: 1 }),
     });
   }

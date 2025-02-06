@@ -6,7 +6,7 @@ import { isEmpty } from "@ember/utils";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import Category from "discourse/models/category";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 import BooleanThree from "./param-input/boolean-three";
 import CategoryIdInput from "./param-input/category-id-input";
 import GroupInput from "./param-input/group-input";
@@ -37,16 +37,16 @@ const layoutMap = {
 };
 
 export const ERRORS = {
-  REQUIRED: I18n.t("form_kit.errors.required"),
-  NOT_AN_INTEGER: I18n.t("form_kit.errors.not_an_integer"),
-  NOT_A_NUMBER: I18n.t("form_kit.errors.not_a_number"),
-  OVERFLOW_HIGH: I18n.t("form_kit.errors.too_high", { count: 2147484647 }),
-  OVERFLOW_LOW: I18n.t("form_kit.errors.too_low", { count: -2147484648 }),
-  INVALID: I18n.t("explorer.form.errors.invalid"),
-  NO_SUCH_CATEGORY: I18n.t("explorer.form.errors.no_such_category"),
-  NO_SUCH_GROUP: I18n.t("explorer.form.errors.no_such_group"),
-  INVALID_DATE: (date) => I18n.t("explorer.form.errors.invalid_date", { date }),
-  INVALID_TIME: (time) => I18n.t("explorer.form.errors.invalid_time", { time }),
+  REQUIRED: i18n("form_kit.errors.required"),
+  NOT_AN_INTEGER: i18n("form_kit.errors.not_an_integer"),
+  NOT_A_NUMBER: i18n("form_kit.errors.not_a_number"),
+  OVERFLOW_HIGH: i18n("form_kit.errors.too_high", { count: 2147484647 }),
+  OVERFLOW_LOW: i18n("form_kit.errors.too_low", { count: -2147484648 }),
+  INVALID: i18n("explorer.form.errors.invalid"),
+  NO_SUCH_CATEGORY: i18n("explorer.form.errors.no_such_category"),
+  NO_SUCH_GROUP: i18n("explorer.form.errors.no_such_group"),
+  INVALID_DATE: (date) => i18n("explorer.form.errors.invalid_date", { date }),
+  INVALID_TIME: (time) => i18n("explorer.form.errors.invalid_time", { time }),
 };
 
 function digitalizeCategoryId(value) {

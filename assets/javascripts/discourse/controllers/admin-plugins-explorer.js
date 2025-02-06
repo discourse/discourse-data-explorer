@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
@@ -223,11 +223,11 @@ export default class PluginsExplorerController extends Controller {
       if (e.jqXHR) {
         popupAjaxError(e);
       } else if (e instanceof SyntaxError) {
-        this.dialog.alert(I18n.t("explorer.import.unparseable_json"));
+        this.dialog.alert(i18n("explorer.import.unparseable_json"));
       } else if (e instanceof TypeError) {
-        this.dialog.alert(I18n.t("explorer.import.wrong_json"));
+        this.dialog.alert(i18n("explorer.import.wrong_json"));
       } else {
-        this.dialog.alert(I18n.t("errors.desc.unknown"));
+        this.dialog.alert(i18n("errors.desc.unknown"));
         // eslint-disable-next-line no-console
         console.error(e);
       }

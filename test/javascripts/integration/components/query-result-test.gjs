@@ -1,7 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import QueryResult from "../../discourse/components/query-result";
 
 module(
@@ -24,15 +24,15 @@ module(
 
       assert
         .dom("div.result-info button:nth-child(1) span")
-        .hasText(I18n.t("explorer.download_json"), "renders the JSON button");
+        .hasText(i18n("explorer.download_json"), "renders the JSON button");
 
       assert
         .dom("div.result-info button:nth-child(2) span")
-        .hasText(I18n.t("explorer.download_csv"), "renders the CSV button");
+        .hasText(i18n("explorer.download_csv"), "renders the CSV button");
 
       assert
         .dom("div.result-info button:nth-child(3) span")
-        .hasText(I18n.t("explorer.show_graph"), "renders the chart button");
+        .hasText(i18n("explorer.show_graph"), "renders the chart button");
 
       assert.dom("div.result-about").exists("renders a query summary");
 
@@ -157,10 +157,7 @@ module(
 
       assert
         .dom("div.result-info button:nth-child(3) span")
-        .hasText(
-          I18n.t("explorer.show_graph"),
-          "the chart button was rendered"
-        );
+        .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
       assert.dom("table").exists("the table was rendered");
 
       await click("div.result-info button:nth-child(3)");
@@ -168,7 +165,7 @@ module(
       assert
         .dom("div.result-info button:nth-child(3) span")
         .hasText(
-          I18n.t("explorer.show_table"),
+          i18n("explorer.show_table"),
           "the chart button was changed to the table button"
         );
       assert.dom("canvas").exists("the chart was rendered");
@@ -177,7 +174,7 @@ module(
       assert
         .dom("div.result-info button:nth-child(3) span")
         .hasText(
-          I18n.t("explorer.show_graph"),
+          i18n("explorer.show_graph"),
           "the table button was changed to the chart button"
         );
       assert.dom("table").exists("the table was rendered");
@@ -198,7 +195,7 @@ module(
 
       assert
         .dom("div.result-info button:nth-child(3) span")
-        .hasText(I18n.t("explorer.show_graph"));
+        .hasText(i18n("explorer.show_graph"));
     });
 
     test("doesn't render a chart button when data contains identifiers in the second column", async function (assert) {
