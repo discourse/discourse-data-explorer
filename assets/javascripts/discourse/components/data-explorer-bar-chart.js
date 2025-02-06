@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { bind } from "discourse/lib/decorators";
 import loadScript from "discourse/lib/load-script";
-import { bind } from "discourse-common/utils/decorators";
 import themeColor from "../lib/themeColor";
 
 export default class DataExplorerBarChart extends Component {

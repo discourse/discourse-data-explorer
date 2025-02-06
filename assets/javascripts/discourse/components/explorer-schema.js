@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
-import { debounce } from "discourse-common/utils/decorators";
+import { debounce } from "discourse/lib/decorators";
 
 export default class ExplorerSchema extends Component {
   @tracked filter;

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
+import { convertIconClass, iconHTML } from "discourse/lib/icon-library";
 
 export default class Badge extends Component {
   get iconOrImageReplacement() {

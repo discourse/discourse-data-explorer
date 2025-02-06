@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Data Explorer Plugin | Run Query", function (needs) {
   needs.user();
@@ -187,7 +187,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
 
     assert
       .dom("form.query-run button span")
-      .hasText(I18n.t("explorer.run"), "the run button was rendered");
+      .hasText(i18n("explorer.run"), "the run button was rendered");
 
     await click("form.query-run button");
 
@@ -197,7 +197,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
 
     assert
       .dom("div.result-info button:nth-child(3) span")
-      .hasText(I18n.t("explorer.show_graph"), "the chart button was rendered");
+      .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
 
     await click("div.result-info button:nth-child(3)");
 
@@ -213,7 +213,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
 
     assert
       .dom("form.query-run button span")
-      .hasText(I18n.t("explorer.run"), "the run button was rendered");
+      .hasText(i18n("explorer.run"), "the run button was rendered");
 
     await click("form.query-run button");
 
