@@ -9,9 +9,6 @@ export default class AdminPluginsExplorer extends DiscourseRoute {
     }
 
     const groupPromise = ajax("/admin/plugins/explorer/groups.json");
-    const schemaPromise = ajax("/admin/plugins/explorer/schema.json", {
-      cache: true,
-    });
     const queryPromise = this.store.findAll("query");
 
     return groupPromise.then((groups) => {
@@ -19,7 +16,6 @@ export default class AdminPluginsExplorer extends DiscourseRoute {
       groups.forEach((g) => {
         groupNames[g.id] = g.name;
       });
-      return schemaPromise.then((schema) => {
         return queryPromise.then((model) => {
           model.forEach((query) => {
             query.set(
@@ -27,8 +23,7 @@ export default class AdminPluginsExplorer extends DiscourseRoute {
               (query.group_ids || []).map((id) => groupNames[id])
             );
           });
-          return { model, schema, groups };
-        });
+          return { model, groups };
       });
     });
   }

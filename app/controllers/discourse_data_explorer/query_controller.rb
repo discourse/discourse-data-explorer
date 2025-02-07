@@ -40,7 +40,7 @@ module ::DiscourseDataExplorer
       end
 
       return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
-      render_serialized @query, QuerySerializer, root: "query"
+      render_serialized @query, QueryDetailsSerializer, root: "query"
     end
 
     def groups

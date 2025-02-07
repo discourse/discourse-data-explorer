@@ -3,12 +3,12 @@
 DiscourseDataExplorer::Engine.routes.draw do
   root to: "query#index"
   get "queries" => "query#index"
+  get "queries/:id" => "query#show"
 
   scope "/", defaults: { format: :json } do
     get "schema" => "query#schema"
     get "groups" => "query#groups"
     post "queries" => "query#create"
-    get "queries/:id" => "query#show"
     put "queries/:id" => "query#update"
     delete "queries/:id" => "query#destroy"
     post "queries/:id/run" => "query#run", :constraints => { format: /(json|csv)/ }

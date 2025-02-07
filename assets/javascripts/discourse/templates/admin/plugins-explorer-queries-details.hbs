@@ -1,0 +1,225 @@
+{{#if this.disallow}}
+  <h1>{{i18n "explorer.admins_only"}}</h1>
+{{else}}
+
+  <div class="query-edit {{if this.editName 'editing'}}">
+    {{#if this.editingName}}
+      <div class="name">
+        <DButton
+          @action={{this.goHome}}
+          @icon="chevron-left"
+          class="previous"
+        />
+        <DButton
+          @action={{this.exitEdit}}
+          @icon="xmark"
+          class="previous"
+        />
+        <div class="name-text-field">
+          <TextField
+            @value={{this.model.name}}
+            @onChange={{this.setDirty}}
+          />
+        </div>
+      </div>
+
+      <div class="desc">
+        <DTextarea
+          @value={{this.model.description}}
+          @placeholder={{i18n "explorer.description_placeholder"}}
+          @input={{this.setDirty}}
+        />
+      </div>
+    {{else}}
+      <div class="name">
+        <DButton
+          @action={{this.goHome}}
+          @icon="chevron-left"
+          class="previous"
+        />
+
+        <h1>
+          {{this.model.name}}
+          {{#unless this.editDisabled}}
+            <a href {{action "editName"}} class="edit-query-name">
+              {{d-icon "pencil"}}
+            </a>
+          {{/unless}}
+        </h1>
+      </div>
+
+      <div class="desc">
+        {{this.model.description}}
+      </div>
+    {{/if}}
+
+    {{#unless this.model.destroyed}}
+      <div class="groups">
+        <span class="label">{{i18n "explorer.allow_groups"}}</span>
+        <span>
+          <MultiSelect
+            @value={{this.model.group_ids}}
+            @content={{this.groupOptions}}
+            @options={{hash allowAny=false}}
+            @onChange={{this.updateGroupIds}}
+          />
+        </span>
+      </div>
+    {{/unless}}
+
+    <div class="clear"></div>
+
+    {{#if this.editingQuery}}
+      <div class="query-editor {{if this.hideSchema 'no-schema'}}">
+        <div class="panels-flex">
+          <div class="editor-panel">
+            <AceEditor
+              {{on "click" this.setDirty}}
+              @content={{this.model.sql}}
+              @onChange={{fn (mut this.model.sql)}}
+              @mode="sql"
+              @disabled={{this.model.destroyed}}
+              @save={{this.save}}
+              @submit={{this.saveAndRun}}
+            />
+          </div>
+
+          <div class="right-panel">
+            <ExplorerSchema
+              @schema={{this.schema}}
+              @hideSchema={{this.hideSchema}}
+              @updateHideSchema={{this.updateHideSchema}}
+            />
+          </div>
+        </div>
+
+        <div
+          class="grippie"
+          {{draggable
+            didStartDrag=this.didStartDrag
+            didEndDrag=this.didEndDrag
+            dragMove=this.dragMove
+          }}
+        >
+          {{d-icon "discourse-expand"}}
+        </div>
+
+        <div class="clear"></div>
+      </div>
+    {{else}}
+      <div class="sql">
+        <CodeView
+          @value={{this.model.sql}}
+          @codeClass="sql"
+          @setDirty={{this.setDirty}}
+        />
+      </div>
+    {{/if}}
+
+    <div class="clear"></div>
+
+    <div class="pull-left left-buttons">
+      {{#if this.editingQuery}}
+        <DButton
+          class="btn-save-query"
+          @action={{this.save}}
+          @label="explorer.save"
+          @disabled={{this.saveDisabled}}
+        />
+      {{else}}
+        {{#unless this.editDisabled}}
+          <DButton
+            class="btn-edit-query"
+            @action={{this.editQuery}}
+            @label="explorer.edit"
+            @icon="pencil"
+          />
+        {{/unless}}
+      {{/if}}
+
+      <DButton
+        @action={{this.download}}
+        @label="explorer.export"
+        @disabled={{this.runDisabled}}
+        @icon="download"
+      />
+
+      {{#if this.editingQuery}}
+        <DButton
+          @action={{this.showHelpModal}}
+          @label="explorer.help.label"
+          @icon="circle-question"
+        />
+      {{/if}}
+    </div>
+
+    <div class="pull-right right-buttons">
+      {{#if this.model.destroyed}}
+        <DButton
+          @action={{this.recover}}
+          @icon="arrow-rotate-left"
+          @label="explorer.recover"
+        />
+      {{else}}
+        {{#if this.editingQuery}}
+          <DButton
+            @action={{this.discard}}
+            @icon="arrow-rotate-left"
+            @label="explorer.undo"
+            @disabled={{this.saveDisabled}}
+          />
+        {{/if}}
+
+        <DButton
+          @action={{this.destroyQuery}}
+          @icon="trash-can"
+          @label="explorer.delete"
+          class="btn-danger"
+        />
+      {{/if}}
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  <form class="query-run" {{on "submit" this.run}}>
+    {{#if this.model.hasParams}}
+      <ParamInputForm
+        @initialValues={{this.parsedParams}}
+        @paramInfo={{this.model.param_info}}
+        @onRegisterApi={{this.onRegisterApi}}
+      />
+    {{/if}}
+
+    {{#if this.runDisabled}}
+      {{#if this.saveDisabled}}
+        <DButton
+          @label="explorer.run"
+          @disabled="true"
+          class="btn-primary"
+        />
+      {{else}}
+        <DButton
+          @action={{this.saveAndRun}}
+          @icon="play"
+          @label="explorer.saverun"
+          class="btn-primary"
+        />
+      {{/if}}
+    {{else}}
+      <DButton
+        @action={{this.run}}
+        @icon="play"
+        @label="explorer.run"
+        @disabled={{this.runDisabled}}
+        @type="submit"
+        class="btn-primary"
+      />
+    {{/if}}
+
+    <label class="query-plan">
+      <Input @type="checkbox" @checked={{this.explain}} name="explain" />
+      {{i18n "explorer.explain_label"}}
+    </label>
+  </form>
+  <hr />
+{{/if}}
