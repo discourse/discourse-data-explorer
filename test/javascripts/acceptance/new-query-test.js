@@ -57,6 +57,6 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     // select create new query button
     await click(".query-create button");
 
-    assert.strictEqual(currentURL(), "/admin/plugins/explorer?id=-15");
+    assert.strictEqual(currentURL(), "/admin/plugins/explorer/queries/-15");
   });
 });

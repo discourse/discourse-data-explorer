@@ -351,7 +351,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("puts params for the query into the url", async function (assert) {
-    await visit("/admin/plugins/explorer?id=-6");
+    await visit("/admin/plugins/explorer/queries/-6");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
@@ -373,7 +373,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("loads the page if one of the parameter is null", async function (assert) {
-    await visit('/admin/plugins/explorer?id=-7&params={"user":null}');
+    await visit('/admin/plugins/explorer/queries/-7?params={"user":null}');
     assert.dom(".query-params .user-chooser").exists();
     assert.dom(".query-run .btn.btn-primary").exists();
   });
@@ -393,7 +393,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("creates input boxes if has parameters when save", async function (assert) {
-    await visit("/admin/plugins/explorer?id=3");
+    await visit("/admin/plugins/explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
     await click(".query-edit .btn-edit-query");
     await click(".query-editor .ace_text-input");

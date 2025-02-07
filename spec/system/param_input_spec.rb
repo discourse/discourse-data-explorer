@@ -62,7 +62,7 @@ RSpec.describe "Param input", type: :system, js: true do
   end
 
   it "correctly displays parameter input boxes" do
-    visit("/admin/plugins/explorer?id=#{all_params_query.id}")
+    visit("/admin/plugins/explorer#/queries/{all_params_query.id}")
 
     ::DiscourseDataExplorer::Parameter
       .create_from_sql(ALL_PARAMS_SQL)

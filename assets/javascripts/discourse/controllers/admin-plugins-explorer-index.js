@@ -18,11 +18,8 @@ export default class PluginsExplorerController extends Controller {
   @tracked search;
   @tracked newQueryName;
   @tracked showCreate;
-  @tracked selectedQueryId;
   @tracked loading = false;
-  @tracked dirty = false;
 
-  queryParams = ["params", { selectedQueryId: "id" }];
   explain = false;
   acceptedImportFileTypes = ["application/json"];
   order = null;
@@ -48,14 +45,12 @@ export default class PluginsExplorerController extends Controller {
     return (this.newQueryName || "").trim().length === 0;
   }
 
-  get editDisabled() {
-    return parseInt(this.selectedQueryId, 10) < 0 ? true : false;
-  }
-
   addCreatedRecord(record) {
     this.model.pushObject(record);
-    this.selectedQueryId = record.id;
-    this.dirty = false;
+    this.router.transitionTo(
+      "adminPlugins.explorer.queries.details",
+      record.id
+    );
   }
 
   async _importQuery(file) {
@@ -126,12 +121,6 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  updateGroupIds(value) {
-    this.dirty = true;
-    this.selectedItem.set("group_ids", value);
-  }
-
-  @action
   async import(files) {
     try {
       this.loading = true;
@@ -152,7 +141,6 @@ export default class PluginsExplorerController extends Controller {
       }
     } finally {
       this.loading = false;
-      this.dirty = true;
     }
   }
 
@@ -188,7 +176,6 @@ export default class PluginsExplorerController extends Controller {
       popupAjaxError(error);
     } finally {
       this.loading = false;
-      this.dirty = true;
     }
   }
 
@@ -201,5 +188,4 @@ export default class PluginsExplorerController extends Controller {
   updateNewQueryName(value) {
     this.newQueryName = value;
   }
-
 }

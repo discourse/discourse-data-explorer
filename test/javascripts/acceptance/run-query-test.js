@@ -177,7 +177,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("runs query and renders data and a chart", async function (assert) {
-    await visit("/admin/plugins/explorer?id=-6");
+    await visit("/admin/plugins/explorer/queries/-6");
 
     assert
       .dom("div.name h1")
@@ -205,7 +205,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("runs query and renders 0, false, and NULL values correctly", async function (assert) {
-    await visit("/admin/plugins/explorer?id=2");
+    await visit("/admin/plugins/explorer/queries/2");
 
     assert
       .dom("div.name h1")

@@ -21,10 +21,10 @@ export default class AdminPluginsExplorer extends DiscourseRoute {
       });
       return schemaPromise.then((schema) => {
         return queryPromise.then((model) => {
-            model.set(
-              "group_names",
-              (model.group_ids || []).map((id) => groupNames[id])
-            );
+          model.set(
+            "group_names",
+            (model.group_ids || []).map((id) => groupNames[id])
+          );
           return { model, schema, groups };
         });
       });

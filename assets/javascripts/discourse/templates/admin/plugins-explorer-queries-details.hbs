@@ -10,16 +10,9 @@
           @icon="chevron-left"
           class="previous"
         />
-        <DButton
-          @action={{this.exitEdit}}
-          @icon="xmark"
-          class="previous"
-        />
+        <DButton @action={{this.exitEdit}} @icon="xmark" class="previous" />
         <div class="name-text-field">
-          <TextField
-            @value={{this.model.name}}
-            @onChange={{this.setDirty}}
-          />
+          <TextField @value={{this.model.name}} @onChange={{this.setDirty}} />
         </div>
       </div>
 
@@ -192,11 +185,7 @@
 
     {{#if this.runDisabled}}
       {{#if this.saveDisabled}}
-        <DButton
-          @label="explorer.run"
-          @disabled="true"
-          class="btn-primary"
-        />
+        <DButton @label="explorer.run" @disabled="true" class="btn-primary" />
       {{else}}
         <DButton
           @action={{this.saveAndRun}}

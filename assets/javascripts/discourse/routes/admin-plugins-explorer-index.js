@@ -16,14 +16,14 @@ export default class AdminPluginsExplorer extends DiscourseRoute {
       groups.forEach((g) => {
         groupNames[g.id] = g.name;
       });
-        return queryPromise.then((model) => {
-          model.forEach((query) => {
-            query.set(
-              "group_names",
-              (query.group_ids || []).map((id) => groupNames[id])
-            );
-          });
-          return { model, groups };
+      return queryPromise.then((model) => {
+        model.forEach((query) => {
+          query.set(
+            "group_names",
+            (query.group_ids || []).map((id) => groupNames[id])
+          );
+        });
+        return { model, groups };
       });
     });
   }

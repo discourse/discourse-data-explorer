@@ -25,7 +25,6 @@ export default class PluginsExplorerController extends Controller {
 
   queryParams = ["params"];
   explain = false;
-  acceptedImportFileTypes = ["application/json"];
   order = null;
   form = null;
 
@@ -188,13 +187,8 @@ export default class PluginsExplorerController extends Controller {
     try {
       this.loading = true;
       const result = await this.store.find("query", this.model.id);
-      this.model.setProperties(
-        result.getProperties(Query.updatePropertyNames)
-      );
-      if (
-        !this.model.group_ids ||
-        !Array.isArray(this.model.group_ids)
-      ) {
+      this.model.setProperties(result.getProperties(Query.updatePropertyNames));
+      if (!this.model.group_ids || !Array.isArray(this.model.group_ids)) {
         this.model.set("group_ids", []);
       }
       this.dirty = false;

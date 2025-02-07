@@ -43,7 +43,7 @@ RSpec.describe "Explorer", type: :system, js: true do
 
     it "supports setting a group_list param" do
       visit(
-        "/admin/plugins/explorer?id=#{q2.id}&params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
+        "/admin/plugins/explorer/queries/#{q2.id}&params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
       )
       find(".query-run .btn-primary").click
 

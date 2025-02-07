@@ -46,7 +46,7 @@ module ::DiscourseDataExplorer
           sql = <<-SQL
   /*
   * DiscourseDataExplorer Query
-  * Query: /admin/plugins/explorer?id=#{query.id}
+  * Query: /admin/plugins/explorer/queries/#{query.id}
   * Started by: #{opts[:current_user]}
   */
   WITH query AS (
