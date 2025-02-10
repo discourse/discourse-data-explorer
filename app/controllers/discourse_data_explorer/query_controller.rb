@@ -40,7 +40,7 @@ module ::DiscourseDataExplorer
       end
 
       return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
-      render_serialized @query, QuerySerializer, root: "query"
+      render_serialized @query, QueryDetailsSerializer, root: "query"
     end
 
     def groups
@@ -68,7 +68,7 @@ module ::DiscourseDataExplorer
           query_group = QueryGroup.find_by(query_id: @query.id, group_id: @group.id)
 
           render json: {
-                   query: serialize_data(@query, QuerySerializer, root: nil),
+                   query: serialize_data(@query, QueryDetailsSerializer, root: nil),
                    query_group: serialize_data(query_group, QueryGroupSerializer, root: nil),
                  }
         end
@@ -93,7 +93,7 @@ module ::DiscourseDataExplorer
         )
       group_ids = params.require(:query)[:group_ids]
       group_ids&.each { |group_id| query.query_groups.find_or_create_by!(group_id: group_id) }
-      render_serialized query, QuerySerializer, root: "query"
+      render_serialized query, QueryDetailsSerializer, root: "query"
     end
 
     def update
@@ -107,7 +107,7 @@ module ::DiscourseDataExplorer
         group_ids&.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
       end
 
-      render_serialized @query, QuerySerializer, root: "query"
+      render_serialized @query, QueryDetailsSerializer, root: "query"
     rescue ValidationError => e
       render_json_error e.message
     end

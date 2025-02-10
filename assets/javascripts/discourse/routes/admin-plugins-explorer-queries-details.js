@@ -1,8 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default class AdminPluginsExplorer extends DiscourseRoute {
-  model() {
+export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
+  model(params) {
     if (!this.currentUser.admin) {
       // display "Only available to admins" message
       return { model: null, schema: null, disallow: true, groups: null };
@@ -12,7 +12,7 @@ export default class AdminPluginsExplorer extends DiscourseRoute {
     const schemaPromise = ajax("/admin/plugins/explorer/schema.json", {
       cache: true,
     });
-    const queryPromise = this.store.findAll("query");
+    const queryPromise = this.store.find("query", params.query_id);
 
     return groupPromise.then((groups) => {
       let groupNames = {};
@@ -21,12 +21,10 @@ export default class AdminPluginsExplorer extends DiscourseRoute {
       });
       return schemaPromise.then((schema) => {
         return queryPromise.then((model) => {
-          model.forEach((query) => {
-            query.set(
-              "group_names",
-              (query.group_ids || []).map((id) => groupNames[id])
-            );
-          });
+          model.set(
+            "group_names",
+            (model.group_ids || []).map((id) => groupNames[id])
+          );
           return { model, schema, groups };
         });
       });

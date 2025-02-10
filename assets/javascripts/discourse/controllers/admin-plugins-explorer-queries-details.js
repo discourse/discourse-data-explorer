@@ -6,43 +6,28 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
-const NoQuery = Query.create({ name: "No queries", fake: true, group_ids: [] });
-
 export default class PluginsExplorerController extends Controller {
   @service modal;
-  @service dialog;
   @service appEvents;
   @service router;
 
-  @tracked sortByProperty = "last_run_at";
-  @tracked sortDescending = true;
   @tracked params;
-  @tracked search;
-  @tracked newQueryName;
-  @tracked showCreate;
   @tracked editingName = false;
   @tracked editingQuery = false;
-  @tracked selectedQueryId;
   @tracked loading = false;
   @tracked showResults = false;
   @tracked hideSchema = false;
-  @tracked results = this.selectedItem.results;
+  @tracked results = this.model.results;
   @tracked dirty = false;
 
-  queryParams = ["params", { selectedQueryId: "id" }];
+  queryParams = ["params"];
   explain = false;
-  acceptedImportFileTypes = ["application/json"];
   order = null;
   form = null;
-
-  get validQueryPresent() {
-    return !!this.selectedItem.id;
-  }
 
   get saveDisabled() {
     return !this.dirty;
@@ -52,33 +37,12 @@ export default class PluginsExplorerController extends Controller {
     return this.dirty;
   }
 
-  get sortedQueries() {
-    const sortedQueries = this.model.sortBy(this.sortByProperty);
-    return this.sortDescending ? sortedQueries.reverse() : sortedQueries;
-  }
-
   get parsedParams() {
     return this.params ? JSON.parse(this.params) : null;
   }
 
-  get filteredContent() {
-    const regexp = new RegExp(this.search, "i");
-    return this.sortedQueries.filter(
-      (result) => regexp.test(result.name) || regexp.test(result.description)
-    );
-  }
-
-  get createDisabled() {
-    return (this.newQueryName || "").trim().length === 0;
-  }
-
-  get selectedItem() {
-    const query = this.model.findBy("id", parseInt(this.selectedQueryId, 10));
-    return query || NoQuery;
-  }
-
   get editDisabled() {
-    return parseInt(this.selectedQueryId, 10) < 0 ? true : false;
+    return parseInt(this.model.id, 10) < 0 ? true : false;
   }
 
   get groupOptions() {
@@ -89,27 +53,11 @@ export default class PluginsExplorerController extends Controller {
       });
   }
 
-  get othersDirty() {
-    return !!this.model.find((q) => q !== this.selectedItem && this.dirty);
-  }
-
-  addCreatedRecord(record) {
-    this.model.pushObject(record);
-    this.selectedQueryId = record.id;
-    this.dirty = false;
-    this.setProperties({
-      showResults: false,
-      results: null,
-      editingName: true,
-      editingQuery: true,
-    });
-  }
-
   @action
   async save() {
     try {
       this.loading = true;
-      await this.selectedItem.save();
+      await this.model.save();
 
       this.dirty = false;
       this.editingName = false;
@@ -194,52 +142,15 @@ export default class PluginsExplorerController extends Controller {
   @bind
   didEndDrag() {}
 
-  @bind
-  scrollTop() {
-    window.scrollTo(0, 0);
-    this.editingName = false;
-    this.editingQuery = false;
-  }
-
   @action
   updateGroupIds(value) {
     this.dirty = true;
-    this.selectedItem.set("group_ids", value);
+    this.model.set("group_ids", value);
   }
 
   @action
   updateHideSchema(value) {
     this.hideSchema = value;
-  }
-
-  @action
-  async import(files) {
-    try {
-      this.loading = true;
-      const file = files[0];
-      const record = await this._importQuery(file);
-      this.addCreatedRecord(record);
-    } catch (e) {
-      if (e.jqXHR) {
-        popupAjaxError(e);
-      } else if (e instanceof SyntaxError) {
-        this.dialog.alert(i18n("explorer.import.unparseable_json"));
-      } else if (e instanceof TypeError) {
-        this.dialog.alert(i18n("explorer.import.wrong_json"));
-      } else {
-        this.dialog.alert(i18n("errors.desc.unknown"));
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    } finally {
-      this.loading = false;
-      this.dirty = true;
-    }
-  }
-
-  @action
-  displayCreate() {
-    this.showCreate = true;
   }
 
   @action
@@ -254,18 +165,12 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   download() {
-    window.open(this.selectedItem.downloadUrl, "_blank");
+    window.open(this.model.downloadUrl, "_blank");
   }
 
   @action
   goHome() {
-    this.order = null;
-    this.showResults = false;
-    this.selectedQueryId = null;
-    this.params = null;
-    this.sortByProperty = "last_run_at";
-    this.sortDescending = true;
-    this.router.transitionTo({ queryParams: { id: null, params: null } });
+    this.router.transitionTo("adminPlugins.explorer");
   }
 
   @action
@@ -275,48 +180,17 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   resetParams() {
-    this.selectedItem.resetParams();
-  }
-
-  @action
-  updateSortProperty(property) {
-    if (this.sortByProperty === property) {
-      this.sortDescending = !this.sortDescending;
-    } else {
-      this.sortByProperty = property;
-      this.sortDescending = true;
-    }
-  }
-
-  @action
-  async create() {
-    try {
-      const name = this.newQueryName.trim();
-      this.loading = true;
-      this.showCreate = false;
-      const result = await this.store.createRecord("query", { name }).save();
-      this.addCreatedRecord(result.target);
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-      this.dirty = true;
-    }
+    this.model.resetParams();
   }
 
   @action
   async discard() {
     try {
       this.loading = true;
-      const result = await this.store.find("query", this.selectedItem.id);
-      this.selectedItem.setProperties(
-        result.getProperties(Query.updatePropertyNames)
-      );
-      if (
-        !this.selectedItem.group_ids ||
-        !Array.isArray(this.selectedItem.group_ids)
-      ) {
-        this.selectedItem.set("group_ids", []);
+      const result = await this.store.find("query", this.model.id);
+      this.model.setProperties(result.getProperties(Query.updatePropertyNames));
+      if (!this.model.group_ids || !Array.isArray(this.model.group_ids)) {
+        this.model.set("group_ids", []);
       }
       this.dirty = false;
     } catch (error) {
@@ -331,8 +205,8 @@ export default class PluginsExplorerController extends Controller {
     try {
       this.loading = true;
       this.showResults = false;
-      await this.store.destroyRecord("query", this.selectedItem);
-      this.selectedItem.set("destroyed", true);
+      await this.store.destroyRecord("query", this.model);
+      this.model.set("destroyed", true);
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -345,8 +219,8 @@ export default class PluginsExplorerController extends Controller {
     try {
       this.loading = true;
       this.showResults = true;
-      await this.selectedItem.save();
-      this.selectedItem.set("destroyed", false);
+      await this.model.save();
+      this.model.set("destroyed", false);
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -357,16 +231,6 @@ export default class PluginsExplorerController extends Controller {
   @action
   onRegisterApi(form) {
     this.form = form;
-  }
-
-  @action
-  updateSearch(value) {
-    this.search = value;
-  }
-
-  @action
-  updateNewQueryName(value) {
-    this.newQueryName = value;
   }
 
   @action
@@ -382,7 +246,7 @@ export default class PluginsExplorerController extends Controller {
   @action
   async run() {
     let params = null;
-    if (this.selectedItem.hasParams) {
+    if (this.model.hasParams) {
       try {
         params = await this.form?.submit();
       } catch (err) {
@@ -400,7 +264,7 @@ export default class PluginsExplorerController extends Controller {
       params: JSON.stringify(params),
     });
 
-    ajax("/admin/plugins/explorer/queries/" + this.selectedItem.id + "/run", {
+    ajax("/admin/plugins/explorer/queries/" + this.model.id + "/run", {
       type: "POST",
       data: {
         params: JSON.stringify(params),

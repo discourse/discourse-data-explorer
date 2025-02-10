@@ -88,39 +88,68 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         queries: [
           {
             id: -6,
-            sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS (\n    SELECT\n        date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,\n        date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end\n        )\n\n    SELECT\n        ua.user_id,\n        count(1) AS like_count\n    FROM user_actions ua\n    INNER JOIN query_period qp\n    ON ua.created_at >= qp.period_start\n    AND ua.created_at <= qp.period_end\n    WHERE ua.action_type = 1\n    GROUP BY ua.user_id\n    ORDER BY like_count DESC\n    LIMIT 100\n",
             name: "Top 100 Likers",
             description:
               "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            param_info: [
-              {
-                identifier: "months_ago",
-                type: "int",
-                default: "1",
-                nullable: false,
-              },
-            ],
-            created_at: "2021-02-02T12:21:11.449Z",
             username: "system",
             group_ids: [],
             last_run_at: "2021-02-11T08:29:59.337Z",
-            hidden: false,
             user_id: -1,
           },
           {
             id: 2,
-            sql: 'SELECT 0 zero, null "null", false "false"',
             name: "What about 0?",
             description: "",
-            param_info: [],
-            created_at: "2023-05-04T22:16:06.007Z",
             username: "system",
             group_ids: [],
             last_run_at: "2023-05-04T22:16:23.858Z",
-            hidden: false,
             user_id: 1,
           },
         ],
+      });
+    });
+
+    server.get("/admin/plugins/explorer/queries/-6", () => {
+      return helper.response({
+        query: {
+          id: -6,
+          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS (\n    SELECT\n        date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,\n        date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end\n        )\n\n    SELECT\n        ua.user_id,\n        count(1) AS like_count\n    FROM user_actions ua\n    INNER JOIN query_period qp\n    ON ua.created_at >= qp.period_start\n    AND ua.created_at <= qp.period_end\n    WHERE ua.action_type = 1\n    GROUP BY ua.user_id\n    ORDER BY like_count DESC\n    LIMIT 100\n",
+          name: "Top 100 Likers",
+          description:
+            "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+          param_info: [
+            {
+              identifier: "months_ago",
+              type: "int",
+              default: "1",
+              nullable: false,
+            },
+          ],
+          created_at: "2021-02-02T12:21:11.449Z",
+          username: "system",
+          group_ids: [],
+          last_run_at: "2021-02-11T08:29:59.337Z",
+          hidden: false,
+          user_id: -1,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/explorer/queries/2", () => {
+      return helper.response({
+        query: {
+          id: 2,
+          sql: 'SELECT 0 zero, null "null", false "false"',
+          name: "What about 0?",
+          description: "",
+          param_info: [],
+          created_at: "2023-05-04T22:16:06.007Z",
+          username: "system",
+          group_ids: [],
+          last_run_at: "2023-05-04T22:16:23.858Z",
+          hidden: false,
+          user_id: 1,
+        },
       });
     });
 
@@ -177,7 +206,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("runs query and renders data and a chart", async function (assert) {
-    await visit("/admin/plugins/explorer?id=-6");
+    await visit("/admin/plugins/explorer/queries/-6");
 
     assert
       .dom("div.name h1")
@@ -205,7 +234,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("runs query and renders 0, false, and NULL values correctly", async function (assert) {
-    await visit("/admin/plugins/explorer?id=2");
+    await visit("/admin/plugins/explorer/queries/2");
 
     assert
       .dom("div.name h1")

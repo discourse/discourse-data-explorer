@@ -29,6 +29,32 @@ RSpec.describe "Explorer", type: :system, js: true do
     end
   end
 
+  context "with the old url format" do
+    fab!(:query_1) do
+      Fabricate(
+        :query,
+        name: "My query",
+        description: "Test query",
+        sql: "SELECT * FROM users",
+        user: admin,
+      )
+    end
+
+    it "redirects to the new url format" do
+      visit("/admin/plugins/explorer/?id=#{query_1.id}")
+
+      expect(page).to have_current_path("/admin/plugins/explorer/queries/#{query_1.id}")
+    end
+
+    it "redirects to the new url format with params" do
+      visit("/admin/plugins/explorer/?id=#{query_1.id}&params=%7B%22limit%22%3A%2210%22%7D")
+
+      expect(page).to have_current_path(
+        "/admin/plugins/explorer/queries/#{query_1.id}?params=%7B%22limit%22%3A%2210%22%7D",
+      )
+    end
+  end
+
   context "with a group_list param" do
     fab!(:q2) do
       Fabricate(
@@ -43,7 +69,7 @@ RSpec.describe "Explorer", type: :system, js: true do
 
     it "supports setting a group_list param" do
       visit(
-        "/admin/plugins/explorer?id=#{q2.id}&params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
+        "/admin/plugins/explorer/queries/#{q2.id}?params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
       )
       find(".query-run .btn-primary").click
 
