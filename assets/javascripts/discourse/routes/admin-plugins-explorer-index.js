@@ -1,7 +1,20 @@
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsExplorerIndex extends DiscourseRoute {
+  @service router;
+
+  beforeModel(transition) {
+    // Redirect old /explorer?id=123 route to /explorer/queries/123
+    if (transition.to.queryParams.id) {
+      this.router.transitionTo(
+        "adminPlugins.explorer.queries.details",
+        transition.to.queryParams.id
+      );
+    }
+  }
+
   model() {
     if (!this.currentUser.admin) {
       // display "Only available to admins" message

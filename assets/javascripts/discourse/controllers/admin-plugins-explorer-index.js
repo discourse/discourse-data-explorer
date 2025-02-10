@@ -20,6 +20,7 @@ export default class PluginsExplorerController extends Controller {
   @tracked showCreate;
   @tracked loading = false;
 
+  queryParams = ["id"];
   explain = false;
   acceptedImportFileTypes = ["application/json"];
   order = null;
