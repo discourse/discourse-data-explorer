@@ -1,6 +1,50 @@
 {{#if this.disallow}}
   <h1>{{i18n "explorer.admins_only"}}</h1>
 {{else}}
+  <div class="query-list">
+    <TextField
+      @value={{this.search}}
+      @placeholderKey="explorer.search_placeholder"
+      @onChange={{this.updateSearch}}
+    />
+    <DButton
+      @action={{this.displayCreate}}
+      @icon="plus"
+      class="no-text btn-right"
+    />
+    <PickFilesButton
+      @label="explorer.import.label"
+      @icon="upload"
+      @acceptedFormatsOverride={{this.acceptedImportFileTypes}}
+      @showButton="true"
+      @onFilesPicked={{this.import}}
+      class="import-btn"
+    />
+  </div>
+
+  {{#if this.showCreate}}
+    <div class="query-create">
+      <TextField
+        @value={{this.newQueryName}}
+        @placeholderKey="explorer.create_placeholder"
+        @onChange={{this.updateNewQueryName}}
+      />
+      <DButton
+        @action={{this.create}}
+        @disabled={{this.createDisabled}}
+        @label="explorer.create"
+        @icon="plus"
+      />
+    </div>
+  {{/if}}
+
+  {{#if this.othersDirty}}
+    <div class="warning">
+      {{d-icon "triangle-exclamation"}}
+      {{i18n "explorer.others_dirty"}}
+    </div>
+  {{/if}}
+
   {{#if this.model.length}}
     <ConditionalLoadingSpinner @condition={{this.loading}} />
 
