@@ -21,6 +21,7 @@ export default class PluginsExplorerController extends Controller {
   @tracked loading = false;
   @tracked showResults = false;
   @tracked hideSchema = false;
+  @tracked results = this.model.results;
   @tracked dirty = false;
 
   queryParams = ["params"];

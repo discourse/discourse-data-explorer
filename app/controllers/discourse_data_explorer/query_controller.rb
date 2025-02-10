@@ -93,7 +93,7 @@ module ::DiscourseDataExplorer
         )
       group_ids = params.require(:query)[:group_ids]
       group_ids&.each { |group_id| query.query_groups.find_or_create_by!(group_id: group_id) }
-      render_serialized query, QuerySerializer, root: "query"
+      render_serialized query, QueryDetailsSerializer, root: "query"
     end
 
     def update
@@ -107,7 +107,7 @@ module ::DiscourseDataExplorer
         group_ids&.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
       end
 
-      render_serialized @query, QuerySerializer, root: "query"
+      render_serialized @query, QueryDetailsSerializer, root: "query"
     rescue ValidationError => e
       render_json_error e.message
     end

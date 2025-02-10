@@ -211,4 +211,13 @@
     </label>
   </form>
   <hr />
+
+  <ConditionalLoadingSpinner @condition={{this.loading}} />
+
+  <QueryResultsWrapper
+    @results={{this.results}}
+    @showResults={{this.showResults}}
+    @query={{this.selectedItem}}
+    @content={{this.results}}
+  />
 {{/if}}

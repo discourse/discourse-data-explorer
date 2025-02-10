@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default class AdminPluginsExplorer extends DiscourseRoute {
+export default class AdminPluginsExplorerIndex extends DiscourseRoute {
   model() {
     if (!this.currentUser.admin) {
       // display "Only available to admins" message
