@@ -68,7 +68,7 @@ module ::DiscourseDataExplorer
           query_group = QueryGroup.find_by(query_id: @query.id, group_id: @group.id)
 
           render json: {
-                   query: serialize_data(@query, QuerySerializer, root: nil),
+                   query: serialize_data(@query, QueryDetailsSerializer, root: nil),
                    query_group: serialize_data(query_group, QueryGroupSerializer, root: nil),
                  }
         end
