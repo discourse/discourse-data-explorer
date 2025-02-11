@@ -21,17 +21,17 @@ de:
       private_message:
         title: "Geplanter Bericht für %{query_name}"
         body: |
-          Hallo, %{recipient_name}! Dein Daten-Explorer-Bericht ist fertig.
+          Hallo %{recipient_name}, dein Data Explorer-Bericht ist fertig.
 
-          Anfragename:
+          Abfragename:
           %{query_name}
 
           Hier sind die Ergebnisse:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Anfrage im Daten-Explorer anzeigen</a>
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Daten-Explorer anzeigen</a>
 
-          Bericht erstellt um %{created_at} (%{timezone})
+          Bericht erstellt auf %{created_at} (%{timezone})
       post:
         body: |
           ### Geplanter Bericht für %{query_name}
@@ -39,7 +39,7 @@ de:
           Hier sind die Ergebnisse:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer?id=%{query_id}'>Anfrage im Daten-Explorer-Explorer anzeigen</a>
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Data Explorer anzeigen</a>
 
-          Bericht erstellt um %{created_at} (%{timezone})
+          Bericht erstellt auf %{created_at} (%{timezone})
       upload_appendix: "Anhang: [%{filename}|attachment](%{short_url})"
