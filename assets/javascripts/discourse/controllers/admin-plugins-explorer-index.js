@@ -151,11 +151,6 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  resetParams() {
-    this.selectedItem.resetParams();
-  }
-
-  @action
   updateSortProperty(property) {
     if (this.sortByProperty === property) {
       this.sortDescending = !this.sortDescending;

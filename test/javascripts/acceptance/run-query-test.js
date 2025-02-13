@@ -1,11 +1,20 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Data Explorer Plugin | Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
+
+  needs.hooks.beforeEach(() => {
+    sinon.stub(window, "open");
+  });
+
+  needs.hooks.afterEach(() => {
+    window.open.restore();
+  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/explorer/groups.json", () => {
@@ -203,6 +212,12 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         rows: [[0, null, false]],
       });
     });
+
+    server.get("/session/csrf.json", function () {
+      return helper.response({
+        csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs= ",
+      });
+    });
   });
 
   test("runs query and renders data and a chart", async function (assert) {
@@ -231,6 +246,74 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     await click("div.result-info button:nth-child(3)");
 
     assert.dom("canvas").exists("the chart was rendered");
+  });
+
+  test("runs query and is able to download the results", async function (assert) {
+    await visit("/admin/plugins/explorer/queries/-6");
+
+    await click("form.query-run button");
+
+    const createElement = document.createElement.bind(document);
+    const appendChild = document.body.appendChild.bind(document.body);
+    const removeChild = document.body.removeChild.bind(document.body);
+
+    const finishedForm = sinon.promise();
+
+    let formElement;
+
+    const formStub = sinon
+      .stub(document, "createElement")
+      .callsFake((tagName) => {
+        if (tagName === "form") {
+          formElement = {
+            fakeForm: true,
+            setAttribute: sinon.stub(),
+            appendChild: sinon.stub(),
+            submit: sinon.stub().callsFake(finishedForm.resolve),
+          };
+
+          return formElement;
+        }
+
+        return createElement(tagName);
+      });
+
+    const appendChildStub = sinon
+      .stub(document.body, "appendChild")
+      .callsFake((el) => {
+        if (!el.fakeForm) {
+          return appendChild(el);
+        }
+      });
+
+    const removeChildStub = sinon
+      .stub(document.body, "removeChild")
+      .callsFake((el) => {
+        if (!el.fakeForm) {
+          return removeChild(el);
+        }
+      });
+
+    await click("div.result-info button:nth-child(1)");
+
+    await finishedForm;
+
+    formStub.restore();
+    appendChildStub.restore();
+    removeChildStub.restore();
+
+    assert.ok(window.open.called, "window.open was called for downloading");
+    assert.ok(formStub.called, "form was created for downloading");
+    assert.ok(formElement.submit.called, "form was submitted for downloading");
+
+    assert.ok(
+      formElement.setAttribute.calledWith("action"),
+      "form action attribute was set"
+    );
+    assert.ok(
+      formElement.setAttribute.calledWith("method", "post"),
+      "form method attribute was set to POST"
+    );
   });
 
   test("runs query and renders 0, false, and NULL values correctly", async function (assert) {
