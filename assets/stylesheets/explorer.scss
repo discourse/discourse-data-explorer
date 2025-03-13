@@ -5,18 +5,23 @@ table.group-reports {
   th:first-child {
     width: 30%;
   }
+
   th:nth-child(2) {
     width: 60%;
   }
+
   th:last-child {
     width: 20%;
     text-align: right;
   }
+
   tbody tr td {
     padding: 0.5em;
+
     &:first-child {
       font-size: $font-up-1;
     }
+
     &:last-child {
       text-align: right;
     }
@@ -35,12 +40,15 @@ table.group-reports {
     height: 400px;
     border: 1px solid var(--primary-very-low);
   }
+
   &.no-schema {
     .editor-panel {
       width: 100%;
     }
+
     .right-panel {
       width: 0;
+
       button.unhide {
         position: absolute;
         margin-left: -53px;
@@ -51,11 +59,13 @@ table.group-reports {
 
   .editor-panel {
     flex-grow: 1;
+
     .ace-wrapper {
       position: relative;
       height: 100%;
       width: 100%;
     }
+
     .ace_editor {
       position: absolute;
       left: 0;
@@ -64,10 +74,12 @@ table.group-reports {
       bottom: 0;
     }
   }
+
   .right-panel {
     flex-shrink: 0;
     flex-grow: 0;
     width: 345px;
+
     .schema {
       border-left: 1px solid var(--primary-low);
       height: 100%;
@@ -81,7 +93,7 @@ table.group-reports {
         padding: 0.5em;
         position: sticky;
         background-color: var(--secondary);
-        top: 0px;
+        top: 0;
         z-index: 1;
       }
 
@@ -89,34 +101,42 @@ table.group-reports {
         font-weight: bold;
         border-bottom: 1px solid var(--primary-low);
         padding-left: 5px;
+
         .fa {
           width: 6px;
         }
       }
+
       ul {
         list-style-type: none;
         margin: 0;
       }
+
       dl {
         margin: 0;
       }
+
       dl > div > * {
         padding-top: 2px;
         padding-bottom: 2px;
       }
+
       dl > div {
         clear: both;
       }
+
       dt {
         display: inline-block;
         vertical-align: text-top;
         overflow-wrap: break-word;
         width: 110px;
         margin-left: 5px;
+
         &.sensitive {
           color: var(--danger);
         }
       }
+
       dd {
         display: inline-block;
         vertical-align: text-top;
@@ -130,20 +150,12 @@ table.group-reports {
           color: var(--primary-medium);
           font-style: italic;
         }
+
         .popup-info {
           color: var(--primary-medium);
 
           .popup {
             display: none;
-          }
-          &:hover .popup {
-            display: block;
-          }
-          &:focus .popup {
-            display: block;
-          }
-
-          .popup {
             width: 180px;
             padding: 4px;
             position: relative;
@@ -152,11 +164,20 @@ table.group-reports {
             padding-right: calc(5px + 0.5em);
           }
 
+          &:hover .popup {
+            display: block;
+          }
+
+          &:focus .popup {
+            display: block;
+          }
+
           .popup ol {
-            padding: 0px;
+            padding: 0;
             position: relative;
             list-style: none;
-            > li:before {
+
+            > li::before {
               content: attr(value) ": ";
             }
           }
@@ -164,15 +185,17 @@ table.group-reports {
       }
     }
   }
+
   .grippie {
     cursor: nwse-resize;
     clear: both;
     font-size: $font-down-2;
-    -webkit-user-select: none;
+    user-select: none;
     color: var(--primary);
     text-align: right;
     background: var(--primary-very-low);
     border: 1px solid var(--primary-very-low);
+
     .d-icon {
       transform: rotate(90deg);
     }
@@ -184,45 +207,56 @@ table.group-reports {
     display: flex;
     align-items: center;
     margin-bottom: 1em;
+
     h1 {
       display: inline-block;
       margin: 0 0.5em 0 0;
       color: var(--primary);
+
       a {
-        color: currentColor;
+        color: currentcolor;
       }
     }
   }
+
   button.previous {
     margin-right: 0.5em;
+
     .d-icon {
       margin-left: -0.15em; // fixing fontawesome horizontal alignment
     }
   }
+
   .name-text-field {
     width: 100%;
   }
+
   .name input,
   .desc textarea {
     width: 100%;
     margin: 0;
   }
+
   &:not(.editing) .desc {
     margin: 10px 0;
   }
+
   .groups {
     margin: 10px 0;
     display: flex;
     flex-direction: row;
     align-items: center;
+
     @include breakpoint("tablet") {
       flex-direction: column;
       align-items: flex-start;
     }
+
     .label {
       margin-right: 10px;
       color: var(--primary-high);
     }
+
     .name {
       display: inline;
     }
@@ -237,6 +271,7 @@ table.group-reports {
 
 .query-run {
   margin-top: 25px;
+
   .query-plan {
     display: inline-block;
     margin-left: 15px;
@@ -254,33 +289,42 @@ table.group-reports {
 
 .query-params {
   border: 1px solid var(--header_primary-medium);
+
   .params-form {
     margin: 5px;
+
     html.desktop-view & {
       flex-direction: row;
       flex-wrap: wrap;
     }
   }
+
   .param > input,
   .param > .select-kit {
     margin: 9px;
   }
+
   .invalid input {
     background-color: var(--danger-low);
   }
+
   .invalid .ac-wrap {
     background-color: var(--danger-low);
   }
+
   .param {
     display: flex;
     align-items: center;
     flex: 0;
+
     .ac-wrap {
       display: inline-block;
+
       input {
         width: 100px !important; // override an inline style
       }
     }
+
     input,
     .select-kit {
       width: auto;
@@ -300,6 +344,7 @@ table.group-reports {
 
 .query-create {
   display: flex;
+
   input {
     margin-right: 0.5em;
     margin-bottom: 0;
@@ -312,13 +357,16 @@ table.group-reports {
     overflow: auto;
     max-height: 1000px;
   }
+
   table {
     width: 100%;
     margin-top: 10px;
+
     td {
       padding: 8px;
     }
   }
+
   thead {
     th {
       position: sticky;
@@ -333,16 +381,20 @@ table.group-reports {
 .query-list {
   display: flex;
   align-items: flex-start;
+
   .btn-left {
     margin-right: 0.5em;
   }
+
   .btn-right {
     margin-left: auto;
     margin-right: 0.5em;
   }
+
   li.none {
     display: none;
   }
+
   .import-btn {
     display: flex;
   }
@@ -353,24 +405,30 @@ table.group-reports {
     .created-by {
       width: 15%;
     }
+
     .group-names {
       width: 15%;
+
       .group-names-header {
         position: absolute;
         bottom: 8px;
         left: 6px;
       }
     }
+
     .created-at {
       width: 15%;
     }
+
     .heading {
       position: relative;
       color: var(--primary-medium);
-      padding: 50px 0px 0px 0px;
+      padding: 50px 0 0 0;
+
       th.sortable {
         font-weight: normal;
       }
+
       .heading-toggle {
         bottom: 0;
         position: absolute;
@@ -378,43 +436,54 @@ table.group-reports {
       }
     }
   }
+
   .query-row {
     a {
       width: 100%;
     }
+
     .query-name {
       color: var(--primary);
     }
+
     .query-desc {
       display: block;
       color: var(--primary-high);
     }
+
     .query-created-by {
       color: var(--primary-high);
     }
+
     .query-group-names {
       color: var(--tertiary);
+
       a {
         display: inline;
       }
     }
+
     .group-names {
       @include breakpoint("tablet") {
         text-align: right;
       }
     }
+
     .query-created-at {
       color: var(--primary-medium);
     }
   }
+
   .query-row:hover {
     background-color: inherit;
   }
+
   tr a {
     color: inherit;
     cursor: pointer;
     display: inline-block;
   }
+
   .no-search-results {
     color: var(--primary-medium);
   }
@@ -423,18 +492,22 @@ table.group-reports {
 .result-info {
   float: left;
 }
+
 .result-about {
   color: var(--primary-high);
   float: right;
 }
+
 .result-explain {
   padding-top: 1em;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
+
 .result-post-link {
   display: block;
   color: inherit !important;
 }
+
 .result-json {
   display: flex;
 }
@@ -458,9 +531,11 @@ table.group-reports {
   label {
     color: var(--primary-high);
   }
+
   input {
     margin-right: 4px;
   }
+
   .popup {
     background-color: var(--secondary);
     position: absolute;
