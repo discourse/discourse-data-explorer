@@ -253,4 +253,24 @@ describe DiscourseDataExplorer::ReportGenerator do
       )
     end
   end
+
+  describe ".params_to_hash" do
+    context "when passing nothing" do
+      let(:query_params) { "[]" }
+
+      it { expect(described_class.params_to_hash(query_params)).to eq({}) }
+    end
+
+    context "when passing an array of arrays" do
+      let(:query_params) { '[["foo", 1], ["bar", 2]]' }
+
+      it { expect(described_class.params_to_hash(query_params)).to eq({ "foo" => 1, "bar" => 2 }) }
+    end
+
+    context "when passing an array of hashes" do
+      let(:query_params) { '[{ "key": "foo", "value": 1 }, { "key": "bar", "value": 2 }]' }
+
+      it { expect(described_class.params_to_hash(query_params)).to eq({ "foo" => 1, "bar" => 2 }) }
+    end
+  end
 end
