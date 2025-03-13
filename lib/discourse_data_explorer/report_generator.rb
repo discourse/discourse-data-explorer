@@ -35,26 +35,10 @@ module ::DiscourseDataExplorer
       build_report_post(query, table, attach_csv: opts[:attach_csv], result:)
     end
 
-    private
-
     def self.params_to_hash(query_params)
       params = JSON.parse(query_params)
-      params_hash = {}
 
-      if !params.blank?
-        param_key, param_value = [], []
-        params.flatten.each.with_index do |data, i|
-          if i % 2 == 0
-            param_key << data
-          else
-            param_value << data
-          end
-        end
-
-        params_hash = Hash[param_key.zip(param_value)]
-      end
-
-      params_hash
+      params.map { |p| p.is_a?(Hash) ? [p["key"], p["value"]] : p }.to_h
     end
 
     def self.build_report_pms(query, table = "", targets = [], attach_csv: false, result: nil)

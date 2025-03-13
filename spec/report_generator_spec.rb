@@ -256,7 +256,7 @@ describe DiscourseDataExplorer::ReportGenerator do
 
   describe ".params_to_hash" do
     context "when passing nothing" do
-      let(:query_params) { '[]' }
+      let(:query_params) { "[]" }
 
       it { expect(described_class.params_to_hash(query_params)).to eq({}) }
     end
