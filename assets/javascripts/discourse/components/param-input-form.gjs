@@ -222,7 +222,7 @@ export default class ParamInputForm extends Component {
           if (!value) {
             return null;
           }
-          return moment(new Date(value).toISOString()).format("YYYY-MM-DD");
+          return moment(value).format("YYYY-MM-DD");
         } catch {
           this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
           return null;
