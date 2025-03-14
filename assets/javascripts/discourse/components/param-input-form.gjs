@@ -132,6 +132,7 @@ function componentOf(info) {
 
 export default class ParamInputForm extends Component {
   @service site;
+
   data = {};
   paramInfo = [];
   infoOf = {};

@@ -37,6 +37,7 @@ const VIEW_COMPONENTS = {
 
 export default class QueryResult extends Component {
   @service site;
+
   @tracked chartDisplayed = false;
 
   get colRender() {
