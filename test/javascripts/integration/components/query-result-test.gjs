@@ -55,7 +55,7 @@ module(
           badge: [
             {
               description: "description",
-              icon: "fa-user",
+              icon: "user",
               id: 1,
               name: "badge name",
               display_name: "badge display name",
