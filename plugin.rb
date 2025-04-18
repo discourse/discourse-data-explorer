@@ -82,6 +82,7 @@ after_initialize do
         field :query_id, component: :choices, required: true, extra: { content: queries }
         field :query_params, component: :"key-value", accepts_placeholders: true
         field :skip_empty, component: :boolean
+        field :users_from_group, component: :boolean
         field :attach_csv,
               component: :boolean,
               validator: ->(attach_csv) do
@@ -103,6 +104,7 @@ after_initialize do
           query_id = fields.dig("query_id", "value")
           query_params = fields.dig("query_params", "value") || {}
           skip_empty = fields.dig("skip_empty", "value") || false
+          users_from_group = fields.dig("users_from_group", "value") || false
           attach_csv = fields.dig("attach_csv", "value") || false
 
           unless SiteSetting.data_explorer_enabled
@@ -120,7 +122,7 @@ after_initialize do
               query_id,
               query_params,
               recipients,
-              { skip_empty:, attach_csv:, render_url_columns: true },
+              { skip_empty:, users_from_group:, attach_csv:, render_url_columns: true },
             )
             .each do |pm|
               begin
