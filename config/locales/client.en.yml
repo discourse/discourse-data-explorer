@@ -118,6 +118,8 @@ en:
               label: Skip sending PM if there are no results
             attach_csv:
               label: Attach the CSV file to the PM
+            users_from_group:
+              label: Send individual PM to each group member
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

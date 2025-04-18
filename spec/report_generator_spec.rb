@@ -175,6 +175,17 @@ describe DiscourseDataExplorer::ReportGenerator do
       expect(result[2]["target_emails"]).to eq(["john@doe.com"])
     end
 
+    it "extracts users from group when option is selected" do
+      Fabricate(:query_group, query: query, group: group)
+      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
+      freeze_time
+
+      result =
+        described_class.generate(query.id, query_params, [group.name], { users_from_group: true })
+      expect(result.length).to eq(1)
+      expect(result[0]["target_usernames"]).to eq([user.username])
+    end
+
     it "works with attached csv file" do
       SiteSetting.personal_message_enabled_groups = group.id
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
