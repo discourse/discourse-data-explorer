@@ -6,7 +6,12 @@ module ::DiscourseDataExplorer
       query = DiscourseDataExplorer::Query.find(query_id)
       return [] if !query || recipients.empty?
 
-      recipients = filter_recipients_by_query_access(recipients, query, opts)
+      recipients =
+        filter_recipients_by_query_access(
+          recipients,
+          query,
+          users_from_group: opts[:users_from_group],
+        )
       params = params_to_hash(query_params)
 
       result = DataExplorer.run_query(query, params)
@@ -114,11 +119,10 @@ module ::DiscourseDataExplorer
       UploadCreator.new(tmp, tmp_filename, type: "csv_export").create_for(Discourse.system_user.id)
     end
 
-    def self.filter_recipients_by_query_access(recipients, query, opts)
+    def self.filter_recipients_by_query_access(recipients, query, users_from_group: false)
       users = User.where(username: recipients)
       groups = Group.where(name: recipients)
       emails = recipients - users.pluck(:username) - groups.pluck(:name)
-      users_from_group = opts[:users_from_group] || false
       result = []
 
       users.each do |user|
