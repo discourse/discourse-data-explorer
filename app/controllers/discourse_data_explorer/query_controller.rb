@@ -194,6 +194,7 @@ module ::DiscourseDataExplorer
                        result,
                        query_params:,
                        download: params[:download],
+                       explain: params[:explain] == "true",
                      )
           end
           format.csv do

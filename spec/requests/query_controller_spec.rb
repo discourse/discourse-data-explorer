@@ -126,9 +126,13 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#run" do
-      def run_query(id, params = {})
+      def run_query(id, params = {}, explain = false)
         params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post "/admin/plugins/explorer/queries/#{id}/run.json", params: { params: params.to_json }
+        post "/admin/plugins/explorer/queries/#{id}/run.json",
+             params: {
+               params: params.to_json,
+               explain: explain,
+             }
       end
 
       it "can run queries" do
@@ -139,6 +143,18 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["errors"]).to eq([])
         expect(response_json["columns"]).to eq(["my_value"])
         expect(response_json["rows"]).to eq([[23]])
+        expect(response_json["explain"]).to be_nil
+      end
+
+      it "can run and explain queries" do
+        query = make_query("SELECT 23 as my_value")
+        run_query query.id, {}, true
+        expect(response.status).to eq(200)
+        expect(response_json["success"]).to eq(true)
+        expect(response_json["errors"]).to eq([])
+        expect(response_json["columns"]).to eq(["my_value"])
+        expect(response_json["rows"]).to eq([[23]])
+        expect(response_json["explain"]).to match("Result ")
       end
 
       it "can process parameters" do
