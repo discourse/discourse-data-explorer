@@ -125,18 +125,18 @@ module ::DiscourseDataExplorer
       emails = recipients - users.pluck(:username) - groups.pluck(:name)
       result = []
 
-      users.each do |user|
-        result << [user.username, "username"] if Guardian.new(user).user_can_access_query?(query)
-      end
+      query_group_ids = [Group::AUTO_GROUPS[:admins]].concat(query.groups.pluck(:group_id)).uniq
 
       groups.each do |group|
-        if group.id == Group::AUTO_GROUPS[:admins] || query.query_groups.exists?(group_id: group.id)
-          if users_from_group
-            result.concat(group.users.pluck(:username).map { |username| [username, "username"] })
-          else
-            result << [group.name, "group_name"]
-          end
+        if users_from_group
+          users = (users + group.users).uniq
+        elsif query_group_ids.include?(group.id)
+          result << [group.name, "group_name"]
         end
+      end
+
+      users.each do |user|
+        result << [user.username, "username"] if Guardian.new(user).user_can_access_query?(query)
       end
 
       emails.each { |email| result << [email, "email"] if Email.is_valid?(email) }
