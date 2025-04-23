@@ -61,8 +61,8 @@ describe "RecurringDataExplorerResultPM" do
         automation.trigger!
       end.to change { Topic.count }.by(3)
 
-      user_topics = Topic.first(2)
-      group_topics = Topic.last(1)
+      user_topics = Topic.last(2)
+      group_topics = Topic.first(1)
       expect(Topic.last(3).pluck(:archetype)).to eq(
         [Archetype.private_message, Archetype.private_message, Archetype.private_message],
       )
@@ -83,7 +83,7 @@ describe "RecurringDataExplorerResultPM" do
       automation.update(last_updated_by_id: admin.id)
       automation.trigger!
 
-      expect(Post.last.raw).to eq(
+      expect(Post.first.raw).to eq(
         I18n.t(
           "data_explorer.report_generator.private_message.body",
           recipient_name: another_group.name,
@@ -112,7 +112,7 @@ describe "RecurringDataExplorerResultPM" do
       automation.update(last_updated_by_id: admin.id)
       automation.trigger!
 
-      expect(Post.last.raw).to eq(
+      expect(Post.first.raw).to eq(
         I18n.t(
           "data_explorer.report_generator.private_message.body",
           recipient_name: another_group.name,
