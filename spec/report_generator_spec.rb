@@ -182,11 +182,9 @@ describe DiscourseDataExplorer::ReportGenerator do
       describe "when true" do
         let(:opts) { { users_from_group: true } }
 
-        it "works with no query groups" do
+        it "does not work when no query groups are set" do
           result = described_class.generate(query.id, query_params, [group.name], opts)
-
-          expect(result.length).to eq(1)
-          expect(result[0]["target_usernames"]).to eq([user.username])
+          expect(result).to eq []
         end
 
         it "works when user is a member of automation group and query group" do
