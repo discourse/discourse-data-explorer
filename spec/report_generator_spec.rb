@@ -170,20 +170,66 @@ describe DiscourseDataExplorer::ReportGenerator do
         )
 
       expect(result.length).to eq(3)
-      expect(result[0]["target_usernames"]).to eq([user.username])
-      expect(result[1]["target_group_names"]).to eq([group.name])
+      expect(result[0]["target_group_names"]).to eq([group.name])
+      expect(result[1]["target_usernames"]).to eq([user.username])
       expect(result[2]["target_emails"]).to eq(["john@doe.com"])
     end
 
-    it "extracts users from group when option is selected" do
-      Fabricate(:query_group, query: query, group: group)
-      DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
-      freeze_time
+    describe "with users_from_group" do
+      fab!(:valid_group) { Fabricate(:group, users: [user]) }
+      fab!(:invalid_group) { Fabricate(:group, users: []) }
 
-      result =
-        described_class.generate(query.id, query_params, [group.name], { users_from_group: true })
-      expect(result.length).to eq(1)
-      expect(result[0]["target_usernames"]).to eq([user.username])
+      describe "when true" do
+        let(:opts) { { users_from_group: true } }
+
+        it "does not work when no query groups are set" do
+          result = described_class.generate(query.id, query_params, [group.name], opts)
+          expect(result).to eq []
+        end
+
+        it "works when user is a member of automation group and query group" do
+          Fabricate(:query_group, query: query, group: valid_group)
+          result = described_class.generate(query.id, query_params, [group.name], opts)
+
+          expect(result.length).to eq(1)
+          expect(result[0]["target_usernames"]).to eq([user.username])
+        end
+
+        it "does not work when user is a member of automation group but not query group" do
+          Fabricate(:query_group, query: query, group: invalid_group)
+          result = described_class.generate(query.id, query_params, [group.name], opts)
+
+          expect(result).to eq []
+        end
+
+        it "works when user has access to one group in query groups" do
+          Fabricate(:query_group, query: query, group: valid_group)
+          Fabricate(:query_group, query: query, group: invalid_group)
+
+          result = described_class.generate(query.id, query_params, [group.name], opts)
+
+          expect(result.length).to eq(1)
+          expect(result[0]["target_usernames"]).to eq([user.username])
+        end
+      end
+
+      describe "when false" do
+        let(:opts) { { users_from_group: false } }
+
+        it "works when group has query access" do
+          Fabricate(:query_group, query: query, group: group)
+          result = described_class.generate(query.id, query_params, [group.name], opts)
+
+          expect(result.length).to eq(1)
+          expect(result[0]["target_group_names"]).to eq([group.name])
+        end
+
+        it "doesn't work when group doesn't have query access" do
+          result = described_class.generate(query.id, query_params, [group.name], opts)
+
+          expect(result).to eq []
+        end
+      end
     end
 
     it "works with attached csv file" do
