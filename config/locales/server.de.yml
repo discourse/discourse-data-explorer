@@ -21,9 +21,9 @@ de:
       private_message:
         title: "Geplanter Bericht für %{query_name}"
         body: |
-          Hallo %{recipient_name}, dein Data Explorer-Bericht ist fertig.
+          Hallo %{recipient_name}, dein Daten Explorer Bericht ist fertig.
 
-          Abfragename:
+          Anfragename:
           %{query_name}
 
           Hier sind die Ergebnisse:
@@ -31,7 +31,7 @@ de:
 
           <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Daten-Explorer anzeigen</a>
 
-          Bericht erstellt auf %{created_at} (%{timezone})
+          Bericht erstellt um %{created_at} (%{timezone})
       post:
         body: |
           ### Geplanter Bericht für %{query_name}
@@ -41,5 +41,5 @@ de:
 
           <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Data Explorer anzeigen</a>
 
-          Bericht erstellt auf %{created_at} (%{timezone})
+          Bericht erstellt um %{created_at} (%{timezone})
       upload_appendix: "Anhang: [%{filename}|attachment](%{short_url})"

@@ -102,6 +102,8 @@ de:
               label: Überspringe das Senden einer PN, wenn es keine Ergebnisse gibt
             attach_csv:
               label: Hänge die CSV-Datei an die PN an
+            users_from_group:
+              label: Senden jedem Gruppenmitglied eine individuelle PN
         recurring_data_explorer_result_topic:
           fields:
             topic_id:
