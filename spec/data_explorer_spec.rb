@@ -87,6 +87,21 @@ describe DiscourseDataExplorer::DataExplorer do
         _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
         expect(colrender).to eq({ 1 => "json" })
       end
+
+      describe "serializing models to serializer" do
+        it "serializes correctly to BasicTopicSerializer for topic relations" do
+          topic = Fabricate(:topic, locale: "ja")
+          query = Fabricate(:query, sql: "SELECT id AS topic_id FROM topics WHERE id = #{topic.id}")
+
+          pg_result = described_class.run_query(query)[:pg_result]
+          relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+
+          expect {
+            records = relations[:topic].object
+            records.map { |t| BasicTopicSerializer.new(t, root: false).as_json }
+          }.not_to raise_error
+        end
+      end
     end
   end
 end
