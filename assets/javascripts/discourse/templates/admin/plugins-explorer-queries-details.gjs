@@ -22,7 +22,7 @@ export default RouteTemplate(
       <h1>{{i18n "explorer.admins_only"}}</h1>
     {{else}}
 
-      <div class="query-edit {{if @controller.editName 'editing'}}">
+      <div class="query-edit {{if @controller.editingName 'editing'}}">
         {{#if @controller.editingName}}
           <div class="name">
             <DButton
@@ -61,7 +61,11 @@ export default RouteTemplate(
             <h1>
               {{@controller.model.name}}
               {{#unless @controller.editDisabled}}
-                <a href {{@controller.editName}} class="edit-query-name">
+                <a
+                  href
+                  {{on "click" @controller.editName}}
+                  class="edit-query-name"
+                >
                   {{icon "pencil"}}
                 </a>
               {{/unless}}
