@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 table.group-reports {
   width: 100%;
   table-layout: fixed;
@@ -247,7 +249,7 @@ table.group-reports {
     flex-direction: row;
     align-items: center;
 
-    @include breakpoint("tablet") {
+    @include viewport.until(md) {
       flex-direction: column;
       align-items: flex-start;
     }
@@ -262,7 +264,7 @@ table.group-reports {
     }
 
     .select-kit.multi-select {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         width: 360px;
       }
     }
@@ -464,7 +466,7 @@ table.group-reports {
     }
 
     .group-names {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         text-align: right;
       }
     }
