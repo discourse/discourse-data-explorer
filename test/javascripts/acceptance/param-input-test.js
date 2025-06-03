@@ -373,6 +373,35 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
         },
       });
     });
+
+    server.get("/admin/plugins/explorer/queries/4", () => {
+      return helper.response({
+        query: {
+          id: 4,
+          sql: "-- [params]\n-- null category_id :category\n\nSELECT 1",
+          name: "Params test - category_id chooser",
+          description: "Test for category_id param.",
+          param_info: [
+            {
+              identifier: "category",
+              type: "category_id",
+              default: null,
+              nullable: true,
+            },
+          ],
+          created_at: "2025-06-03T09:05:59.337Z",
+          username: "system",
+          group_ids: [],
+          last_run_at: "2025-06-03T09:05:59.337Z",
+          hidden: false,
+          category_id: null,
+        },
+      });
+    });
+
+    server.post("/admin/plugins/explorer/queries/4/run", () => {
+      return helper.response({});
+    });
   });
 
   test("puts params for the query into the url", async function (assert) {
@@ -428,5 +457,22 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     );
     await click(".query-edit .btn-save-query");
     assert.dom(".query-params input").exists();
+  });
+
+  test("nullable category_id param: puts params for the query into the url", async function (assert) {
+    const selectedCategory = { id: "6", name: "support" };
+
+    await visit("/admin/plugins/explorer/queries/4");
+    assert.dom(".select-kit-selected-name").hasText("(no category)");
+
+    await click(".select-kit-selected-name");
+    await click(".category-row.select-kit-row:first-of-type");
+    assert.dom(".select-kit-selected-name").hasText(selectedCategory.name);
+
+    await click("form.query-run button");
+
+    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
+    const categoryIdParam = JSON.parse(searchParams.get("params")).category;
+    assert.strictEqual(categoryIdParam, selectedCategory.id);
   });
 });
