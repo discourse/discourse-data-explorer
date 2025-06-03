@@ -8,82 +8,11 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/explorer/groups.json", () => {
-      return helper.response([
-        {
-          id: 1,
-          name: "admins",
-        },
-        {
-          id: 2,
-          name: "moderators",
-        },
-        {
-          id: 3,
-          name: "staff",
-        },
-        {
-          id: 0,
-          name: "everyone",
-        },
-        {
-          id: 10,
-          name: "trust_level_0",
-        },
-        {
-          id: 11,
-          name: "trust_level_1",
-        },
-        {
-          id: 12,
-          name: "trust_level_2",
-        },
-        {
-          id: 13,
-          name: "trust_level_3",
-        },
-        {
-          id: 14,
-          name: "trust_level_4",
-        },
-        {
-          id: 41,
-          name: "discourse",
-        },
-      ]);
+      return helper.response([]);
     });
 
     server.get("/admin/plugins/explorer/schema.json", () => {
-      return helper.response({
-        anonymous_users: [
-          {
-            column_name: "id",
-            data_type: "serial",
-            primary: true,
-          },
-          {
-            column_name: "user_id",
-            data_type: "integer",
-            fkey_info: "users",
-          },
-          {
-            column_name: "master_user_id",
-            data_type: "integer",
-            fkey_info: "users",
-          },
-          {
-            column_name: "active",
-            data_type: "boolean",
-          },
-          {
-            column_name: "created_at",
-            data_type: "timestamp",
-          },
-          {
-            column_name: "updated_at",
-            data_type: "timestamp",
-          },
-        ],
-      });
+      return helper.response({});
     });
 
     server.get("/admin/plugins/explorer/queries", () => {
@@ -353,7 +282,8 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       return helper.response({
         query: {
           id: 3,
-          sql: "-- [params]\n-- int :months_ago = 1\n\nSELECT 1",
+          // sql: "-- [params]\n-- int :months_ago = 1\n\nSELECT 1",
+          sql: "-- [params]\n-- null category_id :cat_id\n-- int :months_ago = 1\n\nSELECT 1",
           name: "Params test",
           description: "test for params.",
           param_info: [
@@ -450,11 +380,11 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit("/admin/plugins/explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
     await click(".query-edit .btn-edit-query");
-    await click(".query-editor .ace_text-input");
     await fillIn(
       ".query-editor .ace_text-input",
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
+    await click(".query-editor .ace_text-input"); // enables `Save Changes` button
     await click(".query-edit .btn-save-query");
     assert.dom(".query-params input").exists();
   });

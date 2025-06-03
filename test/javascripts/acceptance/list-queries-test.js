@@ -9,78 +9,7 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/explorer/groups.json", () => {
-      return helper.response([
-        {
-          id: 1,
-          name: "admins",
-        },
-        {
-          id: 2,
-          name: "moderators",
-        },
-        {
-          id: 3,
-          name: "staff",
-        },
-        {
-          id: 0,
-          name: "everyone",
-        },
-        {
-          id: 10,
-          name: "trust_level_0",
-        },
-        {
-          id: 11,
-          name: "trust_level_1",
-        },
-        {
-          id: 12,
-          name: "trust_level_2",
-        },
-        {
-          id: 13,
-          name: "trust_level_3",
-        },
-        {
-          id: 14,
-          name: "trust_level_4",
-        },
-      ]);
-    });
-
-    server.get("/admin/plugins/explorer/schema.json", () => {
-      return helper.response({
-        anonymous_users: [
-          {
-            column_name: "id",
-            data_type: "serial",
-            primary: true,
-          },
-          {
-            column_name: "user_id",
-            data_type: "integer",
-            fkey_info: "users",
-          },
-          {
-            column_name: "master_user_id",
-            data_type: "integer",
-            fkey_info: "users",
-          },
-          {
-            column_name: "active",
-            data_type: "boolean",
-          },
-          {
-            column_name: "created_at",
-            data_type: "timestamp",
-          },
-          {
-            column_name: "updated_at",
-            data_type: "timestamp",
-          },
-        ],
-      });
+      return helper.response([]);
     });
 
     server.get("/admin/plugins/explorer/queries", () => {
