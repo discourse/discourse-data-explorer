@@ -282,8 +282,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       return helper.response({
         query: {
           id: 3,
-          // sql: "-- [params]\n-- int :months_ago = 1\n\nSELECT 1",
-          sql: "-- [params]\n-- null category_id :cat_id\n-- int :months_ago = 1\n\nSELECT 1",
+          sql: "-- [params]\n-- int :months_ago = 1\n\nSELECT 1",
           name: "Params test",
           description: "test for params.",
           param_info: [
