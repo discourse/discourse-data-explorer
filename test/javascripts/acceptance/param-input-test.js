@@ -334,15 +334,18 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     });
   });
 
+  function getSearchParam(param) {
+    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
+    return JSON.parse(searchParams.get("params"))[param];
+  }
+
   test("puts params for the query into the url", async function (assert) {
     await visit("/admin/plugins/explorer/queries/-6");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
 
-    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
-    const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
-    assert.strictEqual(monthsAgoParam, monthsAgoValue);
+    assert.strictEqual(getSearchParam("months_ago"), monthsAgoValue);
   });
 
   test("puts params for the query into the url for group reports", async function (assert) {
@@ -351,9 +354,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await fillIn(".query-params input", monthsAgoValue);
     await click("form.query-run button");
 
-    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
-    const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
-    assert.strictEqual(monthsAgoParam, monthsAgoValue);
+    assert.strictEqual(getSearchParam("months_ago"), monthsAgoValue);
   });
 
   test("loads the page if one of the parameter is null", async function (assert) {
@@ -396,14 +397,14 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit("/admin/plugins/explorer/queries/4");
     assert.strictEqual(catChooser.header().value(), null);
 
+    await click("form.query-run button");
+    assert.strictEqual(getSearchParam("category"), "");
+
     await catChooser.expand();
     await catChooser.selectRowByIndex(0);
     assert.strictEqual(catChooser.header().label(), selectedCategory.name);
 
     await click("form.query-run button");
-
-    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
-    const categoryIdParam = JSON.parse(searchParams.get("params")).category;
-    assert.strictEqual(categoryIdParam, selectedCategory.id);
+    assert.strictEqual(getSearchParam("category"), selectedCategory.id);
   });
 });
