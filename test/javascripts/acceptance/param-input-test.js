@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Data Explorer Plugin | Param Input", function (needs) {
   needs.user();
@@ -390,13 +391,14 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
 
   test("nullable category_id param: puts params for the query into the url", async function (assert) {
     const selectedCategory = { id: "6", name: "support" };
+    const catChooser = selectKit(".category-chooser");
 
     await visit("/admin/plugins/explorer/queries/4");
-    assert.dom(".select-kit-selected-name").hasText("(no category)");
+    assert.strictEqual(catChooser.header().value(), null);
 
-    await click(".select-kit-selected-name");
-    await click(".category-row.select-kit-row:first-of-type");
-    assert.dom(".select-kit-selected-name").hasText(selectedCategory.name);
+    await catChooser.expand();
+    await catChooser.selectRowByIndex(0);
+    assert.strictEqual(catChooser.header().label(), selectedCategory.name);
 
     await click("form.query-run button");
 
