@@ -1,8 +1,8 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import Category from "discourse/models/category";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import Category from "discourse/models/category";
 
 async function runQuery() {
   await click("form.query-run button");
@@ -413,12 +413,20 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
 
     await runQuery();
 
-    assert.strictEqual(getSearchParam("category"), category.id.toString(), "it updates the URL with the selected category id");
+    assert.strictEqual(
+      getSearchParam("category"),
+      category.id.toString(),
+      "it updates the URL with the selected category id"
+    );
 
     await catChooser.expand();
     await catChooser.selectRowByIndex(0);
     await runQuery();
 
-    assert.strictEqual(getSearchParam("category"), undefined, "it removes the category id from the URL when selecting the first row (null value)");
+    assert.strictEqual(
+      getSearchParam("category"),
+      undefined,
+      "it removes the category id from the URL when selecting the first row (null value)"
+    );
   });
 });
