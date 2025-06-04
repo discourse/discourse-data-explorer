@@ -1,6 +1,12 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import Category from "discourse/models/category";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+
+async function runQuery() {
+  await click("form.query-run button");
+}
 
 acceptance("Data Explorer Plugin | Param Input", function (needs) {
   needs.user();
@@ -8,82 +14,11 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/explorer/groups.json", () => {
-      return helper.response([
-        {
-          id: 1,
-          name: "admins",
-        },
-        {
-          id: 2,
-          name: "moderators",
-        },
-        {
-          id: 3,
-          name: "staff",
-        },
-        {
-          id: 0,
-          name: "everyone",
-        },
-        {
-          id: 10,
-          name: "trust_level_0",
-        },
-        {
-          id: 11,
-          name: "trust_level_1",
-        },
-        {
-          id: 12,
-          name: "trust_level_2",
-        },
-        {
-          id: 13,
-          name: "trust_level_3",
-        },
-        {
-          id: 14,
-          name: "trust_level_4",
-        },
-        {
-          id: 41,
-          name: "discourse",
-        },
-      ]);
+      return helper.response([]);
     });
 
     server.get("/admin/plugins/explorer/schema.json", () => {
-      return helper.response({
-        anonymous_users: [
-          {
-            column_name: "id",
-            data_type: "serial",
-            primary: true,
-          },
-          {
-            column_name: "user_id",
-            data_type: "integer",
-            fkey_info: "users",
-          },
-          {
-            column_name: "master_user_id",
-            data_type: "integer",
-            fkey_info: "users",
-          },
-          {
-            column_name: "active",
-            data_type: "boolean",
-          },
-          {
-            column_name: "created_at",
-            data_type: "timestamp",
-          },
-          {
-            column_name: "updated_at",
-            data_type: "timestamp",
-          },
-        ],
-      });
+      return helper.response({});
     });
 
     server.get("/admin/plugins/explorer/queries", () => {
@@ -373,28 +308,58 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
         },
       });
     });
+
+    server.get("/admin/plugins/explorer/queries/4", () => {
+      return helper.response({
+        query: {
+          id: 4,
+          sql: "-- [params]\n-- null category_id :category\n\nSELECT 1",
+          name: "Params test - category_id chooser",
+          description: "Test for category_id param.",
+          param_info: [
+            {
+              identifier: "category",
+              type: "category_id",
+              default: null,
+              nullable: true,
+            },
+          ],
+          created_at: "2025-06-03T09:05:59.337Z",
+          username: "system",
+          group_ids: [],
+          last_run_at: "2025-06-03T09:05:59.337Z",
+          hidden: false,
+          category_id: null,
+        },
+      });
+    });
+
+    server.post("/admin/plugins/explorer/queries/4/run", () => {
+      return helper.response({});
+    });
   });
+
+  function getSearchParam(param) {
+    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
+    return JSON.parse(searchParams.get("params"))[param];
+  }
 
   test("puts params for the query into the url", async function (assert) {
     await visit("/admin/plugins/explorer/queries/-6");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
-    await click("form.query-run button");
+    await runQuery();
 
-    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
-    const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
-    assert.strictEqual(monthsAgoParam, monthsAgoValue);
+    assert.strictEqual(getSearchParam("months_ago"), monthsAgoValue);
   });
 
   test("puts params for the query into the url for group reports", async function (assert) {
     await visit("/g/discourse/reports/-8");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
-    await click("form.query-run button");
+    await runQuery();
 
-    const searchParams = new URLSearchParams(currentURL().split("?")[1]);
-    const monthsAgoParam = JSON.parse(searchParams.get("params")).months_ago;
-    assert.strictEqual(monthsAgoParam, monthsAgoValue);
+    assert.strictEqual(getSearchParam("months_ago"), monthsAgoValue);
   });
 
   test("loads the page if one of the parameter is null", async function (assert) {
@@ -413,7 +378,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit("/g/discourse/reports/-8");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
-    await click("form.query-run button");
+    await runQuery();
     assert.dom(".query-params input").hasValue(monthsAgoValue);
   });
 
@@ -421,12 +386,47 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit("/admin/plugins/explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
     await click(".query-edit .btn-edit-query");
-    await click(".query-editor .ace_text-input");
     await fillIn(
       ".query-editor .ace_text-input",
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
+    await click(".query-editor .ace_text-input"); // enables `Save Changes` button
     await click(".query-edit .btn-save-query");
     assert.dom(".query-params input").exists();
+  });
+
+  test("nullable category_id param", async function (assert) {
+    await visit("/admin/plugins/explorer/queries/4");
+    const catChooser = selectKit(".category-chooser");
+
+    assert.strictEqual(catChooser.header().value(), null);
+
+    await runQuery();
+
+    assert.strictEqual(getSearchParam("category"), "");
+
+    const category = Category.findById(6);
+    await catChooser.expand();
+    await catChooser.selectRowByValue(category.id);
+
+    assert.strictEqual(catChooser.header().label(), category.name);
+
+    await runQuery();
+
+    assert.strictEqual(
+      getSearchParam("category"),
+      category.id.toString(),
+      "it updates the URL with the selected category id"
+    );
+
+    await catChooser.expand();
+    await catChooser.selectRowByIndex(0);
+    await runQuery();
+
+    assert.strictEqual(
+      getSearchParam("category"),
+      undefined,
+      "it removes the category id from the URL when selecting the first row (null value)"
+    );
   });
 });

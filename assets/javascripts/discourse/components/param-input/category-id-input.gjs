@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import CategoryChooser from "select-kit/components/category-chooser";
 
 export default class CategoryIdInput extends Component {
@@ -15,6 +16,11 @@ export default class CategoryIdInput extends Component {
       <CategoryChooser
         @value={{this.data.value}}
         @onChange={{@field.set}}
+        @options={{hash
+          allowUncategorized=null
+          autoInsertNoneItem=true
+          none=true
+        }}
         name={{@info.identifier}}
       />
     </@field.Custom>
