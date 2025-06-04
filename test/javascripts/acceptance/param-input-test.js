@@ -2,6 +2,11 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import Category from "discourse/models/category";
+
+async function runQuery() {
+  await click("form.query-run button");
+}
 
 acceptance("Data Explorer Plugin | Param Input", function (needs) {
   needs.user();
@@ -343,7 +348,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit("/admin/plugins/explorer/queries/-6");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
-    await click("form.query-run button");
+    await runQuery();
 
     assert.strictEqual(getSearchParam("months_ago"), monthsAgoValue);
   });
@@ -352,7 +357,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit("/g/discourse/reports/-8");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
-    await click("form.query-run button");
+    await runQuery();
 
     assert.strictEqual(getSearchParam("months_ago"), monthsAgoValue);
   });
@@ -373,7 +378,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     await visit("/g/discourse/reports/-8");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
-    await click("form.query-run button");
+    await runQuery();
     assert.dom(".query-params input").hasValue(monthsAgoValue);
   });
 
@@ -390,21 +395,30 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
     assert.dom(".query-params input").exists();
   });
 
-  test("nullable category_id param: puts params for the query into the url", async function (assert) {
-    const selectedCategory = { id: "6", name: "support" };
+  test("nullable category_id param", async function (assert) {
+    await visit("/admin/plugins/explorer/queries/4");
     const catChooser = selectKit(".category-chooser");
 
-    await visit("/admin/plugins/explorer/queries/4");
     assert.strictEqual(catChooser.header().value(), null);
 
-    await click("form.query-run button");
+    await runQuery();
+
     assert.strictEqual(getSearchParam("category"), "");
+
+    const category = Category.findById(6);
+    await catChooser.expand();
+    await catChooser.selectRowByValue(category.id);
+
+    assert.strictEqual(catChooser.header().label(), category.name);
+
+    await runQuery();
+
+    assert.strictEqual(getSearchParam("category"), category.id.toString(), "it updates the URL with the selected category id");
 
     await catChooser.expand();
     await catChooser.selectRowByIndex(0);
-    assert.strictEqual(catChooser.header().label(), selectedCategory.name);
+    await runQuery();
 
-    await click("form.query-run button");
-    assert.strictEqual(getSearchParam("category"), selectedCategory.id);
+    assert.strictEqual(getSearchParam("category"), undefined, "it removes the category id from the URL when selecting the first row (null value)");
   });
 });
