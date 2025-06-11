@@ -59,15 +59,13 @@ export default RouteTemplate(
             />
 
             <h1>
-              {{@controller.model.name}}
+              <span>{{@controller.model.name}}</span>
               {{#unless @controller.editDisabled}}
-                <a
-                  href
-                  {{on "click" @controller.editName}}
-                  class="edit-query-name"
-                >
-                  {{icon "pencil"}}
-                </a>
+                <DButton
+                  @action={{@controller.editName}}
+                  @icon="pencil"
+                  class="edit-query-name btn-transparent"
+                />
               {{/unless}}
             </h1>
           </div>
