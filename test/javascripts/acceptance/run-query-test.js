@@ -320,7 +320,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     await visit("/admin/plugins/explorer/queries/2");
 
     assert
-      .dom("div.name h1")
+      .dom("div.name h1 span")
       .hasText("What about 0?", "the query name was rendered");
 
     assert

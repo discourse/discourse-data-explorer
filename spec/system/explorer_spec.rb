@@ -35,6 +35,7 @@ RSpec.describe "Explorer", type: :system, js: true do
       find(".name-text-field input").fill_in(with: "My custom name edited")
       find(".btn-primary").click
       find("button span", text: "Save Changes and Run").click
+      expect(page.find(".name h1")).to have_content("My custom name edited")
     end
   end
 

@@ -59,7 +59,7 @@ export default RouteTemplate(
             />
 
             <h1>
-              {{@controller.model.name}}
+              <span>{{@controller.model.name}}</span>
               {{#unless @controller.editDisabled}}
                 <DButton
                   @action={{@controller.editName}}
