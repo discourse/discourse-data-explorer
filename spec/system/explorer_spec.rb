@@ -27,6 +27,15 @@ RSpec.describe "Explorer", type: :system, js: true do
 
       expect(page).to have_field("limit", with: 42)
     end
+
+    it "allows to edit custom name" do
+      visit("/admin/plugins/explorer/queries/#{query_1.id}")
+      find(".query-run .btn-primary").click
+      find(".edit-query-name").click
+      find(".name-text-field input").fill_in(with: "My custom name edited")
+      find(".btn-primary").click
+      find("button span", text: "Save Changes and Run").click
+    end
   end
 
   context "with the old url format" do
