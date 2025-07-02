@@ -101,6 +101,23 @@ describe DiscourseDataExplorer::DataExplorer do
             records.map { |t| BasicTopicSerializer.new(t, root: false).as_json }
           }.not_to raise_error
         end
+
+        it "chooses the correct serializer for tag_group" do
+          tag_group = Fabricate(:tag_group)
+          tag1 = Fabricate(:tag)
+          tag2 = Fabricate(:tag)
+          tag_group.tags = [tag1, tag2]
+
+          query = Fabricate(:query, sql: "SELECT tag_id, tag_group_id FROM tag_group_memberships")
+
+          pg_result = described_class.run_query(query)[:pg_result]
+          relations, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+
+          expect(colrender).to eq({ 1 => :tag_group })
+          expect(relations[:tag_group].as_json).to include(
+            { "id" => tag_group.id, "name" => tag_group.name },
+          )
+        end
       end
     end
   end
