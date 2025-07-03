@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { capitalize } from "@ember/string";
+import { classify } from "@ember/string";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import TextViewComponent from "./result-types/text";
@@ -31,7 +31,7 @@ export default class QueryRowContent extends Component {
       }
 
       const lookupFunc =
-        this.args[`lookup${capitalize(componentDefinition.name)}`];
+        this.args[`lookup${classify(componentDefinition.name)}`];
       if (lookupFunc) {
         ctx[componentDefinition.name] = lookupFunc.call(this.args, id);
       }

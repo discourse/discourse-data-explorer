@@ -19,6 +19,7 @@ import HtmlViewComponent from "./result-types/html";
 import JsonViewComponent from "./result-types/json";
 import PostViewComponent from "./result-types/post";
 import ReltimeViewComponent from "./result-types/reltime";
+import TagGroupViewComponent from "./result-types/tag-group";
 import TextViewComponent from "./result-types/text";
 import TopicViewComponent from "./result-types/topic";
 import UrlViewComponent from "./result-types/url";
@@ -36,6 +37,7 @@ const VIEW_COMPONENTS = {
   html: HtmlViewComponent,
   json: JsonViewComponent,
   category: CategoryViewComponent,
+  tag_group: TagGroupViewComponent,
 };
 
 export default class QueryResult extends Component {
@@ -146,6 +148,10 @@ export default class QueryResult extends Component {
     return transformedRelTable(this.args.content.relations.topic);
   }
 
+  get transformedTagGroupTable() {
+    return transformedRelTable(this.args.content.relations.tag_group);
+  }
+
   get transformedGroupTable() {
     return transformedRelTable(this.site.groups);
   }
@@ -201,6 +207,10 @@ export default class QueryResult extends Component {
 
   lookupTopic(id) {
     return this.transformedTopicTable[id];
+  }
+
+  lookupTagGroup(id) {
+    return this.transformedTagGroupTable[id];
   }
 
   lookupGroup(id) {
@@ -368,11 +378,13 @@ export default class QueryResult extends Component {
                   @lookupBadge={{this.lookupBadge}}
                   @lookupPost={{this.lookupPost}}
                   @lookupTopic={{this.lookupTopic}}
+                  @lookupTagGroup={{this.lookupTagGroup}}
                   @lookupGroup={{this.lookupGroup}}
                   @lookupCategory={{this.lookupCategory}}
                   @transformedPostTable={{this.transformedPostTable}}
                   @transformedBadgeTable={{this.transformedBadgeTable}}
                   @transformedUserTable={{this.transformedUserTable}}
+                  @transformedTagGroupTable={{this.transformedTagGroupTable}}
                   @transformedGroupTable={{this.transformedGroupTable}}
                   @transformedTopicTable={{this.transformedTopicTable}}
                   @site={{this.site}}

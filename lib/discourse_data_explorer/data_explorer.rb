@@ -118,6 +118,11 @@ module ::DiscourseDataExplorer
           fields: %i[id title slug posts_count locale],
           serializer: BasicTopicSerializer,
         },
+        tag_group: {
+          class: TagGroup,
+          fields: %i[id name],
+          only: %i[id name],
+        },
         group: {
           class: Group,
           ignore: true,
@@ -141,7 +146,7 @@ module ::DiscourseDataExplorer
     def self.column_regexes
       @column_regexes ||=
         extra_data_pluck_fields
-          .map { |key, val| /(#{val[:class].to_s.downcase})_id$/ if val[:class] }
+          .map { |key, val| /(#{val[:class].to_s.underscore})_id$/ if val[:class] }
           .compact
     end
 
@@ -196,6 +201,7 @@ module ::DiscourseDataExplorer
         ret[cls] = ActiveModel::ArraySerializer.new(
           all_objs,
           each_serializer: support_info[:serializer],
+          only: support_info[:only],
         )
       end
       [ret, col_map]
