@@ -100,6 +100,9 @@ describe DiscourseDataExplorer::DataExplorer do
             records = relations[:topic].object
             records.map { |t| BasicTopicSerializer.new(t, root: false).as_json }
           }.not_to raise_error
+
+          json = relations[:topic].as_json
+          expect(json).to include(BasicTopicSerializer.new(topic, root: false).as_json)
         end
 
         it "chooses the correct serializer for tag_group" do
