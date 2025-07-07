@@ -198,11 +198,9 @@ module ::DiscourseDataExplorer
             .includes(support_info[:include])
             .order(:id)
 
-        ret[cls] = ActiveModel::ArraySerializer.new(
-          all_objs,
-          each_serializer: support_info[:serializer],
-          only: support_info[:only],
-        )
+        opts = { each_serializer: support_info[:serializer] }
+        opts[:only] = support_info[:only] if support_info[:only]
+        ret[cls] = ActiveModel::ArraySerializer.new(all_objs, **opts)
       end
       [ret, col_map]
     end
